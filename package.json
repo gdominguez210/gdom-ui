@@ -1,6 +1,6 @@
 {
   "name": "gdom-ui",
-  "private": true,
+  "private": false,
   "version": "0.0.0",
   "description": "A UI Library built for my personal-use.",
   "author": "gdominguez210",
