@@ -36,6 +36,6 @@ function _Button(props: ButtonProps, ref: Ref<HTMLButtonElement>) {
     />
 }
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(_Button);
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(_Button);
 
 Button.displayName = 'Button';
