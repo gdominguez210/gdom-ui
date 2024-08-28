@@ -38,7 +38,8 @@
     "build:lib": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier . --write --ignore-unknown",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "generate": "tsc --p .generate-component/tsconfig.json && node .generate-component/index.js"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -58,6 +59,7 @@
     "@types/node": "^20.10.4",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
+    "@types/yargs": "^17.0.33",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
@@ -84,7 +86,9 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "vite-plugin-dts": "^3.6.4",
-    "vitest": "^1.0.4"
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^1.0.4",
+    "yargs": "^17.7.2"
   },
   "peerDependencies": {
     "react": "^18.2.0",

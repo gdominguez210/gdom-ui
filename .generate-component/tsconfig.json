@@ -1,10 +1,6 @@
 {
   "extends": [],
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@lib/*": ["lib/*"]
-    },
     // This is a component library, so "ESNext" is a good choice. Also it requires very little down-leveling during transpilation.
     "target": "ESNext",
 
@@ -15,29 +11,19 @@
     "module": "ESNext",
 
     // The types defined in "vite/client" are included in global scope.
-    "types": ["vite/client"],
+    "types": ["node"],
 
     // Do not emit compiled output files, vite will take care of the that.
-    "noEmit": true,
+    "noEmit": false,
 
     // Vite will handle the resolution of the import paths.
     "moduleResolution": "Bundler",
 
-    // Use the React 17 JSX transform, importing React is no longer required.
-    "jsx": "react-jsx",
-
-    // Skip the type checking for declaration files to improve performance.
-    "skipLibCheck": true,
-
     // Allow importing modules with ".json" extension.
     "resolveJsonModule": true,
 
-    // "declarationMap" need to be enabled to let Vite generates source map files.
-    "declaration": true,
-    "declarationMap": true,
-
     // Importing .js files is not allowed, enable if needed.
-    "allowJs": false,
+    "allowJs": true,
 
     // Fix the mis-match of behaviors between ES import and CommonJS require.
     "esModuleInterop": true,
@@ -52,7 +38,7 @@
     "isolatedModules": true,
 
     // Allow importing TypeScript modules.
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
 
     // Enfore "type" modifier for type imports.
     "verbatimModuleSyntax": true,
@@ -69,7 +55,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": true,
+    "noUnusedParameters": true
   },
-  "include": ["./lib/**/*.ts", "./lib/**/*.tsx"],
+  "include": ["./**/*.ts"],
 }

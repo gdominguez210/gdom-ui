@@ -3,13 +3,14 @@ import { join, resolve } from 'node:path';
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-
+import tsconfigPaths from 'vite-tsconfig-paths';
 import { peerDependencies } from './package.json';
 
 export default defineConfig({
   plugins: [
     react(),
     dts({ rollupTypes: true }), // Output .d.ts files
+    tsconfigPaths()
   ],
   build: {
     target: 'esnext',
