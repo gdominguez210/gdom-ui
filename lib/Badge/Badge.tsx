@@ -2,7 +2,7 @@ import { type ElementType, type HTMLAttributes, type Ref, forwardRef } from "rea
 import cn from 'clsx';
 import { twMerge } from "tailwind-merge";
 
-export interface BadgeProps extends HTMLAttributes<HTMLDivElement>{
+export interface BadgeProps extends HTMLAttributes<HTMLElement>{
   /** @default span */
   as?: ElementType
   /** @default neutral */
