@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/gdominguez210/gdom-ui/compare/v1.1.0...v1.2.0) (2024-08-30)
+
+
+### Features
+
+* **lib/Badge:** add Badge component ([f961e02](https://github.com/gdominguez210/gdom-ui/commit/f961e0235a4958b9058b79f3275af629f2635b08))
+
 # [1.1.0](https://github.com/gdominguez210/gdom-ui/compare/v1.0.0...v1.1.0) (2024-08-30)
 
 
