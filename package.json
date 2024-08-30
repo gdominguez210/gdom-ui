@@ -44,6 +44,10 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "github:gdominguez210/gdom-ui"
+  },
   "devDependencies": {
     "@chromatic-com/storybook": "^1",
     "@commitlint/cli": "^19.4.0",
