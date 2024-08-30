@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/gdominguez210/gdom-ui/compare/v1.2.0...v1.2.1) (2024-08-30)
+
+
+### Bug Fixes
+
+* **lib/Badge:** update BadgeProps interface to use HTMLElement as base interface ([01c829d](https://github.com/gdominguez210/gdom-ui/commit/01c829d6808f13c984188b6ab9739b3aba78359d))
+
 # [1.2.0](https://github.com/gdominguez210/gdom-ui/compare/v1.1.0...v1.2.0) (2024-08-30)
 
 
