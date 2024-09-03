@@ -5,12 +5,22 @@ import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { peerDependencies } from './package.json';
+import svgr from 'vite-plugin-svgr';
 
 export default defineConfig({
   plugins: [
     react(),
     dts({ rollupTypes: true }), // Output .d.ts files
-    tsconfigPaths()
+    tsconfigPaths(),
+    svgr({
+      include: '**/*.svg',
+      svgrOptions: {
+        exportType: 'default',
+        svgo: false,
+        ref: true,
+        icon: true,
+      },
+    }),
   ],
   build: {
     target: 'esnext',

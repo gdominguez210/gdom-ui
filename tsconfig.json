@@ -15,7 +15,7 @@
     "module": "ESNext",
 
     // The types defined in "vite/client" are included in global scope.
-    "types": ["vite/client"],
+    "types": ["vite/client", "vite-plugin-svgr/client"],
 
     // Do not emit compiled output files, vite will take care of the that.
     "noEmit": true,
@@ -72,4 +72,7 @@
     "noUnusedParameters": true,
   },
   "include": ["./lib/**/*.ts", "./lib/**/*.tsx"],
+  "files": [
+    "declarations.d.ts"
+  ]
 }
