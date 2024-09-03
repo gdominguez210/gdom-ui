@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/gdominguez210/gdom-ui/compare/v1.2.1...v1.3.0) (2024-09-03)
+
+
+### Features
+
+* **lib/assets:** add StarLine svg ([37003bd](https://github.com/gdominguez210/gdom-ui/commit/37003bd62154caf095ec15c7bb17291dd3943e2e))
+* **lib/Icon:** add Icon component ([d6060bf](https://github.com/gdominguez210/gdom-ui/commit/d6060bf86da63c7c4cd3b0fb2ceef603a92fed32))
+* **svgr:** add svgr vite plugin, and typescript types ([3406860](https://github.com/gdominguez210/gdom-ui/commit/34068606fb97f157f373681d180757181f11664d))
+
 ## [1.2.1](https://github.com/gdominguez210/gdom-ui/compare/v1.2.0...v1.2.1) (2024-08-30)
 
 
