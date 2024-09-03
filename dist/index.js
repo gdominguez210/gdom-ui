@@ -2482,25 +2482,78 @@ const getDefaultConfig = () => {
 };
 const twMerge = /*#__PURE__*/createTailwindMerge(getDefaultConfig);
 
-const variants = {
-  base: "text-white rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500 disabled:opacity-50 disabled:pointer-event-none",
-  primary: "bg-indigo-500 hover:bg-indigo-500/90",
-  success: "bg-green-500 hover:bg-green-500/90",
-  info: "bg-blue-500 hover:bg-blue-500/90",
-  warning: "bg-amber-500 hover:bg-amber-500/90",
-  error: "bg-red-500 hover:bg-red-500/90",
-  small: "px-2.5 py-1.5 text-xs",
-  medium: "px-3.5 py-2 text-sm",
-  large: "px-4 py-2 text-base"
+const styles$1 = {
+  base: "inline-flex justify-center items-center rounded font-medium focus-visible:outline-none",
+  primary: "bg-indigo-700 hover:bg-indigo-800 focus:bg-indigo-800 active:bg-indigo-800 text-white",
+  secondary: "bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border-[0.5px] hover:border focus:border active:border border-solid border-neutral-200",
+  tertiary: "text-indigo-700 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50",
+  destructive: "text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 focus:shadow-red-700/12",
+  linkColor: "text-indigo-700 hover:text-indigo-800 focus:text-indigo-800 active:text-indigo-800",
+  linkGray: "text-neutral-600 hover:text-neutral-900 focus:text-neutral-900 active:text-neutral-900",
+  disabled: "bg-neutral-100 text-neutral-400 pointer-events-none",
+  md: {
+    padding: "px-3.5 py-2.5",
+    gap: "gap-1",
+    fontSize: "text-sm",
+    icon: "p-2.5 gap-2"
+  },
+  lg: {
+    padding: "px-4 py-2.5",
+    gap: "gap-1.5",
+    fontSize: "text-base",
+    icon: "p-3 gap-2"
+  },
+  xl: {
+    padding: "px-5 py-3",
+    gap: "gap-1.5",
+    fontSize: "text-base",
+    icon: "p-3.5 gap-2"
+  },
+  xxl: {
+    padding: "px-6 py-4",
+    gap: "gap-2.5",
+    fontSize: "text-lg",
+    icon: "p-4 gap-2"
+  },
+  boxShadow: {
+    standard: "focus:shadow-[0px_0px_0px_4px_rgba(0.2666666805744171,0.2980392277240753,0.9058823585510254,0.12)]",
+    // custom value from design mocks
+    destructive: "focus:shadow-[0px_0px_0px_4px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,0.12),0px_0px_0px_1px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,1.00)]"
+    // custom value from design mocks
+  }
 };
 function _Button(props, ref) {
-  const { color = "primary", size = "medium", className, ...restProps } = props;
+  const {
+    children,
+    disabled,
+    variant = "primary",
+    size = "md",
+    className,
+    icon,
+    ...restProps
+  } = props;
+  const isLinkButton = variant.includes("link");
+  const isDestructive = variant === "destructive";
   return /* @__PURE__ */ jsx(
     "button",
     {
       ref,
-      className: twMerge(clsx(variants.base, variants[color], variants[size], className)),
-      ...restProps
+      className: twMerge(
+        clsx(
+          styles$1.base,
+          styles$1[variant],
+          styles$1[size].gap,
+          styles$1[size].fontSize,
+          { [styles$1[size].padding]: !isLinkButton },
+          { [styles$1[size].icon]: icon },
+          { [styles$1.disabled]: disabled },
+          { [styles$1.boxShadow.standard]: !isDestructive },
+          { [styles$1.boxShadow.destructive]: isDestructive },
+          className
+        )
+      ),
+      ...restProps,
+      children
     }
   );
 }
