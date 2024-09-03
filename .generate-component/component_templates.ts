@@ -16,8 +16,8 @@ import type { StoryObj, Meta } from '@storybook/react';
 import { ${name} as ${name}Component } from  '@lib/${name}';
 
 export default {
+  title: 'components/${name}',
   component: ${name}Component,
-  parameters: { layout: "fullscreen" },
 } as Meta<typeof ${name}Component>;
 
 export const ${name}: StoryObj<typeof ${name}Component> = {
