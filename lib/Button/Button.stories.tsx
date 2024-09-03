@@ -1,46 +1,63 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Button, type ButtonProps } from './Button';
+import { Button as ButtonComponent, type ButtonProps } from './Button';
+import { Icon } from '@lib/Icon';
 
-const meta = {
-  title: 'Components/Button',
-  component: Button,
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
-  argTypes: {
-    color: {
-      options: ['primary', 'success', 'info', 'warning', 'error'],
-      control: { type: 'select' },
-    },
-    size: {
-      options: ['small', 'medium', 'large'],
-      control: { type: 'select' },
-    },
-  },
-} satisfies Meta<typeof Button>;
+export default {
+  title: 'components/Button',
+  component: ButtonComponent,
+} as Meta<typeof ButtonComponent>;
 
-export default meta;
-
-type Story = StoryObj<typeof meta>;
-
-const defaultProps: ButtonProps = {
-  color: 'primary',
-  size: 'medium',
-};
-
-export const DefaultButton: Story = {
+export const ButtonDefault: StoryObj<typeof ButtonComponent> = {
   args: {
-    ...defaultProps,
-    children: 'Click Me!',
+    children: <>Button CTA</>,
   },
 };
 
-export const DisabledButton: Story = {
+export const ButtonWithIcon: StoryObj<typeof ButtonComponent> = {
   args: {
-    ...defaultProps,
-    children: 'Click Me!',
+    children: (
+      <>
+        <Icon name="star-line" />
+        Button CTA
+        <Icon name="star-line" />
+      </>
+    ),
+  },
+};
+
+export const ButtonIcon: StoryObj<typeof ButtonComponent> = {
+  render: (args) => {
+    const { icon = true, ...restArgs } = args;
+    return (
+      <ButtonComponent
+        icon
+        aria-label="Example Icon Button"
+        {...restArgs}
+      >
+        <Icon name="star-line" />
+      </ButtonComponent>
+    );
+  },
+};
+
+export const ButtonHover: StoryObj<typeof ButtonComponent> = {
+  args: {
+    children: <>Button CTA</>,
+    className: 'pseudo-hover',
+  },
+};
+
+export const ButtonFocused: StoryObj<typeof ButtonComponent> = {
+  args: {
+    children: <>Button CTA</>,
+    className: 'pseudo-focus',
+  },
+};
+
+export const ButtonDisabled: StoryObj<typeof ButtonComponent> = {
+  args: {
+    children: <>Button CTA</>,
     disabled: true,
   },
 };
