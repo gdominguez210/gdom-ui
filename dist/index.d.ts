@@ -17,18 +17,34 @@ export declare interface BadgeProps extends HTMLAttributes<HTMLElement> {
 
 export declare const Button: ForwardRefExoticComponent<ButtonProps & RefAttributes<HTMLButtonElement>>;
 
-export declare interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export declare type ButtonProps = CommonButtonProps & iconButtonAccessibleProps;
+
+declare interface CommonButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     /**
-     * The color of the button.
+     * The type of the button.
+     * @default primary
      */
-    color?: 'primary' | 'success' | 'info' | 'warning' | 'error';
+    variant?: Variant;
     /**
      * The size of the button.
+     * @default md
      */
-    size?: 'small' | 'medium' | 'large';
+    size?: Size;
 }
 
 export declare const Icon: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
+
+declare type iconButtonAccessibleProps = {
+    /**
+     * Switches to use icon button styling
+     * @default false
+     */
+    icon?: false;
+    'aria-label'?: string;
+} | {
+    icon?: true;
+    'aria-label': string;
+};
 
 declare type IconName = keyof typeof icons;
 
@@ -39,5 +55,17 @@ export declare interface IconProps extends SVGAttributes<SVGElement> {
 declare const icons: {
     readonly 'star-line': string;
 };
+
+declare type Size = SizesAsTypes[number];
+
+declare const sizes: readonly ["md", "lg", "xl", "xxl"];
+
+declare type SizesAsTypes = typeof sizes;
+
+declare type Variant = VariantsAsTypes[number];
+
+declare const variants: readonly ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"];
+
+declare type VariantsAsTypes = typeof variants;
 
 export { }

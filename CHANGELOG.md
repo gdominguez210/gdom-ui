@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/gdominguez210/gdom-ui/compare/v1.3.0...v1.4.0) (2024-09-03)
+
+
+### Features
+
+* **lib/Button:** add Button component ([5d4eecc](https://github.com/gdominguez210/gdom-ui/commit/5d4eeccd0ef98026a536870a93f124e18c44bcd4))
+
 # [1.3.0](https://github.com/gdominguez210/gdom-ui/compare/v1.2.1...v1.3.0) (2024-09-03)
 
 
