@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button as ButtonComponent, type ButtonProps } from './Button';
 import { Icon } from '@lib/Icon';
 import { sizes } from './Button';
-import type { HTMLAttributes } from 'react';
+import { type HTMLAttributes, Fragment } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -172,12 +172,13 @@ export const PrimaryButtons: StoryObj<typeof ButtonComponent> = {
           <GridItem
             index={i}
             colOffset={1}
+            key={col}
           >
             {col}
           </GridItem>
         ))}
         {gridBodyRows.map(([label, button], i) => (
-          <>
+          <Fragment key={label}>
             <GridItem
               index={i}
               rowOffset={1}
@@ -185,9 +186,9 @@ export const PrimaryButtons: StoryObj<typeof ButtonComponent> = {
               {label}
             </GridItem>
             {sizes.map((size) => (
-              <GridItem>{button({ size, variant: 'primary' })}</GridItem>
+              <GridItem key={size}>{button({ size, variant: 'primary' })}</GridItem>
             ))}
-          </>
+          </Fragment>
         ))}
       </Grid>
     );
@@ -206,12 +207,13 @@ export const SecondaryButtons: StoryObj<typeof ButtonComponent> = {
           <GridItem
             index={i}
             colOffset={1}
+            key={col}
           >
             {col}
           </GridItem>
         ))}
         {gridBodyRows.map(([label, button], i) => (
-          <>
+          <Fragment key={label}>
             <GridItem
               index={i}
               rowOffset={1}
@@ -219,9 +221,9 @@ export const SecondaryButtons: StoryObj<typeof ButtonComponent> = {
               {label}
             </GridItem>
             {sizes.map((size) => (
-              <GridItem>{button({ size, variant: 'secondary' })}</GridItem>
+              <GridItem key={size}>{button({ size, variant: 'secondary' })}</GridItem>
             ))}
-          </>
+          </Fragment>
         ))}
       </Grid>
     );
@@ -240,12 +242,13 @@ export const TertiaryButtons: StoryObj<typeof ButtonComponent> = {
           <GridItem
             index={i}
             colOffset={1}
+            key={col}
           >
             {col}
           </GridItem>
         ))}
         {gridBodyRows.map(([label, button], i) => (
-          <>
+          <Fragment key={label}>
             <GridItem
               index={i}
               rowOffset={1}
@@ -253,9 +256,9 @@ export const TertiaryButtons: StoryObj<typeof ButtonComponent> = {
               {label}
             </GridItem>
             {sizes.map((size) => (
-              <GridItem>{button({ size, variant: 'tertiary' })}</GridItem>
+              <GridItem key={size}>{button({ size, variant: 'tertiary' })}</GridItem>
             ))}
-          </>
+          </Fragment>
         ))}
       </Grid>
     );
@@ -274,12 +277,13 @@ export const DestructiveButtons: StoryObj<typeof ButtonComponent> = {
           <GridItem
             index={i}
             colOffset={1}
+            key={col}
           >
             {col}
           </GridItem>
         ))}
         {gridBodyRows.map(([label, button], i) => (
-          <>
+          <Fragment key={label}>
             <GridItem
               index={i}
               rowOffset={1}
@@ -287,9 +291,9 @@ export const DestructiveButtons: StoryObj<typeof ButtonComponent> = {
               {label}
             </GridItem>
             {sizes.map((size) => (
-              <GridItem>{button({ size, variant: 'destructive' })}</GridItem>
+              <GridItem key={size}>{button({ size, variant: 'destructive' })}</GridItem>
             ))}
-          </>
+          </Fragment>
         ))}
       </Grid>
     );
@@ -308,12 +312,13 @@ export const ColoredLinkButtons: StoryObj<typeof ButtonComponent> = {
           <GridItem
             index={i}
             colOffset={1}
+            key={col}
           >
             {col}
           </GridItem>
         ))}
         {gridBodyRows.map(([label, button], i) => (
-          <>
+          <Fragment key={label}>
             <GridItem
               index={i}
               rowOffset={1}
@@ -321,9 +326,9 @@ export const ColoredLinkButtons: StoryObj<typeof ButtonComponent> = {
               {label}
             </GridItem>
             {sizes.map((size) => (
-              <GridItem>{button({ size, variant: 'linkColor' })}</GridItem>
+              <GridItem key={size}>{button({ size, variant: 'linkColor' })}</GridItem>
             ))}
-          </>
+          </Fragment>
         ))}
       </Grid>
     );
@@ -342,12 +347,13 @@ export const GrayLinkButtons: StoryObj<typeof ButtonComponent> = {
           <GridItem
             index={i}
             colOffset={1}
+            key={col}
           >
             {col}
           </GridItem>
         ))}
         {gridBodyRows.map(([label, button], i) => (
-          <>
+          <Fragment key={label}>
             <GridItem
               index={i}
               rowOffset={1}
@@ -355,9 +361,9 @@ export const GrayLinkButtons: StoryObj<typeof ButtonComponent> = {
               {label}
             </GridItem>
             {sizes.map((size) => (
-              <GridItem>{button({ size, variant: 'linkGray' })}</GridItem>
+              <GridItem key={size}>{button({ size, variant: 'linkGray' })}</GridItem>
             ))}
-          </>
+          </Fragment>
         ))}
       </Grid>
     );
