@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/gdominguez210/gdom-ui/compare/v1.4.0...v1.5.0) (2024-09-13)
+
+
+### Features
+
+* **lib/assets:** add Audio player icons ([3fa8547](https://github.com/gdominguez210/gdom-ui/commit/3fa85472c950235083d3c3c8b420a839ec637e3d))
+
 # [1.4.0](https://github.com/gdominguez210/gdom-ui/compare/v1.3.0...v1.4.0) (2024-09-03)
 
 

@@ -39,10 +39,10 @@ declare type iconButtonAccessibleProps = {
      * Switches to use icon button styling
      * @default false
      */
-    icon?: false;
+    iconOnly?: false;
     'aria-label'?: string;
 } | {
-    icon?: true;
+    iconOnly?: true;
     'aria-label': string;
 };
 

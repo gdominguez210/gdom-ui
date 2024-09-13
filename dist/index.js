@@ -2,8 +2,6 @@ import { jsx } from 'react/jsx-runtime';
 import * as React from 'react';
 import { forwardRef } from 'react';
 
-function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f);}else for(f in e)e[f]&&(n&&(n+=" "),n+=f);return n}function clsx(){for(var e,t,f=0,n="",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}
-
 const CLASS_PART_SEPARATOR = '-';
 const createClassGroupUtils = config => {
   const classMap = createClassMap(config);
@@ -2482,46 +2480,139 @@ const getDefaultConfig = () => {
 };
 const twMerge = /*#__PURE__*/createTailwindMerge(getDefaultConfig);
 
-const styles$1 = {
-  base: "inline-flex justify-center items-center rounded font-medium focus-visible:outline-none",
-  primary: "bg-indigo-700 hover:bg-indigo-800 focus:bg-indigo-800 active:bg-indigo-800 text-white",
-  secondary: "bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border-[0.5px] hover:border focus:border active:border border-solid border-neutral-200",
-  tertiary: "text-indigo-700 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50",
-  destructive: "text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 focus:shadow-red-700/12",
-  linkColor: "text-indigo-700 hover:text-indigo-800 focus:text-indigo-800 active:text-indigo-800",
-  linkGray: "text-neutral-600 hover:text-neutral-900 focus:text-neutral-900 active:text-neutral-900",
-  disabled: "bg-neutral-100 text-neutral-400 pointer-events-none",
-  md: {
-    padding: "px-3.5 py-2.5",
-    gap: "gap-1",
-    fontSize: "text-sm",
-    icon: "p-2.5 gap-2"
-  },
-  lg: {
-    padding: "px-4 py-2.5",
-    gap: "gap-1.5",
-    fontSize: "text-base",
-    icon: "p-3 gap-2"
-  },
-  xl: {
-    padding: "px-5 py-3",
-    gap: "gap-1.5",
-    fontSize: "text-base",
-    icon: "p-3.5 gap-2"
-  },
-  xxl: {
-    padding: "px-6 py-4",
-    gap: "gap-2.5",
-    fontSize: "text-lg",
-    icon: "p-4 gap-2"
-  },
-  boxShadow: {
-    standard: "focus:shadow-[0px_0px_0px_4px_rgba(0.2666666805744171,0.2980392277240753,0.9058823585510254,0.12)]",
-    // custom value from design mocks
-    destructive: "focus:shadow-[0px_0px_0px_4px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,0.12),0px_0px_0px_1px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,1.00)]"
-    // custom value from design mocks
-  }
+function r$1(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e))for(t=0;t<e.length;t++)e[t]&&(f=r$1(e[t]))&&(n&&(n+=" "),n+=f);else for(t in e)e[t]&&(n&&(n+=" "),n+=t);return n}function clsx$1(){for(var e,t,f=0,n="";f<arguments.length;)(e=arguments[f++])&&(t=r$1(e))&&(n&&(n+=" "),n+=t);return n}
+
+const falsyToString = (value)=>typeof value === "boolean" ? "".concat(value) : value === 0 ? "0" : value;
+const cx = clsx$1;
+const cva = (base, config)=>{
+    return (props)=>{
+        var ref;
+        if ((config === null || config === void 0 ? void 0 : config.variants) == null) return cx(base, props === null || props === void 0 ? void 0 : props.class, props === null || props === void 0 ? void 0 : props.className);
+        const { variants , defaultVariants  } = config;
+        const getVariantClassNames = Object.keys(variants).map((variant)=>{
+            const variantProp = props === null || props === void 0 ? void 0 : props[variant];
+            const defaultVariantProp = defaultVariants === null || defaultVariants === void 0 ? void 0 : defaultVariants[variant];
+            if (variantProp === null) return null;
+            const variantKey = falsyToString(variantProp) || falsyToString(defaultVariantProp);
+            return variants[variant][variantKey];
+        });
+        const propsWithoutUndefined = props && Object.entries(props).reduce((acc, param)=>{
+            let [key, value] = param;
+            if (value === undefined) {
+                return acc;
+            }
+            acc[key] = value;
+            return acc;
+        }, {});
+        const getCompoundVariantClassNames = config === null || config === void 0 ? void 0 : (ref = config.compoundVariants) === null || ref === void 0 ? void 0 : ref.reduce((acc, param1)=>{
+            let { class: cvClass , className: cvClassName , ...compoundVariantOptions } = param1;
+            return Object.entries(compoundVariantOptions).every((param)=>{
+                let [key, value] = param;
+                return Array.isArray(value) ? value.includes({
+                    ...defaultVariants,
+                    ...propsWithoutUndefined
+                }[key]) : ({
+                    ...defaultVariants,
+                    ...propsWithoutUndefined
+                })[key] === value;
+            }) ? [
+                ...acc,
+                cvClass,
+                cvClassName
+            ] : acc;
+        }, []);
+        return cx(base, getVariantClassNames, getCompoundVariantClassNames, props === null || props === void 0 ? void 0 : props.class, props === null || props === void 0 ? void 0 : props.className);
+    };
 };
+
+const buttonStyles = cva(
+  ["inline-flex justify-center items-center rounded font-medium focus-visible:outline-none"],
+  {
+    variants: {
+      variant: {
+        primary: "bg-indigo-700 hover:bg-indigo-800 focus:bg-indigo-800 active:bg-indigo-800 text-white",
+        secondary: "bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border-[0.5px] hover:border focus:border active:border border-solid border-neutral-200",
+        tertiary: "text-indigo-700 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50",
+        destructive: "text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 focus:shadow-red-700/12",
+        linkColor: "text-indigo-700 hover:text-indigo-800 focus:text-indigo-800 active:text-indigo-800",
+        linkGray: "text-neutral-600 hover:text-neutral-900 focus:text-neutral-900 active:text-neutral-900"
+      },
+      size: {
+        md: "gap-1 text-sm",
+        lg: "gap-1.5 text-base",
+        xl: "gap-2 text-base",
+        xxl: "gap-2.5 text-lg"
+      },
+      disabled: {
+        true: "text-neutral-400 pointer-events-none",
+        false: ""
+      },
+      iconOnly: {
+        true: "gap-2",
+        false: ""
+      },
+      isDestructive: {
+        true: "focus:shadow-[0px_0px_0px_4px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,0.12),0px_0px_0px_1px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,1.00)]",
+        false: "focus:shadow-[0px_0px_0px_4px_rgba(0.2666666805744171,0.2980392277240753,0.9058823585510254,0.12)]"
+      }
+    },
+    compoundVariants: [
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive"],
+        size: "md",
+        className: "px-3.5 py-2.5"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive"],
+        size: "lg",
+        className: "px-4 py-2.5"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive"],
+        size: "xl",
+        className: "px-5 py-3"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive"],
+        size: "xxl",
+        className: "px-6 py-4"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive"],
+        disabled: true,
+        className: "bg-neutral-100 text-neutral-400 pointer-events-none"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"],
+        iconOnly: true,
+        size: "md",
+        className: "p-2.5 gap-2"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"],
+        iconOnly: true,
+        size: "lg",
+        className: "p-3 gap-2"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"],
+        iconOnly: true,
+        size: "xl",
+        className: "p-3.5"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"],
+        iconOnly: true,
+        size: "xxl",
+        className: "p-4"
+      }
+    ],
+    defaultVariants: {
+      variant: "primary",
+      size: "md"
+    }
+  }
+);
 function _Button(props, ref) {
   const {
     children,
@@ -2529,29 +2620,18 @@ function _Button(props, ref) {
     variant = "primary",
     size = "md",
     className,
-    icon,
+    iconOnly,
     ...restProps
   } = props;
-  const isLinkButton = variant.includes("link");
   const isDestructive = variant === "destructive";
   return /* @__PURE__ */ jsx(
     "button",
     {
       ref,
       className: twMerge(
-        clsx(
-          styles$1.base,
-          styles$1[variant],
-          styles$1[size].gap,
-          styles$1[size].fontSize,
-          { [styles$1[size].padding]: !isLinkButton },
-          { [styles$1[size].icon]: icon },
-          { [styles$1.disabled]: disabled },
-          { [styles$1.boxShadow.standard]: !isDestructive },
-          { [styles$1.boxShadow.destructive]: isDestructive },
-          className
-        )
+        buttonStyles({ variant, size, disabled, iconOnly, isDestructive, className })
       ),
+      disabled,
       ...restProps,
       children
     }
@@ -2560,17 +2640,29 @@ function _Button(props, ref) {
 const Button = forwardRef(_Button);
 Button.displayName = "Button";
 
-const styles = {
-  base: "inline-flex items-center rounded-full border border-solid font-normal text-center",
-  neutral: "bg-gray-50 border-neutral-200 text-neutral-600",
-  danger: "bg-red-50 border-red-200 text-red-600",
-  warning: "bg-amber-50 border-amber-200 text-amber-600",
-  success: "bg-green-50 border-green-200 text-green-600",
-  brand: "bg-indigo-50 border-indigo-50 text-indigo-600",
-  sm: "text-xs px-1.5 py-0.5",
-  md: "text-sm px-2 py-0.5",
-  lg: "text-sm px-2.5 py-1"
-};
+const badgeStyles = cva(
+  "inline-flex items-center rounded-full border border-solid font-normal text-center",
+  {
+    variants: {
+      variant: {
+        neutral: "bg-gray-50 border-neutral-200 text-neutral-600",
+        danger: "bg-red-50 border-red-200 text-red-600",
+        warning: "bg-amber-50 border-amber-200 text-amber-600",
+        success: "bg-green-50 border-green-200 text-green-600",
+        brand: "bg-indigo-50 border-indigo-50 text-indigo-600"
+      },
+      size: {
+        sm: "text-xs px-1.5 py-0.5",
+        md: "text-sm px-2 py-0.5",
+        lg: "text-sm px-2.5 py-1"
+      }
+    },
+    defaultVariants: {
+      variant: "neutral",
+      size: "md"
+    }
+  }
+);
 function _Badge(props, ref) {
   const {
     as = "span",
@@ -2584,7 +2676,7 @@ function _Badge(props, ref) {
   return /* @__PURE__ */ jsx(
     Node,
     {
-      className: twMerge(clsx(styles.base, styles[variant], styles[size], className)),
+      className: twMerge(badgeStyles({ variant, size, className })),
       ...restProps,
       ref,
       children
@@ -2600,6 +2692,8 @@ const ForwardRef = forwardRef(SvgStarLine);
 const icons = {
   "star-line": ForwardRef
 };
+
+function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f);}else for(f in e)e[f]&&(n&&(n+=" "),n+=f);return n}function clsx(){for(var e,t,f=0,n="",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}
 
 function _Icon(props, ref) {
   const { name, className, ...restProps } = props;
