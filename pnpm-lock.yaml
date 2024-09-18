@@ -28,8 +28,8 @@ importers:
         specifier: ^8.2.9
         version: 8.2.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.1)
       '@storybook/builder-vite':
-        specifier: ^8.2.9
-        version: 8.2.9(storybook@8.3.1)(typescript@5.5.4)(vite@5.4.5(@types/node@22.5.5))
+        specifier: ^8.3.1
+        version: 8.3.1(storybook@8.3.1)(typescript@5.5.4)(vite@5.4.5(@types/node@22.5.5))
       '@storybook/react':
         specifier: ^8.2.9
         version: 8.2.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(storybook@8.3.1)(typescript@5.5.4)
@@ -770,6 +770,22 @@ packages:
       vite-plugin-glimmerx:
         optional: true
 
+  '@storybook/builder-vite@8.3.1':
+    resolution: {integrity: sha512-IxfgIuQo9R+zcwoBE85PkCSKWGbPVStJgm1VHO/mixIdZExanbAhDS+L21nAZCelTvcsObTN76BN953v2LjVGg==}
+    peerDependencies:
+      '@preact/preset-vite': '*'
+      storybook: ^8.3.1
+      typescript: '>= 4.3.x'
+      vite: ^4.0.0 || ^5.0.0
+      vite-plugin-glimmerx: '*'
+    peerDependenciesMeta:
+      '@preact/preset-vite':
+        optional: true
+      typescript:
+        optional: true
+      vite-plugin-glimmerx:
+        optional: true
+
   '@storybook/components@8.2.9':
     resolution: {integrity: sha512-OkkcZ/f/6o3GdFEEK9ZHKIGHWUHmavZUYs5xaSgU64bOrA2aqEFtfeWWitZYTv3Euhk8MVLWfyEMDfez0AlvDg==}
     peerDependencies:
@@ -782,6 +798,11 @@ packages:
     resolution: {integrity: sha512-QQCFb3g12VQQEraDV1UfCmniGhQZKyT6oEt1Im6dzzPJj9NQk+6BjWoDep33CZhBHWoLryrMQd2fjuHxnFRNEA==}
     peerDependencies:
       storybook: ^8.2.9
+
+  '@storybook/csf-plugin@8.3.1':
+    resolution: {integrity: sha512-K3JWJf79+BkJAbOnAns5KGQ9h0NCqWht/1B05frj9LuAD/U+0sikpByiC2QvJ+qtX4fODhqjRYvrv2jgP8o3mA==}
+    peerDependencies:
+      storybook: ^8.3.1
 
   '@storybook/csf@0.0.1':
     resolution: {integrity: sha512-USTLkZze5gkel8MYCujSRBVIrUQ3YPBrLOx7GNk/0wttvVtlzWXAq9eLbQ4p/NicGxP+3T7KPEMVV//g+yubpw==}
@@ -4611,6 +4632,24 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@storybook/builder-vite@8.3.1(storybook@8.3.1)(typescript@5.5.4)(vite@5.4.5(@types/node@22.5.5))':
+    dependencies:
+      '@storybook/csf-plugin': 8.3.1(storybook@8.3.1)
+      '@types/find-cache-dir': 3.2.1
+      browser-assert: 1.2.1
+      es-module-lexer: 1.5.4
+      express: 4.19.2
+      find-cache-dir: 3.3.2
+      fs-extra: 11.2.0
+      magic-string: 0.30.11
+      storybook: 8.3.1
+      ts-dedent: 2.2.0
+      vite: 5.4.5(@types/node@22.5.5)
+    optionalDependencies:
+      typescript: 5.5.4
+    transitivePeerDependencies:
+      - supports-color
+
   '@storybook/components@8.2.9(storybook@8.3.1)':
     dependencies:
       storybook: 8.3.1
@@ -4636,6 +4675,11 @@ snapshots:
       - utf-8-validate
 
   '@storybook/csf-plugin@8.2.9(storybook@8.3.1)':
+    dependencies:
+      storybook: 8.3.1
+      unplugin: 1.12.2
+
+  '@storybook/csf-plugin@8.3.1(storybook@8.3.1)':
     dependencies:
       storybook: 8.3.1
       unplugin: 1.12.2
