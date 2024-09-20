@@ -15,10 +15,12 @@
     "plugin:storybook/recommended",
     "prettier" // disable all rules conflict with Prettier
   ],
-  "plugins": ["jest-dom"],
+  "plugins": ["jest-dom", "react-refresh"],
   "parser": "@typescript-eslint/parser",
   "ignorePatterns": ["dist"],
-  "rules": {},
+  "rules": {
+      "react-refresh/only-export-components": "warn"
+  },
   "settings": {
     "react": {
       "version": "detect"

@@ -8,6 +8,7 @@ import ShuffleFill from '@lib/assets/svgs/shuffle-fill.svg';
 import SpeedFill from '@lib/assets/svgs/speed-fill.svg';
 import StopLargeFill from '@lib/assets/svgs/stop-large-fill.svg';
 import VolumeMuteFill from '@lib/assets/svgs/volume-mute-fill.svg';
+import VolumeDownFill from '@lib/assets/svgs/volume-down-fill.svg';
 import VolumeUpFill from '@lib/assets/svgs/volume-up-fill.svg';
 import RepeatFill from '@lib/assets/svgs/repeat-fill.svg';
 import DiscFill from '@lib/assets/svgs/disc-fill.svg';
@@ -24,6 +25,7 @@ export const icons = {
   'speed-fill': SpeedFill,
   'stop-large-fill': StopLargeFill,
   'volume-mute-fill': VolumeMuteFill,
+  'volume-down-fill': VolumeDownFill,
   'volume-up-fill': VolumeUpFill,
   'disc-fill': DiscFill,
 } as const;
