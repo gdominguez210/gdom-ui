@@ -24,8 +24,6 @@ function _interopNamespaceDefault(e) {
 
 const React__namespace = /*#__PURE__*/_interopNamespaceDefault(React);
 
-function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f);}else for(f in e)e[f]&&(n&&(n+=" "),n+=f);return n}function clsx(){for(var e,t,f=0,n="",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}
-
 const CLASS_PART_SEPARATOR = '-';
 const createClassGroupUtils = config => {
   const classMap = createClassMap(config);
@@ -2504,46 +2502,139 @@ const getDefaultConfig = () => {
 };
 const twMerge = /*#__PURE__*/createTailwindMerge(getDefaultConfig);
 
-const styles$1 = {
-  base: "inline-flex justify-center items-center rounded font-medium focus-visible:outline-none",
-  primary: "bg-indigo-700 hover:bg-indigo-800 focus:bg-indigo-800 active:bg-indigo-800 text-white",
-  secondary: "bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border-[0.5px] hover:border focus:border active:border border-solid border-neutral-200",
-  tertiary: "text-indigo-700 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50",
-  destructive: "text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 focus:shadow-red-700/12",
-  linkColor: "text-indigo-700 hover:text-indigo-800 focus:text-indigo-800 active:text-indigo-800",
-  linkGray: "text-neutral-600 hover:text-neutral-900 focus:text-neutral-900 active:text-neutral-900",
-  disabled: "bg-neutral-100 text-neutral-400 pointer-events-none",
-  md: {
-    padding: "px-3.5 py-2.5",
-    gap: "gap-1",
-    fontSize: "text-sm",
-    icon: "p-2.5 gap-2"
-  },
-  lg: {
-    padding: "px-4 py-2.5",
-    gap: "gap-1.5",
-    fontSize: "text-base",
-    icon: "p-3 gap-2"
-  },
-  xl: {
-    padding: "px-5 py-3",
-    gap: "gap-1.5",
-    fontSize: "text-base",
-    icon: "p-3.5 gap-2"
-  },
-  xxl: {
-    padding: "px-6 py-4",
-    gap: "gap-2.5",
-    fontSize: "text-lg",
-    icon: "p-4 gap-2"
-  },
-  boxShadow: {
-    standard: "focus:shadow-[0px_0px_0px_4px_rgba(0.2666666805744171,0.2980392277240753,0.9058823585510254,0.12)]",
-    // custom value from design mocks
-    destructive: "focus:shadow-[0px_0px_0px_4px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,0.12),0px_0px_0px_1px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,1.00)]"
-    // custom value from design mocks
-  }
+function r$1(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e))for(t=0;t<e.length;t++)e[t]&&(f=r$1(e[t]))&&(n&&(n+=" "),n+=f);else for(t in e)e[t]&&(n&&(n+=" "),n+=t);return n}function clsx$1(){for(var e,t,f=0,n="";f<arguments.length;)(e=arguments[f++])&&(t=r$1(e))&&(n&&(n+=" "),n+=t);return n}
+
+const falsyToString = (value)=>typeof value === "boolean" ? "".concat(value) : value === 0 ? "0" : value;
+const cx = clsx$1;
+const cva = (base, config)=>{
+    return (props)=>{
+        var ref;
+        if ((config === null || config === void 0 ? void 0 : config.variants) == null) return cx(base, props === null || props === void 0 ? void 0 : props.class, props === null || props === void 0 ? void 0 : props.className);
+        const { variants , defaultVariants  } = config;
+        const getVariantClassNames = Object.keys(variants).map((variant)=>{
+            const variantProp = props === null || props === void 0 ? void 0 : props[variant];
+            const defaultVariantProp = defaultVariants === null || defaultVariants === void 0 ? void 0 : defaultVariants[variant];
+            if (variantProp === null) return null;
+            const variantKey = falsyToString(variantProp) || falsyToString(defaultVariantProp);
+            return variants[variant][variantKey];
+        });
+        const propsWithoutUndefined = props && Object.entries(props).reduce((acc, param)=>{
+            let [key, value] = param;
+            if (value === undefined) {
+                return acc;
+            }
+            acc[key] = value;
+            return acc;
+        }, {});
+        const getCompoundVariantClassNames = config === null || config === void 0 ? void 0 : (ref = config.compoundVariants) === null || ref === void 0 ? void 0 : ref.reduce((acc, param1)=>{
+            let { class: cvClass , className: cvClassName , ...compoundVariantOptions } = param1;
+            return Object.entries(compoundVariantOptions).every((param)=>{
+                let [key, value] = param;
+                return Array.isArray(value) ? value.includes({
+                    ...defaultVariants,
+                    ...propsWithoutUndefined
+                }[key]) : ({
+                    ...defaultVariants,
+                    ...propsWithoutUndefined
+                })[key] === value;
+            }) ? [
+                ...acc,
+                cvClass,
+                cvClassName
+            ] : acc;
+        }, []);
+        return cx(base, getVariantClassNames, getCompoundVariantClassNames, props === null || props === void 0 ? void 0 : props.class, props === null || props === void 0 ? void 0 : props.className);
+    };
 };
+
+const buttonStyles = cva(
+  ["inline-flex justify-center items-center rounded font-medium focus-visible:outline-none"],
+  {
+    variants: {
+      variant: {
+        primary: "bg-indigo-700 hover:bg-indigo-800 focus:bg-indigo-800 active:bg-indigo-800 text-white",
+        secondary: "bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border-[0.5px] hover:border focus:border active:border border-solid border-neutral-200",
+        tertiary: "text-indigo-700 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50",
+        destructive: "text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 focus:shadow-red-700/12",
+        linkColor: "text-indigo-700 hover:text-indigo-800 focus:text-indigo-800 active:text-indigo-800",
+        linkGray: "text-neutral-600 hover:text-neutral-900 focus:text-neutral-900 active:text-neutral-900"
+      },
+      size: {
+        md: "gap-1 text-sm",
+        lg: "gap-1.5 text-base",
+        xl: "gap-2 text-base",
+        xxl: "gap-2.5 text-lg"
+      },
+      disabled: {
+        true: "text-neutral-400 pointer-events-none",
+        false: ""
+      },
+      iconOnly: {
+        true: "gap-2",
+        false: ""
+      },
+      isDestructive: {
+        true: "focus:shadow-[0px_0px_0px_4px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,0.12),0px_0px_0px_1px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,1.00)]",
+        false: "focus:shadow-[0px_0px_0px_4px_rgba(0.2666666805744171,0.2980392277240753,0.9058823585510254,0.12)]"
+      }
+    },
+    compoundVariants: [
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive"],
+        size: "md",
+        className: "px-3.5 py-2.5"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive"],
+        size: "lg",
+        className: "px-4 py-2.5"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive"],
+        size: "xl",
+        className: "px-5 py-3"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive"],
+        size: "xxl",
+        className: "px-6 py-4"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive"],
+        disabled: true,
+        className: "bg-neutral-100 text-neutral-400 pointer-events-none"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"],
+        iconOnly: true,
+        size: "md",
+        className: "p-2.5 gap-2"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"],
+        iconOnly: true,
+        size: "lg",
+        className: "p-3 gap-2"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"],
+        iconOnly: true,
+        size: "xl",
+        className: "p-3.5"
+      },
+      {
+        variant: ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"],
+        iconOnly: true,
+        size: "xxl",
+        className: "p-4"
+      }
+    ],
+    defaultVariants: {
+      variant: "primary",
+      size: "md"
+    }
+  }
+);
 function _Button(props, ref) {
   const {
     children,
@@ -2551,29 +2642,18 @@ function _Button(props, ref) {
     variant = "primary",
     size = "md",
     className,
-    icon,
+    iconOnly,
     ...restProps
   } = props;
-  const isLinkButton = variant.includes("link");
   const isDestructive = variant === "destructive";
   return /* @__PURE__ */ jsxRuntime.jsx(
     "button",
     {
       ref,
       className: twMerge(
-        clsx(
-          styles$1.base,
-          styles$1[variant],
-          styles$1[size].gap,
-          styles$1[size].fontSize,
-          { [styles$1[size].padding]: !isLinkButton },
-          { [styles$1[size].icon]: icon },
-          { [styles$1.disabled]: disabled },
-          { [styles$1.boxShadow.standard]: !isDestructive },
-          { [styles$1.boxShadow.destructive]: isDestructive },
-          className
-        )
+        buttonStyles({ variant, size, disabled, iconOnly, isDestructive, className })
       ),
+      disabled,
       ...restProps,
       children
     }
@@ -2582,17 +2662,29 @@ function _Button(props, ref) {
 const Button = React.forwardRef(_Button);
 Button.displayName = "Button";
 
-const styles = {
-  base: "inline-flex items-center rounded-full border border-solid font-normal text-center",
-  neutral: "bg-gray-50 border-neutral-200 text-neutral-600",
-  danger: "bg-red-50 border-red-200 text-red-600",
-  warning: "bg-amber-50 border-amber-200 text-amber-600",
-  success: "bg-green-50 border-green-200 text-green-600",
-  brand: "bg-indigo-50 border-indigo-50 text-indigo-600",
-  sm: "text-xs px-1.5 py-0.5",
-  md: "text-sm px-2 py-0.5",
-  lg: "text-sm px-2.5 py-1"
-};
+const badgeStyles = cva(
+  "inline-flex items-center rounded-full border border-solid font-normal text-center",
+  {
+    variants: {
+      variant: {
+        neutral: "bg-gray-50 border-neutral-200 text-neutral-600",
+        danger: "bg-red-50 border-red-200 text-red-600",
+        warning: "bg-amber-50 border-amber-200 text-amber-600",
+        success: "bg-green-50 border-green-200 text-green-600",
+        brand: "bg-indigo-50 border-indigo-50 text-indigo-600"
+      },
+      size: {
+        sm: "text-xs px-1.5 py-0.5",
+        md: "text-sm px-2 py-0.5",
+        lg: "text-sm px-2.5 py-1"
+      }
+    },
+    defaultVariants: {
+      variant: "neutral",
+      size: "md"
+    }
+  }
+);
 function _Badge(props, ref) {
   const {
     as = "span",
@@ -2606,7 +2698,7 @@ function _Badge(props, ref) {
   return /* @__PURE__ */ jsxRuntime.jsx(
     Node,
     {
-      className: twMerge(clsx(styles.base, styles[variant], styles[size], className)),
+      className: twMerge(badgeStyles({ variant, size, className })),
       ...restProps,
       ref,
       children
@@ -2617,11 +2709,61 @@ const Badge = React.forwardRef(_Badge);
 Badge.displayName = "Badge";
 
 const SvgStarLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { viewBox: "0 0 16 16", xmlns: "http://www.w3.org/2000/svg", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8.00044 12.3471L3.10221 15.0889L4.19619 9.58317L0.0749512 5.77199L5.64928 5.11106L8.00044 0.0137939L10.3516 5.11106L15.9259 5.77199L11.8047 9.58317L12.8986 15.0889L8.00044 12.3471ZM8.00044 10.7555L10.9495 12.4062L10.2909 9.09136L12.7722 6.79671L9.416 6.39875L8.00044 3.32978L6.58485 6.39875L3.22865 6.79671L5.70997 9.09136L5.0513 12.4062L8.00044 10.7555Z" }));
-const ForwardRef = React.forwardRef(SvgStarLine);
+const ForwardRef$c = React.forwardRef(SvgStarLine);
+
+const SvgForwardEndFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M22 4C21.4477 4 21 4.44772 21 5V10.6665L11.7774 4.51806C11.6952 4.4633 11.5987 4.43408 11.5 4.43408C11.2239 4.43408 11 4.65794 11 4.93408V10.6665L1.77735 4.51806C1.69522 4.4633 1.59871 4.43408 1.5 4.43408C1.22386 4.43408 1 4.65794 1 4.93408V19.0656C1 19.1643 1.02922 19.2608 1.08397 19.3429C1.23715 19.5727 1.54759 19.6348 1.77735 19.4816L11 13.3332V19.0656C11 19.1643 11.0292 19.2608 11.084 19.3429C11.2372 19.5727 11.5476 19.6348 11.7774 19.4816L21 13.3332V19C21 19.5523 21.4477 20 22 20C22.5523 20 23 19.5523 23 19V5C23 4.44772 22.5523 4 22 4Z" }));
+const ForwardRef$b = React.forwardRef(SvgForwardEndFill);
+
+const SvgPauseLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 3H8V21H6V3ZM16 3H18V21H16V3Z" }));
+const ForwardRef$a = React.forwardRef(SvgPauseLargeFill);
+
+const SvgPlayLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 20.1957V3.80421C6 3.01878 6.86395 2.53993 7.53 2.95621L20.6432 11.152C21.2699 11.5436 21.2699 12.4563 20.6432 12.848L7.53 21.0437C6.86395 21.46 6 20.9812 6 20.1957Z" }));
+const ForwardRef$9 = React.forwardRef(SvgPlayLargeFill);
+
+const SvgRewindFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 10.6667L21.2227 4.51823C21.4524 4.36506 21.7629 4.42714 21.9161 4.65691C21.9708 4.73904 22 4.83554 22 4.93426V19.0657C22 19.3419 21.7762 19.5657 21.5 19.5657C21.4013 19.5657 21.3048 19.5365 21.2227 19.4818L12 13.3333V19.0657C12 19.3419 11.7762 19.5657 11.5 19.5657C11.4013 19.5657 11.3048 19.5365 11.2227 19.4818L0.62407 12.416C0.394306 12.2628 0.332219 11.9524 0.485395 11.7226C0.522013 11.6677 0.569144 11.6206 0.62407 11.584L11.2227 4.51823C11.4524 4.36506 11.7629 4.42714 11.9161 4.65691C11.9708 4.73904 12 4.83554 12 4.93426V10.6667Z" }));
+const ForwardRef$8 = React.forwardRef(SvgRewindFill);
+
+const SvgRewindStartFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 4C1.44772 4 1 4.44772 1 5V19C1 19.5523 1.44772 20 2 20C2.55228 20 3 19.5523 3 19V13.3332L12.2227 19.4816C12.3048 19.5364 12.4013 19.5656 12.5 19.5656C12.7762 19.5656 13 19.3418 13 19.0656V13.3332L22.2227 19.4816C22.3048 19.5364 22.4013 19.5656 22.5 19.5656C22.7762 19.5656 23 19.3418 23 19.0656V4.93413C23 4.83542 22.9708 4.73892 22.9161 4.65679C22.7629 4.42702 22.4524 4.36493 22.2227 4.51811L13 10.6665V4.93413C13 4.83542 12.9708 4.73892 12.9161 4.65679C12.7629 4.42702 12.4524 4.36493 12.2227 4.51811L3 10.6666V5C3 4.44772 2.55228 4 2 4Z" }));
+const ForwardRef$7 = React.forwardRef(SvgRewindStartFill);
+
+const SvgShuffleFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M18 17.8832V16L23 19L18 22V19.9095C14.9224 19.4698 12.2513 17.4584 11.0029 14.5453L11 14.5386L10.9971 14.5453C9.57893 17.8544 6.32508 20 2.72483 20H2V18H2.72483C5.52503 18 8.05579 16.3312 9.15885 13.7574L9.91203 12L9.15885 10.2426C8.05579 7.66878 5.52503 6 2.72483 6H2V4H2.72483C6.32508 4 9.57893 6.14557 10.9971 9.45473L11 9.46141L11.0029 9.45473C12.2513 6.5416 14.9224 4.53022 18 4.09051V2L23 5L18 8V6.11684C15.7266 6.53763 13.7737 8.0667 12.8412 10.2426L12.088 12L12.8412 13.7574C13.7737 15.9333 15.7266 17.4624 18 17.8832Z" }));
+const ForwardRef$6 = React.forwardRef(SvgShuffleFill);
+
+const SvgSpeedFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 13.3334L2.77735 19.4818C2.54759 19.635 2.23715 19.5729 2.08397 19.3432C2.02922 19.261 2 19.1645 2 19.0658V4.93433C2 4.65818 2.22386 4.43433 2.5 4.43433C2.59871 4.43433 2.69522 4.46355 2.77735 4.5183L12 10.6667V4.93433C12 4.65818 12.2239 4.43433 12.5 4.43433C12.5987 4.43433 12.6952 4.46355 12.7774 4.5183L23.376 11.584C23.6057 11.7372 23.6678 12.0477 23.5146 12.2774C23.478 12.3323 23.4309 12.3795 23.376 12.4161L12.7774 19.4818C12.5476 19.635 12.2372 19.5729 12.084 19.3432C12.0292 19.261 12 19.1645 12 19.0658V13.3334Z" }));
+const ForwardRef$5 = React.forwardRef(SvgSpeedFill);
+
+const SvgStopLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M3 4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4Z" }));
+const ForwardRef$4 = React.forwardRef(SvgStopLargeFill);
+
+const SvgVolumeMuteFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M5.88889 16H2C1.44772 16 1 15.5523 1 15V9.00001C1 8.44772 1.44772 8.00001 2 8.00001H5.88889L11.1834 3.66815C11.3971 3.49329 11.7121 3.52479 11.887 3.73851C11.9601 3.82784 12 3.93971 12 4.05513V19.9449C12 20.221 11.7761 20.4449 11.5 20.4449C11.3846 20.4449 11.2727 20.405 11.1834 20.3319L5.88889 16ZM20.4142 12L23.9497 15.5355L22.5355 16.9498L19 13.4142L15.4645 16.9498L14.0503 15.5355L17.5858 12L14.0503 8.46447L15.4645 7.05026L19 10.5858L22.5355 7.05026L23.9497 8.46447L20.4142 12Z" }));
+const ForwardRef$3 = React.forwardRef(SvgVolumeMuteFill);
+
+const SvgVolumeUpFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 16.0001H5.88889L11.1834 20.3319C11.2727 20.405 11.3846 20.4449 11.5 20.4449C11.7761 20.4449 12 20.2211 12 19.9449V4.05519C12 3.93977 11.9601 3.8279 11.887 3.73857C11.7121 3.52485 11.3971 3.49335 11.1834 3.66821L5.88889 8.00007H2C1.44772 8.00007 1 8.44778 1 9.00007V15.0001C1 15.5524 1.44772 16.0001 2 16.0001ZM23 12C23 15.292 21.5539 18.2463 19.2622 20.2622L17.8445 18.8444C19.7758 17.1937 21 14.7398 21 12C21 9.26016 19.7758 6.80629 17.8445 5.15557L19.2622 3.73779C21.5539 5.75368 23 8.70795 23 12ZM18 12C18 10.0883 17.106 8.38548 15.7133 7.28673L14.2842 8.71584C15.3213 9.43855 16 10.64 16 12C16 13.36 15.3213 14.5614 14.2842 15.2841L15.7133 16.7132C17.106 15.6145 18 13.9116 18 12Z" }));
+const ForwardRef$2 = React.forwardRef(SvgVolumeUpFill);
+
+const SvgRepeatFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 4H21C21.5523 4 22 4.44772 22 5V12H20V6H6V9L1 5L6 1V4ZM18 20H3C2.44772 20 2 19.5523 2 19V12H4V18H18V15L23 19L18 23V20Z" }));
+const ForwardRef$1 = React.forwardRef(SvgRepeatFill);
+
+const SvgDiscFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M13 9.17071C12.6872 9.06015 12.3506 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12V2.4578C19.0571 3.73207 22 7.52236 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C12.3375 2 12.6711 2.01672 13 2.04938V9.17071Z" }));
+const ForwardRef = React.forwardRef(SvgDiscFill);
 
 const icons = {
-  "star-line": ForwardRef
+  "star-line": ForwardRef$c,
+  "forward-end-fill": ForwardRef$b,
+  "pause-large-fill": ForwardRef$a,
+  "play-large-fill": ForwardRef$9,
+  "repeat-fill": ForwardRef$1,
+  "rewind-fill": ForwardRef$8,
+  "rewind-start-fill": ForwardRef$7,
+  "shuffle-fill": ForwardRef$6,
+  "speed-fill": ForwardRef$5,
+  "stop-large-fill": ForwardRef$4,
+  "volume-mute-fill": ForwardRef$3,
+  "volume-up-fill": ForwardRef$2,
+  "disc-fill": ForwardRef
 };
+
+function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f);}else for(f in e)e[f]&&(n&&(n+=" "),n+=f);return n}function clsx(){for(var e,t,f=0,n="",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}
 
 function _Icon(props, ref) {
   const { name, className, ...restProps } = props;

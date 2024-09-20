@@ -39,10 +39,10 @@ declare type iconButtonAccessibleProps = {
      * Switches to use icon button styling
      * @default false
      */
-    icon?: false;
+    iconOnly?: false;
     'aria-label'?: string;
 } | {
-    icon?: true;
+    iconOnly?: true;
     'aria-label': string;
 };
 
@@ -54,6 +54,18 @@ export declare interface IconProps extends SVGAttributes<SVGElement> {
 
 declare const icons: {
     readonly 'star-line': string;
+    readonly 'forward-end-fill': string;
+    readonly 'pause-large-fill': string;
+    readonly 'play-large-fill': string;
+    readonly 'repeat-fill': string;
+    readonly 'rewind-fill': string;
+    readonly 'rewind-start-fill': string;
+    readonly 'shuffle-fill': string;
+    readonly 'speed-fill': string;
+    readonly 'stop-large-fill': string;
+    readonly 'volume-mute-fill': string;
+    readonly 'volume-up-fill': string;
+    readonly 'disc-fill': string;
 };
 
 declare type Size = SizesAsTypes[number];

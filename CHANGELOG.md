@@ -1,3 +1,22 @@
+# [1.6.0](https://github.com/gdominguez210/gdom-ui/compare/v1.5.0...v1.6.0) (2024-09-13)
+
+
+### Bug Fixes
+
+* **lib/assets/svgs:** move SVG icons into svgs folder ([1c7c457](https://github.com/gdominguez210/gdom-ui/commit/1c7c457b1560618e1aa765854bf7af177afa8955))
+
+
+### Features
+
+* **lib/Icon/data:** update icons object ([3edd960](https://github.com/gdominguez210/gdom-ui/commit/3edd9602395421a62d17d423150ccfc6a989a69c))
+
+# [1.5.0](https://github.com/gdominguez210/gdom-ui/compare/v1.4.0...v1.5.0) (2024-09-13)
+
+
+### Features
+
+* **lib/assets:** add Audio player icons ([3fa8547](https://github.com/gdominguez210/gdom-ui/commit/3fa85472c950235083d3c3c8b420a839ec637e3d))
+
 # [1.4.0](https://github.com/gdominguez210/gdom-ui/compare/v1.3.0...v1.4.0) (2024-09-03)
 
 
