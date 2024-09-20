@@ -68,6 +68,7 @@ export const AudioPlayer: StoryObj<typeof AudioPlayerComponent> = {
             <div className="py-2">
               <AudioPlayerComponent.Title />
               <AudioPlayerComponent.Author />
+              <AudioPlayerComponent.Time />
             </div>
           </AudioPlayerComponent.Info>
           <AudioPlayerComponent.Controls />
