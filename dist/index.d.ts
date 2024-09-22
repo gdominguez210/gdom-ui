@@ -1,8 +1,125 @@
+import { Context } from 'react';
+import { Dispatch } from 'react';
 import { ElementType } from 'react';
 import { ForwardRefExoticComponent } from 'react';
 import { HTMLAttributes } from 'react';
+import { JSX as JSX_2 } from 'react/jsx-runtime';
+import { ReactNode } from 'react';
 import { RefAttributes } from 'react';
+import { RefObject } from 'react';
+import { SetStateAction } from 'react';
 import { SVGAttributes } from 'react';
+
+export declare function AudioPlayer(props: AudioPlayerProps): JSX_2.Element;
+
+export declare namespace AudioPlayer {
+    var Author: typeof AudioPlayerAuthor;
+    var ContextProvider: typeof AudioPlayerContextProvider;
+    var Controls: typeof AudioPlayerControls;
+    var Image: typeof AudioPlayerImage;
+    var Info: typeof AudioPlayerInfo;
+    var ProgressBar: typeof AudioPlayerProgressBar;
+    var Time: typeof AudioPlayerTime;
+    var Title: typeof AudioPlayerTitle;
+    var Volume: typeof AudioPlayerVolume;
+}
+
+export declare function AudioPlayerAuthor(props: AudioPlayerAuthorProps): JSX_2.Element | null;
+
+export declare interface AudioPlayerAuthorProps extends HTMLAttributes<HTMLElement> {
+    /** @default p */
+    as?: ElementType;
+}
+
+export declare const AudioPlayerContext: Context<AudioPlayerContextType | undefined>;
+
+export declare function AudioPlayerContextProvider(props: AudioPlayerContextProviderProps): JSX_2.Element;
+
+export declare interface AudioPlayerContextProviderProps {
+    /** @default 0 */
+    defaultTrackIndex?: number;
+    children: ReactNode;
+    tracks: AudioTrackData[];
+}
+
+export declare interface AudioPlayerContextType {
+    audioRef: RefObject<HTMLAudioElement>;
+    currentTime: number;
+    currentTrack: AudioTrackData | undefined;
+    duration: number;
+    isPlaying: boolean;
+    progressBarRef: RefObject<HTMLInputElement>;
+    setCurrentTime: Dispatch<SetStateAction<number>>;
+    setCurrentTrackIndex: Dispatch<SetStateAction<number>>;
+    setDuration: Dispatch<SetStateAction<number>>;
+    setIsPlaying: Dispatch<SetStateAction<boolean>>;
+    tracks: AudioTrackData[];
+}
+
+export declare function AudioPlayerControls(props: AudioPlayerControlsProps): JSX_2.Element;
+
+export declare interface AudioPlayerControlsProps extends HTMLAttributes<HTMLElement> {
+    /** @default div */
+    as?: ElementType;
+}
+
+export declare function AudioPlayerImage(props: AudioPlayerImageProps): JSX_2.Element;
+
+export declare interface AudioPlayerImageProps extends HTMLAttributes<HTMLDivElement> {
+    /** @default `${title} thumbnail` */
+    altText?: string;
+    /** @default 96 */
+    width?: number;
+    /** @default 96 */
+    height?: number;
+}
+
+export declare function AudioPlayerInfo(props: AudioPlayerInfoProps): JSX_2.Element;
+
+export declare interface AudioPlayerInfoProps extends HTMLAttributes<HTMLElement> {
+    /**
+     * @default div
+     * */
+    as?: ElementType;
+}
+
+export declare function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps): JSX_2.Element;
+
+export declare interface AudioPlayerProgressBarProps extends HTMLAttributes<HTMLInputElement> {
+}
+
+export declare interface AudioPlayerProps extends HTMLAttributes<HTMLElement> {
+    /** @default div */
+    as?: ElementType;
+}
+
+export declare function AudioPlayerTime(props: AudioPlayerTimeProps): JSX_2.Element;
+
+export declare interface AudioPlayerTimeProps extends HTMLAttributes<HTMLElement> {
+    /** @default span */
+    as?: ElementType;
+}
+
+export declare function AudioPlayerTitle(props: AudioPlayerTitleProps): JSX_2.Element | null;
+
+export declare interface AudioPlayerTitleProps extends HTMLAttributes<HTMLElement> {
+    /** @default p */
+    as?: ElementType;
+}
+
+export declare function AudioPlayerVolume(props: AudioPlayerVolumeProps): JSX_2.Element;
+
+export declare interface AudioPlayerVolumeProps extends HTMLAttributes<HTMLElement> {
+    /** @default div */
+    as?: ElementType;
+}
+
+export declare interface AudioTrackData {
+    title: string;
+    src: string;
+    author: string;
+    thumbnail?: string;
+}
 
 export declare const Badge: ForwardRefExoticComponent<BadgeProps & RefAttributes<HTMLElement>>;
 
@@ -64,6 +181,7 @@ declare const icons: {
     readonly 'speed-fill': string;
     readonly 'stop-large-fill': string;
     readonly 'volume-mute-fill': string;
+    readonly 'volume-down-fill': string;
     readonly 'volume-up-fill': string;
     readonly 'disc-fill': string;
 };
@@ -74,6 +192,8 @@ declare const sizes: readonly ["md", "lg", "xl", "xxl"];
 
 declare type SizesAsTypes = typeof sizes;
 
+export declare function useAudioPlayerContext(): AudioPlayerContextType;
+
 declare type Variant = VariantsAsTypes[number];
 
 declare const variants: readonly ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"];
@@ -81,3 +201,17 @@ declare const variants: readonly ["primary", "secondary", "tertiary", "destructi
 declare type VariantsAsTypes = typeof variants;
 
 export { }
+
+
+export declare namespace AudioPlayer {
+    var Author: typeof AudioPlayerAuthor;
+    var ContextProvider: typeof AudioPlayerContextProvider;
+    var Controls: typeof AudioPlayerControls;
+    var Image: typeof AudioPlayerImage;
+    var Info: typeof AudioPlayerInfo;
+    var ProgressBar: typeof AudioPlayerProgressBar;
+    var Time: typeof AudioPlayerTime;
+    var Title: typeof AudioPlayerTitle;
+    var Volume: typeof AudioPlayerVolume;
+}
+
