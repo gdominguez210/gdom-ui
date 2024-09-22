@@ -8,22 +8,32 @@ export interface AudioPlayerAuthorProps extends HTMLAttributes<HTMLElement> {
   as?: ElementType;
 }
 
-export function AudioPlayerAuthor(props: AudioPlayerAuthorProps) {
-  const { as = 'p', className, ...restProps } = props;
-
-  const { currentTrack: { author } = {} } = useAudioPlayerContext();
-
-  if (!author) return null;
+export function AudioPlayerAuthorBase(props: AudioPlayerAuthorProps) {
+  const { as = 'p', className, children, ...restProps } = props;
 
   const Node = as;
 
   return (
     <Node
       className={twMerge(clsx('text-sm text-gray-400 line-clamp-1', className))}
-      title={author}
       {...restProps}
     >
-      {author}
+      {children}
     </Node>
+  );
+}
+
+export function AudioPlayerAuthor(props: AudioPlayerAuthorProps) {
+  const { currentTrack: { author } = {} } = useAudioPlayerContext();
+
+  if (!author) return null;
+
+  return (
+    <AudioPlayerAuthorBase
+      {...props}
+      title={author}
+    >
+      {author}
+    </AudioPlayerAuthorBase>
   );
 }
