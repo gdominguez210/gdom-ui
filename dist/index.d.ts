@@ -1,3 +1,4 @@
+import { ChangeEventHandler } from 'react';
 import { Context } from 'react';
 import { Dispatch } from 'react';
 import { ElementType } from 'react';
@@ -25,6 +26,8 @@ export declare namespace AudioPlayer {
 }
 
 export declare function AudioPlayerAuthor(props: AudioPlayerAuthorProps): JSX_2.Element | null;
+
+export declare function AudioPlayerAuthorBase(props: AudioPlayerAuthorProps): JSX_2.Element;
 
 export declare interface AudioPlayerAuthorProps extends HTMLAttributes<HTMLElement> {
     /** @default p */
@@ -65,13 +68,21 @@ export declare interface AudioPlayerControlsProps extends HTMLAttributes<HTMLEle
 
 export declare function AudioPlayerImage(props: AudioPlayerImageProps): JSX_2.Element;
 
-export declare interface AudioPlayerImageProps extends HTMLAttributes<HTMLDivElement> {
-    /** @default `${title} thumbnail` */
-    altText?: string;
+export declare function AudioPlayerImageBase(props: AudioPlayerImageBaseProps): JSX_2.Element;
+
+export declare interface AudioPlayerImageBaseProps extends HTMLAttributes<HTMLDivElement> {
+    /** @default '' */
+    altText: string;
     /** @default 96 */
     width?: number;
     /** @default 96 */
     height?: number;
+    src?: string;
+}
+
+export declare interface AudioPlayerImageProps extends Omit<AudioPlayerImageBaseProps, 'src' | 'altText'> {
+    /** @default `${title} thumbnail` */
+    altText?: string;
 }
 
 export declare function AudioPlayerInfo(props: AudioPlayerInfoProps): JSX_2.Element;
@@ -84,6 +95,8 @@ export declare interface AudioPlayerInfoProps extends HTMLAttributes<HTMLElement
 }
 
 export declare function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps): JSX_2.Element;
+
+export declare const AudioPlayerProgressBarBase: ForwardRefExoticComponent<AudioPlayerProgressBarProps & RefAttributes<HTMLInputElement>>;
 
 export declare interface AudioPlayerProgressBarProps extends HTMLAttributes<HTMLInputElement> {
 }
@@ -101,6 +114,8 @@ export declare interface AudioPlayerTimeProps extends HTMLAttributes<HTMLElement
 }
 
 export declare function AudioPlayerTitle(props: AudioPlayerTitleProps): JSX_2.Element | null;
+
+export declare function AudioPlayerTitleBase(props: AudioPlayerTitleProps): JSX_2.Element;
 
 export declare interface AudioPlayerTitleProps extends HTMLAttributes<HTMLElement> {
     /** @default p */
@@ -149,6 +164,8 @@ declare interface CommonButtonProps extends React.ButtonHTMLAttributes<HTMLButto
     size?: Size;
 }
 
+export declare function formatAudioDurationForDisplay(audioDurationInSeconds?: number): string;
+
 export declare const Icon: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
 
 declare type iconButtonAccessibleProps = {
@@ -193,6 +210,14 @@ declare const sizes: readonly ["md", "lg", "xl", "xxl"];
 declare type SizesAsTypes = typeof sizes;
 
 export declare function useAudioPlayerContext(): AudioPlayerContextType;
+
+export declare function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps): {
+    handleProgressChange: ChangeEventHandler<HTMLInputElement>;
+};
+
+export declare interface useAudioPlayerProgressBarProps {
+    cssVariableName?: string;
+}
 
 declare type Variant = VariantsAsTypes[number];
 

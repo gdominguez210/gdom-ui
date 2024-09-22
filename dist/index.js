@@ -2518,17 +2518,26 @@ function useAudioPlayerContext() {
   return context;
 }
 
-function AudioPlayerAuthor(props) {
-  const { as = "p", className, ...restProps } = props;
-  const { currentTrack: { author } = {} } = useAudioPlayerContext();
-  if (!author) return null;
+function AudioPlayerAuthorBase(props) {
+  const { as = "p", className, children, ...restProps } = props;
   const Node = as;
   return /* @__PURE__ */ jsx(
     Node,
     {
       className: twMerge(clsx$1("text-sm text-gray-400 line-clamp-1", className)),
-      title: author,
       ...restProps,
+      children
+    }
+  );
+}
+function AudioPlayerAuthor(props) {
+  const { currentTrack: { author } = {} } = useAudioPlayerContext();
+  if (!author) return null;
+  return /* @__PURE__ */ jsx(
+    AudioPlayerAuthorBase,
+    {
+      ...props,
+      title: author,
       children: author
     }
   );
@@ -2752,9 +2761,8 @@ function AudioPlayerControls(props) {
   );
 }
 
-function AudioPlayerImage(props) {
-  const { altText, className, width = 96, height = 96, ...restProps } = props;
-  const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContext();
+function AudioPlayerImageBase(props) {
+  const { altText, className, width = 96, height = 96, src, ...restProps } = props;
   return /* @__PURE__ */ jsxs(
     "div",
     {
@@ -2766,18 +2774,29 @@ function AudioPlayerImage(props) {
       ),
       ...restProps,
       children: [
-        thumbnail && /* @__PURE__ */ jsx(
+        src && /* @__PURE__ */ jsx(
           "img",
           {
             className: "w-full h-full object-cover",
-            src: thumbnail,
-            alt: altText || `${title} thumbnail`,
+            src,
+            alt: altText,
             width,
             height
           }
         ),
-        !thumbnail && /* @__PURE__ */ jsx("div", { className: "flex items-center justify-center w-full h-full", children: /* @__PURE__ */ jsx("span", { className: "text-4xl", children: /* @__PURE__ */ jsx(Icon, { name: "disc-fill" }) }) })
+        !src && /* @__PURE__ */ jsx("div", { className: "flex items-center justify-center w-full h-full", children: /* @__PURE__ */ jsx("span", { className: "text-4xl", children: /* @__PURE__ */ jsx(Icon, { name: "disc-fill" }) }) })
       ]
+    }
+  );
+}
+function AudioPlayerImage(props) {
+  const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContext();
+  return /* @__PURE__ */ jsx(
+    AudioPlayerImageBase,
+    {
+      ...props,
+      src: thumbnail,
+      altText: props.altText || `${title} thumbnail`
     }
   );
 }
@@ -2795,8 +2814,8 @@ function AudioPlayerInfo(props) {
   );
 }
 
-function AudioPlayerProgressBar(props) {
-  const { className, ...restProps } = props;
+function useAudioPlayerProgressBar(props) {
+  const { cssVariableName = "--range-progress" } = props || {};
   const { isPlaying, progressBarRef, audioRef, setCurrentTime, duration, currentTrack } = useAudioPlayerContext();
   const animationRef = useRef(null);
   const handleProgressChange = useCallback(() => {
@@ -2804,23 +2823,20 @@ function AudioPlayerProgressBar(props) {
       const newTime = Number(progressBarRef.current.value);
       audioRef.current.currentTime = newTime;
       setCurrentTime(newTime);
-      progressBarRef.current.style.setProperty(
-        "--range-progress",
-        `${newTime / duration * 100}%`
-      );
+      progressBarRef.current.style.setProperty(cssVariableName, `${newTime / duration * 100}%`);
     }
-  }, [audioRef, progressBarRef, setCurrentTime, duration]);
+  }, [audioRef, progressBarRef, setCurrentTime, duration, cssVariableName]);
   const updateProgress = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
       const currentTime = audioRef.current.currentTime;
       setCurrentTime(currentTime);
       progressBarRef.current.value = currentTime.toString();
       progressBarRef.current.style.setProperty(
-        "--range-progress",
+        cssVariableName,
         `${currentTime / duration * 100}%`
       );
     }
-  }, [audioRef, progressBarRef, setCurrentTime, duration]);
+  }, [audioRef, progressBarRef, setCurrentTime, duration, cssVariableName]);
   const startAnimation = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
       const animate = () => {
@@ -2846,6 +2862,13 @@ function AudioPlayerProgressBar(props) {
       }
     };
   }, [isPlaying, duration, currentTrack, startAnimation, updateProgress]);
+  return {
+    handleProgressChange
+  };
+}
+
+function _AudioPlayerProgressBarBase(props, ref) {
+  const { className } = props;
   return /* @__PURE__ */ jsx(
     "input",
     {
@@ -2877,11 +2900,25 @@ function AudioPlayerProgressBar(props) {
           className
         )
       ),
-      ...restProps,
-      ref: progressBarRef,
+      ...props,
+      ref,
       type: "range",
-      defaultValue: "0",
-      onChange: handleProgressChange
+      defaultValue: "0"
+    }
+  );
+}
+const AudioPlayerProgressBarBase = forwardRef(
+  _AudioPlayerProgressBarBase
+);
+function AudioPlayerProgressBar(props) {
+  const { progressBarRef } = useAudioPlayerContext();
+  const { handleProgressChange } = useAudioPlayerProgressBar();
+  return /* @__PURE__ */ jsx(
+    AudioPlayerProgressBarBase,
+    {
+      ...props,
+      onChange: handleProgressChange,
+      ref: progressBarRef
     }
   );
 }
@@ -3958,6 +3995,7 @@ function formatAudioDurationForDisplay(audioDurationInSeconds = 0) {
   const formatWithZero = (num) => String(num).padStart(2, "0");
   return [hours, minutes, seconds].filter(isDefined).map(formatWithZero).join(":");
 }
+
 function AudioPlayerTime(props) {
   const { as = "span", className, ...restProps } = props;
   const { currentTime, duration } = useAudioPlayerContext();
@@ -3978,17 +4016,26 @@ function AudioPlayerTime(props) {
   );
 }
 
-function AudioPlayerTitle(props) {
-  const { as = "p", className, ...restProps } = props;
-  const { currentTrack: { title } = {} } = useAudioPlayerContext();
-  if (!title) return null;
+function AudioPlayerTitleBase(props) {
+  const { as = "p", children, className, ...restProps } = props;
   const Node = as;
   return /* @__PURE__ */ jsx(
     Node,
     {
       className: twMerge(clsx$1("font-bold lg:truncate lg:max-w-64 line-clamp-1", className)),
-      title,
       ...restProps,
+      children
+    }
+  );
+}
+function AudioPlayerTitle(props) {
+  const { currentTrack: { title } = {} } = useAudioPlayerContext();
+  if (!title) return null;
+  return /* @__PURE__ */ jsx(
+    AudioPlayerTitleBase,
+    {
+      title,
+      ...props,
       children: title
     }
   );
@@ -4281,4 +4328,4 @@ function _Button(props, ref) {
 const Button = forwardRef(_Button);
 Button.displayName = "Button";
 
-export { AudioPlayer, AudioPlayerAuthor, AudioPlayerContext, AudioPlayerContextProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerInfo, AudioPlayerProgressBar, AudioPlayerTime, AudioPlayerTitle, AudioPlayerVolume, Badge, Button, Icon, useAudioPlayerContext };
+export { AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorBase, AudioPlayerContext, AudioPlayerContextProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImageBase, AudioPlayerInfo, AudioPlayerProgressBar, AudioPlayerProgressBarBase, AudioPlayerTime, AudioPlayerTitle, AudioPlayerTitleBase, AudioPlayerVolume, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContext, useAudioPlayerProgressBar };

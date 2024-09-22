@@ -1,3 +1,16 @@
+# [1.8.0](https://github.com/gdominguez210/gdom-ui/compare/v1.7.0...v1.8.0) (2024-09-22)
+
+
+### Features
+
+* **lib/AudioPlayerAuthor:** add AudioPlayerAuthorBase ([e167856](https://github.com/gdominguez210/gdom-ui/commit/e167856f569c92ec3ae824997f51a9d423466c4a))
+* **lib/AudioPlayerImage:** add AudioPlayerImageBase ([fcf0721](https://github.com/gdominguez210/gdom-ui/commit/fcf072196942f2d124b70ffdee1b479fc9dbe0ab))
+* **lib/AudioPlayerProgressBar/useAudioPlayerProgressBar:** add useAudioPlayerProgressBar ([422ec3f](https://github.com/gdominguez210/gdom-ui/commit/422ec3f1fe693ebaf2a590272df18d714dabd014))
+* **lib/AudioPlayerProgressBar:** add AudioPlayerProgressBarBase ([c2d9613](https://github.com/gdominguez210/gdom-ui/commit/c2d9613a5055043d704e3f5d0014395c68d2ca82))
+* **lib/AudioPlayerTime/data:** expose formatAudioDurationForDisplay ([3f31df6](https://github.com/gdominguez210/gdom-ui/commit/3f31df6df5d99332756f758c58d9aba438b8b049))
+* **lib/AudioPlayerTime:** add AudioPlayerTimeBase ([0c2b3e8](https://github.com/gdominguez210/gdom-ui/commit/0c2b3e815d8c3edfbd4391478739726c696847c0))
+* **lib/AudioPlayerTitle:** add AudioPlayerTitleBase ([f69d4e8](https://github.com/gdominguez210/gdom-ui/commit/f69d4e82504f7ea8c17f3b14ac6f2ee5393f29f8))
+
 # [1.7.0](https://github.com/gdominguez210/gdom-ui/compare/v1.6.0...v1.7.0) (2024-09-20)
 
 
