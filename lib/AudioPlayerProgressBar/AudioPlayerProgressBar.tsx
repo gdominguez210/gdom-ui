@@ -1,80 +1,16 @@
-import {
-  useRef,
-  useEffect,
-  useCallback,
-  type HTMLAttributes,
-  type ChangeEventHandler,
-} from 'react';
+import { forwardRef, type HTMLAttributes, type Ref } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider';
+import { useAudioPlayerProgressBar } from './useAudioPlayerProgressBar';
 
 export interface AudioPlayerProgressBarProps extends HTMLAttributes<HTMLInputElement> {}
 
-export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
-  const { className, ...restProps } = props;
-
-  const { isPlaying, progressBarRef, audioRef, setCurrentTime, duration, currentTrack } =
-    useAudioPlayerContext();
-
-  const animationRef = useRef<number | null>(null);
-
-  const handleProgressChange: ChangeEventHandler<HTMLInputElement> = useCallback(() => {
-    if (audioRef.current && progressBarRef.current) {
-      const newTime = Number(progressBarRef.current.value);
-      audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
-
-      progressBarRef.current.style.setProperty(
-        '--range-progress',
-        `${(newTime / duration) * 100}%`,
-      );
-    }
-  }, [audioRef, progressBarRef, setCurrentTime, duration]);
-
-  const updateProgress = useCallback(() => {
-    if (audioRef?.current && progressBarRef?.current && duration) {
-      const currentTime = audioRef.current.currentTime;
-
-      setCurrentTime(currentTime);
-
-      progressBarRef.current.value = currentTime.toString();
-      progressBarRef.current.style.setProperty(
-        '--range-progress',
-        `${(currentTime / duration) * 100}%`,
-      );
-    }
-  }, [audioRef, progressBarRef, setCurrentTime, duration]);
-
-  const startAnimation = useCallback(() => {
-    if (audioRef?.current && progressBarRef?.current && duration) {
-      const animate = () => {
-        updateProgress();
-        animationRef.current = requestAnimationFrame(animate);
-      };
-
-      animationRef.current = requestAnimationFrame(animate);
-    }
-  }, [audioRef, progressBarRef, animationRef, duration, updateProgress]);
-
-  useEffect(() => {
-    if (isPlaying) {
-      startAnimation();
-    } else {
-      if (animationRef.current !== null) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
-      }
-
-      updateProgress();
-    }
-
-    return () => {
-      if (animationRef.current !== null) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [isPlaying, duration, currentTrack, startAnimation, updateProgress]);
+function _AudioPlayerProgressBarBase(
+  props: AudioPlayerProgressBarProps,
+  ref: Ref<HTMLInputElement>,
+) {
+  const { className } = props;
 
   return (
     <input
@@ -106,11 +42,27 @@ export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
           className,
         ),
       )}
-      {...restProps}
-      ref={progressBarRef}
+      {...props}
+      ref={ref}
       type="range"
       defaultValue="0"
+    />
+  );
+}
+
+export const AudioPlayerProgressBarBase = forwardRef<HTMLInputElement, AudioPlayerProgressBarProps>(
+  _AudioPlayerProgressBarBase,
+);
+
+export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
+  const { progressBarRef } = useAudioPlayerContext();
+  const { handleProgressChange } = useAudioPlayerProgressBar();
+
+  return (
+    <AudioPlayerProgressBarBase
+      {...props}
       onChange={handleProgressChange}
+      ref={progressBarRef}
     />
   );
 }
