@@ -11,6 +11,8 @@ import VolumeMuteFill from '@lib/assets/svgs/volume-mute-fill.svg';
 import VolumeDownFill from '@lib/assets/svgs/volume-down-fill.svg';
 import VolumeUpFill from '@lib/assets/svgs/volume-up-fill.svg';
 import RepeatFill from '@lib/assets/svgs/repeat-fill.svg';
+import RepeatOneFill from '@lib/assets/svgs/repeat-one-fill.svg';
+import Repeat2Fill from '@lib/assets/svgs/repeat-2-fill.svg';
 import DiscFill from '@lib/assets/svgs/disc-fill.svg';
 
 export const icons = {
@@ -19,6 +21,8 @@ export const icons = {
   'pause-large-fill': PauseLargeFill,
   'play-large-fill': PlayLargeFill,
   'repeat-fill': RepeatFill,
+  'repeat-one-fill': RepeatOneFill,
+  'repeat-2-fill': Repeat2Fill,
   'rewind-fill': RewindFill,
   'rewind-start-fill': RewindStartFill,
   'shuffle-fill': ShuffleFill,
