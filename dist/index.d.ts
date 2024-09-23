@@ -5,6 +5,7 @@ import { ElementType } from 'react';
 import { ForwardRefExoticComponent } from 'react';
 import { HTMLAttributes } from 'react';
 import { JSX as JSX_2 } from 'react/jsx-runtime';
+import { MouseEventHandler } from 'react';
 import { ReactNode } from 'react';
 import { RefAttributes } from 'react';
 import { RefObject } from 'react';
@@ -60,6 +61,22 @@ export declare interface AudioPlayerContextType {
 }
 
 export declare function AudioPlayerControls(props: AudioPlayerControlsProps): JSX_2.Element;
+
+export declare function AudioPlayerControlsBase(props: AudioPlayerControlsProps): JSX_2.Element;
+
+export declare function AudioPlayerControlsButtonLoop(props: AudioPlayerControlsButtonProps): JSX_2.Element;
+
+export declare function AudioPlayerControlsButtonNext(props: HTMLAttributes<HTMLButtonElement>): JSX_2.Element;
+
+export declare function AudioPlayerControlsButtonPlay(props: AudioPlayerControlsButtonProps): JSX_2.Element;
+
+export declare function AudioPlayerControlsButtonPrevious(props: HTMLAttributes<HTMLButtonElement>): JSX_2.Element;
+
+export declare interface AudioPlayerControlsButtonProps extends HTMLAttributes<HTMLButtonElement> {
+    active?: boolean;
+}
+
+export declare function AudioPlayerControlsButtonShuffle(props: AudioPlayerControlsButtonProps): JSX_2.Element;
 
 export declare interface AudioPlayerControlsProps extends HTMLAttributes<HTMLElement> {
     /** @default div */
@@ -192,6 +209,8 @@ declare const icons: {
     readonly 'pause-large-fill': string;
     readonly 'play-large-fill': string;
     readonly 'repeat-fill': string;
+    readonly 'repeat-one-fill': string;
+    readonly 'repeat-2-fill': string;
     readonly 'rewind-fill': string;
     readonly 'rewind-start-fill': string;
     readonly 'shuffle-fill': string;
@@ -210,6 +229,21 @@ declare const sizes: readonly ["md", "lg", "xl", "xxl"];
 declare type SizesAsTypes = typeof sizes;
 
 export declare function useAudioPlayerContext(): AudioPlayerContextType;
+
+export declare function useAudioPlayerControls(props: useAudioPlayerControlsProps): {
+    handlePrevTrack: MouseEventHandler<HTMLButtonElement>;
+    handleNextTrack: () => void;
+    handleLoadedMetadata: () => void;
+    resetTime: () => void;
+    shouldLoop: boolean;
+    shouldShuffle: boolean;
+    togglePlay: MouseEventHandler<HTMLButtonElement>;
+    toggleShuffle: MouseEventHandler<HTMLButtonElement>;
+    toggleLoop: MouseEventHandler<HTMLButtonElement>;
+};
+
+declare interface useAudioPlayerControlsProps extends AudioPlayerContextType {
+}
 
 export declare function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps): {
     handleProgressChange: ChangeEventHandler<HTMLInputElement>;

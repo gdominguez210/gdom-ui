@@ -1,3 +1,12 @@
+# [1.9.0](https://github.com/gdominguez210/gdom-ui/compare/v1.8.0...v1.9.0) (2024-09-23)
+
+
+### Features
+
+* **lib/assets/svgs:** add new repeat icons ([9927806](https://github.com/gdominguez210/gdom-ui/commit/9927806dd92ed7ac9c0412b9dd41897670ea236f))
+* **lib/AudioPlayerControls/useAudioPlayerControls:** add useAudioPlayerControls ([05a6d2f](https://github.com/gdominguez210/gdom-ui/commit/05a6d2f07038738a2bc94233d7a4fbe02ee570d1))
+* **lib/AudioPlayerControls:** add AudioPlayerControlsBase, AudioPlayerControlsButton ([27c1293](https://github.com/gdominguez210/gdom-ui/commit/27c1293606991febff3531f8339887178aa015ba))
+
 # [1.8.0](https://github.com/gdominguez210/gdom-ui/compare/v1.7.0...v1.8.0) (2024-09-22)
 
 
