@@ -1,121 +1,17 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  type MouseEventHandler,
-  type HTMLAttributes,
-  type ElementType,
-} from 'react';
+import { type HTMLAttributes, type ElementType } from 'react';
 import { Icon } from '@lib/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider';
+import { useAudioPlayerControls } from './useAudioPlayerControls';
 
 export interface AudioPlayerControlsProps extends HTMLAttributes<HTMLElement> {
   /** @default div */
   as?: ElementType;
 }
 
-export function AudioPlayerControls(props: AudioPlayerControlsProps) {
-  const { as = 'div', className, ...restProps } = props;
-
-  const {
-    currentTrack,
-    currentTime,
-    audioRef,
-    progressBarRef,
-    duration,
-    isPlaying,
-    setDuration,
-    setCurrentTime,
-    setCurrentTrackIndex,
-    setIsPlaying,
-    tracks,
-  } = useAudioPlayerContext();
-
-  const [shouldLoop, setShouldLoop] = useState<boolean>(false);
-  const [shouldShuffle, setShouldShuffle] = useState<boolean>(false);
-
-  const togglePlay: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
-    setIsPlaying((prevState) => !prevState);
-  }, [setIsPlaying]);
-
-  const toggleShuffle: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
-    setShouldShuffle((prevState) => !prevState);
-  }, [setShouldShuffle]);
-
-  const toggleLoop: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
-    setShouldLoop((prevState) => !prevState);
-  }, [setShouldLoop]);
-
-  const resetTime = useCallback(() => {
-    if (audioRef?.current) {
-      setCurrentTime(0);
-      audioRef.current.currentTime = 0;
-      return;
-    }
-  }, [audioRef, setCurrentTime]);
-
-  const handleNextTrack = useCallback(() => {
-    if (shouldLoop) {
-      resetTime();
-      return;
-    }
-
-    setCurrentTrackIndex((prevIndex) => {
-      if (shouldShuffle) {
-        return Math.floor(Math.random() * tracks.length);
-      }
-
-      return prevIndex >= tracks.length - 1 ? 0 : prevIndex + 1;
-    });
-  }, [shouldShuffle, shouldLoop, setCurrentTrackIndex, tracks, resetTime]);
-
-  const handlePrevTrack: MouseEventHandler<HTMLButtonElement> = () => {
-    if (currentTime >= 1 || shouldLoop) {
-      resetTime();
-      return;
-    }
-
-    setCurrentTrackIndex((prevIndex) => {
-      if (shouldShuffle) {
-        return Math.floor(Math.random() * tracks.length);
-      }
-
-      return prevIndex === 0 ? tracks.length - 1 : prevIndex - 1;
-    });
-  };
-
-  const onLoadedMetadata = useCallback(() => {
-    const seconds = audioRef.current?.duration;
-
-    if (typeof seconds !== 'undefined') {
-      setDuration(seconds);
-      if (progressBarRef.current) {
-        progressBarRef.current.max = seconds.toString();
-      }
-    }
-  }, [audioRef, progressBarRef, setDuration]);
-
-  useEffect(() => {
-    isPlaying ? audioRef?.current?.play() : audioRef?.current?.pause();
-  }, [isPlaying, duration, audioRef, currentTrack]);
-
-  useEffect(() => {
-    const currentAudioRef = audioRef.current;
-
-    if (currentAudioRef) {
-      currentAudioRef.onended = () => {
-        shouldLoop ? currentAudioRef.play() : handleNextTrack();
-      };
-    }
-
-    return () => {
-      if (currentAudioRef) {
-        currentAudioRef.onended = null;
-      }
-    };
-  }, [shouldLoop, audioRef, handleNextTrack]);
+export function AudioPlayerControlsBase(props: AudioPlayerControlsProps) {
+  const { as = 'div', children, className, ...restProps } = props;
 
   const Node = as;
 
@@ -124,44 +20,127 @@ export function AudioPlayerControls(props: AudioPlayerControlsProps) {
       className={twMerge(clsx('flex justify-center gap-4 items-center text-2xl p-4', className))}
       {...restProps}
     >
-      <audio
-        src={currentTrack?.src}
-        ref={audioRef}
-        onLoadedMetadata={onLoadedMetadata}
-      />
-      <button
-        onClick={toggleLoop}
-        className={clsx({ 'text-neutral-100/50': !shouldLoop }, 'hover:text-neutral-100')}
-      >
-        <Icon
-          name="repeat-fill"
-          className="scale-75"
-        />
-      </button>
-      <button onClick={handlePrevTrack}>
-        <Icon
-          name="rewind-start-fill"
-          className="scale-90"
-        />
-      </button>
-      <button onClick={togglePlay}>
-        {isPlaying ? <Icon name="pause-large-fill" /> : <Icon name="play-large-fill" />}
-      </button>
-      <button onClick={handleNextTrack}>
-        <Icon
-          name="forward-end-fill"
-          className="scale-90"
-        />
-      </button>
-      <button
-        onClick={toggleShuffle}
-        className={clsx({ 'text-neutral-100/50': !shouldShuffle }, 'hover:text-neutral-100')}
-      >
-        <Icon
-          name="shuffle-fill"
-          className="scale-75"
-        />
-      </button>
+      {children}
     </Node>
+  );
+}
+
+export interface AudioPlayerControlsButtonProps extends HTMLAttributes<HTMLButtonElement> {
+  active?: boolean;
+}
+
+export function AudioPlayerControlsButtonPlay(props: AudioPlayerControlsButtonProps) {
+  const { active = false, ...restProps } = props;
+
+  return (
+    <button {...restProps}>
+      {active ? <Icon name="pause-large-fill" /> : <Icon name="play-large-fill" />}
+    </button>
+  );
+}
+
+export function AudioPlayerControlsButtonLoop(props: AudioPlayerControlsButtonProps) {
+  const { active = false, className, ...restProps } = props;
+
+  return (
+    <button
+      className={twMerge(
+        clsx({ 'text-neutral-100/50': !active }, 'hover:text-neutral-100', className),
+      )}
+      {...restProps}
+    >
+      {active ? (
+        <Icon
+          name="repeat-one-fill"
+          className="scale-75"
+        />
+      ) : (
+        <Icon
+          name="repeat-2-fill"
+          className="scale-75"
+        />
+      )}
+    </button>
+  );
+}
+
+export function AudioPlayerControlsButtonShuffle(props: AudioPlayerControlsButtonProps) {
+  const { active = false, className, ...restProps } = props;
+
+  return (
+    <button
+      className={twMerge(
+        clsx({ 'text-neutral-100/50': !active }, 'hover:text-neutral-100', className),
+      )}
+      {...restProps}
+    >
+      <Icon
+        name="shuffle-fill"
+        className="scale-75"
+      />
+    </button>
+  );
+}
+
+export function AudioPlayerControlsButtonPrevious(props: HTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button {...props}>
+      <Icon
+        name="rewind-start-fill"
+        className="scale-90"
+      />
+    </button>
+  );
+}
+
+export function AudioPlayerControlsButtonNext(props: HTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button {...props}>
+      <Icon
+        name="forward-end-fill"
+        className="scale-90"
+      />
+    </button>
+  );
+}
+
+export function AudioPlayerControls(props: AudioPlayerControlsProps) {
+  const context = useAudioPlayerContext();
+
+  const { audioRef, currentTrack, isPlaying } = context;
+
+  const {
+    handleLoadedMetadata,
+    handlePrevTrack,
+    handleNextTrack,
+    shouldLoop,
+    shouldShuffle,
+    toggleLoop,
+    togglePlay,
+    toggleShuffle,
+  } = useAudioPlayerControls(context);
+
+  return (
+    <AudioPlayerControlsBase {...props}>
+      <audio
+        onLoadedMetadata={handleLoadedMetadata}
+        ref={audioRef}
+        src={currentTrack?.src}
+      />
+      <AudioPlayerControlsButtonLoop
+        active={shouldLoop}
+        onClick={toggleLoop}
+      />
+      <AudioPlayerControlsButtonPrevious onClick={handlePrevTrack} />
+      <AudioPlayerControlsButtonPlay
+        active={isPlaying}
+        onClick={togglePlay}
+      />
+      <AudioPlayerControlsButtonNext onClick={handleNextTrack} />
+      <AudioPlayerControlsButtonShuffle
+        active={shouldShuffle}
+        onClick={toggleShuffle}
+      />
+    </AudioPlayerControlsBase>
   );
 }
