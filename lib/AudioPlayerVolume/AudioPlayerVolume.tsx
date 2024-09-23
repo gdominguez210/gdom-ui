@@ -6,6 +6,7 @@ import {
   type MouseEventHandler,
   type ElementType,
   type ChangeEventHandler,
+  type RefObject,
 } from 'react';
 import { Icon } from '@lib/Icon';
 import clsx from 'clsx';
@@ -17,11 +18,46 @@ export interface AudioPlayerVolumeProps extends HTMLAttributes<HTMLElement> {
   as?: ElementType;
 }
 
-export function AudioPlayerVolume(props: AudioPlayerVolumeProps) {
-  const { as = 'div', className, ...restProps } = props;
-  const { audioRef } = useAudioPlayerContext();
+interface AudioPlayerVolumeLayoutProps extends AudioPlayerVolumeProps {
+  value: number;
+}
 
-  const [volume, setVolume] = useState<number>(60);
+function AudioPlayerVolumeLayout(props: AudioPlayerVolumeLayoutProps) {
+  const { as = 'div', className, children, onChange, onClick, value, ...restProps } = props;
+
+  const Node = as;
+
+  return (
+    <Node
+      className={twMerge(clsx('flex items-center gap-3', className))}
+      {...restProps}
+    >
+      <button
+        onClick={onClick}
+        className="text-2xl"
+      >
+        {children}
+      </button>
+      <input
+        className="cursor-pointer flex-grow"
+        type="range"
+        min="0"
+        max="100"
+        value={value}
+        onChange={onChange}
+      />
+    </Node>
+  );
+}
+
+interface useAudioPlayerVolumeProps {
+  ref: RefObject<HTMLAudioElement>;
+}
+
+function useAudioPlayerVolume(props: useAudioPlayerVolumeProps) {
+  const { ref } = props;
+
+  const [volume, setVolume] = useState<number>(50);
   const [mute, setMute] = useState(false);
 
   const handleVolumeChange: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -36,39 +72,54 @@ export function AudioPlayerVolume(props: AudioPlayerVolumeProps) {
   }, [setMute]);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume / 100;
-      audioRef.current.muted = mute;
+    if (ref.current) {
+      ref.current.volume = volume / 100;
+      ref.current.muted = mute;
     }
-  }, [volume, audioRef, mute]);
+  }, [volume, ref, mute]);
 
-  const showMuteIcon = mute || volume < 5;
-  const showVolume = !mute && volume >= 5 && volume < 40;
-  const showVolumeMax = !mute && volume >= 40;
+  return { handleVolumeChange, handleMute, volume, mute };
+}
 
-  const Node = as;
+export function AudioPlayerVolume(props: AudioPlayerVolumeProps) {
+  const { audioRef } = useAudioPlayerContext();
+
+  const { handleMute, handleVolumeChange, mute, volume } = useAudioPlayerVolume({ ref: audioRef });
+
+  if (mute || volume < 5) {
+    return (
+      <AudioPlayerVolumeLayout
+        {...props}
+        onClick={handleMute}
+        onChange={handleVolumeChange}
+        value={volume}
+      >
+        <Icon name="volume-mute-fill" />
+      </AudioPlayerVolumeLayout>
+    );
+  }
+
+  if (volume >= 40) {
+    return (
+      <AudioPlayerVolumeLayout
+        {...props}
+        onClick={handleMute}
+        onChange={handleVolumeChange}
+        value={volume}
+      >
+        <Icon name="volume-up-fill" />
+      </AudioPlayerVolumeLayout>
+    );
+  }
 
   return (
-    <Node
-      className={twMerge(clsx('flex items-center gap-3', className))}
-      {...restProps}
+    <AudioPlayerVolumeLayout
+      {...props}
+      onClick={handleMute}
+      onChange={handleVolumeChange}
+      value={volume}
     >
-      <button
-        onClick={handleMute}
-        className="text-2xl"
-      >
-        {showMuteIcon && <Icon name="volume-mute-fill" />}
-        {showVolume && <Icon name="volume-down-fill" />}
-        {showVolumeMax && <Icon name="volume-up-fill" />}
-      </button>
-      <input
-        className="cursor-pointer flex-grow"
-        type="range"
-        min={0}
-        max={100}
-        value={volume}
-        onChange={handleVolumeChange}
-      />
-    </Node>
+      <Icon name="volume-down-fill" />
+    </AudioPlayerVolumeLayout>
   );
 }
