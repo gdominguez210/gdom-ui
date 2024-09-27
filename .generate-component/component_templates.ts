@@ -9,11 +9,8 @@ export function ${name}(props: ${name}Props){
 };
 
 // component.stories.jsx
-export const story = (
-  name: string,
-) => `/* eslint-disable import/no-extraneous-dependencies, react/jsx-props-no-spreading */
-import type { StoryObj, Meta } from '@storybook/react';
-import { ${name} as ${name}Component } from  '@lib/${name}';
+export const story = (name: string) => `import type { StoryObj, Meta } from '@storybook/react';
+import { ${name} as ${name}Component } from  '@lib/${name}/${name}';
 
 export default {
   title: 'components/${name}',
@@ -26,14 +23,12 @@ export const ${name}: StoryObj<typeof ${name}Component> = {
 `;
 
 // component.test.tsx
-export const test = (name: string) => `
-
-import { render } from '@testing-library/react';
+export const test = (name: string) => `import { render } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 import { ${name} } from '@lib/${name}';
 
 describe('${name} should...', () => {
-  test('it should match the snapshot', () => {
+  test('match the snapshot', () => {
     const { container } = render(<${name} />);
     expect(container).toMatchSnapshot();
   });
