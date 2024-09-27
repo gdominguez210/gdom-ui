@@ -36,11 +36,11 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'jsdom',
+    environment: 'happy-dom',
     setupFiles: './lib/test/setup.ts',
     coverage: {
       all: false,
-      enabled: true,
+      enabled: false,
     },
   },
 });
