@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AudioPlayerAuthor should... > match the snapshot 1`] = `
+<div>
+  <p
+    class="line-clamp-1 text-sm text-gray-400"
+    title="Gary Dominguez"
+  >
+    Gary Dominguez
+  </p>
+</div>
+`;
