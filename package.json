@@ -72,7 +72,7 @@
     "autoprefixer": "^10.4.16",
     "clsx": "^2.0.0",
     "date-fns": "^4.1.0",
-    "eslint": "^8.55.0",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest-dom": "^5.1.0",
     "eslint-plugin-react": "^7.36.1",
