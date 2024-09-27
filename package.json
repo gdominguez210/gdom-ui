@@ -78,7 +78,7 @@
     "eslint-plugin-react": "^7.36.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.12",
-    "eslint-plugin-storybook": "^0.8.0",
+    "eslint-plugin-storybook": "^0.9.0",
     "happy-dom": "^15.7.4",
     "husky": "^9.1.6",
     "jsdom": "^23.0.1",
