@@ -24,7 +24,7 @@ export function AudioPlayer(props: AudioPlayerProps) {
   return (
     <Node
       className={twMerge(
-        clsx('bg-slate-700 flex flex-col justify-center text-neutral-100', className),
+        clsx('flex flex-col justify-center bg-slate-700 text-neutral-100', className),
       )}
     >
       {children}
