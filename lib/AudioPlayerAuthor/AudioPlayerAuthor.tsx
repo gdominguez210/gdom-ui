@@ -1,7 +1,7 @@
 import { type HTMLAttributes, type ElementType } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider';
+import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
 
 export interface AudioPlayerAuthorProps extends HTMLAttributes<HTMLElement> {
   /** @default p */
@@ -15,7 +15,7 @@ export function AudioPlayerAuthorBase(props: AudioPlayerAuthorProps) {
 
   return (
     <Node
-      className={twMerge(clsx('text-sm text-gray-400 line-clamp-1', className))}
+      className={twMerge(clsx('line-clamp-1 text-sm text-gray-400', className))}
       {...restProps}
     >
       {children}
