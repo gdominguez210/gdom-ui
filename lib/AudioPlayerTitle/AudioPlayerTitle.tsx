@@ -1,7 +1,7 @@
 import { type ElementType, type HTMLAttributes } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider';
+import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
 
 export interface AudioPlayerTitleProps extends HTMLAttributes<HTMLElement> {
   /** @default p */

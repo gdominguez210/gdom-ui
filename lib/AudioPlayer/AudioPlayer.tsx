@@ -1,15 +1,15 @@
 import { type HTMLAttributes, type ElementType } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { AudioPlayerAuthor } from '@lib/AudioPlayerAuthor';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
-import { AudioPlayerControls } from '@lib/AudioPlayerControls';
-import { AudioPlayerImage } from '@lib/AudioPlayerImage';
-import { AudioPlayerInfo } from '@lib/AudioPlayerInfo';
-import { AudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar';
-import { AudioPlayerTime } from '@lib/AudioPlayerTime';
-import { AudioPlayerTitle } from '@lib/AudioPlayerTitle';
-import { AudioPlayerVolume } from '@lib/AudioPlayerVolume';
+import { AudioPlayerAuthor } from '@lib/AudioPlayerAuthor/AudioPlayerAuthor';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { AudioPlayerControls } from '@lib/AudioPlayerControls/AudioPlayerControls';
+import { AudioPlayerImage } from '@lib/AudioPlayerImage/AudioPlayerImage';
+import { AudioPlayerInfo } from '@lib/AudioPlayerInfo/AudioPlayerInfo';
+import { AudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/AudioPlayerProgressBar';
+import { AudioPlayerTime } from '@lib/AudioPlayerTime/AudioPlayerTime';
+import { AudioPlayerTitle } from '@lib/AudioPlayerTitle/AudioPlayerTitle';
+import { AudioPlayerVolume } from '@lib/AudioPlayerVolume/AudioPlayerVolume';
 
 export interface AudioPlayerProps extends HTMLAttributes<HTMLElement> {
   /** @default div */

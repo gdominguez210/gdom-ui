@@ -11,7 +11,7 @@ import {
 import { Icon } from '@lib/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider';
+import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
 
 export interface AudioPlayerVolumeProps extends HTMLAttributes<HTMLElement> {
   /** @default div */

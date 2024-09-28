@@ -1,8 +1,8 @@
 import { type HTMLAttributes, type ElementType } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider';
-import { formatAudioDurationForDisplay } from './data';
+import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { formatAudioDurationForDisplay } from '@lib/AudioPlayerTime/data';
 
 export interface AudioPlayerTimeProps extends HTMLAttributes<HTMLElement> {
   /** @default span */

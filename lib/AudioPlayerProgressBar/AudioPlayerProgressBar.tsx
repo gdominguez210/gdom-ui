@@ -1,8 +1,8 @@
 import { forwardRef, type HTMLAttributes, type Ref } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider';
-import { useAudioPlayerProgressBar } from './useAudioPlayerProgressBar';
+import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/useAudioPlayerProgressBar';
 
 export interface AudioPlayerProgressBarProps extends HTMLAttributes<HTMLInputElement> {}
 

@@ -1,8 +1,8 @@
 import { type HTMLAttributes } from 'react';
-import { Icon } from '@lib/Icon';
+import { Icon } from '@lib/Icon/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider';
+import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
 
 export interface AudioPlayerImageBaseProps extends HTMLAttributes<HTMLDivElement> {
   /** @default '' */
@@ -26,7 +26,7 @@ export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
     <div
       className={twMerge(
         clsx(
-          'w-24 h-24 flex items-center justify-center bg-neutral-100/10 rounded-md overflow-hidden',
+          'flex h-24 w-24 items-center justify-center overflow-hidden rounded-md bg-neutral-100/10',
           className,
         ),
       )}
@@ -34,7 +34,7 @@ export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
     >
       {src && (
         <img
-          className="w-full h-full object-cover"
+          className="h-full w-full object-cover"
           src={src}
           alt={altText}
           width={width}
@@ -42,7 +42,7 @@ export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
         />
       )}
       {!src && (
-        <div className="flex items-center justify-center w-full h-full">
+        <div className="flex h-full w-full items-center justify-center">
           <span className="text-4xl">
             <Icon name="disc-fill" />
           </span>

@@ -1,9 +1,9 @@
 import { type HTMLAttributes, type ElementType } from 'react';
-import { Icon } from '@lib/Icon';
+import { Icon } from '@lib/Icon/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider';
-import { useAudioPlayerControls } from './useAudioPlayerControls';
+import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { useAudioPlayerControls } from '@lib/AudioPlayerControls/useAudioPlayerControls';
 
 export interface AudioPlayerControlsProps extends HTMLAttributes<HTMLElement> {
   /** @default div */
@@ -17,7 +17,7 @@ export function AudioPlayerControlsBase(props: AudioPlayerControlsProps) {
 
   return (
     <Node
-      className={twMerge(clsx('flex justify-center gap-4 items-center text-2xl p-4', className))}
+      className={twMerge(clsx('flex items-center justify-center gap-4 p-4 text-2xl', className))}
       {...restProps}
     >
       {children}
