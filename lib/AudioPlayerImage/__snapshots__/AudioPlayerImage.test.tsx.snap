@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AudioPlayerImage should... > match the snapshot 1`] = `
+<div>
+  <div
+    class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-md bg-neutral-100/10"
+  >
+    <img
+      alt="Electro Swing House thumbnail"
+      class="h-full w-full object-cover"
+      height="96"
+      src="https://cdn2.suno.ai/image_7fa89cca-b468-4ec4-9649-70dd745acd12.jpeg"
+      width="96"
+    />
+  </div>
+</div>
+`;
