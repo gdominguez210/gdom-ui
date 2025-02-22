@@ -1,34 +1,46 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  type HTMLAttributes,
-  type MouseEventHandler,
-  type ElementType,
-  type ChangeEventHandler,
-  type RefObject,
-} from 'react';
-import { Icon } from '@lib/Icon';
 import clsx from 'clsx';
+import {
+  type ChangeEventHandler,
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type MouseEventHandler,
+  type RefObject,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
+
 import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { Icon } from '@lib/Icon';
 
-export interface AudioPlayerVolumeProps extends HTMLAttributes<HTMLElement> {
+export type AudioPlayerVolumeProps<T extends ElementType = 'div'> = {
   /** @default div */
-  as?: ElementType;
-}
+  as?: T;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+} & ComponentPropsWithoutRef<T>;
 
-interface AudioPlayerVolumeLayoutProps extends AudioPlayerVolumeProps {
+export type AudioPlayerVolumeLayoutProps<T extends ElementType> = AudioPlayerVolumeProps<T> & {
+  max?: number;
+  min?: number;
   value: number;
-}
+};
 
-function AudioPlayerVolumeLayout(props: AudioPlayerVolumeLayoutProps) {
-  const { as = 'div', className, children, onChange, onClick, value, ...restProps } = props;
-
-  const Node = as;
+function AudioPlayerVolumeLayout<T extends ElementType>(props: AudioPlayerVolumeLayoutProps<T>) {
+  const {
+    as: Element = 'div',
+    className,
+    children,
+    max = 100,
+    min = 0,
+    onChange,
+    onClick,
+    value,
+    ...restProps
+  } = props;
 
   return (
-    <Node
+    <Element
       className={twMerge(clsx('flex items-center gap-3', className))}
       {...restProps}
     >
@@ -41,23 +53,24 @@ function AudioPlayerVolumeLayout(props: AudioPlayerVolumeLayoutProps) {
       <input
         className="cursor-pointer flex-grow"
         type="range"
-        min="0"
-        max="100"
+        min={min}
+        max={max}
         value={value}
         onChange={onChange}
       />
-    </Node>
+    </Element>
   );
 }
 
 interface useAudioPlayerVolumeProps {
+  defaultVolume?: number;
   ref: RefObject<HTMLAudioElement>;
 }
 
 function useAudioPlayerVolume(props: useAudioPlayerVolumeProps) {
-  const { ref } = props;
+  const { ref, defaultVolume = 50 } = props;
 
-  const [volume, setVolume] = useState<number>(50);
+  const [volume, setVolume] = useState(defaultVolume);
   const [mute, setMute] = useState(false);
 
   const handleVolumeChange: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -81,7 +94,7 @@ function useAudioPlayerVolume(props: useAudioPlayerVolumeProps) {
   return { handleVolumeChange, handleMute, volume, mute };
 }
 
-export function AudioPlayerVolume(props: AudioPlayerVolumeProps) {
+export function AudioPlayerVolume<T extends ElementType>(props: AudioPlayerVolumeProps<T>) {
   const { audioRef } = useAudioPlayerContext();
 
   const { handleMute, handleVolumeChange, mute, volume } = useAudioPlayerVolume({ ref: audioRef });
