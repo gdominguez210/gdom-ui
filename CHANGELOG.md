@@ -1,3 +1,23 @@
+# [1.10.0](https://github.com/gdominguez210/gdom-ui/compare/v1.9.0...v1.10.0) (2025-02-22)
+
+
+### Bug Fixes
+
+* **AudioPlayerAuthor:** add the generic type to the function signature for AudioPlayerAuthor ([4e6485a](https://github.com/gdominguez210/gdom-ui/commit/4e6485a36d665f4ef59e989bef2f76b45893213c))
+* **AudioPlayerAuthor:** refactor component type to be truly polymorphic ([587b5b2](https://github.com/gdominguez210/gdom-ui/commit/587b5b2a382cd1cac0da58cc35aa485e98145184))
+* **AudioPlayerControls:** refactor component type to be truly polymorphic ([ef33d54](https://github.com/gdominguez210/gdom-ui/commit/ef33d5442ffa55419530aabde77914c5137c1012))
+* **AudioPlayerInfo:** refactor component type to be truly polymorphic ([ac0fe1d](https://github.com/gdominguez210/gdom-ui/commit/ac0fe1deceece5921affd4c51722f486566402b3))
+* **AudioPlayer:** refactor component type to be truly polymorphic ([68c5dbf](https://github.com/gdominguez210/gdom-ui/commit/68c5dbff9ef99f966bd944d3761d4ee3e1e421ee))
+* **AudioPlayerTime:** refactor component type to be truly polymorphic ([1ec23fd](https://github.com/gdominguez210/gdom-ui/commit/1ec23fd9005d698bd8e9a2960e8b8a0c91d2bcea))
+* **AudioPlayerTitle:** refactor component type to be truly polymorphic ([01d9e75](https://github.com/gdominguez210/gdom-ui/commit/01d9e754e009df070854ed1bb8b13080d01cbb92))
+* **AudioPlayerVolume:** refactor component type to be truly polymorphic ([d336b93](https://github.com/gdominguez210/gdom-ui/commit/d336b93de9e579f58e98b534638db2130fb7141a))
+* **Icon/data:** support forwarded Ref on Icon components from SVGR ([31ac7da](https://github.com/gdominguez210/gdom-ui/commit/31ac7da2debf7eed47132bfb338c5d4c078f4a66))
+
+
+### Features
+
+* **lib/AudioPlayerTime/useAudioPlayerTime:** add useAudioPlayerTime ([6a095fd](https://github.com/gdominguez210/gdom-ui/commit/6a095fd4a3f7077c79c72d3982522201286e57af))
+
 # [1.9.0](https://github.com/gdominguez210/gdom-ui/compare/v1.8.0...v1.9.0) (2024-09-23)
 
 

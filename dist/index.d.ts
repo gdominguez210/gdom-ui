@@ -1,4 +1,5 @@
 import { ChangeEventHandler } from 'react';
+import { ComponentPropsWithoutRef } from 'react';
 import { Context } from 'react';
 import { Dispatch } from 'react';
 import { ElementType } from 'react';
@@ -11,8 +12,9 @@ import { RefAttributes } from 'react';
 import { RefObject } from 'react';
 import { SetStateAction } from 'react';
 import { SVGAttributes } from 'react';
+import { SVGProps } from 'react';
 
-export declare function AudioPlayer(props: AudioPlayerProps): JSX_2.Element;
+export declare function AudioPlayer<T extends ElementType>(props: AudioPlayerProps<T>): JSX_2.Element;
 
 export declare namespace AudioPlayer {
     var Author: typeof AudioPlayerAuthor;
@@ -26,14 +28,14 @@ export declare namespace AudioPlayer {
     var Volume: typeof AudioPlayerVolume;
 }
 
-export declare function AudioPlayerAuthor(props: AudioPlayerAuthorProps): JSX_2.Element | null;
+export declare function AudioPlayerAuthor<T extends ElementType>(props: AudioPlayerAuthorProps<T>): JSX_2.Element | null;
 
-export declare function AudioPlayerAuthorBase(props: AudioPlayerAuthorProps): JSX_2.Element;
+export declare function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerAuthorProps<T>): JSX_2.Element;
 
-export declare interface AudioPlayerAuthorProps extends HTMLAttributes<HTMLElement> {
+export declare type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
     /** @default p */
-    as?: ElementType;
-}
+    as?: T;
+} & ComponentPropsWithoutRef<T>;
 
 export declare const AudioPlayerContext: Context<AudioPlayerContextType | undefined>;
 
@@ -62,7 +64,7 @@ export declare interface AudioPlayerContextType {
 
 export declare function AudioPlayerControls(props: AudioPlayerControlsProps): JSX_2.Element;
 
-export declare function AudioPlayerControlsBase(props: AudioPlayerControlsProps): JSX_2.Element;
+export declare function AudioPlayerControlsBase<T extends ElementType>(props: AudioPlayerControlsProps<T>): JSX_2.Element;
 
 export declare function AudioPlayerControlsButtonLoop(props: AudioPlayerControlsButtonProps): JSX_2.Element;
 
@@ -78,10 +80,10 @@ export declare interface AudioPlayerControlsButtonProps extends HTMLAttributes<H
 
 export declare function AudioPlayerControlsButtonShuffle(props: AudioPlayerControlsButtonProps): JSX_2.Element;
 
-export declare interface AudioPlayerControlsProps extends HTMLAttributes<HTMLElement> {
+export declare type AudioPlayerControlsProps<T extends ElementType = 'div'> = {
     /** @default div */
-    as?: ElementType;
-}
+    as?: T;
+} & ComponentPropsWithoutRef<T>;
 
 export declare function AudioPlayerImage(props: AudioPlayerImageProps): JSX_2.Element;
 
@@ -102,14 +104,14 @@ export declare interface AudioPlayerImageProps extends Omit<AudioPlayerImageBase
     altText?: string;
 }
 
-export declare function AudioPlayerInfo(props: AudioPlayerInfoProps): JSX_2.Element;
+export declare function AudioPlayerInfo<T extends ElementType>(props: AudioPlayerInfoProps<T>): JSX_2.Element;
 
-export declare interface AudioPlayerInfoProps extends HTMLAttributes<HTMLElement> {
+export declare type AudioPlayerInfoProps<T extends ElementType = 'div'> = {
     /**
      * @default div
      * */
-    as?: ElementType;
-}
+    as?: T;
+} & ComponentPropsWithoutRef<T>;
 
 export declare function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps): JSX_2.Element;
 
@@ -118,33 +120,44 @@ export declare const AudioPlayerProgressBarBase: ForwardRefExoticComponent<Audio
 export declare interface AudioPlayerProgressBarProps extends HTMLAttributes<HTMLInputElement> {
 }
 
-export declare interface AudioPlayerProps extends HTMLAttributes<HTMLElement> {
+export declare type AudioPlayerProps<T extends ElementType = 'div'> = {
     /** @default div */
-    as?: ElementType;
-}
+    as?: T;
+} & ComponentPropsWithoutRef<T>;
 
-export declare function AudioPlayerTime(props: AudioPlayerTimeProps): JSX_2.Element;
+export declare function AudioPlayerTime(props: Omit<AudioPlayerTimeProps, 'currentTime' | 'duration'>): JSX_2.Element;
 
-export declare interface AudioPlayerTimeProps extends HTMLAttributes<HTMLElement> {
+export declare function AudioPlayerTimeBase<T extends ElementType>(props: AudioPlayerTimeProps<T>): JSX_2.Element;
+
+export declare type AudioPlayerTimeProps<T extends ElementType = 'div'> = {
     /** @default span */
-    as?: ElementType;
-}
+    as?: T;
+    currentTime: string;
+    duration: string;
+} & ComponentPropsWithoutRef<T>;
 
-export declare function AudioPlayerTitle(props: AudioPlayerTitleProps): JSX_2.Element | null;
+export declare function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>): JSX_2.Element | null;
 
-export declare function AudioPlayerTitleBase(props: AudioPlayerTitleProps): JSX_2.Element;
+export declare function AudioPlayerTitleBase<T extends ElementType>(props: AudioPlayerTitleProps<T>): JSX_2.Element;
 
-export declare interface AudioPlayerTitleProps extends HTMLAttributes<HTMLElement> {
+export declare type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
     /** @default p */
-    as?: ElementType;
-}
+    as?: T;
+} & ComponentPropsWithoutRef<T>;
 
-export declare function AudioPlayerVolume(props: AudioPlayerVolumeProps): JSX_2.Element;
+export declare function AudioPlayerVolume<T extends ElementType>(props: AudioPlayerVolumeProps<T>): JSX_2.Element;
 
-export declare interface AudioPlayerVolumeProps extends HTMLAttributes<HTMLElement> {
+export declare type AudioPlayerVolumeLayoutProps<T extends ElementType> = AudioPlayerVolumeProps<T> & {
+    max?: number;
+    min?: number;
+    value: number;
+};
+
+export declare type AudioPlayerVolumeProps<T extends ElementType = 'div'> = {
     /** @default div */
-    as?: ElementType;
-}
+    as?: T;
+    onClick?: MouseEventHandler<HTMLButtonElement>;
+} & ComponentPropsWithoutRef<T>;
 
 export declare interface AudioTrackData {
     title: string;
@@ -204,22 +217,22 @@ export declare interface IconProps extends SVGAttributes<SVGElement> {
 }
 
 declare const icons: {
-    readonly 'star-line': string;
-    readonly 'forward-end-fill': string;
-    readonly 'pause-large-fill': string;
-    readonly 'play-large-fill': string;
-    readonly 'repeat-fill': string;
-    readonly 'repeat-one-fill': string;
-    readonly 'repeat-2-fill': string;
-    readonly 'rewind-fill': string;
-    readonly 'rewind-start-fill': string;
-    readonly 'shuffle-fill': string;
-    readonly 'speed-fill': string;
-    readonly 'stop-large-fill': string;
-    readonly 'volume-mute-fill': string;
-    readonly 'volume-down-fill': string;
-    readonly 'volume-up-fill': string;
-    readonly 'disc-fill': string;
+    readonly 'star-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'forward-end-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'pause-large-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'play-large-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'repeat-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'repeat-one-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'repeat-2-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'rewind-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'rewind-start-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'shuffle-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'speed-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'stop-large-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'volume-mute-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'volume-down-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'volume-up-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'disc-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
 };
 
 declare type Size = SizesAsTypes[number];
@@ -253,6 +266,11 @@ export declare interface useAudioPlayerProgressBarProps {
     cssVariableName?: string;
 }
 
+export declare function useAudioPlayerTime(props: Pick<AudioPlayerContextType, 'currentTime' | 'duration'>): {
+    currentTimeDisplay: string;
+    durationDisplay: string;
+};
+
 declare type Variant = VariantsAsTypes[number];
 
 declare const variants: readonly ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"];
@@ -260,17 +278,3 @@ declare const variants: readonly ["primary", "secondary", "tertiary", "destructi
 declare type VariantsAsTypes = typeof variants;
 
 export { }
-
-
-export declare namespace AudioPlayer {
-    var Author: typeof AudioPlayerAuthor;
-    var ContextProvider: typeof AudioPlayerContextProvider;
-    var Controls: typeof AudioPlayerControls;
-    var Image: typeof AudioPlayerImage;
-    var Info: typeof AudioPlayerInfo;
-    var ProgressBar: typeof AudioPlayerProgressBar;
-    var Time: typeof AudioPlayerTime;
-    var Title: typeof AudioPlayerTitle;
-    var Volume: typeof AudioPlayerVolume;
-}
-
