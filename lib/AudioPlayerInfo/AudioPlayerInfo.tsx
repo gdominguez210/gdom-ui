@@ -1,25 +1,23 @@
-import type { ElementType, HTMLAttributes } from 'react';
 import clsx from 'clsx';
+import type { ComponentPropsWithoutRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-export interface AudioPlayerInfoProps extends HTMLAttributes<HTMLElement> {
+export type AudioPlayerInfoProps<T extends ElementType = 'div'> = {
   /**
    * @default div
    * */
-  as?: ElementType;
-}
+  as?: T;
+} & ComponentPropsWithoutRef<T>;
 
-export function AudioPlayerInfo(props: AudioPlayerInfoProps) {
-  const { as = 'div', className, children, ...restProps } = props;
-
-  const Node = as;
+export function AudioPlayerInfo<T extends ElementType>(props: AudioPlayerInfoProps<T>) {
+  const { as: Element = 'div', className, children, ...restProps } = props;
 
   return (
-    <Node
+    <Element
       className={twMerge(clsx('flex items-center gap-4', className))}
       {...restProps}
     >
       {children}
-    </Node>
+    </Element>
   );
 }
