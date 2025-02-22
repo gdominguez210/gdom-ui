@@ -22,7 +22,7 @@ export function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerA
   );
 }
 
-export function AudioPlayerAuthor(props: AudioPlayerAuthorProps) {
+export function AudioPlayerAuthor<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
   const { currentTrack: { author } = {} } = useAudioPlayerContext();
 
   if (!author) return null;
