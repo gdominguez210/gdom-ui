@@ -1,25 +1,24 @@
-import { type HTMLAttributes, type ElementType } from 'react';
 import clsx from 'clsx';
+import type { ComponentPropsWithoutRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
+
 import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
 
-export interface AudioPlayerAuthorProps extends HTMLAttributes<HTMLElement> {
+export type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
   /** @default p */
-  as?: ElementType;
-}
+  as?: T;
+} & ComponentPropsWithoutRef<T>;
 
-export function AudioPlayerAuthorBase(props: AudioPlayerAuthorProps) {
-  const { as = 'p', className, children, ...restProps } = props;
-
-  const Node = as;
+export function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
+  const { as: Element = 'p', className, children, ...restProps } = props;
 
   return (
-    <Node
+    <Element
       className={twMerge(clsx('line-clamp-1 text-sm text-gray-400', className))}
       {...restProps}
     >
       {children}
-    </Node>
+    </Element>
   );
 }
 
