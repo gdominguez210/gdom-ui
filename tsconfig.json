@@ -71,7 +71,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": true,
   },
-  "include": ["./lib/**/*.ts", "./lib/**/*.tsx"],
+  "include": ["./lib/**/*.ts", "./lib/**/*.tsx", "global.d.ts"],
   "files": [
     "declarations.d.ts"
   ]

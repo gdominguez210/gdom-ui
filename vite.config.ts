@@ -15,7 +15,7 @@ export default defineConfig({
     svgr({
       include: '**/*.svg',
       svgrOptions: {
-        exportType: 'default',
+        exportType: 'named',
         svgo: false,
         ref: true,
         icon: true,
