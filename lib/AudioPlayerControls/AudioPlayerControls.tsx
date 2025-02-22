@@ -1,27 +1,26 @@
-import { type HTMLAttributes, type ElementType } from 'react';
-import { Icon } from '@lib/Icon/Icon';
 import clsx from 'clsx';
+import type { ComponentPropsWithoutRef, ElementType, HTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
+
 import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
 import { useAudioPlayerControls } from '@lib/AudioPlayerControls/useAudioPlayerControls';
+import { Icon } from '@lib/Icon/Icon';
 
-export interface AudioPlayerControlsProps extends HTMLAttributes<HTMLElement> {
+export type AudioPlayerControlsProps<T extends ElementType = 'div'> = {
   /** @default div */
-  as?: ElementType;
-}
+  as?: T;
+} & ComponentPropsWithoutRef<T>;
 
-export function AudioPlayerControlsBase(props: AudioPlayerControlsProps) {
-  const { as = 'div', children, className, ...restProps } = props;
-
-  const Node = as;
+export function AudioPlayerControlsBase<T extends ElementType>(props: AudioPlayerControlsProps<T>) {
+  const { as: Element = 'div', children, className, ...restProps } = props;
 
   return (
-    <Node
+    <Element
       className={twMerge(clsx('flex items-center justify-center gap-4 p-4 text-2xl', className))}
       {...restProps}
     >
       {children}
-    </Node>
+    </Element>
   );
 }
 
