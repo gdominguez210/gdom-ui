@@ -1,29 +1,27 @@
 import clsx from 'clsx';
-import { type ElementType, type HTMLAttributes } from 'react';
+import type { ComponentPropsWithoutRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
 import { useAudioPlayerTime } from '@lib/AudioPlayerTime/useAudioPlayerTime';
 
-export interface AudioPlayerTimeProps extends HTMLAttributes<HTMLElement> {
+export type AudioPlayerTimeProps<T extends ElementType = 'div'> = {
   /** @default span */
-  as?: ElementType;
+  as?: T;
   currentTime: string;
   duration: string;
-}
+} & ComponentPropsWithoutRef<T>;
 
-export function AudioPlayerTimeBase(props: AudioPlayerTimeProps) {
-  const { as = 'span', className, currentTime, duration, ...restProps } = props;
-
-  const Node = as;
+export function AudioPlayerTimeBase<T extends ElementType>(props: AudioPlayerTimeProps<T>) {
+  const { as: Element = 'span', className, currentTime, duration, ...restProps } = props;
 
   return (
-    <Node
+    <Element
       className={twMerge(clsx('text-sm', className))}
       {...restProps}
     >
       {currentTime} / {duration}
-    </Node>
+    </Element>
   );
 }
 
