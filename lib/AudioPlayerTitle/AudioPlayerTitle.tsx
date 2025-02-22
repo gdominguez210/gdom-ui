@@ -1,29 +1,28 @@
-import { type ElementType, type HTMLAttributes } from 'react';
 import clsx from 'clsx';
+import type { ComponentPropsWithoutRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
+
 import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
 
-export interface AudioPlayerTitleProps extends HTMLAttributes<HTMLElement> {
+export type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
   /** @default p */
-  as?: ElementType;
-}
+  as?: T;
+} & ComponentPropsWithoutRef<T>;
 
-export function AudioPlayerTitleBase(props: AudioPlayerTitleProps) {
-  const { as = 'p', children, className, ...restProps } = props;
-
-  const Node = as;
+export function AudioPlayerTitleBase<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
+  const { as: Element = 'p', children, className, ...restProps } = props;
 
   return (
-    <Node
+    <Element
       className={twMerge(clsx('font-bold lg:truncate lg:max-w-64 line-clamp-1', className))}
       {...restProps}
     >
       {children}
-    </Node>
+    </Element>
   );
 }
 
-export function AudioPlayerTitle(props: AudioPlayerTitleProps) {
+export function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
   const { currentTrack: { title } = {} } = useAudioPlayerContext();
 
   if (!title) return null;
