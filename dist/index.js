@@ -1,6 +1,6 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import * as React from 'react';
-import { createContext, useState, useRef, useMemo, useContext, useCallback, useEffect, forwardRef } from 'react';
+import { createContext, useReducer, useRef, useMemo, useContext, useState, useCallback, useEffect, forwardRef } from 'react';
 
 function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f);}else for(f in e)e[f]&&(n&&(n+=" "),n+=f);return n}function clsx(){for(var e,t,f=0,n="",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}
 
@@ -2496,38 +2496,79 @@ const getDefaultConfig = () => {
 };
 const twMerge = /*#__PURE__*/createTailwindMerge(getDefaultConfig);
 
-const AudioPlayerContext = createContext(void 0);
+const AUDIO_PLAYER_ACTIONS = {
+  SET_CURRENT_TRACK_INDEX: "SET_CURRENT_TRACK_INDEX",
+  SET_CURRENT_TIME: "SET_CURRENT_TIME",
+  SET_DURATION: "SET_DURATION",
+  SET_IS_PLAYING: "SET_IS_PLAYING"
+};
+function getInitialState(defaultTrackIndex) {
+  return {
+    currentTrackIndex: defaultTrackIndex,
+    currentTime: 0,
+    duration: 0,
+    isPlaying: false
+  };
+}
+function audioPlayerReducer(state, action) {
+  switch (action.type) {
+    case AUDIO_PLAYER_ACTIONS.SET_CURRENT_TIME:
+      return { ...state, ...action.payload };
+    case AUDIO_PLAYER_ACTIONS.SET_CURRENT_TRACK_INDEX:
+      return { ...state, ...action.payload };
+    case AUDIO_PLAYER_ACTIONS.SET_DURATION:
+      return { ...state, ...action.payload };
+    case AUDIO_PLAYER_ACTIONS.SET_IS_PLAYING:
+      return {
+        ...state,
+        isPlaying: action.payload.isPlaying === "toggle" ? !state.isPlaying : action.payload.isPlaying
+      };
+    default:
+      return state;
+  }
+}
+const AudioPlayerContextState = createContext(
+  void 0
+);
+const AudioPlayerContextDispatch = createContext(
+  void 0
+);
 function AudioPlayerContextProvider(props) {
   const { children, defaultTrackIndex = 0, tracks = [] } = props;
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(defaultTrackIndex);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [{ currentTime, duration, currentTrackIndex, isPlaying }, dispatch] = useReducer(
+    audioPlayerReducer,
+    null,
+    () => getInitialState(defaultTrackIndex)
+  );
   const audioRef = useRef(null);
   const progressBarRef = useRef(null);
-  const contextValue = useMemo(
+  const stateContextValue = useMemo(
     () => ({
       audioRef,
       progressBarRef,
+      currentTrackIndex,
       currentTime,
       duration,
       currentTrack: tracks[currentTrackIndex],
       isPlaying,
-      setCurrentTrackIndex,
-      setCurrentTime,
-      setDuration,
-      setIsPlaying,
       tracks
     }),
     [currentTrackIndex, currentTime, duration, tracks, isPlaying]
   );
-  return /* @__PURE__ */ jsx(AudioPlayerContext.Provider, { value: contextValue, children });
+  const dispatchContextValue = useMemo(
+    () => ({
+      dispatch,
+      actions: AUDIO_PLAYER_ACTIONS
+    }),
+    []
+  );
+  return /* @__PURE__ */ jsx(AudioPlayerContextDispatch.Provider, { value: dispatchContextValue, children: /* @__PURE__ */ jsx(AudioPlayerContextState.Provider, { value: stateContextValue, children }) });
 }
 
 const AUDIO_PLAYER_CONTEXT_ERROR = "useAudioPlayerContext must be used within an AudioPlayerContextProvider";
 
-function useAudioPlayerContext() {
-  const context = useContext(AudioPlayerContext);
+function useAudioPlayerContextState() {
+  const context = useContext(AudioPlayerContextState);
   if (!context) {
     throw new Error(AUDIO_PLAYER_CONTEXT_ERROR);
   }
@@ -2546,7 +2587,7 @@ function AudioPlayerAuthorBase(props) {
   );
 }
 function AudioPlayerAuthor(props) {
-  const { currentTrack: { author } = {} } = useAudioPlayerContext();
+  const { currentTrack: { author } = {} } = useAudioPlayerContextState();
   if (!author) return null;
   return /* @__PURE__ */ jsx(
     AudioPlayerAuthorBase,
@@ -2558,6 +2599,14 @@ function AudioPlayerAuthor(props) {
   );
 }
 
+function useAudioPlayerContextDispatch() {
+  const context = useContext(AudioPlayerContextDispatch);
+  if (!context) {
+    throw new Error(AUDIO_PLAYER_CONTEXT_ERROR);
+  }
+  return context;
+}
+
 function getRandomNumber(min, max, excludeArray = []) {
   let randomNumber;
   do {
@@ -2567,23 +2616,22 @@ function getRandomNumber(min, max, excludeArray = []) {
 }
 function useAudioPlayerControls(props) {
   const {
+    actions,
     audioRef,
     currentTime,
     currentTrack,
+    currentTrackIndex,
+    dispatch,
     duration,
     isPlaying,
     progressBarRef,
-    setCurrentTime,
-    setCurrentTrackIndex,
-    setDuration,
-    setIsPlaying,
     tracks
   } = props;
   const [shouldLoop, setShouldLoop] = useState(false);
   const [shouldShuffle, setShouldShuffle] = useState(false);
   const togglePlay = useCallback(() => {
-    setIsPlaying((prevState) => !prevState);
-  }, [setIsPlaying]);
+    dispatch({ type: actions.SET_IS_PLAYING, payload: { isPlaying: "toggle" } });
+  }, [dispatch, actions]);
   const toggleShuffle = useCallback(() => {
     setShouldShuffle((prevState) => !prevState);
   }, [setShouldShuffle]);
@@ -2592,41 +2640,39 @@ function useAudioPlayerControls(props) {
   }, [setShouldLoop]);
   const resetTime = useCallback(() => {
     if (audioRef?.current) {
-      setCurrentTime(0);
+      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime: 0 } });
       audioRef.current.currentTime = 0;
     }
-  }, [audioRef, setCurrentTime]);
+  }, [audioRef, dispatch, actions]);
   const handleNextTrack = useCallback(() => {
     if (shouldLoop) {
       return resetTime();
     }
-    setCurrentTrackIndex((prevIndex) => {
-      if (shouldShuffle) {
-        return getRandomNumber(0, tracks.length - 1, [prevIndex]);
-      }
-      return prevIndex >= tracks.length - 1 ? 0 : prevIndex + 1;
+    const newIndex = shouldShuffle ? getRandomNumber(0, tracks.length - 1, [currentTrackIndex]) : currentTrackIndex >= tracks.length - 1 ? 0 : currentTrackIndex + 1;
+    dispatch({
+      type: actions.SET_CURRENT_TRACK_INDEX,
+      payload: { currentTrackIndex: newIndex }
     });
-  }, [shouldShuffle, shouldLoop, setCurrentTrackIndex, tracks, resetTime]);
+  }, [shouldShuffle, shouldLoop, tracks, resetTime, dispatch, actions, currentTrackIndex]);
   const handlePrevTrack = () => {
     if (currentTime >= 1 || shouldLoop) {
       return resetTime();
     }
-    setCurrentTrackIndex((prevIndex) => {
-      if (shouldShuffle) {
-        return getRandomNumber(0, tracks.length - 1, [prevIndex]);
-      }
-      return prevIndex === 0 ? tracks.length - 1 : prevIndex - 1;
+    const newIndex = shouldShuffle ? getRandomNumber(0, tracks.length - 1, [currentTrackIndex]) : currentTrackIndex === 0 ? tracks.length - 1 : currentTrackIndex - 1;
+    dispatch({
+      type: actions.SET_CURRENT_TRACK_INDEX,
+      payload: { currentTrackIndex: newIndex }
     });
   };
   const handleLoadedMetadata = useCallback(() => {
     const seconds = audioRef.current?.duration;
     if (typeof seconds !== "undefined") {
-      setDuration(seconds);
+      dispatch({ type: actions.SET_DURATION, payload: { duration: seconds } });
       if (progressBarRef.current) {
         progressBarRef.current.max = seconds.toString();
       }
     }
-  }, [audioRef, progressBarRef, setDuration]);
+  }, [audioRef, progressBarRef, dispatch, actions]);
   useEffect(() => {
     isPlaying ? audioRef?.current?.play() : audioRef?.current?.pause();
   }, [isPlaying, duration, audioRef, currentTrack]);
@@ -2815,8 +2861,9 @@ function AudioPlayerControlsButtonNext(props) {
   ) });
 }
 function AudioPlayerControls(props) {
-  const context = useAudioPlayerContext();
-  const { audioRef, currentTrack, isPlaying } = context;
+  const stateContext = useAudioPlayerContextState();
+  const dispatchContext = useAudioPlayerContextDispatch();
+  const { audioRef, currentTrack, isPlaying } = stateContext;
   const {
     handleLoadedMetadata,
     handlePrevTrack,
@@ -2826,7 +2873,7 @@ function AudioPlayerControls(props) {
     toggleLoop,
     togglePlay,
     toggleShuffle
-  } = useAudioPlayerControls(context);
+  } = useAudioPlayerControls({ ...stateContext, ...dispatchContext });
   return /* @__PURE__ */ jsxs(AudioPlayerControlsBase, { ...props, children: [
     /* @__PURE__ */ jsx(
       "audio",
@@ -2891,7 +2938,7 @@ function AudioPlayerImageBase(props) {
   );
 }
 function AudioPlayerImage(props) {
-  const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContext();
+  const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContextState();
   return /* @__PURE__ */ jsx(
     AudioPlayerImageBase,
     {
@@ -2916,27 +2963,28 @@ function AudioPlayerInfo(props) {
 
 function useAudioPlayerProgressBar(props) {
   const { cssVariableName = "--range-progress" } = props || {};
-  const { isPlaying, progressBarRef, audioRef, setCurrentTime, duration, currentTrack } = useAudioPlayerContext();
+  const { isPlaying, progressBarRef, audioRef, duration, currentTrack } = useAudioPlayerContextState();
+  const { dispatch, actions } = useAudioPlayerContextDispatch();
   const animationRef = useRef(null);
   const handleProgressChange = useCallback(() => {
     if (audioRef.current && progressBarRef.current) {
       const newTime = Number(progressBarRef.current.value);
       audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
+      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime: newTime } });
       progressBarRef.current.style.setProperty(cssVariableName, `${newTime / duration * 100}%`);
     }
-  }, [audioRef, progressBarRef, setCurrentTime, duration, cssVariableName]);
+  }, [audioRef, progressBarRef, duration, cssVariableName, dispatch, actions]);
   const updateProgress = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
       const currentTime = audioRef.current.currentTime;
-      setCurrentTime(currentTime);
+      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime } });
       progressBarRef.current.value = currentTime.toString();
       progressBarRef.current.style.setProperty(
         cssVariableName,
         `${currentTime / duration * 100}%`
       );
     }
-  }, [audioRef, progressBarRef, setCurrentTime, duration, cssVariableName]);
+  }, [audioRef, progressBarRef, duration, cssVariableName, dispatch, actions]);
   const startAnimation = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
       const animate = () => {
@@ -3011,7 +3059,7 @@ const AudioPlayerProgressBarBase = forwardRef(
   _AudioPlayerProgressBarBase
 );
 function AudioPlayerProgressBar(props) {
-  const { progressBarRef } = useAudioPlayerContext();
+  const { progressBarRef } = useAudioPlayerContextState();
   const { handleProgressChange } = useAudioPlayerProgressBar();
   return /* @__PURE__ */ jsx(
     AudioPlayerProgressBarBase,
@@ -4120,7 +4168,7 @@ function AudioPlayerTimeBase(props) {
   );
 }
 function AudioPlayerTime(props) {
-  const { currentTime, duration } = useAudioPlayerContext();
+  const { currentTime, duration } = useAudioPlayerContextState();
   const { currentTimeDisplay, durationDisplay } = useAudioPlayerTime({ currentTime, duration });
   return /* @__PURE__ */ jsx(
     AudioPlayerTimeBase,
@@ -4137,14 +4185,14 @@ function AudioPlayerTitleBase(props) {
   return /* @__PURE__ */ jsx(
     Element,
     {
-      className: twMerge(clsx("font-bold lg:truncate lg:max-w-64 line-clamp-1", className)),
+      className: twMerge(clsx("line-clamp-1 font-bold lg:max-w-64 lg:truncate", className)),
       ...restProps,
       children
     }
   );
 }
 function AudioPlayerTitle(props) {
-  const { currentTrack: { title } = {} } = useAudioPlayerContext();
+  const { currentTrack: { title } = {} } = useAudioPlayerContextState();
   if (!title) return null;
   return /* @__PURE__ */ jsx(
     AudioPlayerTitleBase,
@@ -4185,7 +4233,7 @@ function AudioPlayerVolumeLayout(props) {
         /* @__PURE__ */ jsx(
           "input",
           {
-            className: "cursor-pointer flex-grow",
+            className: "flex-grow cursor-pointer",
             type: "range",
             min,
             max,
@@ -4219,7 +4267,7 @@ function useAudioPlayerVolume(props) {
   return { handleVolumeChange, handleMute, volume, mute };
 }
 function AudioPlayerVolume(props) {
-  const { audioRef } = useAudioPlayerContext();
+  const { audioRef } = useAudioPlayerContextState();
   const { handleMute, handleVolumeChange, mute, volume } = useAudioPlayerVolume({ ref: audioRef });
   if (mute || volume < 5) {
     return /* @__PURE__ */ jsx(
@@ -4481,4 +4529,4 @@ function _Button(props, ref) {
 const Button = forwardRef(_Button);
 Button.displayName = "Button";
 
-export { AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorBase, AudioPlayerContext, AudioPlayerContextProvider, AudioPlayerControls, AudioPlayerControlsBase, AudioPlayerControlsButtonLoop, AudioPlayerControlsButtonNext, AudioPlayerControlsButtonPlay, AudioPlayerControlsButtonPrevious, AudioPlayerControlsButtonShuffle, AudioPlayerImage, AudioPlayerImageBase, AudioPlayerInfo, AudioPlayerProgressBar, AudioPlayerProgressBarBase, AudioPlayerTime, AudioPlayerTimeBase, AudioPlayerTitle, AudioPlayerTitleBase, AudioPlayerVolume, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContext, useAudioPlayerControls, useAudioPlayerProgressBar, useAudioPlayerTime };
+export { AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorBase, AudioPlayerContextDispatch, AudioPlayerContextProvider, AudioPlayerContextState, AudioPlayerControls, AudioPlayerControlsBase, AudioPlayerControlsButtonLoop, AudioPlayerControlsButtonNext, AudioPlayerControlsButtonPlay, AudioPlayerControlsButtonPrevious, AudioPlayerControlsButtonShuffle, AudioPlayerImage, AudioPlayerImageBase, AudioPlayerInfo, AudioPlayerProgressBar, AudioPlayerProgressBarBase, AudioPlayerTime, AudioPlayerTimeBase, AudioPlayerTitle, AudioPlayerTitleBase, AudioPlayerVolume, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContextDispatch, useAudioPlayerContextState, useAudioPlayerControls, useAudioPlayerProgressBar, useAudioPlayerTime };

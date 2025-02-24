@@ -10,9 +10,30 @@ import { MouseEventHandler } from 'react';
 import { ReactNode } from 'react';
 import { RefAttributes } from 'react';
 import { RefObject } from 'react';
-import { SetStateAction } from 'react';
 import { SVGAttributes } from 'react';
 import { SVGProps } from 'react';
+
+declare type ActionPayloads = {
+    [AUDIO_PLAYER_ACTIONS.SET_CURRENT_TRACK_INDEX]: {
+        currentTrackIndex: number;
+    };
+    [AUDIO_PLAYER_ACTIONS.SET_CURRENT_TIME]: {
+        currentTime: number;
+    };
+    [AUDIO_PLAYER_ACTIONS.SET_DURATION]: {
+        duration: number;
+    };
+    [AUDIO_PLAYER_ACTIONS.SET_IS_PLAYING]: {
+        isPlaying: boolean | 'toggle';
+    };
+};
+
+declare const AUDIO_PLAYER_ACTIONS: {
+    readonly SET_CURRENT_TRACK_INDEX: "SET_CURRENT_TRACK_INDEX";
+    readonly SET_CURRENT_TIME: "SET_CURRENT_TIME";
+    readonly SET_DURATION: "SET_DURATION";
+    readonly SET_IS_PLAYING: "SET_IS_PLAYING";
+};
 
 export declare function AudioPlayer<T extends ElementType>(props: AudioPlayerProps<T>): JSX_2.Element;
 
@@ -37,7 +58,12 @@ export declare type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
     as?: T;
 } & ComponentPropsWithoutRef<T>;
 
-export declare const AudioPlayerContext: Context<AudioPlayerContextType | undefined>;
+export declare const AudioPlayerContextDispatch: Context<AudioPlayerContextDispatchType | undefined>;
+
+export declare interface AudioPlayerContextDispatchType {
+    dispatch: Dispatch<ReducerAction>;
+    actions: typeof AUDIO_PLAYER_ACTIONS;
+}
 
 export declare function AudioPlayerContextProvider(props: AudioPlayerContextProviderProps): JSX_2.Element;
 
@@ -48,17 +74,12 @@ export declare interface AudioPlayerContextProviderProps {
     tracks: AudioTrackData[];
 }
 
-export declare interface AudioPlayerContextType {
+export declare const AudioPlayerContextState: Context<AudioPlayerContextStateType | undefined>;
+
+export declare interface AudioPlayerContextStateType extends State {
     audioRef: RefObject<HTMLAudioElement>;
-    currentTime: number;
     currentTrack: AudioTrackData | undefined;
-    duration: number;
-    isPlaying: boolean;
     progressBarRef: RefObject<HTMLInputElement>;
-    setCurrentTime: Dispatch<SetStateAction<number>>;
-    setCurrentTrackIndex: Dispatch<SetStateAction<number>>;
-    setDuration: Dispatch<SetStateAction<number>>;
-    setIsPlaying: Dispatch<SetStateAction<boolean>>;
     tracks: AudioTrackData[];
 }
 
@@ -235,13 +256,31 @@ declare const icons: {
     readonly 'disc-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
 };
 
+declare type ReducerAction = {
+    [K in keyof ActionPayloads]: ActionPayloads[K] extends undefined ? {
+        type: K;
+    } : {
+        type: K;
+        payload: ActionPayloads[K];
+    };
+}[keyof ActionPayloads];
+
 declare type Size = SizesAsTypes[number];
 
 declare const sizes: readonly ["md", "lg", "xl", "xxl"];
 
 declare type SizesAsTypes = typeof sizes;
 
-export declare function useAudioPlayerContext(): AudioPlayerContextType;
+declare type State = {
+    currentTrackIndex: number;
+    currentTime: number;
+    duration: number;
+    isPlaying: boolean;
+};
+
+export declare function useAudioPlayerContextDispatch(): AudioPlayerContextDispatchType;
+
+export declare function useAudioPlayerContextState(): AudioPlayerContextStateType;
 
 export declare function useAudioPlayerControls(props: useAudioPlayerControlsProps): {
     handlePrevTrack: MouseEventHandler<HTMLButtonElement>;
@@ -255,7 +294,7 @@ export declare function useAudioPlayerControls(props: useAudioPlayerControlsProp
     toggleLoop: MouseEventHandler<HTMLButtonElement>;
 };
 
-declare interface useAudioPlayerControlsProps extends AudioPlayerContextType {
+declare interface useAudioPlayerControlsProps extends AudioPlayerContextStateType, AudioPlayerContextDispatchType {
 }
 
 export declare function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps): {
@@ -266,7 +305,7 @@ export declare interface useAudioPlayerProgressBarProps {
     cssVariableName?: string;
 }
 
-export declare function useAudioPlayerTime(props: Pick<AudioPlayerContextType, 'currentTime' | 'duration'>): {
+export declare function useAudioPlayerTime(props: Pick<AudioPlayerContextStateType, 'currentTime' | 'duration'>): {
     currentTimeDisplay: string;
     durationDisplay: string;
 };

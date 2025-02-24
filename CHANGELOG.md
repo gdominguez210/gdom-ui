@@ -1,3 +1,11 @@
+# [1.11.0](https://github.com/gdominguez210/gdom-ui/compare/v1.10.0...v1.11.0) (2025-02-24)
+
+
+### Features
+
+* **AudioPlayerContextProvider:** expose useAudioPlayerContextState, useAudioPlayerContextDispatch ([aaba9ed](https://github.com/gdominguez210/gdom-ui/commit/aaba9ed9dbd5b2dcca5085f8f0576ff92491366e))
+* **useAudioPlayerContextDispatch:** add useAudioPlayerContextDispatch hook ([4c4caea](https://github.com/gdominguez210/gdom-ui/commit/4c4caea9e25ca676b6927846d5229acdf774caa2))
+
 # [1.10.0](https://github.com/gdominguez210/gdom-ui/compare/v1.9.0...v1.10.0) (2025-02-22)
 
 
