@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import type { ComponentPropsWithoutRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 
 export type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
   /** @default p */
@@ -23,7 +23,7 @@ export function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerA
 }
 
 export function AudioPlayerAuthor<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
-  const { currentTrack: { author } = {} } = useAudioPlayerContext();
+  const { currentTrack: { author } = {} } = useAudioPlayerContextState();
 
   if (!author) return null;
 
