@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback, type ChangeEventHandler } from 'react';
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider';
+import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
+import { useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextDispatch';
 
 export interface useAudioPlayerProgressBarProps {
   cssVariableName?: string;
@@ -8,8 +9,10 @@ export interface useAudioPlayerProgressBarProps {
 export function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps) {
   const { cssVariableName = '--range-progress' } = props || {};
 
-  const { isPlaying, progressBarRef, audioRef, setCurrentTime, duration, currentTrack } =
-    useAudioPlayerContext();
+  const { isPlaying, progressBarRef, audioRef, duration, currentTrack } =
+    useAudioPlayerContextState();
+
+  const { dispatch, actions } = useAudioPlayerContextDispatch();
 
   const animationRef = useRef<number | null>(null);
 
@@ -17,17 +20,17 @@ export function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps
     if (audioRef.current && progressBarRef.current) {
       const newTime = Number(progressBarRef.current.value);
       audioRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
+      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime: newTime } });
 
       progressBarRef.current.style.setProperty(cssVariableName, `${(newTime / duration) * 100}%`);
     }
-  }, [audioRef, progressBarRef, setCurrentTime, duration, cssVariableName]);
+  }, [audioRef, progressBarRef, duration, cssVariableName, dispatch, actions]);
 
   const updateProgress = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
       const currentTime = audioRef.current.currentTime;
 
-      setCurrentTime(currentTime);
+      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime } });
 
       progressBarRef.current.value = currentTime.toString();
       progressBarRef.current.style.setProperty(
@@ -35,7 +38,7 @@ export function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps
         `${(currentTime / duration) * 100}%`,
       );
     }
-  }, [audioRef, progressBarRef, setCurrentTime, duration, cssVariableName]);
+  }, [audioRef, progressBarRef, duration, cssVariableName, dispatch, actions]);
 
   const startAnimation = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
