@@ -11,7 +11,7 @@ import {
 } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 import { Icon } from '@lib/Icon';
 
 export type AudioPlayerVolumeProps<T extends ElementType = 'div'> = {
@@ -51,7 +51,7 @@ function AudioPlayerVolumeLayout<T extends ElementType>(props: AudioPlayerVolume
         {children}
       </button>
       <input
-        className="cursor-pointer flex-grow"
+        className="flex-grow cursor-pointer"
         type="range"
         min={min}
         max={max}
@@ -95,7 +95,7 @@ function useAudioPlayerVolume(props: useAudioPlayerVolumeProps) {
 }
 
 export function AudioPlayerVolume<T extends ElementType>(props: AudioPlayerVolumeProps<T>) {
-  const { audioRef } = useAudioPlayerContext();
+  const { audioRef } = useAudioPlayerContextState();
 
   const { handleMute, handleVolumeChange, mute, volume } = useAudioPlayerVolume({ ref: audioRef });
 
