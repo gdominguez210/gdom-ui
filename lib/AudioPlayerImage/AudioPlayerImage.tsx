@@ -2,7 +2,7 @@ import { type HTMLAttributes } from 'react';
 import { Icon } from '@lib/Icon/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 
 export interface AudioPlayerImageBaseProps extends HTMLAttributes<HTMLDivElement> {
   /** @default '' */
@@ -53,7 +53,7 @@ export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
 }
 
 export function AudioPlayerImage(props: AudioPlayerImageProps) {
-  const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContext();
+  const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContextState();
 
   return (
     <AudioPlayerImageBase
