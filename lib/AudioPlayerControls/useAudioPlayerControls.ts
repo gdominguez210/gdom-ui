@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback, type MouseEventHandler } from 'react';
-import { type AudioPlayerContextType } from '@lib/AudioPlayerContextProvider';
+import type {
+  AudioPlayerContextStateType,
+  AudioPlayerContextDispatchType,
+} from '@lib/AudioPlayerContextProvider';
 
 function getRandomNumber(min: number, max: number, excludeArray: number[] = []) {
   let randomNumber;
@@ -10,20 +13,21 @@ function getRandomNumber(min: number, max: number, excludeArray: number[] = []) 
   return randomNumber;
 }
 
-interface useAudioPlayerControlsProps extends AudioPlayerContextType {}
+interface useAudioPlayerControlsProps
+  extends AudioPlayerContextStateType,
+    AudioPlayerContextDispatchType {}
 
 export function useAudioPlayerControls(props: useAudioPlayerControlsProps) {
   const {
+    actions,
     audioRef,
     currentTime,
     currentTrack,
+    currentTrackIndex,
+    dispatch,
     duration,
     isPlaying,
     progressBarRef,
-    setCurrentTime,
-    setCurrentTrackIndex,
-    setDuration,
-    setIsPlaying,
     tracks,
   } = props;
 
@@ -31,8 +35,8 @@ export function useAudioPlayerControls(props: useAudioPlayerControlsProps) {
   const [shouldShuffle, setShouldShuffle] = useState<boolean>(false);
 
   const togglePlay: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
-    setIsPlaying((prevState) => !prevState);
-  }, [setIsPlaying]);
+    dispatch({ type: actions.SET_IS_PLAYING, payload: { isPlaying: 'toggle' } });
+  }, [dispatch, actions]);
 
   const toggleShuffle: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
     setShouldShuffle((prevState) => !prevState);
@@ -44,36 +48,42 @@ export function useAudioPlayerControls(props: useAudioPlayerControlsProps) {
 
   const resetTime = useCallback(() => {
     if (audioRef?.current) {
-      setCurrentTime(0);
+      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime: 0 } });
       audioRef.current.currentTime = 0;
     }
-  }, [audioRef, setCurrentTime]);
+  }, [audioRef, dispatch, actions]);
 
   const handleNextTrack = useCallback(() => {
     if (shouldLoop) {
       return resetTime();
     }
 
-    setCurrentTrackIndex((prevIndex) => {
-      if (shouldShuffle) {
-        return getRandomNumber(0, tracks.length - 1, [prevIndex]);
-      }
+    const newIndex = shouldShuffle
+      ? getRandomNumber(0, tracks.length - 1, [currentTrackIndex])
+      : currentTrackIndex >= tracks.length - 1
+        ? 0
+        : currentTrackIndex + 1;
 
-      return prevIndex >= tracks.length - 1 ? 0 : prevIndex + 1;
+    dispatch({
+      type: actions.SET_CURRENT_TRACK_INDEX,
+      payload: { currentTrackIndex: newIndex },
     });
-  }, [shouldShuffle, shouldLoop, setCurrentTrackIndex, tracks, resetTime]);
+  }, [shouldShuffle, shouldLoop, tracks, resetTime, dispatch, actions, currentTrackIndex]);
 
   const handlePrevTrack: MouseEventHandler<HTMLButtonElement> = () => {
     if (currentTime >= 1 || shouldLoop) {
       return resetTime();
     }
 
-    setCurrentTrackIndex((prevIndex) => {
-      if (shouldShuffle) {
-        return getRandomNumber(0, tracks.length - 1, [prevIndex]);
-      }
+    const newIndex = shouldShuffle
+      ? getRandomNumber(0, tracks.length - 1, [currentTrackIndex])
+      : currentTrackIndex === 0
+        ? tracks.length - 1
+        : currentTrackIndex - 1;
 
-      return prevIndex === 0 ? tracks.length - 1 : prevIndex - 1;
+    dispatch({
+      type: actions.SET_CURRENT_TRACK_INDEX,
+      payload: { currentTrackIndex: newIndex },
     });
   };
 
@@ -81,12 +91,12 @@ export function useAudioPlayerControls(props: useAudioPlayerControlsProps) {
     const seconds = audioRef.current?.duration;
 
     if (typeof seconds !== 'undefined') {
-      setDuration(seconds);
+      dispatch({ type: actions.SET_DURATION, payload: { duration: seconds } });
       if (progressBarRef.current) {
         progressBarRef.current.max = seconds.toString();
       }
     }
-  }, [audioRef, progressBarRef, setDuration]);
+  }, [audioRef, progressBarRef, dispatch, actions]);
 
   useEffect(() => {
     isPlaying ? audioRef?.current?.play() : audioRef?.current?.pause();
