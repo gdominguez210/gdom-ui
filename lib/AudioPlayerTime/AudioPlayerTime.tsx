@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import type { ComponentPropsWithoutRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 import { useAudioPlayerTime } from '@lib/AudioPlayerTime/useAudioPlayerTime';
 
 export type AudioPlayerTimeProps<T extends ElementType = 'div'> = {
@@ -26,7 +26,7 @@ export function AudioPlayerTimeBase<T extends ElementType>(props: AudioPlayerTim
 }
 
 export function AudioPlayerTime(props: Omit<AudioPlayerTimeProps, 'currentTime' | 'duration'>) {
-  const { currentTime, duration } = useAudioPlayerContext();
+  const { currentTime, duration } = useAudioPlayerContextState();
 
   const { currentTimeDisplay, durationDisplay } = useAudioPlayerTime({ currentTime, duration });
 
