@@ -2,7 +2,8 @@ import clsx from 'clsx';
 import type { ComponentPropsWithoutRef, ElementType, HTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
+import { useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextDispatch';
 import { useAudioPlayerControls } from '@lib/AudioPlayerControls/useAudioPlayerControls';
 import { Icon } from '@lib/Icon/Icon';
 
@@ -104,9 +105,10 @@ export function AudioPlayerControlsButtonNext(props: HTMLAttributes<HTMLButtonEl
 }
 
 export function AudioPlayerControls(props: AudioPlayerControlsProps) {
-  const context = useAudioPlayerContext();
+  const stateContext = useAudioPlayerContextState();
+  const dispatchContext = useAudioPlayerContextDispatch();
 
-  const { audioRef, currentTrack, isPlaying } = context;
+  const { audioRef, currentTrack, isPlaying } = stateContext;
 
   const {
     handleLoadedMetadata,
@@ -117,7 +119,7 @@ export function AudioPlayerControls(props: AudioPlayerControlsProps) {
     toggleLoop,
     togglePlay,
     toggleShuffle,
-  } = useAudioPlayerControls(context);
+  } = useAudioPlayerControls({ ...stateContext, ...dispatchContext });
 
   return (
     <AudioPlayerControlsBase {...props}>
