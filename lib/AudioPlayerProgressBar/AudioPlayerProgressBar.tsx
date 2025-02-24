@@ -1,7 +1,7 @@
 import { forwardRef, type HTMLAttributes, type Ref } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/useAudioPlayerProgressBar';
 
 export interface AudioPlayerProgressBarProps extends HTMLAttributes<HTMLInputElement> {}
@@ -55,7 +55,7 @@ export const AudioPlayerProgressBarBase = forwardRef<HTMLInputElement, AudioPlay
 );
 
 export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
-  const { progressBarRef } = useAudioPlayerContext();
+  const { progressBarRef } = useAudioPlayerContextState();
   const { handleProgressChange } = useAudioPlayerProgressBar();
 
   return (
