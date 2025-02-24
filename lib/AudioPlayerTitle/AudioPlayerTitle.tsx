@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import type { ComponentPropsWithoutRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { useAudioPlayerContext } from '@lib/AudioPlayerContextProvider/useAudioPlayerContext';
+import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 
 export type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
   /** @default p */
@@ -14,7 +14,7 @@ export function AudioPlayerTitleBase<T extends ElementType>(props: AudioPlayerTi
 
   return (
     <Element
-      className={twMerge(clsx('font-bold lg:truncate lg:max-w-64 line-clamp-1', className))}
+      className={twMerge(clsx('line-clamp-1 font-bold lg:max-w-64 lg:truncate', className))}
       {...restProps}
     >
       {children}
@@ -23,7 +23,7 @@ export function AudioPlayerTitleBase<T extends ElementType>(props: AudioPlayerTi
 }
 
 export function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
-  const { currentTrack: { title } = {} } = useAudioPlayerContext();
+  const { currentTrack: { title } = {} } = useAudioPlayerContextState();
 
   if (!title) return null;
 
