@@ -9,9 +9,23 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    docs: {
+      story: {
+        inline: true,
+      },
+      canvas: {
+        sourceState: 'shown',
+      },
+    },
+    options: {
+      storySort: {
+        method: 'alphabetical',
+        order: [],
+      },
+    },
   },
 
-  tags: ['autodocs']
+  tags: ['autodocs'],
 };
 
 export default preview;
