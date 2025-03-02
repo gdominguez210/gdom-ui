@@ -1,0 +1,118 @@
+import { Meta, Controls, Story, Source, Canvas } from '@storybook/blocks';
+import * as AudioPlayerStories from './AudioPlayer.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+
+<Meta of={AudioPlayerStories} />
+
+# AudioPlayer
+
+The AudioPlayer is a flexible, composable audio playback interface that provides a comprehensive set of controls and display elements for audio content. Built using a polymorphic component pattern, it allows for maximum customization and flexibility in implementation.
+
+<DocumentationNav />
+
+<Canvas sourceState="shown">
+  <Story of={AudioPlayerStories.AudioPlayer} />
+</Canvas>
+
+## Overview
+
+The AudioPlayer uses a compound component pattern, where multiple specialized components work together through a shared context. This approach allows developers to:
+
+- Customize the layout and appearance of the player
+- Include or exclude specific controls and information displays
+- Maintain full control over styling while leveraging built-in functionality
+- Use semantic HTML elements through polymorphic components
+
+## Basic Usage
+
+The AudioPlayer requires a `ContextProvider` that manages the audio state and provides track data to all child components. Here's a basic implementation:
+
+  <Source
+    language="tsx"
+    dark
+    code={`
+import { AudioPlayer } from '@lib/AudioPlayer';
+
+function MyAudioPlayer() {
+const tracks = [
+{
+id: '1',
+title: 'Song Title',
+artist: 'Artist Name',
+audioUrl: '/path/to/audio.mp3',
+imageUrl: '/path/to/cover.jpg',
+},
+];
+
+return (
+
+    <AudioPlayer.ContextProvider tracks={tracks}>
+      <AudioPlayer>
+        <AudioPlayer.Info>
+          <AudioPlayer.Image />
+          <AudioPlayer.Title />
+          <AudioPlayer.Author />
+        </AudioPlayer.Info>
+        <AudioPlayer.Controls />
+        <AudioPlayer.ProgressBar />
+      </AudioPlayer>
+    </AudioPlayer.ContextProvider>
+
+); }`} />
+
+## Advanced Implementation
+
+The interactive example above demonstrates a more sophisticated implementation that showcases all available components and custom styling. You can view its source code by expanding the "Show code" panel in the example.
+
+## Polymorphic Components
+
+All components in the AudioPlayer system are polymorphic, meaning they can be rendered as any HTML element or custom component using the `as` prop:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+<AudioPlayer.Info as="section">
+  <AudioPlayer.Title as="h2" />
+  <AudioPlayer.Author as="span" />
+</AudioPlayer.Info>
+`}
+/>
+
+## Styling
+
+The AudioPlayer components come with minimal default styling and can be customized using:
+
+- className props for Tailwind CSS classes
+- Custom CSS
+- Styled-components or other CSS-in-JS solutions
+
+The base component uses Tailwind CSS utilities for basic layout and appearance, which can be overridden or extended as needed.
+
+## Accessibility
+
+The AudioPlayer components are built with accessibility in mind, providing:
+
+- Proper ARIA attributes for media controls
+- Keyboard navigation support
+- Screen reader-friendly status updates
+- Semantic HTML structure
+
+## Available Components
+
+The AudioPlayer consists of the following composable components:
+
+- `AudioPlayer` - The main container component
+- `AudioPlayer.ContextProvider` - Provides audio state and track data to all child components
+- `AudioPlayer.Info` - Container for track information
+- `AudioPlayer.Image` - Displays the track's cover image
+- `AudioPlayer.Title` - Displays the track title
+- `AudioPlayer.Author` - Displays the track artist
+- `AudioPlayer.Controls` - Playback controls (play/pause, next, previous)
+- `AudioPlayer.ProgressBar` - Shows playback progress and enables seeking
+- `AudioPlayer.Time` - Displays current and total track time
+- `AudioPlayer.Volume` - Volume control with mute toggle
+
+## Props
+
+<Controls />
