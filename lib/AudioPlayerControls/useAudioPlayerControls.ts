@@ -13,9 +13,18 @@ function getRandomNumber(min: number, max: number, excludeArray: number[] = []) 
   return randomNumber;
 }
 
-interface useAudioPlayerControlsProps
-  extends AudioPlayerContextStateType,
-    AudioPlayerContextDispatchType {}
+interface useAudioPlayerControlsProps {
+  actions: AudioPlayerContextDispatchType['actions'];
+  audioRef: AudioPlayerContextStateType['audioRef'];
+  currentTime: number;
+  currentTrack: AudioPlayerContextStateType['currentTrack'];
+  currentTrackIndex: number;
+  dispatch: AudioPlayerContextDispatchType['dispatch'];
+  duration: number;
+  isPlaying: boolean;
+  progressBarRef: AudioPlayerContextStateType['progressBarRef'];
+  tracks: AudioPlayerContextStateType['tracks'];
+}
 
 export function useAudioPlayerControls(props: useAudioPlayerControlsProps) {
   const {
