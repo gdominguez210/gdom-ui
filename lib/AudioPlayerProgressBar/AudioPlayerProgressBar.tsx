@@ -10,7 +10,7 @@ function _AudioPlayerProgressBarBase(
   props: AudioPlayerProgressBarProps,
   ref: Ref<HTMLInputElement>,
 ) {
-  const { className } = props;
+  const { className, 'aria-label': ariaLabel } = props;
 
   return (
     <input
@@ -46,6 +46,11 @@ function _AudioPlayerProgressBarBase(
       ref={ref}
       type="range"
       defaultValue="0"
+      aria-label={ariaLabel || 'Audio progress'}
+      role="slider"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow={Number(props.value || 0)}
     />
   );
 }
