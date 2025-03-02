@@ -33,7 +33,11 @@ export function AudioPlayerControlsButtonPlay(props: AudioPlayerControlsButtonPr
   const { active = false, ...restProps } = props;
 
   return (
-    <button {...restProps}>
+    <button
+      {...restProps}
+      aria-label={active ? 'Pause' : 'Play'}
+      aria-pressed={active}
+    >
       {active ? <Icon name="pause-large-fill" /> : <Icon name="play-large-fill" />}
     </button>
   );
@@ -47,6 +51,8 @@ export function AudioPlayerControlsButtonLoop(props: AudioPlayerControlsButtonPr
       className={twMerge(
         clsx({ 'text-neutral-100/50': !active }, 'hover:text-neutral-100', className),
       )}
+      aria-label="Toggle Loop"
+      aria-pressed={active}
       {...restProps}
     >
       {active ? (
