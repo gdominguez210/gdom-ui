@@ -13,6 +13,8 @@ const AUDIO_PLAYER_ACTIONS = {
   SET_CURRENT_TIME: 'SET_CURRENT_TIME',
   SET_DURATION: 'SET_DURATION',
   SET_IS_PLAYING: 'SET_IS_PLAYING',
+  SET_VOLUME: 'SET_VOLUME',
+  SET_MUTE: 'SET_MUTE',
 } as const;
 
 type ActionPayloads = {
@@ -20,6 +22,8 @@ type ActionPayloads = {
   [AUDIO_PLAYER_ACTIONS.SET_CURRENT_TIME]: { currentTime: number };
   [AUDIO_PLAYER_ACTIONS.SET_DURATION]: { duration: number };
   [AUDIO_PLAYER_ACTIONS.SET_IS_PLAYING]: { isPlaying: boolean | 'toggle' };
+  [AUDIO_PLAYER_ACTIONS.SET_VOLUME]: { volume: number };
+  [AUDIO_PLAYER_ACTIONS.SET_MUTE]: { mute: boolean | 'toggle' };
 };
 
 type ReducerAction = {
@@ -33,6 +37,8 @@ type State = {
   currentTime: number;
   duration: number;
   isPlaying: boolean;
+  volume: number;
+  mute: boolean;
 };
 
 function getInitialState(defaultTrackIndex: number): State {
@@ -41,6 +47,8 @@ function getInitialState(defaultTrackIndex: number): State {
     currentTime: 0,
     duration: 0,
     isPlaying: false,
+    volume: 50,
+    mute: false,
   };
 }
 
@@ -57,6 +65,13 @@ function audioPlayerReducer(state: State, action: ReducerAction) {
         ...state,
         isPlaying:
           action.payload.isPlaying === 'toggle' ? !state.isPlaying : action.payload.isPlaying,
+      };
+    case AUDIO_PLAYER_ACTIONS.SET_VOLUME:
+      return { ...state, ...action.payload };
+    case AUDIO_PLAYER_ACTIONS.SET_MUTE:
+      return {
+        ...state,
+        mute: action.payload.mute === 'toggle' ? !state.mute : action.payload.mute,
       };
     default:
       return state;
@@ -75,6 +90,7 @@ export interface AudioPlayerContextStateType extends State {
   currentTrack: AudioTrackData | undefined;
   progressBarRef: RefObject<HTMLInputElement>;
   tracks: AudioTrackData[];
+  containerRef: RefObject<HTMLElement>;
 }
 
 export interface AudioPlayerContextDispatchType {
@@ -100,27 +116,28 @@ export interface AudioPlayerContextProviderProps {
 export function AudioPlayerContextProvider(props: AudioPlayerContextProviderProps) {
   const { children, defaultTrackIndex = 0, tracks = [] } = props;
 
-  const [{ currentTime, duration, currentTrackIndex, isPlaying }, dispatch] = useReducer(
-    audioPlayerReducer,
-    null,
-    () => getInitialState(defaultTrackIndex),
-  );
+  const [{ currentTime, duration, currentTrackIndex, isPlaying, volume, mute }, dispatch] =
+    useReducer(audioPlayerReducer, null, () => getInitialState(defaultTrackIndex));
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressBarRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
 
   const stateContextValue: AudioPlayerContextStateType = useMemo(
     () => ({
       audioRef,
       progressBarRef,
+      containerRef,
       currentTrackIndex,
       currentTime,
       duration,
       currentTrack: tracks[currentTrackIndex],
       isPlaying,
       tracks,
+      volume,
+      mute,
     }),
-    [currentTrackIndex, currentTime, duration, tracks, isPlaying],
+    [currentTrackIndex, currentTime, duration, tracks, isPlaying, volume, mute],
   );
 
   const dispatchContextValue: AudioPlayerContextDispatchType = useMemo(
