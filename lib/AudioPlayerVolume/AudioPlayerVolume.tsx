@@ -1,29 +1,22 @@
-import clsx from 'clsx';
-import {
-  type ChangeEventHandler,
-  type ComponentPropsWithoutRef,
-  type ElementType,
-  type MouseEventHandler,
-  type RefObject,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { type ChangeEventHandler, type ComponentPropsWithoutRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
-
+import clsx from 'clsx';
 import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
+import { useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextDispatch';
 import { Icon } from '@lib/Icon';
 
 export type AudioPlayerVolumeProps<T extends ElementType = 'div'> = {
   /** @default div */
   as?: T;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
 } & ComponentPropsWithoutRef<T>;
 
 export type AudioPlayerVolumeLayoutProps<T extends ElementType> = AudioPlayerVolumeProps<T> & {
   max?: number;
   min?: number;
   value: number;
+  mute: boolean;
+  onMute: () => void;
+  onVolumeChange: ChangeEventHandler<HTMLInputElement>;
 };
 
 function AudioPlayerVolumeLayout<T extends ElementType>(props: AudioPlayerVolumeLayoutProps<T>) {
@@ -33,9 +26,10 @@ function AudioPlayerVolumeLayout<T extends ElementType>(props: AudioPlayerVolume
     children,
     max = 100,
     min = 0,
-    onChange,
-    onClick,
     value,
+    mute,
+    onMute,
+    onVolumeChange,
     ...restProps
   } = props;
 
@@ -45,8 +39,10 @@ function AudioPlayerVolumeLayout<T extends ElementType>(props: AudioPlayerVolume
       {...restProps}
     >
       <button
-        onClick={onClick}
+        onClick={onMute}
         className="text-2xl"
+        aria-label={mute ? 'Unmute' : 'Mute'}
+        aria-pressed={mute}
       >
         {children}
       </button>
@@ -56,83 +52,52 @@ function AudioPlayerVolumeLayout<T extends ElementType>(props: AudioPlayerVolume
         min={min}
         max={max}
         value={value}
-        onChange={onChange}
+        onChange={onVolumeChange}
+        aria-label="Volume control"
+        role="slider"
+        aria-valuemin={min}
+        aria-valuemax={max}
+        aria-valuenow={value}
+        aria-valuetext={`Volume ${value}%`}
       />
     </Element>
   );
 }
 
-interface useAudioPlayerVolumeProps {
-  defaultVolume?: number;
-  ref: RefObject<HTMLAudioElement>;
-}
-
-function useAudioPlayerVolume(props: useAudioPlayerVolumeProps) {
-  const { ref, defaultVolume = 50 } = props;
-
-  const [volume, setVolume] = useState(defaultVolume);
-  const [mute, setMute] = useState(false);
-
-  const handleVolumeChange: ChangeEventHandler<HTMLInputElement> = useCallback(
-    (e) => {
-      setVolume(Number(e.target.value));
-    },
-    [setVolume],
-  );
-
-  const handleMute: MouseEventHandler<HTMLButtonElement> = useCallback(() => {
-    setMute((prev) => !prev);
-  }, [setMute]);
-
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.volume = volume / 100;
-      ref.current.muted = mute;
-    }
-  }, [volume, ref, mute]);
-
-  return { handleVolumeChange, handleMute, volume, mute };
-}
-
 export function AudioPlayerVolume<T extends ElementType>(props: AudioPlayerVolumeProps<T>) {
-  const { audioRef } = useAudioPlayerContextState();
+  const { audioRef, volume, mute } = useAudioPlayerContextState();
+  const { actions, dispatch } = useAudioPlayerContextDispatch();
 
-  const { handleMute, handleVolumeChange, mute, volume } = useAudioPlayerVolume({ ref: audioRef });
+  const handleVolumeChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const newVolume = Number(e.target.value);
+    dispatch({ type: actions.SET_VOLUME, payload: { volume: newVolume } });
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume / 100;
+    }
+  };
 
-  if (mute || volume < 5) {
-    return (
-      <AudioPlayerVolumeLayout
-        {...props}
-        onClick={handleMute}
-        onChange={handleVolumeChange}
-        value={volume}
-      >
-        <Icon name="volume-mute-fill" />
-      </AudioPlayerVolumeLayout>
-    );
-  }
-
-  if (volume >= 40) {
-    return (
-      <AudioPlayerVolumeLayout
-        {...props}
-        onClick={handleMute}
-        onChange={handleVolumeChange}
-        value={volume}
-      >
-        <Icon name="volume-up-fill" />
-      </AudioPlayerVolumeLayout>
-    );
-  }
+  const handleMute = () => {
+    dispatch({ type: actions.SET_MUTE, payload: { mute: 'toggle' } });
+    if (audioRef.current) {
+      audioRef.current.muted = !mute;
+    }
+  };
 
   return (
     <AudioPlayerVolumeLayout
       {...props}
-      onClick={handleMute}
-      onChange={handleVolumeChange}
       value={volume}
+      mute={mute}
+      onMute={handleMute}
+      onVolumeChange={handleVolumeChange}
     >
-      <Icon name="volume-down-fill" />
+      {mute || volume < 5 ? (
+        <Icon name="volume-mute-fill" />
+      ) : volume >= 40 ? (
+        <Icon name="volume-up-fill" />
+      ) : (
+        <Icon name="volume-down-fill" />
+      )}
     </AudioPlayerVolumeLayout>
   );
 }
