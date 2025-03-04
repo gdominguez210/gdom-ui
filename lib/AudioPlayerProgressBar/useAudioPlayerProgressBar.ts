@@ -1,18 +1,25 @@
-import { useRef, useEffect, useCallback, type ChangeEventHandler } from 'react';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
-import { useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextDispatch';
+import { useRef, useCallback, useEffect, type ChangeEventHandler, type RefObject } from 'react';
 
-export interface useAudioPlayerProgressBarProps {
+interface UseAudioPlayerProgressBarProps {
+  audioRef: RefObject<HTMLAudioElement>;
+  currentTrack?: { src: string };
   cssVariableName?: string;
+  duration: number;
+  isPlaying: boolean;
+  onProgressChange: (time: number) => void;
+  progressBarRef: RefObject<HTMLInputElement>;
 }
 
-export function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps) {
-  const { cssVariableName = '--range-progress' } = props || {};
-
-  const { isPlaying, progressBarRef, audioRef, duration, currentTrack } =
-    useAudioPlayerContextState();
-
-  const { dispatch, actions } = useAudioPlayerContextDispatch();
+export function useAudioPlayerProgressBar(props: UseAudioPlayerProgressBarProps) {
+  const {
+    audioRef,
+    currentTrack,
+    cssVariableName = '--range-progress',
+    duration,
+    isPlaying,
+    onProgressChange,
+    progressBarRef,
+  } = props;
 
   const animationRef = useRef<number | null>(null);
 
@@ -20,17 +27,16 @@ export function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps
     if (audioRef.current && progressBarRef.current) {
       const newTime = Number(progressBarRef.current.value);
       audioRef.current.currentTime = newTime;
-      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime: newTime } });
+      onProgressChange(newTime);
 
       progressBarRef.current.style.setProperty(cssVariableName, `${(newTime / duration) * 100}%`);
     }
-  }, [audioRef, progressBarRef, duration, cssVariableName, dispatch, actions]);
+  }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
 
   const updateProgress = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
       const currentTime = audioRef.current.currentTime;
-
-      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime } });
+      onProgressChange(currentTime);
 
       progressBarRef.current.value = currentTime.toString();
       progressBarRef.current.style.setProperty(
@@ -38,7 +44,7 @@ export function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps
         `${(currentTime / duration) * 100}%`,
       );
     }
-  }, [audioRef, progressBarRef, duration, cssVariableName, dispatch, actions]);
+  }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
 
   const startAnimation = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
@@ -49,7 +55,7 @@ export function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps
 
       animationRef.current = requestAnimationFrame(animate);
     }
-  }, [audioRef, progressBarRef, animationRef, duration, updateProgress]);
+  }, [audioRef, progressBarRef, duration, updateProgress]);
 
   useEffect(() => {
     if (isPlaying) {

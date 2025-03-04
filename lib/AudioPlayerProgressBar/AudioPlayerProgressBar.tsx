@@ -1,8 +1,9 @@
-import { forwardRef, type HTMLAttributes, type Ref } from 'react';
+import { forwardRef, type HTMLAttributes, type Ref, useCallback } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/useAudioPlayerProgressBar';
+import { useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextDispatch';
 
 export interface AudioPlayerProgressBarProps extends HTMLAttributes<HTMLInputElement> {}
 
@@ -48,9 +49,6 @@ function _AudioPlayerProgressBarBase(
       defaultValue="0"
       aria-label={ariaLabel || 'Audio progress'}
       role="slider"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      aria-valuenow={Number(props.value || 0)}
     />
   );
 }
@@ -60,8 +58,25 @@ export const AudioPlayerProgressBarBase = forwardRef<HTMLInputElement, AudioPlay
 );
 
 export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
-  const { progressBarRef } = useAudioPlayerContextState();
-  const { handleProgressChange } = useAudioPlayerProgressBar();
+  const { progressBarRef, audioRef, currentTrack, duration, isPlaying } =
+    useAudioPlayerContextState();
+  const { actions, dispatch } = useAudioPlayerContextDispatch();
+
+  const handleTimeChange = useCallback(
+    (time: number) => {
+      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime: time } });
+    },
+    [dispatch, actions],
+  );
+
+  const { handleProgressChange } = useAudioPlayerProgressBar({
+    audioRef,
+    currentTrack,
+    duration,
+    isPlaying,
+    onProgressChange: handleTimeChange,
+    progressBarRef,
+  });
 
   return (
     <AudioPlayerProgressBarBase
