@@ -2,8 +2,6 @@ import { jsx, jsxs } from 'react/jsx-runtime';
 import * as React from 'react';
 import { createContext, useReducer, useRef, useMemo, useContext, useState, useCallback, useEffect, forwardRef } from 'react';
 
-function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f);}else for(f in e)e[f]&&(n&&(n+=" "),n+=f);return n}function clsx(){for(var e,t,f=0,n="",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}
-
 const CLASS_PART_SEPARATOR = '-';
 const createClassGroupUtils = config => {
   const classMap = createClassMap(config);
@@ -2496,18 +2494,24 @@ const getDefaultConfig = () => {
 };
 const twMerge = /*#__PURE__*/createTailwindMerge(getDefaultConfig);
 
+function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f);}else for(f in e)e[f]&&(n&&(n+=" "),n+=f);return n}function clsx(){for(var e,t,f=0,n="",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}
+
 const AUDIO_PLAYER_ACTIONS = {
   SET_CURRENT_TRACK_INDEX: "SET_CURRENT_TRACK_INDEX",
   SET_CURRENT_TIME: "SET_CURRENT_TIME",
   SET_DURATION: "SET_DURATION",
-  SET_IS_PLAYING: "SET_IS_PLAYING"
+  SET_IS_PLAYING: "SET_IS_PLAYING",
+  SET_VOLUME: "SET_VOLUME",
+  SET_MUTE: "SET_MUTE"
 };
 function getInitialState(defaultTrackIndex) {
   return {
     currentTrackIndex: defaultTrackIndex,
     currentTime: 0,
     duration: 0,
-    isPlaying: false
+    isPlaying: false,
+    volume: 50,
+    mute: false
   };
 }
 function audioPlayerReducer(state, action) {
@@ -2523,6 +2527,13 @@ function audioPlayerReducer(state, action) {
         ...state,
         isPlaying: action.payload.isPlaying === "toggle" ? !state.isPlaying : action.payload.isPlaying
       };
+    case AUDIO_PLAYER_ACTIONS.SET_VOLUME:
+      return { ...state, ...action.payload };
+    case AUDIO_PLAYER_ACTIONS.SET_MUTE:
+      return {
+        ...state,
+        mute: action.payload.mute === "toggle" ? !state.mute : action.payload.mute
+      };
     default:
       return state;
   }
@@ -2535,25 +2546,25 @@ const AudioPlayerContextDispatch = createContext(
 );
 function AudioPlayerContextProvider(props) {
   const { children, defaultTrackIndex = 0, tracks = [] } = props;
-  const [{ currentTime, duration, currentTrackIndex, isPlaying }, dispatch] = useReducer(
-    audioPlayerReducer,
-    null,
-    () => getInitialState(defaultTrackIndex)
-  );
+  const [{ currentTime, duration, currentTrackIndex, isPlaying, volume, mute }, dispatch] = useReducer(audioPlayerReducer, null, () => getInitialState(defaultTrackIndex));
   const audioRef = useRef(null);
   const progressBarRef = useRef(null);
+  const containerRef = useRef(null);
   const stateContextValue = useMemo(
     () => ({
       audioRef,
       progressBarRef,
+      containerRef,
       currentTrackIndex,
       currentTime,
       duration,
       currentTrack: tracks[currentTrackIndex],
       isPlaying,
-      tracks
+      tracks,
+      volume,
+      mute
     }),
-    [currentTrackIndex, currentTime, duration, tracks, isPlaying]
+    [currentTrackIndex, currentTime, duration, tracks, isPlaying, volume, mute]
   );
   const dispatchContextValue = useMemo(
     () => ({
@@ -2569,6 +2580,14 @@ const AUDIO_PLAYER_CONTEXT_ERROR = "useAudioPlayerContext must be used within an
 
 function useAudioPlayerContextState() {
   const context = useContext(AudioPlayerContextState);
+  if (!context) {
+    throw new Error(AUDIO_PLAYER_CONTEXT_ERROR);
+  }
+  return context;
+}
+
+function useAudioPlayerContextDispatch() {
+  const context = useContext(AudioPlayerContextDispatch);
   if (!context) {
     throw new Error(AUDIO_PLAYER_CONTEXT_ERROR);
   }
@@ -2597,14 +2616,6 @@ function AudioPlayerAuthor(props) {
       children: author
     }
   );
-}
-
-function useAudioPlayerContextDispatch() {
-  const context = useContext(AudioPlayerContextDispatch);
-  if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_ERROR);
-  }
-  return context;
 }
 
 function getRandomNumber(min, max, excludeArray = []) {
@@ -2796,7 +2807,15 @@ function AudioPlayerControlsBase(props) {
 }
 function AudioPlayerControlsButtonPlay(props) {
   const { active = false, ...restProps } = props;
-  return /* @__PURE__ */ jsx("button", { ...restProps, children: active ? /* @__PURE__ */ jsx(Icon, { name: "pause-large-fill" }) : /* @__PURE__ */ jsx(Icon, { name: "play-large-fill" }) });
+  return /* @__PURE__ */ jsx(
+    "button",
+    {
+      ...restProps,
+      "aria-label": active ? "Pause" : "Play",
+      "aria-pressed": active,
+      children: active ? /* @__PURE__ */ jsx(Icon, { name: "pause-large-fill" }) : /* @__PURE__ */ jsx(Icon, { name: "play-large-fill" })
+    }
+  );
 }
 function AudioPlayerControlsButtonLoop(props) {
   const { active = false, className, ...restProps } = props;
@@ -2806,6 +2825,8 @@ function AudioPlayerControlsButtonLoop(props) {
       className: twMerge(
         clsx({ "text-neutral-100/50": !active }, "hover:text-neutral-100", className)
       ),
+      "aria-label": "Toggle Loop",
+      "aria-pressed": active,
       ...restProps,
       children: active ? /* @__PURE__ */ jsx(
         Icon,
@@ -2962,29 +2983,35 @@ function AudioPlayerInfo(props) {
 }
 
 function useAudioPlayerProgressBar(props) {
-  const { cssVariableName = "--range-progress" } = props || {};
-  const { isPlaying, progressBarRef, audioRef, duration, currentTrack } = useAudioPlayerContextState();
-  const { dispatch, actions } = useAudioPlayerContextDispatch();
+  const {
+    audioRef,
+    currentTrack,
+    cssVariableName = "--range-progress",
+    duration,
+    isPlaying,
+    onProgressChange,
+    progressBarRef
+  } = props;
   const animationRef = useRef(null);
   const handleProgressChange = useCallback(() => {
     if (audioRef.current && progressBarRef.current) {
       const newTime = Number(progressBarRef.current.value);
       audioRef.current.currentTime = newTime;
-      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime: newTime } });
+      onProgressChange(newTime);
       progressBarRef.current.style.setProperty(cssVariableName, `${newTime / duration * 100}%`);
     }
-  }, [audioRef, progressBarRef, duration, cssVariableName, dispatch, actions]);
+  }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
   const updateProgress = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
       const currentTime = audioRef.current.currentTime;
-      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime } });
+      onProgressChange(currentTime);
       progressBarRef.current.value = currentTime.toString();
       progressBarRef.current.style.setProperty(
         cssVariableName,
         `${currentTime / duration * 100}%`
       );
     }
-  }, [audioRef, progressBarRef, duration, cssVariableName, dispatch, actions]);
+  }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
   const startAnimation = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
       const animate = () => {
@@ -2993,7 +3020,7 @@ function useAudioPlayerProgressBar(props) {
       };
       animationRef.current = requestAnimationFrame(animate);
     }
-  }, [audioRef, progressBarRef, animationRef, duration, updateProgress]);
+  }, [audioRef, progressBarRef, duration, updateProgress]);
   useEffect(() => {
     if (isPlaying) {
       startAnimation();
@@ -3016,7 +3043,7 @@ function useAudioPlayerProgressBar(props) {
 }
 
 function _AudioPlayerProgressBarBase(props, ref) {
-  const { className } = props;
+  const { className, "aria-label": ariaLabel } = props;
   return /* @__PURE__ */ jsx(
     "input",
     {
@@ -3051,7 +3078,9 @@ function _AudioPlayerProgressBarBase(props, ref) {
       ...props,
       ref,
       type: "range",
-      defaultValue: "0"
+      defaultValue: "0",
+      "aria-label": ariaLabel || "Audio progress",
+      role: "slider"
     }
   );
 }
@@ -3059,8 +3088,22 @@ const AudioPlayerProgressBarBase = forwardRef(
   _AudioPlayerProgressBarBase
 );
 function AudioPlayerProgressBar(props) {
-  const { progressBarRef } = useAudioPlayerContextState();
-  const { handleProgressChange } = useAudioPlayerProgressBar();
+  const { progressBarRef, audioRef, currentTrack, duration, isPlaying } = useAudioPlayerContextState();
+  const { actions, dispatch } = useAudioPlayerContextDispatch();
+  const handleTimeChange = useCallback(
+    (time) => {
+      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime: time } });
+    },
+    [dispatch, actions]
+  );
+  const { handleProgressChange } = useAudioPlayerProgressBar({
+    audioRef,
+    currentTrack,
+    duration,
+    isPlaying,
+    onProgressChange: handleTimeChange,
+    progressBarRef
+  });
   return /* @__PURE__ */ jsx(
     AudioPlayerProgressBarBase,
     {
@@ -4211,9 +4254,10 @@ function AudioPlayerVolumeLayout(props) {
     children,
     max = 100,
     min = 0,
-    onChange,
-    onClick,
     value,
+    mute,
+    onMute,
+    onVolumeChange,
     ...restProps
   } = props;
   return /* @__PURE__ */ jsxs(
@@ -4225,8 +4269,10 @@ function AudioPlayerVolumeLayout(props) {
         /* @__PURE__ */ jsx(
           "button",
           {
-            onClick,
+            onClick: onMute,
             className: "text-2xl",
+            "aria-label": mute ? "Unmute" : "Mute",
+            "aria-pressed": mute,
             children
           }
         ),
@@ -4238,82 +4284,71 @@ function AudioPlayerVolumeLayout(props) {
             min,
             max,
             value,
-            onChange
+            onChange: onVolumeChange,
+            "aria-label": "Volume control",
+            role: "slider",
+            "aria-valuemin": min,
+            "aria-valuemax": max,
+            "aria-valuenow": value,
+            "aria-valuetext": `Volume ${value}%`
           }
         )
       ]
     }
   );
 }
-function useAudioPlayerVolume(props) {
-  const { ref, defaultVolume = 50 } = props;
-  const [volume, setVolume] = useState(defaultVolume);
-  const [mute, setMute] = useState(false);
-  const handleVolumeChange = useCallback(
-    (e) => {
-      setVolume(Number(e.target.value));
-    },
-    [setVolume]
-  );
-  const handleMute = useCallback(() => {
-    setMute((prev) => !prev);
-  }, [setMute]);
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.volume = volume / 100;
-      ref.current.muted = mute;
-    }
-  }, [volume, ref, mute]);
-  return { handleVolumeChange, handleMute, volume, mute };
-}
 function AudioPlayerVolume(props) {
-  const { audioRef } = useAudioPlayerContextState();
-  const { handleMute, handleVolumeChange, mute, volume } = useAudioPlayerVolume({ ref: audioRef });
-  if (mute || volume < 5) {
-    return /* @__PURE__ */ jsx(
-      AudioPlayerVolumeLayout,
-      {
-        ...props,
-        onClick: handleMute,
-        onChange: handleVolumeChange,
-        value: volume,
-        children: /* @__PURE__ */ jsx(Icon, { name: "volume-mute-fill" })
-      }
-    );
-  }
-  if (volume >= 40) {
-    return /* @__PURE__ */ jsx(
-      AudioPlayerVolumeLayout,
-      {
-        ...props,
-        onClick: handleMute,
-        onChange: handleVolumeChange,
-        value: volume,
-        children: /* @__PURE__ */ jsx(Icon, { name: "volume-up-fill" })
-      }
-    );
-  }
+  const { audioRef, volume, mute } = useAudioPlayerContextState();
+  const { actions, dispatch } = useAudioPlayerContextDispatch();
+  const handleVolumeChange = (e) => {
+    const newVolume = Number(e.target.value);
+    dispatch({ type: actions.SET_VOLUME, payload: { volume: newVolume } });
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume / 100;
+    }
+  };
+  const handleMute = () => {
+    dispatch({ type: actions.SET_MUTE, payload: { mute: "toggle" } });
+    if (audioRef.current) {
+      audioRef.current.muted = !mute;
+    }
+  };
   return /* @__PURE__ */ jsx(
     AudioPlayerVolumeLayout,
     {
       ...props,
-      onClick: handleMute,
-      onChange: handleVolumeChange,
       value: volume,
-      children: /* @__PURE__ */ jsx(Icon, { name: "volume-down-fill" })
+      mute,
+      onMute: handleMute,
+      onVolumeChange: handleVolumeChange,
+      children: mute || volume < 5 ? /* @__PURE__ */ jsx(Icon, { name: "volume-mute-fill" }) : volume >= 40 ? /* @__PURE__ */ jsx(Icon, { name: "volume-up-fill" }) : /* @__PURE__ */ jsx(Icon, { name: "volume-down-fill" })
     }
   );
 }
 
-function AudioPlayer(props) {
-  const { as: Element = "div", children, className } = props;
+function _AudioPlayerBase(props, ref) {
+  const { as: Element = "div", children, className, ...restProps } = props;
   return /* @__PURE__ */ jsx(
     Element,
     {
+      ref,
       className: twMerge(
         clsx("flex flex-col justify-center bg-slate-700 text-neutral-100", className)
       ),
+      tabIndex: -1,
+      ...restProps,
       children
+    }
+  );
+}
+const AudioPlayerBase = forwardRef(_AudioPlayerBase);
+function AudioPlayer(props) {
+  const { containerRef } = useAudioPlayerContextState();
+  return /* @__PURE__ */ jsx(
+    AudioPlayerBase,
+    {
+      ...props,
+      ref: containerRef
     }
   );
 }
@@ -4529,4 +4564,4 @@ function _Button(props, ref) {
 const Button = forwardRef(_Button);
 Button.displayName = "Button";
 
-export { AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorBase, AudioPlayerContextDispatch, AudioPlayerContextProvider, AudioPlayerContextState, AudioPlayerControls, AudioPlayerControlsBase, AudioPlayerControlsButtonLoop, AudioPlayerControlsButtonNext, AudioPlayerControlsButtonPlay, AudioPlayerControlsButtonPrevious, AudioPlayerControlsButtonShuffle, AudioPlayerImage, AudioPlayerImageBase, AudioPlayerInfo, AudioPlayerProgressBar, AudioPlayerProgressBarBase, AudioPlayerTime, AudioPlayerTimeBase, AudioPlayerTitle, AudioPlayerTitleBase, AudioPlayerVolume, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContextDispatch, useAudioPlayerContextState, useAudioPlayerControls, useAudioPlayerProgressBar, useAudioPlayerTime };
+export { AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorBase, AudioPlayerBase, AudioPlayerContextDispatch, AudioPlayerContextProvider, AudioPlayerContextState, AudioPlayerControls, AudioPlayerControlsBase, AudioPlayerControlsButtonLoop, AudioPlayerControlsButtonNext, AudioPlayerControlsButtonPlay, AudioPlayerControlsButtonPrevious, AudioPlayerControlsButtonShuffle, AudioPlayerImage, AudioPlayerImageBase, AudioPlayerInfo, AudioPlayerProgressBar, AudioPlayerProgressBarBase, AudioPlayerTime, AudioPlayerTimeBase, AudioPlayerTitle, AudioPlayerTitleBase, AudioPlayerVolume, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContextDispatch, useAudioPlayerContextState, useAudioPlayerControls, useAudioPlayerProgressBar, useAudioPlayerTime };

@@ -26,6 +26,12 @@ declare type ActionPayloads = {
     [AUDIO_PLAYER_ACTIONS.SET_IS_PLAYING]: {
         isPlaying: boolean | 'toggle';
     };
+    [AUDIO_PLAYER_ACTIONS.SET_VOLUME]: {
+        volume: number;
+    };
+    [AUDIO_PLAYER_ACTIONS.SET_MUTE]: {
+        mute: boolean | 'toggle';
+    };
 };
 
 declare const AUDIO_PLAYER_ACTIONS: {
@@ -33,6 +39,8 @@ declare const AUDIO_PLAYER_ACTIONS: {
     readonly SET_CURRENT_TIME: "SET_CURRENT_TIME";
     readonly SET_DURATION: "SET_DURATION";
     readonly SET_IS_PLAYING: "SET_IS_PLAYING";
+    readonly SET_VOLUME: "SET_VOLUME";
+    readonly SET_MUTE: "SET_MUTE";
 };
 
 export declare function AudioPlayer<T extends ElementType>(props: AudioPlayerProps<T>): JSX_2.Element;
@@ -55,6 +63,13 @@ export declare function AudioPlayerAuthorBase<T extends ElementType>(props: Audi
 
 export declare type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
     /** @default p */
+    as?: T;
+} & ComponentPropsWithoutRef<T>;
+
+export declare const AudioPlayerBase: ForwardRefExoticComponent<Omit<AudioPlayerBaseProps<ElementType>, "ref"> & RefAttributes<any>>;
+
+export declare type AudioPlayerBaseProps<T extends ElementType = 'div'> = {
+    /** @default div */
     as?: T;
 } & ComponentPropsWithoutRef<T>;
 
@@ -81,6 +96,7 @@ export declare interface AudioPlayerContextStateType extends State {
     currentTrack: AudioTrackData | undefined;
     progressBarRef: RefObject<HTMLInputElement>;
     tracks: AudioTrackData[];
+    containerRef: RefObject<HTMLElement>;
 }
 
 export declare function AudioPlayerControls(props: AudioPlayerControlsProps): JSX_2.Element;
@@ -141,10 +157,7 @@ export declare const AudioPlayerProgressBarBase: ForwardRefExoticComponent<Audio
 export declare interface AudioPlayerProgressBarProps extends HTMLAttributes<HTMLInputElement> {
 }
 
-export declare type AudioPlayerProps<T extends ElementType = 'div'> = {
-    /** @default div */
-    as?: T;
-} & ComponentPropsWithoutRef<T>;
+export declare type AudioPlayerProps<T extends ElementType = 'div'> = AudioPlayerBaseProps<T>;
 
 export declare function AudioPlayerTime(props: Omit<AudioPlayerTimeProps, 'currentTime' | 'duration'>): JSX_2.Element;
 
@@ -172,12 +185,14 @@ export declare type AudioPlayerVolumeLayoutProps<T extends ElementType> = AudioP
     max?: number;
     min?: number;
     value: number;
+    mute: boolean;
+    onMute: () => void;
+    onVolumeChange: ChangeEventHandler<HTMLInputElement>;
 };
 
 export declare type AudioPlayerVolumeProps<T extends ElementType = 'div'> = {
     /** @default div */
     as?: T;
-    onClick?: MouseEventHandler<HTMLButtonElement>;
 } & ComponentPropsWithoutRef<T>;
 
 export declare interface AudioTrackData {
@@ -276,6 +291,8 @@ declare type State = {
     currentTime: number;
     duration: number;
     isPlaying: boolean;
+    volume: number;
+    mute: boolean;
 };
 
 export declare function useAudioPlayerContextDispatch(): AudioPlayerContextDispatchType;
@@ -294,15 +311,33 @@ export declare function useAudioPlayerControls(props: useAudioPlayerControlsProp
     toggleLoop: MouseEventHandler<HTMLButtonElement>;
 };
 
-declare interface useAudioPlayerControlsProps extends AudioPlayerContextStateType, AudioPlayerContextDispatchType {
+declare interface useAudioPlayerControlsProps {
+    actions: AudioPlayerContextDispatchType['actions'];
+    audioRef: AudioPlayerContextStateType['audioRef'];
+    currentTime: number;
+    currentTrack: AudioPlayerContextStateType['currentTrack'];
+    currentTrackIndex: number;
+    dispatch: AudioPlayerContextDispatchType['dispatch'];
+    duration: number;
+    isPlaying: boolean;
+    progressBarRef: AudioPlayerContextStateType['progressBarRef'];
+    tracks: AudioPlayerContextStateType['tracks'];
 }
 
-export declare function useAudioPlayerProgressBar(props?: useAudioPlayerProgressBarProps): {
+export declare function useAudioPlayerProgressBar(props: UseAudioPlayerProgressBarProps): {
     handleProgressChange: ChangeEventHandler<HTMLInputElement>;
 };
 
-export declare interface useAudioPlayerProgressBarProps {
+declare interface UseAudioPlayerProgressBarProps {
+    audioRef: RefObject<HTMLAudioElement>;
+    currentTrack?: {
+        src: string;
+    };
     cssVariableName?: string;
+    duration: number;
+    isPlaying: boolean;
+    onProgressChange: (time: number) => void;
+    progressBarRef: RefObject<HTMLInputElement>;
 }
 
 export declare function useAudioPlayerTime(props: Pick<AudioPlayerContextStateType, 'currentTime' | 'duration'>): {

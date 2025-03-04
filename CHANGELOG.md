@@ -1,3 +1,12 @@
+# [1.12.0](https://github.com/gdominguez210/gdom-ui/compare/v1.11.0...v1.12.0) (2025-03-04)
+
+
+### Features
+
+* **AudioPlayerContextProvider:** add containerRef to context, move volume/mute to provider state ([9c9e260](https://github.com/gdominguez210/gdom-ui/commit/9c9e260f71c89a05d597b44f6acb4f493fcc5df2))
+* **AudioPlayerControls:** add accessibility properties for aria-label, aria-pressed ([4ed3b33](https://github.com/gdominguez210/gdom-ui/commit/4ed3b3318097e5e3b23360811b7d715a997015ee))
+* **AudioPlayerProgressBar:** add accessibility properties for aria-label, role, aria-value ([b5d655c](https://github.com/gdominguez210/gdom-ui/commit/b5d655c77a877251840890a27556ec45b2c4d11c))
+
 # [1.11.0](https://github.com/gdominguez210/gdom-ui/compare/v1.10.0...v1.11.0) (2025-02-24)
 
 
