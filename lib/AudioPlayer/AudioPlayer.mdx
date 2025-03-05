@@ -100,18 +100,160 @@ The AudioPlayer components are built with accessibility in mind, providing:
 
 ## Available Components
 
-The AudioPlayer consists of the following composable components:
+All context-connected components are available through the main `AudioPlayer` import (e.g. `AudioPlayer.Controls`, `AudioPlayer.ProgressBar`). Base components can be imported directly from their respective modules.
 
-- `AudioPlayer` - The main container component
-- `AudioPlayer.ContextProvider` - Provides audio state and track data to all child components
-- `AudioPlayer.Info` - Container for track information
-- `AudioPlayer.Image` - Displays the track's cover image
-- `AudioPlayer.Title` - Displays the track title
-- `AudioPlayer.Author` - Displays the track artist
-- `AudioPlayer.Controls` - Playback controls (play/pause, next, previous)
-- `AudioPlayer.ProgressBar` - Shows playback progress and enables seeking
-- `AudioPlayer.Time` - Displays current and total track time
-- `AudioPlayer.Volume` - Volume control with mute toggle
+### Main Container
+
+- **AudioPlayer** - The main container component with context integration
+- **AudioPlayerBase** - The base container component without context dependencies
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { AudioPlayer, AudioPlayerBase } from '@lib/AudioPlayer';
+`}
+/>
+
+### Controls
+
+- **AudioPlayerControls** - The controls container with play/pause, next/previous, loop, and shuffle buttons
+- **AudioPlayerControlsBase** - The base controls container for custom implementations
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { AudioPlayerControls, AudioPlayerControlsBase } from '@lib/AudioPlayerControls';
+`}
+/>
+
+### Progress Bar
+
+- **AudioPlayerProgressBar** - The progress bar with time tracking and context integration
+- **AudioPlayerProgressBarBase** - The base progress bar input component
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { AudioPlayerProgressBar, AudioPlayerProgressBarBase } from '@lib/AudioPlayerProgressBar';
+`}
+/>
+
+### Volume
+
+- **AudioPlayerVolume** - The volume controls with mute functionality and context integration
+- **AudioPlayerVolumeBase** - The base volume controls component
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { AudioPlayerVolume, AudioPlayerVolumeBase } from '@lib/AudioPlayerVolume';
+`}
+/>
+
+### Track Information
+
+- **AudioPlayerInfo** - The track information container
+- **AudioPlayerInfoBase** - The base info container component
+- **AudioPlayerTitle** - The track title display
+- **AudioPlayerTitleBase** - The base title component
+- **AudioPlayerAuthor** - The track author display
+- **AudioPlayerAuthorBase** - The base author component
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { AudioPlayerInfo, AudioPlayerInfoBase } from '@lib/AudioPlayerInfo';
+import { AudioPlayerTitle, AudioPlayerTitleBase } from '@lib/AudioPlayerTitle';
+import { AudioPlayerAuthor, AudioPlayerAuthorBase } from '@lib/AudioPlayerAuthor';
+`}
+/>
+
+### Media
+
+- **AudioPlayerImage** - The album art/thumbnail display
+- **AudioPlayerImageBase** - The base image component
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { AudioPlayerImage, AudioPlayerImageBase } from '@lib/AudioPlayerImage';
+`}
+/>
+
+### Time
+
+- **AudioPlayerTime** - The time display with current and total duration
+- **AudioPlayerTimeBase** - The base time display component
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { AudioPlayerTime, AudioPlayerTimeBase } from '@lib/AudioPlayerTime';
+`}
+/>
+
+Each base component provides the same UI structure as its context-connected counterpart but without the built-in state management, allowing for custom implementations when needed.
+
+## Available Hooks
+
+All hooks can be imported from either the barrel file of their related component (e.g. `@lib/AudioPlayerControls`) or directly from their respective modules. Some hooks are designed to work with the AudioPlayer context, while others can be used independently.
+
+### Context Hooks
+
+- **useAudioPlayerContextState** - Hook to access the AudioPlayer state context
+- **useAudioPlayerContextDispatch** - Hook to access the AudioPlayer dispatch context
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { useAudioPlayerContextState, useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider';
+`}
+/>
+
+### Control Hooks
+
+- **useAudioPlayerControls** - Hook for managing audio playback controls (play/pause, next/previous, loop, shuffle)
+- **useAudioPlayerKeyboardControls** - Hook for handling keyboard shortcuts
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { useAudioPlayerControls, useAudioPlayerKeyboardControls } from '@lib/AudioPlayerControls';
+`}
+/>
+
+### Progress Bar Hook
+
+- **useAudioPlayerProgressBar** - Hook for managing progress bar interactions and animations
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar';
+`}
+/>
+
+### Time Hook
+
+- **useAudioPlayerTime** - Hook for formatting and displaying audio duration
+
+<Source
+  language="typescript"
+  dark
+  code={`
+import { useAudioPlayerTime } from '@lib/AudioPlayerTime';
+`}
+/>
 
 ## Props
 
