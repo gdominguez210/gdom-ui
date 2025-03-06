@@ -52,6 +52,7 @@ export const Default: StoryObj<typeof AudioPlayer> = {
 export const Variation: StoryObj<typeof AudioPlayer> = {
   args: {
     tracks: trackData,
+    defaultTrackIndex: 1,
   },
   parameters: {
     docs: {
