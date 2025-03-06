@@ -4,7 +4,10 @@ import clsx from 'clsx';
 import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider';
 
 import { AudioPlayerAuthor } from '@lib/AudioPlayerAuthor/AudioPlayerAuthor';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import {
+  AudioPlayerContextProvider,
+  type AudioTrackData,
+} from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 import { AudioPlayerControls } from '@lib/AudioPlayerControls/AudioPlayerControls';
 import { AudioPlayerImage } from '@lib/AudioPlayerImage/AudioPlayerImage';
 import { AudioPlayerInfo } from '@lib/AudioPlayerInfo/AudioPlayerInfo';
@@ -40,9 +43,7 @@ function _AudioPlayerBase<T extends ElementType>(
 
 export const AudioPlayerBase = forwardRef(_AudioPlayerBase);
 
-export type AudioPlayerProps<T extends ElementType = 'div'> = AudioPlayerBaseProps<T>;
-
-export function AudioPlayer<T extends ElementType>(props: AudioPlayerProps<T>) {
+function AudioPlayerWithContext<T extends ElementType = 'div'>(props: AudioPlayerBaseProps<T>) {
   const { containerRef } = useAudioPlayerContextState();
 
   return (
@@ -53,8 +54,21 @@ export function AudioPlayer<T extends ElementType>(props: AudioPlayerProps<T>) {
   );
 }
 
+export type AudioPlayerProps<T extends ElementType = 'div'> = AudioPlayerBaseProps<T> & {
+  tracks: AudioTrackData[];
+};
+
+export function AudioPlayer<T extends ElementType = 'div'>(props: AudioPlayerProps<T>) {
+  const { tracks, ...restProps } = props;
+
+  return (
+    <AudioPlayerContextProvider tracks={tracks}>
+      <AudioPlayerWithContext {...(restProps as AudioPlayerBaseProps<T>)} />
+    </AudioPlayerContextProvider>
+  );
+}
+
 AudioPlayer.Author = AudioPlayerAuthor;
-AudioPlayer.ContextProvider = AudioPlayerContextProvider;
 AudioPlayer.Controls = AudioPlayerControls;
 AudioPlayer.Image = AudioPlayerImage;
 AudioPlayer.Info = AudioPlayerInfo;
