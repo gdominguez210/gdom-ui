@@ -1,42 +1,82 @@
-import type { StoryObj, Meta } from '@storybook/react';
-import { AudioPlayer as AudioPlayerComponent } from '@lib/AudioPlayer';
+import type { Meta, StoryObj } from '@storybook/react';
+import { AudioPlayer } from '@lib/AudioPlayer';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
 import { trackData } from './data';
 
 export default {
   title: 'components/AudioPlayer',
-  component: AudioPlayerComponent,
+  component: AudioPlayer,
   subcomponents: {
-    AudioPlayerAuthor: AudioPlayerComponent.Author,
-    AudioPlayerContextProvider: AudioPlayerComponent.ContextProvider,
-    AudioPlayerControls: AudioPlayerComponent.Controls,
-    AudioPlayerImage: AudioPlayerComponent.Image,
-    AudioPlayerInfo: AudioPlayerComponent.Info,
-    AudioPlayerProgressBar: AudioPlayerComponent.ProgressBar,
-    AudioPlayerTime: AudioPlayerComponent.Time,
-    AudioPlayerTitle: AudioPlayerComponent.Title,
-    AudioPlayerVolume: AudioPlayerComponent.Volume,
+    AudioPlayerAuthor: AudioPlayer.Author,
+    AudioPlayerContextProvider,
+    AudioPlayerControls: AudioPlayer.Controls,
+    AudioPlayerImage: AudioPlayer.Image,
+    AudioPlayerInfo: AudioPlayer.Info,
+    AudioPlayerProgressBar: AudioPlayer.ProgressBar,
+    AudioPlayerTime: AudioPlayer.Time,
+    AudioPlayerTitle: AudioPlayer.Title,
+    AudioPlayerVolume: AudioPlayer.Volume,
   },
-} as Meta<typeof AudioPlayerComponent>;
+} as Meta<typeof AudioPlayer>;
 
-export const AudioPlayer: StoryObj<typeof AudioPlayerComponent> = {
-  args: {},
-  render: () => (
-    <AudioPlayerComponent.ContextProvider tracks={trackData}>
-      <AudioPlayerComponent>
-        <div className="justify-space-between flex flex-grow gap-4">
-          <AudioPlayerComponent.Info className="basis-1/3">
-            <AudioPlayerComponent.Image />
-            <div className="py-2">
-              <AudioPlayerComponent.Title />
-              <AudioPlayerComponent.Author />
-              <AudioPlayerComponent.Time />
-            </div>
-          </AudioPlayerComponent.Info>
-          <AudioPlayerComponent.Controls />
-          <AudioPlayerComponent.Volume className="ml-auto pr-4" />
+export const Default: StoryObj<typeof AudioPlayer> = {
+  args: {
+    tracks: trackData,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Default layout with time display inside the info section',
+      },
+    },
+  },
+  render: (args) => (
+    <AudioPlayer {...args}>
+      <div className="justify-space-between flex flex-grow gap-4">
+        <AudioPlayer.Info className="basis-1/3">
+          <AudioPlayer.Image />
+          <div className="py-2">
+            <AudioPlayer.Title />
+            <AudioPlayer.Author />
+            <AudioPlayer.Time />
+          </div>
+        </AudioPlayer.Info>
+        <AudioPlayer.Controls />
+        <AudioPlayer.Volume className="ml-auto pr-4" />
+      </div>
+      <AudioPlayer.ProgressBar />
+    </AudioPlayer>
+  ),
+};
+
+export const Variation: StoryObj<typeof AudioPlayer> = {
+  args: {
+    tracks: trackData,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Alternative layout with time display as a separate component',
+      },
+      source: { type: 'dynamic' },
+    },
+  },
+  render: (args) => (
+    <AudioPlayer {...args}>
+      <AudioPlayer.ProgressBar className="before:bg-red-500 active:[&::-webkit-slider-thumb]:bg-red-500" />
+      <div className="justify-space-between flex flex-grow items-center gap-4">
+        <AudioPlayer.Info className="basis-1/3">
+          <AudioPlayer.Image />
+          <div className="py-2">
+            <AudioPlayer.Title />
+            <AudioPlayer.Author />
+          </div>
+        </AudioPlayer.Info>
+        <div className="flex flex-col items-center justify-center">
+          <AudioPlayer.Controls className="py-2" />
         </div>
-        <AudioPlayerComponent.ProgressBar />
-      </AudioPlayerComponent>
-    </AudioPlayerComponent.ContextProvider>
+        <AudioPlayer.Time className="ml-auto px-4 text-lg font-bold" />
+      </div>
+    </AudioPlayer>
   ),
 };
