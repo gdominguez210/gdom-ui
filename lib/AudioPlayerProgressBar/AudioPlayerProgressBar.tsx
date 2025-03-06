@@ -11,7 +11,7 @@ function _AudioPlayerProgressBarBase(
   props: AudioPlayerProgressBarProps,
   ref: Ref<HTMLInputElement>,
 ) {
-  const { className, 'aria-label': ariaLabel } = props;
+  const { className, 'aria-label': ariaLabel, ...restProps } = props;
 
   return (
     <input
@@ -43,7 +43,7 @@ function _AudioPlayerProgressBarBase(
           className,
         ),
       )}
-      {...props}
+      {...restProps}
       ref={ref}
       type="range"
       defaultValue="0"
