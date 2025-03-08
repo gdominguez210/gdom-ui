@@ -1,61 +1,148 @@
-import { screen, render, waitFor } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerAuthor } from '@lib/AudioPlayerAuthor/AudioPlayerAuthor';
+import { AudioPlayerAuthor, AudioPlayerAuthorBase } from '@lib/AudioPlayerAuthor';
+import { AUDIO_PLAYER_CONTEXT_ERROR } from '@lib/AudioPlayerContextProvider/data';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
 import { trackData } from '@lib/AudioPlayer/data';
-import {
-  AudioPlayerContextProviderWithTrackData as AudioWrapper,
-  AUDIO_PLAYER_CONTEXT_ERROR,
-} from '@lib/AudioPlayerContextProvider/data';
 
-describe('AudioPlayerAuthor should...', () => {
-  test('match the snapshot', () => {
-    const { container } = render(<AudioPlayerAuthor />, { wrapper: AudioWrapper });
-
-    expect(container).toMatchSnapshot();
+describe('AudioPlayerAuthor', () => {
+  describe('without context', () => {
+    test('should throw error when used without context', () => {
+      vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
+      expect(() => render(<AudioPlayerAuthor />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
+      vi.restoreAllMocks();
+    });
   });
 
-  test('should throw an error when not used in AudioPlayerContextProvider', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
+  describe('with context', () => {
+    test('should render author from current track', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioPlayerAuthor data-testid="author" />
+        </AudioPlayerContextProvider>,
+      );
 
-    await waitFor(() =>
-      expect(() => render(<AudioPlayerAuthor />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR),
-    );
-    vi.restoreAllMocks();
+      const authorElement = screen.getByTestId('author');
+      expect(authorElement).toHaveTextContent(trackData[0]!.author);
+    });
+
+    test('should render author from specified track index', () => {
+      const trackIndex = 1;
+
+      render(
+        <AudioPlayerContextProvider
+          tracks={trackData}
+          defaultTrackIndex={trackIndex}
+        >
+          <AudioPlayerAuthor data-testid="author" />
+        </AudioPlayerContextProvider>,
+      );
+
+      const authorElement = screen.getByTestId('author');
+      expect(authorElement).toHaveTextContent(trackData[trackIndex]!.author);
+    });
+
+    test('should allow custom className', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioPlayerAuthor
+            className="custom-class"
+            data-testid="author"
+          />
+        </AudioPlayerContextProvider>,
+      );
+
+      const authorElement = screen.getByTestId('author');
+      expect(authorElement).toHaveClass('custom-class');
+    });
+
+    test('should render as different element', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioPlayerAuthor
+            as="h2"
+            data-testid="author"
+          />
+        </AudioPlayerContextProvider>,
+      );
+
+      const authorElement = screen.getByTestId('author');
+      expect(authorElement.tagName.toLowerCase()).toBe('h2');
+    });
+
+    test('should pass through additional props', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioPlayerAuthor
+            data-testid="author"
+            aria-label="Track author"
+          />
+        </AudioPlayerContextProvider>,
+      );
+
+      const authorElement = screen.getByTestId('author');
+      expect(authorElement).toHaveAttribute('aria-label', 'Track author');
+    });
+  });
+});
+
+describe('AudioPlayerAuthorBase', () => {
+  test('should render as a <p> by default', () => {
+    render(<AudioPlayerAuthorBase data-testid="base">Author Name</AudioPlayerAuthorBase>);
+
+    const element = screen.getByTestId('base');
+    expect(element.tagName.toLowerCase()).toBe('p');
   });
 
-  test("display a track's author", () => {
-    render(<AudioPlayerAuthor data-testid="audio-player-author" />, { wrapper: AudioWrapper });
+  test('should render children', () => {
+    const authorText = 'Test Author';
+    render(<AudioPlayerAuthorBase data-testid="base">{authorText}</AudioPlayerAuthorBase>);
 
-    const element = screen.getByTestId('audio-player-author');
-
-    expect(element).toHaveTextContent(trackData[0]?.author as string);
+    const element = screen.getByTestId('base');
+    expect(element).toHaveTextContent(authorText);
   });
 
-  test('allow the user to change the returned element type', () => {
+  test('should merge className with default styles', () => {
     render(
-      <AudioPlayerAuthor
+      <AudioPlayerAuthorBase
+        className="custom-class"
+        data-testid="base"
+      >
+        Author Name
+      </AudioPlayerAuthorBase>,
+    );
+
+    const element = screen.getByTestId('base');
+    expect(element).toHaveClass('custom-class');
+  });
+
+  test('should render as different element', () => {
+    render(
+      <AudioPlayerAuthorBase
         as="span"
-        data-testid="audio-player-author"
-      />,
-      { wrapper: AudioWrapper },
+        data-testid="base"
+      >
+        Author Name
+      </AudioPlayerAuthorBase>,
     );
 
-    const element = screen.getByTestId('audio-player-author');
-
-    expect(element.nodeName.toLowerCase()).toBe('span');
+    const element = screen.getByTestId('base');
+    expect(element.tagName.toLowerCase()).toBe('span');
   });
 
-  test('allow the user to add a className', () => {
+  test('should forward additional props', () => {
     render(
-      <AudioPlayerAuthor
-        className="text-md"
-        data-testid="audio-player-author"
-      />,
-      { wrapper: AudioWrapper },
+      <AudioPlayerAuthorBase
+        data-testid="base"
+        aria-label="Track author"
+        title="Author tooltip"
+      >
+        Author Name
+      </AudioPlayerAuthorBase>,
     );
 
-    const element = screen.getByTestId('audio-player-author');
-
-    expect(element).toHaveClass('text-md');
+    const element = screen.getByTestId('base');
+    expect(element).toHaveAttribute('aria-label', 'Track author');
+    expect(element).toHaveAttribute('title', 'Author tooltip');
   });
 });
