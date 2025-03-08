@@ -56,16 +56,20 @@ function AudioPlayerWithContext<T extends ElementType = 'div'>(props: AudioPlaye
 
 export type AudioPlayerProps<T extends ElementType = 'div'> = AudioPlayerBaseProps<T> & {
   tracks: AudioTrackData[];
+  /** @default 0 */
   defaultTrackIndex?: number;
+  /** @default 50 */
+  defaultVolume?: number;
 };
 
 export function AudioPlayer<T extends ElementType = 'div'>(props: AudioPlayerProps<T>) {
-  const { tracks, defaultTrackIndex = 0, ...restProps } = props;
+  const { tracks, defaultTrackIndex = 0, defaultVolume = 50, ...restProps } = props;
 
   return (
     <AudioPlayerContextProvider
       tracks={tracks}
       defaultTrackIndex={defaultTrackIndex}
+      defaultVolume={defaultVolume}
     >
       <AudioPlayerWithContext {...(restProps as AudioPlayerBaseProps<T>)} />
     </AudioPlayerContextProvider>
