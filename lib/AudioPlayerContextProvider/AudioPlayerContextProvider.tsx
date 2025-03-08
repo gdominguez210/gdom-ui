@@ -7,15 +7,7 @@ import {
   type RefObject,
   type ReactNode,
 } from 'react';
-
-const AUDIO_PLAYER_ACTIONS = {
-  SET_CURRENT_TRACK_INDEX: 'SET_CURRENT_TRACK_INDEX',
-  SET_CURRENT_TIME: 'SET_CURRENT_TIME',
-  SET_DURATION: 'SET_DURATION',
-  SET_IS_PLAYING: 'SET_IS_PLAYING',
-  SET_VOLUME: 'SET_VOLUME',
-  SET_MUTE: 'SET_MUTE',
-} as const;
+import { AUDIO_PLAYER_ACTIONS } from './data';
 
 type ActionPayloads = {
   [AUDIO_PLAYER_ACTIONS.SET_CURRENT_TRACK_INDEX]: { currentTrackIndex: number };
@@ -41,13 +33,13 @@ type State = {
   mute: boolean;
 };
 
-function getInitialState(defaultTrackIndex: number): State {
+function getInitialState(defaultTrackIndex: number, defaultVolume: number): State {
   return {
     currentTrackIndex: defaultTrackIndex,
     currentTime: 0,
     duration: 0,
     isPlaying: false,
-    volume: 50,
+    volume: defaultVolume,
     mute: false,
   };
 }
@@ -111,13 +103,17 @@ export interface AudioPlayerContextProviderProps {
   defaultTrackIndex?: number;
   children: ReactNode;
   tracks: AudioTrackData[];
+  defaultVolume?: number;
 }
 
-export function AudioPlayerContextProvider(props: AudioPlayerContextProviderProps) {
-  const { children, defaultTrackIndex = 0, tracks = [] } = props;
-
+export function AudioPlayerContextProvider({
+  children,
+  defaultTrackIndex = 0,
+  tracks = [],
+  defaultVolume = 50,
+}: AudioPlayerContextProviderProps) {
   const [{ currentTime, duration, currentTrackIndex, isPlaying, volume, mute }, dispatch] =
-    useReducer(audioPlayerReducer, null, () => getInitialState(defaultTrackIndex));
+    useReducer(audioPlayerReducer, null, () => getInitialState(defaultTrackIndex, defaultVolume));
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressBarRef = useRef<HTMLInputElement>(null);
