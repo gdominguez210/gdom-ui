@@ -92,11 +92,20 @@ export function AudioPlayerVolume<T extends ElementType>(props: AudioPlayerVolum
       onVolumeChange={handleVolumeChange}
     >
       {mute || volume < 5 ? (
-        <Icon name="volume-mute-fill" />
+        <Icon
+          name="volume-mute-fill"
+          data-testid="volume-mute-icon"
+        />
       ) : volume >= 40 ? (
-        <Icon name="volume-up-fill" />
+        <Icon
+          name="volume-up-fill"
+          data-testid="volume-up-icon"
+        />
       ) : (
-        <Icon name="volume-down-fill" />
+        <Icon
+          name="volume-down-fill"
+          data-testid="volume-down-icon"
+        />
       )}
     </AudioPlayerVolumeLayout>
   );
