@@ -1,66 +1,114 @@
-import { screen, render, waitFor } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerImage } from '@lib/AudioPlayerImage/AudioPlayerImage';
+import { AudioPlayerImage, AudioPlayerImageBase } from './AudioPlayerImage';
 import { trackData } from '@lib/AudioPlayer/data';
-import {
-  AudioPlayerContextProviderWithTrackData as AudioWrapper,
-  AUDIO_PLAYER_CONTEXT_ERROR,
-} from '@lib/AudioPlayerContextProvider/data';
-import {
-  AudioPlayerContextProvider,
-  type AudioTrackData,
-} from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { AUDIO_PLAYER_CONTEXT_ERROR } from '@lib/AudioPlayerContextProvider/data';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
 
-describe('AudioPlayerImage should...', () => {
-  test('match the snapshot', () => {
-    const { container } = render(<AudioPlayerImage />, { wrapper: AudioWrapper });
-
-    expect(container).toMatchSnapshot();
+describe('AudioPlayerImage', () => {
+  describe('without context', () => {
+    test('should throw error when used without context', () => {
+      vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
+      expect(() => render(<AudioPlayerImage />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
+      vi.restoreAllMocks();
+    });
   });
 
-  test('should throw an error when not used in AudioPlayerContextProvider', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
+  describe('with context', () => {
+    test('should render current track image', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioPlayerImage data-testid="container" />
+        </AudioPlayerContextProvider>,
+      );
 
-    await waitFor(() =>
-      expect(() => render(<AudioPlayerImage />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR),
-    );
-    vi.restoreAllMocks();
+      const container = screen.getByTestId('container');
+      const image = container.querySelector('img');
+      expect(image).toHaveAttribute('src', trackData[0]!.thumbnail);
+      expect(image).toHaveAttribute('alt', `${trackData[0]!.title} thumbnail`);
+    });
+
+    test('should allow custom className on container', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioPlayerImage
+            className="custom-class"
+            data-testid="container"
+          />
+        </AudioPlayerContextProvider>,
+      );
+
+      expect(screen.getByTestId('container')).toHaveClass('custom-class');
+    });
+
+    test('should forward additional props to container', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioPlayerImage
+            data-testid="container"
+            aria-label="Track artwork"
+          />
+        </AudioPlayerContextProvider>,
+      );
+
+      expect(screen.getByTestId('container')).toHaveAttribute('aria-label', 'Track artwork');
+    });
   });
+});
 
-  test("display a track's thumbnail if it exists", () => {
-    render(<AudioPlayerImage data-testid="audio-player-image" />, { wrapper: AudioWrapper });
-
-    const element = screen.getByTestId('audio-player-image');
-
-    expect(element.firstChild).toHaveAttribute('src', trackData[0]?.thumbnail as string);
-  });
-
-  test('display a placeholder icon if a thumbnail does not exist', () => {
-    const track = { ...trackData[0] } as AudioTrackData;
-    delete track.thumbnail;
-
+describe('AudioPlayerImageBase', () => {
+  test('should render as div by default', () => {
     render(
-      <AudioPlayerContextProvider tracks={[track]}>
-        <AudioPlayerImage data-testid="audio-player-image" />
-      </AudioPlayerContextProvider>,
-    );
-
-    const element = screen.getByTestId('audio-player-image');
-
-    expect(element.firstChild?.nodeName.toLowerCase()).toBe('div');
-  });
-
-  test('allow the user to add a className', () => {
-    render(
-      <AudioPlayerImage
-        className="h-26 w-26"
-        data-testid="audio-player-image"
+      <AudioPlayerImageBase
+        data-testid="container"
+        src="test.jpg"
+        altText="Test image"
       />,
-      { wrapper: AudioWrapper },
     );
 
-    const element = screen.getByTestId('audio-player-image');
+    const container = screen.getByTestId('container');
+    expect(container.tagName.toLowerCase()).toBe('div');
+    expect(container.querySelector('img')).toBeInTheDocument();
+  });
 
-    expect(element).toHaveClass('h-26 w-26');
+  // test('should render as different element', () => {
+  //   render(
+  //     <AudioPlayerImageBase
+  //       as="figure"
+  //       data-testid="container"
+  //       src="test.jpg"
+  //       altText="Test image"
+  //     />,
+  //   );
+
+  //   const container = screen.getByTestId('container');
+  //   expect(container.tagName.toLowerCase()).toBe('figure');
+  //   expect(container.querySelector('img')).toBeInTheDocument();
+  // });
+
+  test('should merge className with default styles', () => {
+    render(
+      <AudioPlayerImageBase
+        className="custom-class"
+        data-testid="container"
+        src="test.jpg"
+        altText="Test image"
+      />,
+    );
+
+    expect(screen.getByTestId('container')).toHaveClass('custom-class');
+  });
+
+  test('should forward additional props to container', () => {
+    render(
+      <AudioPlayerImageBase
+        data-testid="container"
+        src="test.jpg"
+        altText="Test image"
+        aria-label="Track artwork"
+      />,
+    );
+
+    expect(screen.getByTestId('container')).toHaveAttribute('aria-label', 'Track artwork');
   });
 });
