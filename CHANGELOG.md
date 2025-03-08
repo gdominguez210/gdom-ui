@@ -1,3 +1,17 @@
+# [1.13.0](https://github.com/gdominguez210/gdom-ui/compare/v1.12.0...v1.13.0) (2025-03-08)
+
+
+### Bug Fixes
+
+* **lib/AudioPlayerProgressBar:** spread restProps instead of all props ([c8d0c48](https://github.com/gdominguez210/gdom-ui/commit/c8d0c48b7ec551a90754891b1f42db72bfba40d8))
+
+
+### Features
+
+* **lib/AudioPlayer:** accept defaultTrackIndex ([7d7c237](https://github.com/gdominguez210/gdom-ui/commit/7d7c23721514d029eceaf1a13efe611069cb9508))
+* **lib/AudioPlayer:** add defaultVolume prop ([afaf5ff](https://github.com/gdominguez210/gdom-ui/commit/afaf5ffd43f67b940485bbc8b651ea96dec4006f))
+* **lib/AudioPlayerContextProvider:** add defaultVolume prop ([1232c2a](https://github.com/gdominguez210/gdom-ui/commit/1232c2aaacfa3168f0c47fb46fd5683fcc629015))
+
 # [1.12.0](https://github.com/gdominguez210/gdom-ui/compare/v1.11.0...v1.12.0) (2025-03-04)
 
 

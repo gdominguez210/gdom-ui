@@ -2504,13 +2504,18 @@ const AUDIO_PLAYER_ACTIONS = {
   SET_VOLUME: "SET_VOLUME",
   SET_MUTE: "SET_MUTE"
 };
-function getInitialState(defaultTrackIndex) {
+const AUDIO_PLAYER_CONTEXT_ERROR = {
+  STATE: "useAudioPlayerContextState must be used within an AudioPlayerContextProvider",
+  DISPATCH: "useAudioPlayerContextDispatch must be used within an AudioPlayerContextProvider"
+};
+
+function getInitialState(defaultTrackIndex, defaultVolume) {
   return {
     currentTrackIndex: defaultTrackIndex,
     currentTime: 0,
     duration: 0,
     isPlaying: false,
-    volume: 50,
+    volume: defaultVolume,
     mute: false
   };
 }
@@ -2544,9 +2549,13 @@ const AudioPlayerContextState = createContext(
 const AudioPlayerContextDispatch = createContext(
   void 0
 );
-function AudioPlayerContextProvider(props) {
-  const { children, defaultTrackIndex = 0, tracks = [] } = props;
-  const [{ currentTime, duration, currentTrackIndex, isPlaying, volume, mute }, dispatch] = useReducer(audioPlayerReducer, null, () => getInitialState(defaultTrackIndex));
+function AudioPlayerContextProvider({
+  children,
+  defaultTrackIndex = 0,
+  tracks = [],
+  defaultVolume = 50
+}) {
+  const [{ currentTime, duration, currentTrackIndex, isPlaying, volume, mute }, dispatch] = useReducer(audioPlayerReducer, null, () => getInitialState(defaultTrackIndex, defaultVolume));
   const audioRef = useRef(null);
   const progressBarRef = useRef(null);
   const containerRef = useRef(null);
@@ -2576,12 +2585,10 @@ function AudioPlayerContextProvider(props) {
   return /* @__PURE__ */ jsx(AudioPlayerContextDispatch.Provider, { value: dispatchContextValue, children: /* @__PURE__ */ jsx(AudioPlayerContextState.Provider, { value: stateContextValue, children }) });
 }
 
-const AUDIO_PLAYER_CONTEXT_ERROR = "useAudioPlayerContext must be used within an AudioPlayerContextProvider";
-
 function useAudioPlayerContextState() {
   const context = useContext(AudioPlayerContextState);
   if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_ERROR);
+    throw new Error(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
   }
   return context;
 }
@@ -2589,7 +2596,7 @@ function useAudioPlayerContextState() {
 function useAudioPlayerContextDispatch() {
   const context = useContext(AudioPlayerContextDispatch);
   if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_ERROR);
+    throw new Error(AUDIO_PLAYER_CONTEXT_ERROR.DISPATCH);
   }
   return context;
 }
@@ -3043,7 +3050,7 @@ function useAudioPlayerProgressBar(props) {
 }
 
 function _AudioPlayerProgressBarBase(props, ref) {
-  const { className, "aria-label": ariaLabel } = props;
+  const { className, "aria-label": ariaLabel, ...restProps } = props;
   return /* @__PURE__ */ jsx(
     "input",
     {
@@ -3075,7 +3082,7 @@ function _AudioPlayerProgressBarBase(props, ref) {
           className
         )
       ),
-      ...props,
+      ...restProps,
       ref,
       type: "range",
       defaultValue: "0",
@@ -4321,7 +4328,25 @@ function AudioPlayerVolume(props) {
       mute,
       onMute: handleMute,
       onVolumeChange: handleVolumeChange,
-      children: mute || volume < 5 ? /* @__PURE__ */ jsx(Icon, { name: "volume-mute-fill" }) : volume >= 40 ? /* @__PURE__ */ jsx(Icon, { name: "volume-up-fill" }) : /* @__PURE__ */ jsx(Icon, { name: "volume-down-fill" })
+      children: mute || volume < 5 ? /* @__PURE__ */ jsx(
+        Icon,
+        {
+          name: "volume-mute-fill",
+          "data-testid": "volume-mute-icon"
+        }
+      ) : volume >= 40 ? /* @__PURE__ */ jsx(
+        Icon,
+        {
+          name: "volume-up-fill",
+          "data-testid": "volume-up-icon"
+        }
+      ) : /* @__PURE__ */ jsx(
+        Icon,
+        {
+          name: "volume-down-fill",
+          "data-testid": "volume-down-icon"
+        }
+      )
     }
   );
 }
@@ -4342,7 +4367,7 @@ function _AudioPlayerBase(props, ref) {
   );
 }
 const AudioPlayerBase = forwardRef(_AudioPlayerBase);
-function AudioPlayer(props) {
+function AudioPlayerWithContext(props) {
   const { containerRef } = useAudioPlayerContextState();
   return /* @__PURE__ */ jsx(
     AudioPlayerBase,
@@ -4352,8 +4377,19 @@ function AudioPlayer(props) {
     }
   );
 }
+function AudioPlayer(props) {
+  const { tracks, defaultTrackIndex = 0, defaultVolume = 50, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    AudioPlayerContextProvider,
+    {
+      tracks,
+      defaultTrackIndex,
+      defaultVolume,
+      children: /* @__PURE__ */ jsx(AudioPlayerWithContext, { ...restProps })
+    }
+  );
+}
 AudioPlayer.Author = AudioPlayerAuthor;
-AudioPlayer.ContextProvider = AudioPlayerContextProvider;
 AudioPlayer.Controls = AudioPlayerControls;
 AudioPlayer.Image = AudioPlayerImage;
 AudioPlayer.Info = AudioPlayerInfo;
