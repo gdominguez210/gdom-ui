@@ -1,26 +1,44 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
+import { AudioPlayerInfo } from './AudioPlayerInfo';
 
-import { AudioPlayerInfo } from '@lib/AudioPlayerInfo';
+describe('AudioPlayerInfo', () => {
+  test('should render children', () => {
+    render(
+      <AudioPlayerInfo data-testid="info">
+        <div>Track Title</div>
+        <div>Track Author</div>
+      </AudioPlayerInfo>,
+    );
 
-describe('AudioPlayerInfo should...', () => {
-  test('it should match the snapshot', () => {
-    const { container } = render(<AudioPlayerInfo>Track Info</AudioPlayerInfo>);
-    expect(container).toMatchSnapshot();
+    const info = screen.getByTestId('info');
+    expect(info).toHaveTextContent('Track Title');
+    expect(info).toHaveTextContent('Track Author');
   });
 
-  test('allow the user to add a className', () => {
+  test('should allow custom className', () => {
     render(
       <AudioPlayerInfo
-        className="gap-6"
-        data-testid="audio-player-info"
+        className="custom-class"
+        data-testid="info"
       >
         Track Info
       </AudioPlayerInfo>,
     );
 
-    const element = screen.getByTestId('audio-player-info');
+    expect(screen.getByTestId('info')).toHaveClass('custom-class');
+  });
 
-    expect(element).toHaveClass('gap-6');
+  test('should forward additional props', () => {
+    render(
+      <AudioPlayerInfo
+        data-testid="info"
+        aria-label="Track information"
+      >
+        Track Info
+      </AudioPlayerInfo>,
+    );
+
+    expect(screen.getByTestId('info')).toHaveAttribute('aria-label', 'Track information');
   });
 });
