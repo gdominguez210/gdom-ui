@@ -1,15 +1,12 @@
 import { useContext } from 'react';
-import {
-  AudioPlayerContextState,
-  type AudioPlayerContextStateType,
-} from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { AUDIO_PLAYER_CONTEXT_ERROR } from '@lib/AudioPlayerContextProvider/data';
+import { AUDIO_PLAYER_CONTEXT_ERROR } from './data';
+import { AudioPlayerContextState } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 
-export function useAudioPlayerContextState(): AudioPlayerContextStateType {
+export function useAudioPlayerContextState() {
   const context = useContext(AudioPlayerContextState);
 
   if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_ERROR);
+    throw new Error(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
   }
 
   return context;
