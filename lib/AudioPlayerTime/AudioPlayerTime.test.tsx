@@ -1,38 +1,96 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
+import { AudioPlayerTime, AudioPlayerTimeBase } from './AudioPlayerTime';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
+import { AUDIO_PLAYER_CONTEXT_ERROR } from '@lib/AudioPlayerContextProvider/data';
+import { trackData } from '@lib/AudioPlayer/data';
 
-import {
-  AUDIO_PLAYER_CONTEXT_ERROR,
-  AudioPlayerContextProviderWithTrackData as AudioWrapper,
-} from '@lib/AudioPlayerContextProvider/data';
-import { AudioPlayerTime } from '@lib/AudioPlayerTime';
-
-describe('AudioPlayerTime should...', () => {
-  test('it should match the snapshot', () => {
-    const { container } = render(<AudioPlayerTime />, { wrapper: AudioWrapper });
-    expect(container).toMatchSnapshot();
+describe('AudioPlayerTime', () => {
+  describe('without context', () => {
+    test('should throw error when used without context', () => {
+      vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
+      expect(() => render(<AudioPlayerTime />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
+      vi.restoreAllMocks();
+    });
   });
 
-  test('throw an error when not used in AudioPlayerContextProvider', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
+  describe('with context', () => {
+    test('should render current time and duration', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioPlayerTime data-testid="time" />
+        </AudioPlayerContextProvider>,
+      );
 
-    await waitFor(() =>
-      expect(() => render(<AudioPlayerTime />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR),
-    );
-    vi.restoreAllMocks();
+      const time = screen.getByTestId('time');
+      expect(time).toHaveTextContent('00:00 / 00:00');
+    });
+
+    test('should allow custom className', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioPlayerTime
+            className="custom-class"
+            data-testid="time"
+          />
+        </AudioPlayerContextProvider>,
+      );
+
+      expect(screen.getByTestId('time')).toHaveClass('custom-class');
+    });
+
+    test('should forward additional props', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioPlayerTime
+            data-testid="time"
+            aria-label="Track time"
+          />
+        </AudioPlayerContextProvider>,
+      );
+
+      expect(screen.getByTestId('time')).toHaveAttribute('aria-label', 'Track time');
+    });
   });
+});
 
-  test('allow the user to add a className', () => {
+describe('AudioPlayerTimeBase', () => {
+  test('should render as span by default', () => {
     render(
-      <AudioPlayerTime
-        className="text-md"
-        data-testid="audio-player-time"
+      <AudioPlayerTimeBase
+        data-testid="time"
+        currentTime="60"
+        duration="180"
       />,
-      { wrapper: AudioWrapper },
     );
 
-    const element = screen.getByTestId('audio-player-time');
+    const element = screen.getByTestId('time');
+    expect(element.tagName.toLowerCase()).toBe('span');
+  });
 
-    expect(element).toHaveClass('text-md');
+  test('should merge className with default styles', () => {
+    render(
+      <AudioPlayerTimeBase
+        className="custom-class"
+        data-testid="time"
+        currentTime="0"
+        duration="0"
+      />,
+    );
+
+    expect(screen.getByTestId('time')).toHaveClass('custom-class');
+  });
+
+  test('should forward additional props', () => {
+    render(
+      <AudioPlayerTimeBase
+        data-testid="time"
+        currentTime="0"
+        duration="0"
+        aria-label="Track time"
+      />,
+    );
+
+    expect(screen.getByTestId('time')).toHaveAttribute('aria-label', 'Track time');
   });
 });
