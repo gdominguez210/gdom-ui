@@ -2602,7 +2602,7 @@ function useAudioPlayerContextDispatch() {
 }
 
 function AudioPlayerAuthorBase(props) {
-  const { as: Element = "p", className, children, ...restProps } = props;
+  const { as: Element = "p", children, className, ...restProps } = props;
   return /* @__PURE__ */ jsx(
     Element,
     {
@@ -2938,9 +2938,17 @@ function AudioPlayerControls(props) {
 }
 
 function AudioPlayerImageBase(props) {
-  const { altText, className, width = 96, height = 96, src, ...restProps } = props;
+  const {
+    as: Element = "div",
+    altText,
+    className,
+    width = 96,
+    height = 96,
+    src,
+    ...restProps
+  } = props;
   return /* @__PURE__ */ jsxs(
-    "div",
+    Element,
     {
       className: twMerge(
         clsx(
@@ -2989,35 +2997,29 @@ function AudioPlayerInfo(props) {
   );
 }
 
-function useAudioPlayerProgressBar(props) {
-  const {
-    audioRef,
-    currentTrack,
-    cssVariableName = "--range-progress",
-    duration,
-    isPlaying,
-    onProgressChange,
-    progressBarRef
-  } = props;
+function useAudioPlayerProgressBar({
+  audioRef,
+  currentTrack,
+  cssVariableName = "--range-progress",
+  duration,
+  isPlaying,
+  onProgressChange,
+  progressBarRef
+}) {
   const animationRef = useRef(null);
   const handleProgressChange = useCallback(() => {
-    if (audioRef.current && progressBarRef.current) {
-      const newTime = Number(progressBarRef.current.value);
-      audioRef.current.currentTime = newTime;
-      onProgressChange(newTime);
-      progressBarRef.current.style.setProperty(cssVariableName, `${newTime / duration * 100}%`);
-    }
+    if (!audioRef.current || !progressBarRef.current) return;
+    const newTime = Number(progressBarRef.current.value);
+    audioRef.current.currentTime = newTime;
+    onProgressChange(newTime);
+    progressBarRef.current.style.setProperty(cssVariableName, `${newTime / duration * 100}%`);
   }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
   const updateProgress = useCallback(() => {
-    if (audioRef?.current && progressBarRef?.current && duration) {
-      const currentTime = audioRef.current.currentTime;
-      onProgressChange(currentTime);
-      progressBarRef.current.value = currentTime.toString();
-      progressBarRef.current.style.setProperty(
-        cssVariableName,
-        `${currentTime / duration * 100}%`
-      );
-    }
+    if (!audioRef.current || !progressBarRef.current || !duration) return;
+    const currentTime = audioRef.current.currentTime;
+    onProgressChange(currentTime);
+    progressBarRef.current.value = currentTime.toString();
+    progressBarRef.current.style.setProperty(cssVariableName, `${currentTime / duration * 100}%`);
   }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
   const startAnimation = useCallback(() => {
     if (audioRef?.current && progressBarRef?.current && duration) {
@@ -3049,7 +3051,7 @@ function useAudioPlayerProgressBar(props) {
   };
 }
 
-function _AudioPlayerProgressBarBase(props, ref) {
+function AudioPlayerProgressBarBase(props) {
   const { className, "aria-label": ariaLabel, ...restProps } = props;
   return /* @__PURE__ */ jsx(
     "input",
@@ -3083,7 +3085,6 @@ function _AudioPlayerProgressBarBase(props, ref) {
         )
       ),
       ...restProps,
-      ref,
       type: "range",
       defaultValue: "0",
       "aria-label": ariaLabel || "Audio progress",
@@ -3091,9 +3092,6 @@ function _AudioPlayerProgressBarBase(props, ref) {
     }
   );
 }
-const AudioPlayerProgressBarBase = forwardRef(
-  _AudioPlayerProgressBarBase
-);
 function AudioPlayerProgressBar(props) {
   const { progressBarRef, audioRef, currentTrack, duration, isPlaying } = useAudioPlayerContextState();
   const { actions, dispatch } = useAudioPlayerContextDispatch();
@@ -4351,12 +4349,11 @@ function AudioPlayerVolume(props) {
   );
 }
 
-function _AudioPlayerBase(props, ref) {
+function AudioPlayerBase(props) {
   const { as: Element = "div", children, className, ...restProps } = props;
   return /* @__PURE__ */ jsx(
     Element,
     {
-      ref,
       className: twMerge(
         clsx("flex flex-col justify-center bg-slate-700 text-neutral-100", className)
       ),
@@ -4366,7 +4363,6 @@ function _AudioPlayerBase(props, ref) {
     }
   );
 }
-const AudioPlayerBase = forwardRef(_AudioPlayerBase);
 function AudioPlayerWithContext(props) {
   const { containerRef } = useAudioPlayerContextState();
   return /* @__PURE__ */ jsx(

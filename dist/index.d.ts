@@ -1,12 +1,12 @@
 import { AudioPlayerContextStateType as AudioPlayerContextStateType_2 } from './AudioPlayerContextProvider';
 import { ChangeEventHandler } from 'react';
-import { ComponentPropsWithoutRef } from 'react';
+import { ComponentPropsWithRef } from 'react';
 import { Context } from 'react';
 import { Dispatch } from 'react';
 import { ElementType } from 'react';
 import { ForwardRefExoticComponent } from 'react';
 import { HTMLAttributes } from 'react';
-import { JSX as JSX_2 } from 'react/jsx-runtime';
+import { JSX } from 'react/jsx-runtime';
 import { MouseEventHandler } from 'react';
 import { ReactNode } from 'react';
 import { RefAttributes } from 'react';
@@ -44,7 +44,7 @@ declare const AUDIO_PLAYER_ACTIONS: {
     readonly SET_MUTE: "SET_MUTE";
 };
 
-export declare function AudioPlayer<T extends ElementType = 'div'>(props: AudioPlayerProps<T>): JSX_2.Element;
+export declare function AudioPlayer<T extends ElementType = 'div'>(props: AudioPlayerProps<T>): JSX.Element;
 
 export declare namespace AudioPlayer {
     var Author: typeof AudioPlayerAuthor;
@@ -57,21 +57,21 @@ export declare namespace AudioPlayer {
     var Volume: typeof AudioPlayerVolume;
 }
 
-export declare function AudioPlayerAuthor<T extends ElementType>(props: AudioPlayerAuthorProps<T>): JSX_2.Element | null;
+export declare function AudioPlayerAuthor<T extends ElementType>(props: AudioPlayerAuthorProps<T>): JSX.Element | null;
 
-export declare function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerAuthorProps<T>): JSX_2.Element;
+export declare function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerAuthorProps<T>): JSX.Element;
 
 export declare type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
     /** @default p */
     as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
-export declare const AudioPlayerBase: ForwardRefExoticComponent<Omit<AudioPlayerBaseProps<ElementType>, "ref"> & RefAttributes<any>>;
+export declare function AudioPlayerBase<T extends ElementType>(props: AudioPlayerBaseProps<T>): JSX.Element;
 
 export declare type AudioPlayerBaseProps<T extends ElementType = 'div'> = {
     /** @default div */
     as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
 export declare const AudioPlayerContextDispatch: Context<AudioPlayerContextDispatchType | undefined>;
 
@@ -80,7 +80,7 @@ export declare interface AudioPlayerContextDispatchType {
     actions: typeof AUDIO_PLAYER_ACTIONS;
 }
 
-export declare function AudioPlayerContextProvider({ children, defaultTrackIndex, tracks, defaultVolume, }: AudioPlayerContextProviderProps): JSX_2.Element;
+export declare function AudioPlayerContextProvider({ children, defaultTrackIndex, tracks, defaultVolume, }: AudioPlayerContextProviderProps): JSX.Element;
 
 export declare interface AudioPlayerContextProviderProps {
     /** @default 0 */
@@ -93,41 +93,43 @@ export declare interface AudioPlayerContextProviderProps {
 export declare const AudioPlayerContextState: Context<AudioPlayerContextStateType | undefined>;
 
 export declare interface AudioPlayerContextStateType extends State {
-    audioRef: RefObject<HTMLAudioElement>;
+    audioRef: RefObject<HTMLAudioElement | null>;
     currentTrack: AudioTrackData | undefined;
-    progressBarRef: RefObject<HTMLInputElement>;
+    progressBarRef: RefObject<HTMLInputElement | null>;
     tracks: AudioTrackData[];
-    containerRef: RefObject<HTMLElement>;
+    containerRef: RefObject<HTMLElement | null>;
 }
 
-export declare function AudioPlayerControls(props: AudioPlayerControlsProps): JSX_2.Element;
+export declare function AudioPlayerControls(props: AudioPlayerControlsProps): JSX.Element;
 
-export declare function AudioPlayerControlsBase<T extends ElementType>(props: AudioPlayerControlsProps<T>): JSX_2.Element;
+export declare function AudioPlayerControlsBase<T extends ElementType>(props: AudioPlayerControlsProps<T>): JSX.Element;
 
-export declare function AudioPlayerControlsButtonLoop(props: AudioPlayerControlsButtonProps): JSX_2.Element;
+export declare function AudioPlayerControlsButtonLoop(props: AudioPlayerControlsButtonProps): JSX.Element;
 
-export declare function AudioPlayerControlsButtonNext(props: HTMLAttributes<HTMLButtonElement>): JSX_2.Element;
+export declare function AudioPlayerControlsButtonNext(props: ComponentPropsWithRef<'button'>): JSX.Element;
 
-export declare function AudioPlayerControlsButtonPlay(props: AudioPlayerControlsButtonProps): JSX_2.Element;
+export declare function AudioPlayerControlsButtonPlay(props: AudioPlayerControlsButtonProps): JSX.Element;
 
-export declare function AudioPlayerControlsButtonPrevious(props: HTMLAttributes<HTMLButtonElement>): JSX_2.Element;
+export declare function AudioPlayerControlsButtonPrevious(props: ComponentPropsWithRef<'button'>): JSX.Element;
 
-export declare interface AudioPlayerControlsButtonProps extends HTMLAttributes<HTMLButtonElement> {
+export declare interface AudioPlayerControlsButtonProps extends ComponentPropsWithRef<'button'> {
     active?: boolean;
 }
 
-export declare function AudioPlayerControlsButtonShuffle(props: AudioPlayerControlsButtonProps): JSX_2.Element;
+export declare function AudioPlayerControlsButtonShuffle(props: AudioPlayerControlsButtonProps): JSX.Element;
 
 export declare type AudioPlayerControlsProps<T extends ElementType = 'div'> = {
     /** @default div */
     as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
-export declare function AudioPlayerImage(props: AudioPlayerImageProps): JSX_2.Element;
+export declare function AudioPlayerImage(props: AudioPlayerImageProps): JSX.Element;
 
-export declare function AudioPlayerImageBase(props: AudioPlayerImageBaseProps): JSX_2.Element;
+export declare function AudioPlayerImageBase(props: AudioPlayerImageBaseProps): JSX.Element;
 
-export declare interface AudioPlayerImageBaseProps extends HTMLAttributes<HTMLDivElement> {
+export declare type AudioPlayerImageBaseProps<T extends ElementType = 'div'> = {
+    /** @default div */
+    as?: T;
     /** @default '' */
     altText: string;
     /** @default 96 */
@@ -135,28 +137,25 @@ export declare interface AudioPlayerImageBaseProps extends HTMLAttributes<HTMLDi
     /** @default 96 */
     height?: number;
     src?: string;
-}
+} & ComponentPropsWithRef<T>;
 
 export declare interface AudioPlayerImageProps extends Omit<AudioPlayerImageBaseProps, 'src' | 'altText'> {
     /** @default `${title} thumbnail` */
     altText?: string;
 }
 
-export declare function AudioPlayerInfo<T extends ElementType>(props: AudioPlayerInfoProps<T>): JSX_2.Element;
+export declare function AudioPlayerInfo<T extends ElementType>(props: AudioPlayerInfoProps<T>): JSX.Element;
 
 export declare type AudioPlayerInfoProps<T extends ElementType = 'div'> = {
-    /**
-     * @default div
-     * */
+    /** @default div */
     as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
-export declare function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps): JSX_2.Element;
+export declare function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps): JSX.Element;
 
-export declare const AudioPlayerProgressBarBase: ForwardRefExoticComponent<AudioPlayerProgressBarProps & RefAttributes<HTMLInputElement>>;
+export declare function AudioPlayerProgressBarBase(props: AudioPlayerProgressBarProps): JSX.Element;
 
-export declare interface AudioPlayerProgressBarProps extends HTMLAttributes<HTMLInputElement> {
-}
+export declare type AudioPlayerProgressBarProps = ComponentPropsWithRef<'input'>;
 
 export declare type AudioPlayerProps<T extends ElementType = 'div'> = AudioPlayerBaseProps<T> & {
     tracks: AudioTrackData[];
@@ -166,27 +165,27 @@ export declare type AudioPlayerProps<T extends ElementType = 'div'> = AudioPlaye
     defaultVolume?: number;
 };
 
-export declare function AudioPlayerTime(props: Omit<AudioPlayerTimeProps, 'currentTime' | 'duration'>): JSX_2.Element;
+export declare function AudioPlayerTime(props: Omit<AudioPlayerTimeProps, 'currentTime' | 'duration'>): JSX.Element;
 
-export declare function AudioPlayerTimeBase<T extends ElementType>(props: AudioPlayerTimeProps<T>): JSX_2.Element;
+export declare function AudioPlayerTimeBase<T extends ElementType>(props: AudioPlayerTimeProps<T>): JSX.Element;
 
-export declare type AudioPlayerTimeProps<T extends ElementType = 'div'> = {
+export declare type AudioPlayerTimeProps<T extends ElementType = 'span'> = {
     /** @default span */
     as?: T;
     currentTime: string;
     duration: string;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
-export declare function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>): JSX_2.Element | null;
+export declare function AudioPlayerTitle<T extends ElementType = 'p'>(props: AudioPlayerTitleProps<T>): JSX.Element | null;
 
-export declare function AudioPlayerTitleBase<T extends ElementType>(props: AudioPlayerTitleProps<T>): JSX_2.Element;
+export declare function AudioPlayerTitleBase<T extends ElementType>(props: AudioPlayerTitleProps<T>): JSX.Element;
 
 export declare type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
     /** @default p */
     as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
-export declare function AudioPlayerVolume<T extends ElementType>(props: AudioPlayerVolumeProps<T>): JSX_2.Element;
+export declare function AudioPlayerVolume<T extends ElementType>(props: AudioPlayerVolumeProps<T>): JSX.Element;
 
 export declare type AudioPlayerVolumeLayoutProps<T extends ElementType> = AudioPlayerVolumeProps<T> & {
     max?: number;
@@ -200,7 +199,7 @@ export declare type AudioPlayerVolumeLayoutProps<T extends ElementType> = AudioP
 export declare type AudioPlayerVolumeProps<T extends ElementType = 'div'> = {
     /** @default div */
     as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
 export declare interface AudioTrackData {
     title: string;
@@ -331,12 +330,12 @@ declare interface useAudioPlayerControlsProps {
     tracks: AudioPlayerContextStateType['tracks'];
 }
 
-export declare function useAudioPlayerProgressBar(props: UseAudioPlayerProgressBarProps): {
+export declare function useAudioPlayerProgressBar({ audioRef, currentTrack, cssVariableName, duration, isPlaying, onProgressChange, progressBarRef, }: UseAudioPlayerProgressBarProps): {
     handleProgressChange: ChangeEventHandler<HTMLInputElement>;
 };
 
 declare interface UseAudioPlayerProgressBarProps {
-    audioRef: RefObject<HTMLAudioElement>;
+    audioRef: RefObject<HTMLAudioElement | null>;
     currentTrack?: {
         src: string;
     };
@@ -344,7 +343,7 @@ declare interface UseAudioPlayerProgressBarProps {
     duration: number;
     isPlaying: boolean;
     onProgressChange: (time: number) => void;
-    progressBarRef: RefObject<HTMLInputElement>;
+    progressBarRef: RefObject<HTMLInputElement | null>;
 }
 
 export declare function useAudioPlayerTime(props: Pick<AudioPlayerContextStateType, 'currentTime' | 'duration'>): {

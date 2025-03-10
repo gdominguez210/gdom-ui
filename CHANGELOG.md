@@ -1,3 +1,17 @@
+# [1.14.0](https://github.com/gdominguez210/gdom-ui/compare/v1.13.0...v1.14.0) (2025-03-10)
+
+
+### Features
+
+* **AudioPlayerAuthor:** accept ref as a prop ([fcd72c6](https://github.com/gdominguez210/gdom-ui/commit/fcd72c64e3d81e1d3677a9bf319d54c78a6d6f06))
+* **AudioPlayerControls:** accept ref as a prop ([96e9135](https://github.com/gdominguez210/gdom-ui/commit/96e9135eb52f5ebe609c96fccca8a5320dcf1823))
+* **AudioPlayerImage:** accept ref as a prop, add polymorphic behavior ([8fdd7c1](https://github.com/gdominguez210/gdom-ui/commit/8fdd7c127284e46e5f5e93fc9a45ab636f977e8c))
+* **AudioPlayerInfo:** accept ref as a prop ([61dfbc5](https://github.com/gdominguez210/gdom-ui/commit/61dfbc5ae6a8fe60dbdcee793d1a96b450d259b5))
+* **AudioPlayerProgressBar:** accept ref as a prop ([5f64418](https://github.com/gdominguez210/gdom-ui/commit/5f6441870bd9caa3b3fa86c2d31c3304cc5f7b92))
+* **AudioPlayerTime:** accept ref as a prop ([fb934bf](https://github.com/gdominguez210/gdom-ui/commit/fb934bfead3ee916f1e0358b214ee013f096d4cd))
+* **AudioPlayerTitle:** accept ref as a prop ([42dc32e](https://github.com/gdominguez210/gdom-ui/commit/42dc32e5e42e7431b064182d13b5be2d4a44d4f0))
+* **AudioPlayerVolume:** accept ref as a prop ([3736226](https://github.com/gdominguez210/gdom-ui/commit/3736226068754940e084d3d1ad1472f5620fcbca))
+
 # [1.13.0](https://github.com/gdominguez210/gdom-ui/compare/v1.12.0...v1.13.0) (2025-03-08)
 
 
