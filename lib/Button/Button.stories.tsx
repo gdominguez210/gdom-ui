@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-
+import type { ReactElement } from 'react';
 import { Button as ButtonComponent, type ButtonProps } from './Button';
 import { Icon } from '@lib/Icon';
 import { sizes } from './Button';
@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 const gridHeaderCols = ['Medium', 'Large', 'Extra Large', '2 Extra Large'];
-const gridBodyRows: [string, (props: ButtonProps) => JSX.Element][] = [
+const gridBodyRows: [string, (props: ButtonProps) => ReactElement][] = [
   ['Normal', (props: ButtonProps) => <ButtonComponent {...props}>Button CTA</ButtonComponent>],
   [
     'Hover',

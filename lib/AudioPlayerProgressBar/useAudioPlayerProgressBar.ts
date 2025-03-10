@@ -1,49 +1,44 @@
 import { useRef, useCallback, useEffect, type ChangeEventHandler, type RefObject } from 'react';
 
 interface UseAudioPlayerProgressBarProps {
-  audioRef: RefObject<HTMLAudioElement>;
+  audioRef: RefObject<HTMLAudioElement | null>;
   currentTrack?: { src: string };
   cssVariableName?: string;
   duration: number;
   isPlaying: boolean;
   onProgressChange: (time: number) => void;
-  progressBarRef: RefObject<HTMLInputElement>;
+  progressBarRef: RefObject<HTMLInputElement | null>;
 }
 
-export function useAudioPlayerProgressBar(props: UseAudioPlayerProgressBarProps) {
-  const {
-    audioRef,
-    currentTrack,
-    cssVariableName = '--range-progress',
-    duration,
-    isPlaying,
-    onProgressChange,
-    progressBarRef,
-  } = props;
-
+export function useAudioPlayerProgressBar({
+  audioRef,
+  currentTrack,
+  cssVariableName = '--range-progress',
+  duration,
+  isPlaying,
+  onProgressChange,
+  progressBarRef,
+}: UseAudioPlayerProgressBarProps) {
   const animationRef = useRef<number | null>(null);
 
   const handleProgressChange: ChangeEventHandler<HTMLInputElement> = useCallback(() => {
-    if (audioRef.current && progressBarRef.current) {
-      const newTime = Number(progressBarRef.current.value);
-      audioRef.current.currentTime = newTime;
-      onProgressChange(newTime);
+    if (!audioRef.current || !progressBarRef.current) return;
 
-      progressBarRef.current.style.setProperty(cssVariableName, `${(newTime / duration) * 100}%`);
-    }
+    const newTime = Number(progressBarRef.current.value);
+    audioRef.current.currentTime = newTime;
+    onProgressChange(newTime);
+
+    progressBarRef.current.style.setProperty(cssVariableName, `${(newTime / duration) * 100}%`);
   }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
 
   const updateProgress = useCallback(() => {
-    if (audioRef?.current && progressBarRef?.current && duration) {
-      const currentTime = audioRef.current.currentTime;
-      onProgressChange(currentTime);
+    if (!audioRef.current || !progressBarRef.current || !duration) return;
 
-      progressBarRef.current.value = currentTime.toString();
-      progressBarRef.current.style.setProperty(
-        cssVariableName,
-        `${(currentTime / duration) * 100}%`,
-      );
-    }
+    const currentTime = audioRef.current.currentTime;
+    onProgressChange(currentTime);
+
+    progressBarRef.current.value = currentTime.toString();
+    progressBarRef.current.style.setProperty(cssVariableName, `${(currentTime / duration) * 100}%`);
   }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
 
   const startAnimation = useCallback(() => {

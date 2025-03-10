@@ -78,11 +78,11 @@ export interface AudioTrackData {
 }
 
 export interface AudioPlayerContextStateType extends State {
-  audioRef: RefObject<HTMLAudioElement>;
+  audioRef: RefObject<HTMLAudioElement | null>;
   currentTrack: AudioTrackData | undefined;
-  progressBarRef: RefObject<HTMLInputElement>;
+  progressBarRef: RefObject<HTMLInputElement | null>;
   tracks: AudioTrackData[];
-  containerRef: RefObject<HTMLElement>;
+  containerRef: RefObject<HTMLElement | null>;
 }
 
 export interface AudioPlayerContextDispatchType {
