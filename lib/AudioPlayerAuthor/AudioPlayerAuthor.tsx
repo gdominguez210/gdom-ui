@@ -1,16 +1,15 @@
-import clsx from 'clsx';
-import type { ComponentPropsWithoutRef, ElementType } from 'react';
+import type { ComponentPropsWithRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
-
+import clsx from 'clsx';
 import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 
 export type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
   /** @default p */
   as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
 export function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
-  const { as: Element = 'p', className, children, ...restProps } = props;
+  const { as: Element = 'p', children, className, ...restProps } = props;
 
   return (
     <Element
