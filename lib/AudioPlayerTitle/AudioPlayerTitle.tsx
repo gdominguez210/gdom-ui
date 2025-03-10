@@ -1,13 +1,12 @@
 import clsx from 'clsx';
-import type { ComponentPropsWithoutRef, ElementType } from 'react';
+import type { ComponentPropsWithRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
-
 import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 
 export type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
   /** @default p */
   as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
 export function AudioPlayerTitleBase<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
   const { as: Element = 'p', children, className, ...restProps } = props;
@@ -22,7 +21,7 @@ export function AudioPlayerTitleBase<T extends ElementType>(props: AudioPlayerTi
   );
 }
 
-export function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
+export function AudioPlayerTitle<T extends ElementType = 'p'>(props: AudioPlayerTitleProps<T>) {
   const { currentTrack: { title } = {} } = useAudioPlayerContextState();
 
   if (!title) return null;
