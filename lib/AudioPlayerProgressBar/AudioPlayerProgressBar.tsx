@@ -1,16 +1,13 @@
-import { forwardRef, type HTMLAttributes, type Ref, useCallback } from 'react';
+import { type ComponentPropsWithRef, useCallback } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/useAudioPlayerProgressBar';
 import { useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextDispatch';
 
-export interface AudioPlayerProgressBarProps extends HTMLAttributes<HTMLInputElement> {}
+export type AudioPlayerProgressBarProps = ComponentPropsWithRef<'input'>;
 
-function _AudioPlayerProgressBarBase(
-  props: AudioPlayerProgressBarProps,
-  ref: Ref<HTMLInputElement>,
-) {
+export function AudioPlayerProgressBarBase(props: AudioPlayerProgressBarProps) {
   const { className, 'aria-label': ariaLabel, ...restProps } = props;
 
   return (
@@ -44,7 +41,6 @@ function _AudioPlayerProgressBarBase(
         ),
       )}
       {...restProps}
-      ref={ref}
       type="range"
       defaultValue="0"
       aria-label={ariaLabel || 'Audio progress'}
@@ -52,10 +48,6 @@ function _AudioPlayerProgressBarBase(
     />
   );
 }
-
-export const AudioPlayerProgressBarBase = forwardRef<HTMLInputElement, AudioPlayerProgressBarProps>(
-  _AudioPlayerProgressBarBase,
-);
 
 export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
   const { progressBarRef, audioRef, currentTrack, duration, isPlaying } =
