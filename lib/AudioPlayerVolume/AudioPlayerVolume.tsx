@@ -1,4 +1,4 @@
-import { type ChangeEventHandler, type ComponentPropsWithoutRef, type ElementType } from 'react';
+import { type ChangeEventHandler, type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
@@ -8,7 +8,7 @@ import { Icon } from '@lib/Icon';
 export type AudioPlayerVolumeProps<T extends ElementType = 'div'> = {
   /** @default div */
   as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
 export type AudioPlayerVolumeLayoutProps<T extends ElementType> = AudioPlayerVolumeProps<T> & {
   max?: number;
