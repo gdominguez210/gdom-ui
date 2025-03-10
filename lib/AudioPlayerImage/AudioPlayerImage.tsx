@@ -1,10 +1,12 @@
-import { type HTMLAttributes } from 'react';
+import type { ComponentPropsWithRef, ElementType } from 'react';
 import { Icon } from '@lib/Icon/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 
-export interface AudioPlayerImageBaseProps extends HTMLAttributes<HTMLDivElement> {
+export type AudioPlayerImageBaseProps<T extends ElementType = 'div'> = {
+  /** @default div */
+  as?: T;
   /** @default '' */
   altText: string;
   /** @default 96 */
@@ -12,7 +14,7 @@ export interface AudioPlayerImageBaseProps extends HTMLAttributes<HTMLDivElement
   /** @default 96 */
   height?: number;
   src?: string;
-}
+} & ComponentPropsWithRef<T>;
 
 export interface AudioPlayerImageProps extends Omit<AudioPlayerImageBaseProps, 'src' | 'altText'> {
   /** @default `${title} thumbnail` */
@@ -20,10 +22,18 @@ export interface AudioPlayerImageProps extends Omit<AudioPlayerImageBaseProps, '
 }
 
 export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
-  const { altText, className, width = 96, height = 96, src, ...restProps } = props;
+  const {
+    as: Element = 'div',
+    altText,
+    className,
+    width = 96,
+    height = 96,
+    src,
+    ...restProps
+  } = props;
 
   return (
-    <div
+    <Element
       className={twMerge(
         clsx(
           'flex h-24 w-24 items-center justify-center overflow-hidden rounded-md bg-neutral-100/10',
@@ -48,7 +58,7 @@ export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
           </span>
         </div>
       )}
-    </div>
+    </Element>
   );
 }
 
