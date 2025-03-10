@@ -1,7 +1,6 @@
-import clsx from 'clsx';
-import type { ComponentPropsWithoutRef, ElementType, HTMLAttributes } from 'react';
+import type { ComponentPropsWithRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
-
+import clsx from 'clsx';
 import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
 import { useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextDispatch';
 import { useAudioPlayerControls } from '@lib/AudioPlayerControls/useAudioPlayerControls';
@@ -10,7 +9,7 @@ import { Icon } from '@lib/Icon/Icon';
 export type AudioPlayerControlsProps<T extends ElementType = 'div'> = {
   /** @default div */
   as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
 export function AudioPlayerControlsBase<T extends ElementType>(props: AudioPlayerControlsProps<T>) {
   const { as: Element = 'div', children, className, ...restProps } = props;
@@ -25,7 +24,7 @@ export function AudioPlayerControlsBase<T extends ElementType>(props: AudioPlaye
   );
 }
 
-export interface AudioPlayerControlsButtonProps extends HTMLAttributes<HTMLButtonElement> {
+export interface AudioPlayerControlsButtonProps extends ComponentPropsWithRef<'button'> {
   active?: boolean;
 }
 
@@ -88,7 +87,7 @@ export function AudioPlayerControlsButtonShuffle(props: AudioPlayerControlsButto
   );
 }
 
-export function AudioPlayerControlsButtonPrevious(props: HTMLAttributes<HTMLButtonElement>) {
+export function AudioPlayerControlsButtonPrevious(props: ComponentPropsWithRef<'button'>) {
   return (
     <button {...props}>
       <Icon
@@ -99,7 +98,7 @@ export function AudioPlayerControlsButtonPrevious(props: HTMLAttributes<HTMLButt
   );
 }
 
-export function AudioPlayerControlsButtonNext(props: HTMLAttributes<HTMLButtonElement>) {
+export function AudioPlayerControlsButtonNext(props: ComponentPropsWithRef<'button'>) {
   return (
     <button {...props}>
       <Icon
