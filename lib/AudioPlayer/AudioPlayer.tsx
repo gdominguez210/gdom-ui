@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type ElementType, forwardRef, type Ref } from 'react';
+import { type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider';
@@ -19,17 +19,13 @@ import { AudioPlayerVolume } from '@lib/AudioPlayerVolume/AudioPlayerVolume';
 export type AudioPlayerBaseProps<T extends ElementType = 'div'> = {
   /** @default div */
   as?: T;
-} & ComponentPropsWithoutRef<T>;
+} & ComponentPropsWithRef<T>;
 
-function _AudioPlayerBase<T extends ElementType>(
-  props: AudioPlayerBaseProps<T>,
-  ref: Ref<T extends ElementType<infer E> ? E : HTMLElement>,
-) {
+export function AudioPlayerBase<T extends ElementType>(props: AudioPlayerBaseProps<T>) {
   const { as: Element = 'div', children, className, ...restProps } = props;
 
   return (
     <Element
-      ref={ref}
       className={twMerge(
         clsx('flex flex-col justify-center bg-slate-700 text-neutral-100', className),
       )}
@@ -40,8 +36,6 @@ function _AudioPlayerBase<T extends ElementType>(
     </Element>
   );
 }
-
-export const AudioPlayerBase = forwardRef(_AudioPlayerBase);
 
 function AudioPlayerWithContext<T extends ElementType = 'div'>(props: AudioPlayerBaseProps<T>) {
   const { containerRef } = useAudioPlayerContextState();
