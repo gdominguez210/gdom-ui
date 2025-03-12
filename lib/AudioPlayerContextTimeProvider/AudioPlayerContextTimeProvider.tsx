@@ -1,0 +1,69 @@
+import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
+import { AudioPlayerContextTime } from './AudioPlayerContextTime';
+
+const TIME_ACTIONS = {
+  SET_CURRENT_TIME: 'SET_CURRENT_TIME',
+  SET_DURATION: 'SET_DURATION',
+} as const;
+
+type ActionPayloads = {
+  [TIME_ACTIONS.SET_CURRENT_TIME]: { currentTime: number };
+  [TIME_ACTIONS.SET_DURATION]: { duration: number };
+};
+
+type TimeAction = {
+  [K in keyof ActionPayloads]: { type: K; payload: ActionPayloads[K] };
+}[keyof ActionPayloads];
+
+type TimeState = {
+  currentTime: number;
+  duration: number;
+};
+
+function timeReducer(state: TimeState, action: TimeAction): TimeState {
+  switch (action.type) {
+    case TIME_ACTIONS.SET_CURRENT_TIME:
+      return { ...state, currentTime: action.payload.currentTime };
+    case TIME_ACTIONS.SET_DURATION:
+      return { ...state, duration: action.payload.duration };
+    default:
+      return state;
+  }
+}
+
+export interface AudioPlayerContextTimeProviderProps extends PropsWithChildren {
+  defaultDuration?: number;
+  defaultCurrentTime?: number;
+}
+
+export function AudioPlayerContextTimeProvider(props: AudioPlayerContextTimeProviderProps) {
+  const { defaultDuration = 0, defaultCurrentTime = 0, children } = props;
+
+  const [state, dispatch] = useReducer(timeReducer, {
+    currentTime: defaultCurrentTime,
+    duration: defaultDuration,
+  });
+
+  const seek = useCallback((time: number) => {
+    dispatch({ type: TIME_ACTIONS.SET_CURRENT_TIME, payload: { currentTime: time } });
+  }, []);
+
+  const setDuration = useCallback((duration: number) => {
+    dispatch({ type: TIME_ACTIONS.SET_DURATION, payload: { duration } });
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      ...state,
+      seek,
+      setDuration,
+    }),
+    [state, seek, setDuration],
+  );
+
+  return (
+    <AudioPlayerContextTime.Provider value={contextValue}>
+      {children}
+    </AudioPlayerContextTime.Provider>
+  );
+}
