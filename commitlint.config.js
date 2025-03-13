@@ -9,6 +9,7 @@ export default {
     },
   },
   rules: {
+    'header-max-length': [0],
     'body-max-length': [0],
     'body-max-line-length': [0],
     'subject-case': [1, 'never', ['upper-case', 'pascal-case', 'start-case']],
