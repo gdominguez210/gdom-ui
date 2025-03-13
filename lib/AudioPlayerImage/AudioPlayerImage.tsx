@@ -2,9 +2,9 @@ import type { ComponentPropsWithRef, ElementType } from 'react';
 import { Icon } from '@lib/Icon/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
+import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 
-export type AudioPlayerImageBaseProps<T extends ElementType = 'div'> = {
+export type AudioPlayerImagePrimitiveProps<T extends ElementType = 'div'> = {
   /** @default div */
   as?: T;
   /** @default '' */
@@ -16,12 +16,13 @@ export type AudioPlayerImageBaseProps<T extends ElementType = 'div'> = {
   src?: string;
 } & ComponentPropsWithRef<T>;
 
-export interface AudioPlayerImageProps extends Omit<AudioPlayerImageBaseProps, 'src' | 'altText'> {
+export interface AudioPlayerImageProps
+  extends Omit<AudioPlayerImagePrimitiveProps, 'src' | 'altText'> {
   /** @default `${title} thumbnail` */
   altText?: string;
 }
 
-export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
+export function AudioPlayerImagePrimitive(props: AudioPlayerImagePrimitiveProps) {
   const {
     as: Element = 'div',
     altText,
@@ -63,10 +64,10 @@ export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
 }
 
 export function AudioPlayerImage(props: AudioPlayerImageProps) {
-  const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContextState();
+  const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContextTrack();
 
   return (
-    <AudioPlayerImageBase
+    <AudioPlayerImagePrimitive
       {...props}
       src={thumbnail}
       altText={props.altText || `${title} thumbnail`}
