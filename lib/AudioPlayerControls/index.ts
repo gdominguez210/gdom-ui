@@ -1,2 +1,3 @@
 export * from './AudioPlayerControls';
-export * from './useAudioPlayerControls';
+export * from './useAudioPlayerTrackControls';
+export * from './useAudioPlayerMetadata';

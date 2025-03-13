@@ -1,17 +1,22 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
+import type { ComponentPropsWithRef, ElementType, PropsWithChildren, RefObject } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
-import { useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextDispatch';
-import { useAudioPlayerControls } from '@lib/AudioPlayerControls/useAudioPlayerControls';
+import { useAudioPlayerTrackControls } from '@lib/AudioPlayerControls/useAudioPlayerTrackControls';
 import { Icon } from '@lib/Icon/Icon';
+import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
+import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
+import { useAudioPlayerMetadata } from '@lib/AudioPlayerControls/useAudioPlayerMetadata';
+import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
 
 export type AudioPlayerControlsProps<T extends ElementType = 'div'> = {
   /** @default div */
   as?: T;
 } & ComponentPropsWithRef<T>;
 
-export function AudioPlayerControlsBase<T extends ElementType>(props: AudioPlayerControlsProps<T>) {
+export function AudioPlayerControlsPrimitive<T extends ElementType>(
+  props: AudioPlayerControlsProps<T>,
+) {
   const { as: Element = 'div', children, className, ...restProps } = props;
 
   return (
@@ -109,44 +114,75 @@ export function AudioPlayerControlsButtonNext(props: ComponentPropsWithRef<'butt
   );
 }
 
-export function AudioPlayerControls(props: AudioPlayerControlsProps) {
-  const stateContext = useAudioPlayerContextState();
-  const dispatchContext = useAudioPlayerContextDispatch();
+export function AudioPlayerTrackControls(props: PropsWithChildren) {
+  const { children } = props;
+  const { audioRef } = useAudioPlayerContextRefs();
+  const { seek } = useAudioPlayerContextTime();
+  const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
+  const { isPlaying, loop, shuffle } = useAudioPlayerContextAudio();
 
-  const { audioRef, currentTrack, isPlaying } = stateContext;
-
-  const {
-    handleLoadedMetadata,
-    handlePrevTrack,
-    handleNextTrack,
-    shouldLoop,
-    shouldShuffle,
-    toggleLoop,
-    togglePlay,
-    toggleShuffle,
-  } = useAudioPlayerControls({ ...stateContext, ...dispatchContext });
+  const { handlePrevTrack, handleNextTrack } = useAudioPlayerTrackControls({
+    isPlaying,
+    loop,
+    shuffle,
+    currentTrackIndex,
+    tracksLength: tracks.length,
+    onTimeChange: seek,
+    onTrackIndexChange: setTrackIndex,
+    audioRef: audioRef as RefObject<HTMLAudioElement>,
+  });
 
   return (
-    <AudioPlayerControlsBase {...props}>
-      <audio
-        onLoadedMetadata={handleLoadedMetadata}
-        ref={audioRef}
-        src={currentTrack?.src}
-      />
+    <>
+      <AudioPlayerControlsButtonPrevious onClick={handlePrevTrack} />
+      {children}
+      <AudioPlayerControlsButtonNext onClick={handleNextTrack} />
+    </>
+  );
+}
+
+export function AudioPlayerAudio(props: ComponentPropsWithRef<'audio'>) {
+  const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
+  const { setDuration } = useAudioPlayerContextTime();
+  const { currentTrack } = useAudioPlayerContextTrack();
+
+  const { handleLoadedMetadata } = useAudioPlayerMetadata({
+    audioRef: audioRef as RefObject<HTMLAudioElement>,
+    progressBarRef: progressBarRef as RefObject<HTMLInputElement>,
+    onDurationChange: setDuration,
+  });
+
+  return (
+    <audio
+      ref={audioRef}
+      src={currentTrack?.src}
+      onLoadedMetadata={handleLoadedMetadata}
+      {...props}
+    />
+  );
+}
+
+export function AudioPlayerControls(props: AudioPlayerControlsProps) {
+  const { isPlaying, loop, shuffle, togglePlay, toggleLoop, toggleShuffle } =
+    useAudioPlayerContextAudio();
+
+  return (
+    <AudioPlayerControlsPrimitive {...props}>
+      <AudioPlayerAudio />
       <AudioPlayerControlsButtonLoop
-        active={shouldLoop}
+        active={loop}
         onClick={toggleLoop}
       />
-      <AudioPlayerControlsButtonPrevious onClick={handlePrevTrack} />
-      <AudioPlayerControlsButtonPlay
-        active={isPlaying}
-        onClick={togglePlay}
-      />
-      <AudioPlayerControlsButtonNext onClick={handleNextTrack} />
+      <AudioPlayerTrackControls>
+        <AudioPlayerControlsButtonPlay
+          active={isPlaying}
+          onClick={togglePlay}
+        />
+      </AudioPlayerTrackControls>
       <AudioPlayerControlsButtonShuffle
-        active={shouldShuffle}
+        active={shuffle}
         onClick={toggleShuffle}
       />
-    </AudioPlayerControlsBase>
+    </AudioPlayerControlsPrimitive>
   );
 }
