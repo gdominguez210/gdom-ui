@@ -1,4 +1,4 @@
-import type { AudioTrackData } from '@lib/AudioPlayerContextProvider';
+import type { AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
 export const trackData: AudioTrackData[] = [
   {
     title: 'Electro Swing House',
