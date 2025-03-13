@@ -1,13 +1,13 @@
-import { type ComponentPropsWithRef, useCallback } from 'react';
+import { type ComponentPropsWithRef } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
+import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
 import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/useAudioPlayerProgressBar';
-import { useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextDispatch';
-
+import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
+import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
 export type AudioPlayerProgressBarProps = ComponentPropsWithRef<'input'>;
 
-export function AudioPlayerProgressBarBase(props: AudioPlayerProgressBarProps) {
+export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarProps) {
   const { className, 'aria-label': ariaLabel, ...restProps } = props;
 
   return (
@@ -50,28 +50,22 @@ export function AudioPlayerProgressBarBase(props: AudioPlayerProgressBarProps) {
 }
 
 export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
-  const { progressBarRef, audioRef, currentTrack, duration, isPlaying } =
-    useAudioPlayerContextState();
-  const { actions, dispatch } = useAudioPlayerContextDispatch();
+  const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
 
-  const handleTimeChange = useCallback(
-    (time: number) => {
-      dispatch({ type: actions.SET_CURRENT_TIME, payload: { currentTime: time } });
-    },
-    [dispatch, actions],
-  );
+  const { isPlaying } = useAudioPlayerContextAudio();
+
+  const { duration, seek } = useAudioPlayerContextTime();
 
   const { handleProgressChange } = useAudioPlayerProgressBar({
     audioRef,
-    currentTrack,
     duration,
     isPlaying,
-    onProgressChange: handleTimeChange,
+    onProgressChange: seek,
     progressBarRef,
   });
 
   return (
-    <AudioPlayerProgressBarBase
+    <AudioPlayerProgressBarPrimitive
       {...props}
       onChange={handleProgressChange}
       ref={progressBarRef}
