@@ -1,14 +1,16 @@
 import type { ComponentPropsWithRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
+import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 
 export type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
   /** @default p */
   as?: T;
 } & ComponentPropsWithRef<T>;
 
-export function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
+export function AudioPlayerAuthorPrimitive<T extends ElementType>(
+  props: AudioPlayerAuthorProps<T>,
+) {
   const { as: Element = 'p', children, className, ...restProps } = props;
 
   return (
@@ -22,16 +24,16 @@ export function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerA
 }
 
 export function AudioPlayerAuthor<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
-  const { currentTrack: { author } = {} } = useAudioPlayerContextState();
+  const { currentTrack: { author } = {} } = useAudioPlayerContextTrack();
 
   if (!author) return null;
 
   return (
-    <AudioPlayerAuthorBase
+    <AudioPlayerAuthorPrimitive
       {...props}
       title={author}
     >
       {author}
-    </AudioPlayerAuthorBase>
+    </AudioPlayerAuthorPrimitive>
   );
 }
