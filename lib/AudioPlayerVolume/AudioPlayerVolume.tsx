@@ -1,9 +1,9 @@
 import { type ChangeEventHandler, type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
-import { useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextDispatch';
 import { Icon } from '@lib/Icon';
+import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
+import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
 
 export type AudioPlayerVolumeProps<T extends ElementType = 'div'> = {
   /** @default div */
@@ -19,7 +19,7 @@ export type AudioPlayerVolumeLayoutProps<T extends ElementType> = AudioPlayerVol
   onVolumeChange: ChangeEventHandler<HTMLInputElement>;
 };
 
-function AudioPlayerVolumeLayout<T extends ElementType>(props: AudioPlayerVolumeLayoutProps<T>) {
+function AudioPlayerVolumePrimitive<T extends ElementType>(props: AudioPlayerVolumeLayoutProps<T>) {
   const {
     as: Element = 'div',
     className,
@@ -65,26 +65,26 @@ function AudioPlayerVolumeLayout<T extends ElementType>(props: AudioPlayerVolume
 }
 
 export function AudioPlayerVolume<T extends ElementType>(props: AudioPlayerVolumeProps<T>) {
-  const { audioRef, volume, mute } = useAudioPlayerContextState();
-  const { actions, dispatch } = useAudioPlayerContextDispatch();
+  const { audioRef } = useAudioPlayerContextRefs();
+  const { volume, mute, toggleMute, setVolume } = useAudioPlayerContextAudio();
 
   const handleVolumeChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const newVolume = Number(e.target.value);
-    dispatch({ type: actions.SET_VOLUME, payload: { volume: newVolume } });
+    setVolume(newVolume);
     if (audioRef.current) {
       audioRef.current.volume = newVolume / 100;
     }
   };
 
   const handleMute = () => {
-    dispatch({ type: actions.SET_MUTE, payload: { mute: 'toggle' } });
+    toggleMute();
     if (audioRef.current) {
       audioRef.current.muted = !mute;
     }
   };
 
   return (
-    <AudioPlayerVolumeLayout
+    <AudioPlayerVolumePrimitive
       {...props}
       value={volume}
       mute={mute}
@@ -107,6 +107,6 @@ export function AudioPlayerVolume<T extends ElementType>(props: AudioPlayerVolum
           data-testid="volume-down-icon"
         />
       )}
-    </AudioPlayerVolumeLayout>
+    </AudioPlayerVolumePrimitive>
   );
 }
