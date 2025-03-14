@@ -16,7 +16,6 @@ function getNextIndex(currentIndex: number, tracksLength: number, direction: num
 
 interface UseAudioPlayerTrackControlsProps {
   // Audio state
-  isPlaying: boolean;
   loop: boolean;
   shuffle: boolean;
 
@@ -33,7 +32,6 @@ interface UseAudioPlayerTrackControlsProps {
 }
 
 export function useAudioPlayerTrackControls({
-  isPlaying,
   loop,
   shuffle,
   currentTrackIndex,
@@ -70,10 +68,6 @@ export function useAudioPlayerTrackControls({
 
     onTrackIndexChange(newIndex);
   }, [audioRef, shuffle, loop, tracksLength, currentTrackIndex, resetTime, onTrackIndexChange]);
-
-  useEffect(() => {
-    isPlaying ? audioRef?.current?.play() : audioRef?.current?.pause();
-  }, [isPlaying, currentTrackIndex, audioRef]);
 
   useEffect(() => {
     const currentAudioRef = audioRef.current;
