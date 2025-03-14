@@ -18,8 +18,6 @@ export function useAudioPlayerMetadata({
   const handleLoadedMetadata = useCallback(() => {
     const seconds = audioRef.current?.duration;
 
-    console.log('seconds', seconds);
-
     if (typeof seconds !== 'undefined') {
       onDurationChange(seconds);
       if (progressBarRef.current) {
