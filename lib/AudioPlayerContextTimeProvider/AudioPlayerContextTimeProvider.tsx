@@ -1,10 +1,6 @@
 import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
 import { AudioPlayerContextTime } from './AudioPlayerContextTime';
-
-const TIME_ACTIONS = {
-  SET_CURRENT_TIME: 'SET_CURRENT_TIME',
-  SET_DURATION: 'SET_DURATION',
-} as const;
+import { timeReducer, TIME_ACTIONS } from './reducer';
 
 type ActionPayloads = {
   [TIME_ACTIONS.SET_CURRENT_TIME]: { currentTime: number };
@@ -19,17 +15,6 @@ type TimeState = {
   currentTime: number;
   duration: number;
 };
-
-function timeReducer(state: TimeState, action: TimeAction): TimeState {
-  switch (action.type) {
-    case TIME_ACTIONS.SET_CURRENT_TIME:
-      return { ...state, currentTime: action.payload.currentTime };
-    case TIME_ACTIONS.SET_DURATION:
-      return { ...state, duration: action.payload.duration };
-    default:
-      return state;
-  }
-}
 
 export interface AudioPlayerContextTimeProviderProps extends PropsWithChildren {
   defaultDuration?: number;
