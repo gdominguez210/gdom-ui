@@ -1,2 +1,2 @@
 export * from './AudioPlayerControlPlay';
-export * from './useAudioPlayerPlay';
+export * from './useAudioPlayerControlPlay';
