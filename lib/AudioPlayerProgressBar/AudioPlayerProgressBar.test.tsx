@@ -1,13 +1,13 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerProgressBar, AudioPlayerProgressBarBase } from './AudioPlayerProgressBar';
+import { AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive } from './AudioPlayerProgressBar';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
-import { AUDIO_PLAYER_CONTEXT_ERROR } from '@lib/AudioPlayerContextProvider/data';
+import { AUDIO_PLAYER_CONTEXT_AUDIO_ERROR } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudio';
 import { trackData } from '@lib/AudioPlayer/data';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider';
+import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 
 function AudioElement() {
-  const { audioRef } = useAudioPlayerContextState();
+  const { audioRef } = useAudioPlayerContextRefs();
   return (
     <audio
       ref={audioRef}
@@ -20,7 +20,7 @@ describe('AudioPlayerProgressBar', () => {
   describe('without context', () => {
     test('should throw error when used without context', () => {
       vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
-      expect(() => render(<AudioPlayerProgressBar />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
+      expect(() => render(<AudioPlayerProgressBar />)).toThrow(AUDIO_PLAYER_CONTEXT_AUDIO_ERROR);
       vi.restoreAllMocks();
     });
   });
@@ -66,15 +66,66 @@ describe('AudioPlayerProgressBar', () => {
       fireEvent.change(slider, { target: { value: '50' } });
       expect(audio.currentTime).toBe(50);
     });
+
+    test('should call custom onChange handler after internal handler', () => {
+      const handleChange = vi.fn();
+
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioElement />
+          <AudioPlayerProgressBar
+            data-testid="progress"
+            onChange={handleChange}
+          />
+        </AudioPlayerContextProvider>,
+      );
+
+      const slider = screen.getByRole('slider');
+      fireEvent.change(slider, { target: { value: '50' } });
+
+      expect(handleChange).toHaveBeenCalledTimes(1);
+      expect(handleChange).toHaveBeenCalledWith(expect.any(Object));
+    });
+
+    test('should update progress bar style on value change', () => {
+      render(
+        <AudioPlayerContextProvider tracks={trackData}>
+          <AudioElement />
+          <AudioPlayerProgressBar data-testid="progress" />
+        </AudioPlayerContextProvider>,
+      );
+
+      const slider = screen.getByRole('slider');
+      fireEvent.change(slider, { target: { value: '50' } });
+
+      expect(slider).toHaveStyle({ '--range-progress': '50%' });
+    });
   });
 });
 
-describe('AudioPlayerProgressBarBase', () => {
+describe('AudioPlayerProgressBarPrimitive', () => {
+  test('should render with default aria-label', () => {
+    render(<AudioPlayerProgressBarPrimitive data-testid="progress" />);
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-label', 'Audio progress');
+  });
+
+  test('should allow custom aria-label', () => {
+    render(
+      <AudioPlayerProgressBarPrimitive
+        data-testid="progress"
+        aria-label="Custom progress"
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-label', 'Custom progress');
+  });
+
   test('should call onChange when slider changes', () => {
     const handleChange = vi.fn();
 
     render(
-      <AudioPlayerProgressBarBase
+      <AudioPlayerProgressBarPrimitive
         data-testid="progress"
         onChange={handleChange}
       />,
@@ -88,10 +139,9 @@ describe('AudioPlayerProgressBarBase', () => {
 
   test('should merge className with default styles', () => {
     render(
-      <AudioPlayerProgressBarBase
+      <AudioPlayerProgressBarPrimitive
         className="custom-class"
         data-testid="progress"
-        onChange={() => {}}
       />,
     );
 
@@ -100,13 +150,21 @@ describe('AudioPlayerProgressBarBase', () => {
 
   test('should forward additional props', () => {
     render(
-      <AudioPlayerProgressBarBase
+      <AudioPlayerProgressBarPrimitive
         data-testid="progress"
-        onChange={() => {}}
-        aria-label="Progress control"
+        title="Progress bar"
       />,
     );
 
-    expect(screen.getByTestId('progress')).toHaveAttribute('aria-label', 'Progress control');
+    expect(screen.getByTestId('progress')).toHaveAttribute('title', 'Progress bar');
+  });
+
+  test('should have correct default attributes', () => {
+    render(<AudioPlayerProgressBarPrimitive data-testid="progress" />);
+
+    const slider = screen.getByRole('slider');
+    expect(slider).toHaveAttribute('type', 'range');
+    expect(slider).toHaveAttribute('defaultValue', '0');
+    expect(slider).toHaveAttribute('role', 'slider');
   });
 });
