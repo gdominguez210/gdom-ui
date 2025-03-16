@@ -1,10 +1,11 @@
-import { type ComponentPropsWithRef } from 'react';
+import { type ComponentPropsWithRef, type ChangeEventHandler, useCallback } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
 import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/useAudioPlayerProgressBar';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
+
 export type AudioPlayerProgressBarProps = ComponentPropsWithRef<'input'>;
 
 export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarProps) {
@@ -50,6 +51,7 @@ export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarPro
 }
 
 export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
+  const { onChange, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
 
   const { isPlaying } = useAudioPlayerContextAudio();
@@ -64,10 +66,18 @@ export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
     progressBarRef,
   });
 
+  const handleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      handleProgressChange(e);
+      onChange?.(e);
+    },
+    [handleProgressChange, onChange],
+  );
+
   return (
     <AudioPlayerProgressBarPrimitive
-      {...props}
-      onChange={handleProgressChange}
+      {...restProps}
+      onChange={handleChange}
       ref={progressBarRef}
     />
   );
