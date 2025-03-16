@@ -21,7 +21,7 @@ export function useAudioPlayerNextTrack({
   audioRef,
 }: UseAudioPlayerNextTrackProps) {
   const handleNextTrack = useCallback(() => {
-    if (audioRef?.current?.currentTime >= 1 || loop) {
+    if (loop) {
       onTimeChange(0);
       audioRef.current.currentTime = 0;
       return;
