@@ -10,7 +10,7 @@ import { AudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/AudioPlayerP
 import { AudioPlayerTime } from '@lib/AudioPlayerTime/AudioPlayerTime';
 import { AudioPlayerTitle } from '@lib/AudioPlayerTitle/AudioPlayerTitle';
 import { AudioPlayerVolume } from '@lib/AudioPlayerVolume/AudioPlayerVolume';
-import type { AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
+import type { AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
 
 export type AudioPlayerPrimitiveProps<T extends ElementType = 'div'> = {
   /** @default div */
@@ -32,17 +32,6 @@ export function AudioPlayerPrimitive<T extends ElementType>(props: AudioPlayerPr
     </Element>
   );
 }
-
-// function AudioPlayerWithContext<T extends ElementType = 'div'>(props: AudioPlayerBaseProps<T>) {
-//   const { containerRef } = useAudioPlayerContextState();
-
-//   return (
-//     <AudioPlayerBase
-//       {...props}
-//       ref={containerRef}
-//     />
-//   );
-// }
 
 export type AudioPlayerProps<T extends ElementType = 'div'> = AudioPlayerPrimitiveProps<T> & {
   tracks: AudioTrackData[];
