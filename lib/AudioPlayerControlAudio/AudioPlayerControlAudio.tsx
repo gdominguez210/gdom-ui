@@ -8,6 +8,7 @@ import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
 import { useAudioPlayerMetadata } from '@lib/AudioPlayerControlAudio/useAudioPlayerMetadata';
+import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 
 export type AudioPlayerControlAudioPrimitiveProps = ComponentPropsWithRef<'audio'>;
 
@@ -29,6 +30,7 @@ export function AudioPlayerControlAudio(props: AudioPlayerControlAudioPrimitiveP
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
   const { setDuration } = useAudioPlayerContextTime();
   const { currentTrack } = useAudioPlayerContextTrack();
+  const { mute } = useAudioPlayerContextAudio();
 
   const { handleLoadedMetadata } = useAudioPlayerMetadata({
     audioRef: audioRef as RefObject<HTMLAudioElement>,
@@ -50,6 +52,7 @@ export function AudioPlayerControlAudio(props: AudioPlayerControlAudioPrimitiveP
       ref={audioRef}
       src={currentTrack?.src}
       onLoadedMetadata={handleMetadata}
+      muted={mute}
     />
   );
 }
