@@ -1,9 +1,6 @@
-import { type AudioPlayerContextStateType } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 import { formatAudioDurationForDisplay } from '@lib/AudioPlayerTime/data';
 
-export function useAudioPlayerTime(
-  props: Pick<AudioPlayerContextStateType, 'currentTime' | 'duration'>,
-) {
+export function useAudioPlayerTime(props: { currentTime: number; duration: number }) {
   const { currentTime, duration } = props;
 
   return {
