@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import type { ComponentPropsWithRef, ElementType } from 'react';
+import { type ComponentPropsWithRef, type ElementType, memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 
@@ -8,7 +8,7 @@ export type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
   as?: T;
 } & ComponentPropsWithRef<T>;
 
-export function AudioPlayerTitlePrimitive<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
+function AudioPlayerTitlePrimitive<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
   const { as: Element = 'p', children, className, ...restProps } = props;
 
   return (
@@ -21,7 +21,11 @@ export function AudioPlayerTitlePrimitive<T extends ElementType>(props: AudioPla
   );
 }
 
-export function AudioPlayerTitle<T extends ElementType = 'p'>(props: AudioPlayerTitleProps<T>) {
+const AudioPlayerTitlePrimitiveMemo = memo(AudioPlayerTitlePrimitive);
+AudioPlayerTitlePrimitiveMemo.displayName = 'AudioPlayerTitlePrimitive';
+export { AudioPlayerTitlePrimitiveMemo as AudioPlayerTitlePrimitive };
+
+function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
   const { currentTrack: { title } = {} } = useAudioPlayerContextTrack();
 
   if (!title) return null;
@@ -35,3 +39,7 @@ export function AudioPlayerTitle<T extends ElementType = 'p'>(props: AudioPlayer
     </AudioPlayerTitlePrimitive>
   );
 }
+
+const AudioPlayerTitleMemo = memo(AudioPlayerTitle);
+AudioPlayerTitleMemo.displayName = 'AudioPlayerTitle';
+export { AudioPlayerTitleMemo as AudioPlayerTitle };
