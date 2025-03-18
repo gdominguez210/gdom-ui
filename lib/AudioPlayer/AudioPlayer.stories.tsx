@@ -2,6 +2,14 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { AudioPlayer } from '@lib/AudioPlayer';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
 import { trackData } from './data';
+import { AudioPlayerControlPlay } from '@lib/AudioPlayerControlPlay';
+import { AudioPlayerControlNext } from '@lib/AudioPlayerControlNext';
+import { AudioPlayerControlPrevious } from '@lib/AudioPlayerControlPrevious';
+import { AudioPlayerControlShuffle } from '@lib/AudioPlayerControlShuffle';
+import { AudioPlayerControlLoop } from '@lib/AudioPlayerControlLoop';
+import { AudioPlayerControlAudio } from '@lib/AudioPlayerControlAudio';
+import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
+import { AudioPlayerVolumeButton } from '@lib/AudioPlayerVolumeButton/AudioPlayerVolumeButton';
 
 export default {
   title: 'components/AudioPlayer',
@@ -16,6 +24,14 @@ export default {
     AudioPlayerTime: AudioPlayer.Time,
     AudioPlayerTitle: AudioPlayer.Title,
     AudioPlayerVolume: AudioPlayer.Volume,
+    AudioPlayerControlPlay: AudioPlayerControlPlay,
+    AudioPlayerControlNext: AudioPlayerControlNext,
+    AudioPlayerControlPrevious: AudioPlayerControlPrevious,
+    AudioPlayerControlShuffle: AudioPlayerControlShuffle,
+    AudioPlayerControlLoop: AudioPlayerControlLoop,
+    AudioPlayerControlAudio: AudioPlayerControlAudio,
+    AudioPlayerVolumeSlider: AudioPlayerVolumeSlider,
+    AudioPlayerVolumeButton: AudioPlayerVolumeButton,
   },
 } as Meta<typeof AudioPlayer>;
 
