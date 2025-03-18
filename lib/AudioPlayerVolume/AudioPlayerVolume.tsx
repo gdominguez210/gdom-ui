@@ -1,112 +1,58 @@
-import { type ChangeEventHandler, type ComponentPropsWithRef, type ElementType } from 'react';
+import { memo, type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { Icon } from '@lib/Icon';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
+import { AudioPlayerVolumeButton } from '@lib/AudioPlayerVolumeButton/AudioPlayerVolumeButton';
+import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
 
-export type AudioPlayerVolumeProps<T extends ElementType = 'div'> = {
-  /** @default div */
+export type AudioPlayerVolumeProps<T extends ElementType = 'div'> = ComponentPropsWithRef<T> & {
+  /**
+   * The element to render the component as.
+   * @default 'div'
+   */
   as?: T;
-} & ComponentPropsWithRef<T>;
-
-export type AudioPlayerVolumeLayoutProps<T extends ElementType> = AudioPlayerVolumeProps<T> & {
-  max?: number;
-  min?: number;
-  value: number;
-  mute: boolean;
-  onMute: () => void;
-  onVolumeChange: ChangeEventHandler<HTMLInputElement>;
 };
 
-function AudioPlayerVolumePrimitive<T extends ElementType>(props: AudioPlayerVolumeLayoutProps<T>) {
-  const {
-    as: Element = 'div',
-    className,
-    children,
-    max = 100,
-    min = 0,
-    value,
-    mute,
-    onMute,
-    onVolumeChange,
-    ...restProps
-  } = props;
+function AudioPlayerVolumePrimitive<T extends ElementType = 'div'>(
+  props: AudioPlayerVolumeProps<T>,
+) {
+  const { as: Element = 'div', className, children, ...restProps } = props;
 
   return (
     <Element
-      className={twMerge(clsx('flex items-center gap-3', className))}
+      className={twMerge(clsx('items-center gap-3', className))}
       {...restProps}
     >
-      <button
-        onClick={onMute}
-        className="text-2xl"
-        aria-label={mute ? 'Unmute' : 'Mute'}
-        aria-pressed={mute}
-      >
-        {children}
-      </button>
-      <input
-        className="flex-grow cursor-pointer"
-        type="range"
-        min={min}
-        max={max}
-        value={value}
-        onChange={onVolumeChange}
-        aria-label="Volume control"
-        role="slider"
-        aria-valuemin={min}
-        aria-valuemax={max}
-        aria-valuenow={value}
-        aria-valuetext={`Volume ${value}%`}
-      />
+      {children}
     </Element>
   );
 }
 
-export function AudioPlayerVolume<T extends ElementType>(props: AudioPlayerVolumeProps<T>) {
-  const { audioRef } = useAudioPlayerContextRefs();
-  const { volume, mute, toggleMute, setVolume } = useAudioPlayerContextAudio();
+const AudioPlayerVolumePrimitiveMemo = memo(AudioPlayerVolumePrimitive);
+AudioPlayerVolumePrimitiveMemo.displayName = 'AudioPlayerVolumePrimitive';
+export { AudioPlayerVolumePrimitiveMemo as AudioPlayerVolumePrimitive };
 
-  const handleVolumeChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const newVolume = Number(e.target.value);
-    setVolume(newVolume);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume / 100;
-    }
-  };
-
-  const handleMute = () => {
-    toggleMute();
-    if (audioRef.current) {
-      audioRef.current.muted = !mute;
-    }
-  };
+function AudioPlayerVolume<T extends ElementType = 'div'>(props: AudioPlayerVolumeProps<T>) {
+  const { className, ...restProps } = props;
 
   return (
     <AudioPlayerVolumePrimitive
-      {...props}
-      value={volume}
-      mute={mute}
-      onMute={handleMute}
-      onVolumeChange={handleVolumeChange}
-    >
-      {mute || volume < 5 ? (
-        <Icon
-          name="volume-mute-fill"
-          data-testid="volume-mute-icon"
-        />
-      ) : volume >= 40 ? (
-        <Icon
-          name="volume-up-fill"
-          data-testid="volume-up-icon"
-        />
-      ) : (
-        <Icon
-          name="volume-down-fill"
-          data-testid="volume-down-icon"
-        />
+      {...(restProps as AudioPlayerVolumeProps)}
+      className={twMerge(
+        clsx(
+          'grid grid-cols-[auto_0fr] focus-within:grid-cols-[auto_1fr] hover:grid-cols-[auto_1fr]',
+          'transition-[grid-template-columns] duration-200',
+          className,
+        ),
       )}
+    >
+      <AudioPlayerVolumeButton />
+      <div className="overflow-hidden">
+        <AudioPlayerVolumeSlider />
+      </div>
     </AudioPlayerVolumePrimitive>
   );
 }
+
+const AudioPlayerVolumeMemo = memo(AudioPlayerVolume);
+AudioPlayerVolumeMemo.displayName = 'AudioPlayerVolume';
+export { AudioPlayerVolumeMemo as AudioPlayerVolume };
