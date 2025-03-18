@@ -3,6 +3,7 @@ import {
   type RefObject,
   type ComponentPropsWithRef,
   useCallback,
+  memo,
 } from 'react';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
@@ -11,9 +12,12 @@ import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider
 import { useAudioPlayerNextTrack } from './useAudioPlayerNextTrack';
 import { Icon } from '@lib/Icon/Icon';
 
-export function AudioPlayerControlNextPrimitive(props: ComponentPropsWithRef<'button'>) {
+function AudioPlayerControlNextPrimitive(props: AudioPlayerControlNextProps) {
   return (
-    <button {...props}>
+    <button
+      aria-label="Next Track"
+      {...props}
+    >
       <Icon
         name="forward-end-fill"
         className="scale-90"
@@ -22,7 +26,13 @@ export function AudioPlayerControlNextPrimitive(props: ComponentPropsWithRef<'bu
   );
 }
 
-export function AudioPlayerControlNext(props: ComponentPropsWithRef<'button'>) {
+const AudioPlayerControlNextPrimitiveMemo = memo(AudioPlayerControlNextPrimitive);
+AudioPlayerControlNextPrimitiveMemo.displayName = 'AudioPlayerControlNextPrimitive';
+export { AudioPlayerControlNextPrimitiveMemo as AudioPlayerControlNextPrimitive };
+
+export type AudioPlayerControlNextProps = ComponentPropsWithRef<'button'>;
+
+function AudioPlayerControlNext(props: AudioPlayerControlNextProps) {
   const { onClick, ...restProps } = props;
   const { audioRef } = useAudioPlayerContextRefs();
   const { seek } = useAudioPlayerContextTime();
@@ -54,3 +64,7 @@ export function AudioPlayerControlNext(props: ComponentPropsWithRef<'button'>) {
     />
   );
 }
+
+const AudioPlayerControlNextMemo = memo(AudioPlayerControlNext);
+AudioPlayerControlNextMemo.displayName = 'AudioPlayerControlNext';
+export { AudioPlayerControlNextMemo as AudioPlayerControlNext };
