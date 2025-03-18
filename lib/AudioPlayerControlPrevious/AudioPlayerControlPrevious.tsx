@@ -3,6 +3,7 @@ import {
   type MouseEventHandler,
   type RefObject,
   useCallback,
+  memo,
 } from 'react';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
@@ -11,9 +12,12 @@ import { useAudioPlayerPreviousTrack } from './useAudioPlayerPreviousTrack';
 import { Icon } from '@lib/Icon/Icon';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 
-export function AudioPlayerControlPreviousPrimitive(props: ComponentPropsWithRef<'button'>) {
+function AudioPlayerControlPreviousPrimitive(props: AudioPlayerControlPreviousProps) {
   return (
-    <button {...props}>
+    <button
+      aria-label="Previous Track"
+      {...props}
+    >
       <Icon
         name="rewind-start-fill"
         className="scale-90"
@@ -22,7 +26,13 @@ export function AudioPlayerControlPreviousPrimitive(props: ComponentPropsWithRef
   );
 }
 
-export function AudioPlayerControlPrevious(props: ComponentPropsWithRef<'button'>) {
+const AudioPlayerControlPreviousPrimitiveMemo = memo(AudioPlayerControlPreviousPrimitive);
+AudioPlayerControlPreviousPrimitiveMemo.displayName = 'AudioPlayerControlPreviousPrimitive';
+export { AudioPlayerControlPreviousPrimitiveMemo as AudioPlayerControlPreviousPrimitive };
+
+export type AudioPlayerControlPreviousProps = ComponentPropsWithRef<'button'>;
+
+function AudioPlayerControlPrevious(props: AudioPlayerControlPreviousProps) {
   const { onClick, ...restProps } = props;
   const { seek } = useAudioPlayerContextTime();
   const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
@@ -54,3 +64,7 @@ export function AudioPlayerControlPrevious(props: ComponentPropsWithRef<'button'
     />
   );
 }
+
+const AudioPlayerControlPreviousMemo = memo(AudioPlayerControlPrevious);
+AudioPlayerControlPreviousMemo.displayName = 'AudioPlayerControlPrevious';
+export { AudioPlayerControlPreviousMemo as AudioPlayerControlPrevious };
