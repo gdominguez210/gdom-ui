@@ -35,3 +35,7 @@ export const icons = {
 } as const;
 
 export type IconName = keyof typeof icons;
+
+export type IconSubset<T extends IconName> = keyof Pick<typeof icons, T>;
+
+export type VolumeIconName = IconSubset<'volume-mute-fill' | 'volume-down-fill' | 'volume-up-fill'>;
