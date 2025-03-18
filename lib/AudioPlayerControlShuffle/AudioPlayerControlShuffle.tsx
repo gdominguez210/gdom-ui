@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, type MouseEventHandler, useCallback } from 'react';
+import { type ComponentPropsWithRef, type MouseEventHandler, useCallback, memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { Icon } from '@lib/Icon';
@@ -8,7 +8,7 @@ export interface AudioPlayerControlShufflePrimitiveProps extends ComponentPropsW
   active?: boolean;
 }
 
-export function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShufflePrimitiveProps) {
+function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShufflePrimitiveProps) {
   const { active = false, className, ...restProps } = props;
 
   return (
@@ -28,9 +28,16 @@ export function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShuf
   );
 }
 
-export function AudioPlayerControlShuffle(
-  props: Omit<AudioPlayerControlShufflePrimitiveProps, 'active'>,
-) {
+const AudioPlayerControlShufflePrimitiveMemo = memo(AudioPlayerControlShufflePrimitive);
+AudioPlayerControlShufflePrimitiveMemo.displayName = 'AudioPlayerControlShufflePrimitive';
+export { AudioPlayerControlShufflePrimitiveMemo as AudioPlayerControlShufflePrimitive };
+
+export type AudioPlayerControlShuffleProps = Omit<
+  AudioPlayerControlShufflePrimitiveProps,
+  'active'
+>;
+
+function AudioPlayerControlShuffle(props: AudioPlayerControlShuffleProps) {
   const { onClick, ...restProps } = props;
   const { shuffle, toggleShuffle } = useAudioPlayerContextAudio();
 
@@ -50,3 +57,7 @@ export function AudioPlayerControlShuffle(
     />
   );
 }
+
+const AudioPlayerControlShuffleMemo = memo(AudioPlayerControlShuffle);
+AudioPlayerControlShuffleMemo.displayName = 'AudioPlayerControlShuffle';
+export { AudioPlayerControlShuffleMemo as AudioPlayerControlShuffle };
