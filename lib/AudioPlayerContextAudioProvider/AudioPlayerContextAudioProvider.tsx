@@ -1,4 +1,4 @@
-import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
+import { type PropsWithChildren, useReducer, useMemo, useCallback, memo } from 'react';
 import { AudioPlayerContextAudio } from './AudioPlayerContextAudio';
 import { audioReducer, AUDIO_ACTIONS } from './reducer';
 
@@ -9,7 +9,7 @@ export interface AudioPlayerContextAudioProviderProps extends PropsWithChildren 
   defaultLoop?: boolean;
 }
 
-export function AudioPlayerContextAudioProvider(props: AudioPlayerContextAudioProviderProps) {
+function AudioPlayerContextAudioProvider(props: AudioPlayerContextAudioProviderProps) {
   const {
     defaultVolume = 1,
     defaultMute = false,
@@ -101,3 +101,7 @@ export function AudioPlayerContextAudioProvider(props: AudioPlayerContextAudioPr
     </AudioPlayerContextAudio.Provider>
   );
 }
+
+const AudioPlayerContextAudioProviderMemo = memo(AudioPlayerContextAudioProvider);
+AudioPlayerContextAudioProviderMemo.displayName = 'AudioPlayerContextAudioProvider';
+export { AudioPlayerContextAudioProviderMemo as AudioPlayerContextAudioProvider };
