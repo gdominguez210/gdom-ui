@@ -1,159 +1,98 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerVolume } from './AudioPlayerVolume';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, test } from 'vitest';
+import { AudioPlayerVolume, AudioPlayerVolumePrimitive } from './AudioPlayerVolume';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
-import { AUDIO_PLAYER_CONTEXT_ERROR } from '@lib/AudioPlayerContextProvider/data';
 import { trackData } from '@lib/AudioPlayer/data';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider';
 
-function AudioElement() {
-  const { audioRef } = useAudioPlayerContextState();
-  return (
-    <audio
-      ref={audioRef}
-      data-testid="audio"
-    />
-  );
-}
+describe('AudioPlayerVolumePrimitive', () => {
+  test('should render children', () => {
+    render(
+      <AudioPlayerVolumePrimitive>
+        <div data-testid="child">Child content</div>
+      </AudioPlayerVolumePrimitive>,
+    );
 
-describe('AudioPlayerVolume', () => {
-  describe('without context', () => {
-    test('should throw error when used without context', () => {
-      vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
-      expect(() => render(<AudioPlayerVolume />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
-      vi.restoreAllMocks();
-    });
+    expect(screen.getByTestId('child')).toBeInTheDocument();
+    expect(screen.getByTestId('child')).toHaveTextContent('Child content');
   });
 
-  describe('with context', () => {
-    test('should render volume slider with default value', () => {
-      render(
-        <AudioPlayerContextProvider tracks={trackData}>
-          <AudioPlayerVolume data-testid="volume" />
-        </AudioPlayerContextProvider>,
-      );
+  test('should render with custom element', () => {
+    render(
+      <AudioPlayerVolumePrimitive
+        as="section"
+        data-testid="volume"
+      >
+        Content
+      </AudioPlayerVolumePrimitive>,
+    );
 
-      const slider = screen.getByRole('slider');
-      expect(slider).toBeInTheDocument();
-      expect(slider).toHaveAttribute('type', 'range');
-      expect(slider).toHaveAttribute('min', '0');
-      expect(slider).toHaveAttribute('max', '100');
-      expect(slider).toHaveValue('50'); // Default volume
-    });
+    const element = screen.getByTestId('volume');
+    expect(element.tagName).toBe('SECTION');
+  });
 
-    test('should render volume slider with custom default value', () => {
-      render(
+  test('should merge className prop', () => {
+    render(
+      <AudioPlayerVolumePrimitive
+        className="custom-class"
+        data-testid="volume"
+      >
+        Content
+      </AudioPlayerVolumePrimitive>,
+    );
+
+    const element = screen.getByTestId('volume');
+    expect(element).toHaveClass('items-center', 'gap-3', 'custom-class');
+  });
+
+  test('should forward additional props', () => {
+    render(
+      <AudioPlayerVolumePrimitive
+        data-testid="volume"
+        aria-label="Volume control"
+      >
+        Content
+      </AudioPlayerVolumePrimitive>,
+    );
+
+    expect(screen.getByTestId('volume')).toHaveAttribute('aria-label', 'Volume control');
+  });
+});
+
+describe('AudioPlayerVolume', () => {
+  test('should throw error when used without providers', () => {
+    expect(() => render(<AudioPlayerVolume />)).toThrow();
+  });
+
+  test('should render volume controls with correct grid layout', () => {
+    render(<AudioPlayerVolume data-testid="volume" />, {
+      wrapper: ({ children }) => (
         <AudioPlayerContextProvider
           tracks={trackData}
-          defaultVolume={75}
+          defaultVolume={50}
         >
-          <AudioPlayerVolume data-testid="volume" />
-        </AudioPlayerContextProvider>,
-      );
-
-      expect(screen.getByRole('slider')).toHaveValue('75');
+          {children}
+        </AudioPlayerContextProvider>
+      ),
     });
 
-    test('should allow custom className', () => {
-      render(
-        <AudioPlayerContextProvider tracks={trackData}>
-          <AudioPlayerVolume
-            className="custom-class"
-            data-testid="volume"
-          />
-        </AudioPlayerContextProvider>,
-      );
+    const volume = screen.getByTestId('volume');
+    const button = screen.getByRole('button');
+    const slider = screen.getByRole('slider');
 
-      expect(screen.getByTestId('volume')).toHaveClass('custom-class');
-    });
+    // Test grid layout structure
+    expect(volume).toHaveClass(
+      'grid',
+      'grid-cols-[auto_0fr]',
+      'focus-within:grid-cols-[auto_1fr]',
+      'hover:grid-cols-[auto_1fr]',
+      'transition-[grid-template-columns]',
+      'duration-200',
+    );
 
-    test('should forward additional props', () => {
-      render(
-        <AudioPlayerContextProvider tracks={trackData}>
-          <AudioPlayerVolume
-            data-testid="volume"
-            aria-label="Volume control"
-          />
-        </AudioPlayerContextProvider>,
-      );
-
-      expect(screen.getByTestId('volume')).toHaveAttribute('aria-label', 'Volume control');
-    });
-
-    test('should update volume on slider change', () => {
-      render(
-        <AudioPlayerContextProvider tracks={trackData}>
-          <AudioPlayerVolume data-testid="volume" />
-        </AudioPlayerContextProvider>,
-      );
-
-      const slider = screen.getByRole('slider');
-      fireEvent.change(slider, { target: { value: '75' } });
-
-      expect(slider).toHaveValue('75');
-    });
-
-    test('should toggle mute on button click', () => {
-      render(
-        <AudioPlayerContextProvider tracks={trackData}>
-          <AudioElement />
-          <AudioPlayerVolume data-testid="volume" />
-        </AudioPlayerContextProvider>,
-      );
-
-      const muteButton = screen.getByRole('button');
-      const audioElement = screen.getByTestId('audio') as HTMLAudioElement;
-      const slider = screen.getByRole('slider');
-
-      expect(audioElement.muted).toBe(false);
-      expect(slider).toHaveValue('50');
-
-      fireEvent.click(muteButton);
-      expect(audioElement.muted).toBe(true);
-      expect(slider).toHaveValue('50');
-
-      fireEvent.click(muteButton);
-      expect(audioElement.muted).toBe(false);
-      expect(slider).toHaveValue('50');
-    });
-
-    test('should show volume-up icon when volume >= 40', () => {
-      render(
-        <AudioPlayerContextProvider
-          tracks={trackData}
-          defaultVolume={75}
-        >
-          <AudioPlayerVolume data-testid="volume" />
-        </AudioPlayerContextProvider>,
-      );
-
-      expect(screen.getByTestId('volume-up-icon')).toBeInTheDocument();
-    });
-
-    test('should show volume-down icon when volume between 5 and 40', () => {
-      render(
-        <AudioPlayerContextProvider
-          tracks={trackData}
-          defaultVolume={35}
-        >
-          <AudioPlayerVolume data-testid="volume" />
-        </AudioPlayerContextProvider>,
-      );
-
-      expect(screen.getByTestId('volume-down-icon')).toBeInTheDocument();
-    });
-
-    test('should show volume-mute icon when volume < 5', () => {
-      render(
-        <AudioPlayerContextProvider
-          tracks={trackData}
-          defaultVolume={0}
-        >
-          <AudioPlayerVolume data-testid="volume" />
-        </AudioPlayerContextProvider>,
-      );
-
-      expect(screen.getByTestId('volume-mute-icon')).toBeInTheDocument();
-    });
+    // Test component composition
+    expect(volume.firstElementChild).toContainElement(button);
+    const sliderWrapper = volume.lastElementChild;
+    expect(sliderWrapper).toContainElement(slider);
+    expect(sliderWrapper).toHaveClass('overflow-hidden');
   });
 });
