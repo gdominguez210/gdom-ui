@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, type MouseEventHandler, useCallback } from 'react';
+import { type ComponentPropsWithRef, type MouseEventHandler, useCallback, memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { Icon } from '@lib/Icon';
@@ -8,7 +8,7 @@ export interface AudioPlayerControlLoopPrimitiveProps extends ComponentPropsWith
   active?: boolean;
 }
 
-export function AudioPlayerControlLoopPrimitive(props: AudioPlayerControlLoopPrimitiveProps) {
+function AudioPlayerControlLoopPrimitive(props: AudioPlayerControlLoopPrimitiveProps) {
   const { active = false, className, ...restProps } = props;
 
   return (
@@ -28,9 +28,11 @@ export function AudioPlayerControlLoopPrimitive(props: AudioPlayerControlLoopPri
   );
 }
 
-export function AudioPlayerControlLoop(
-  props: Omit<AudioPlayerControlLoopPrimitiveProps, 'active'>,
-) {
+const AudioPlayerControlLoopPrimitiveMemo = memo(AudioPlayerControlLoopPrimitive);
+AudioPlayerControlLoopPrimitiveMemo.displayName = 'AudioPlayerControlLoopPrimitive';
+export { AudioPlayerControlLoopPrimitiveMemo as AudioPlayerControlLoopPrimitive };
+
+function AudioPlayerControlLoop(props: Omit<AudioPlayerControlLoopPrimitiveProps, 'active'>) {
   const { onClick, ...restProps } = props;
   const { loop, toggleLoop } = useAudioPlayerContextAudio();
 
@@ -50,3 +52,7 @@ export function AudioPlayerControlLoop(
     />
   );
 }
+
+const AudioPlayerControlLoopMemo = memo(AudioPlayerControlLoop);
+AudioPlayerControlLoopMemo.displayName = 'AudioPlayerControlLoop';
+export { AudioPlayerControlLoopMemo as AudioPlayerControlLoop };
