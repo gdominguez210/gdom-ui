@@ -1,30 +1,44 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
+import { type ComponentPropsWithRef, type ElementType, memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
-import { useAudioPlayerTime } from '@lib/AudioPlayerTime/useAudioPlayerTime';
+import { useAudioPlayerTime } from './useAudioPlayerTime';
 
-export type AudioPlayerTimeProps<T extends ElementType = 'span'> = {
+export type AudioPlayerTimePrimitiveProps<T extends ElementType = 'span'> = {
   /** @default span */
   as?: T;
-  currentTime: string;
-  duration: string;
+  currentTime?: string;
+  duration?: string;
+  separator?: string;
 } & ComponentPropsWithRef<T>;
 
-export function AudioPlayerTimePrimitive<T extends ElementType>(props: AudioPlayerTimeProps<T>) {
-  const { as: Element = 'span', className, currentTime, duration, ...restProps } = props;
+function AudioPlayerTimePrimitive<T extends ElementType>(props: AudioPlayerTimePrimitiveProps<T>) {
+  const {
+    as: Element = 'span',
+    className,
+    currentTime,
+    duration,
+    separator = ' / ',
+    ...restProps
+  } = props;
 
   return (
     <Element
       className={twMerge(clsx('text-sm', className))}
       {...restProps}
     >
-      {currentTime} / {duration}
+      {`${currentTime}${separator}${duration}`}
     </Element>
   );
 }
 
-export function AudioPlayerTime(props: Omit<AudioPlayerTimeProps, 'currentTime' | 'duration'>) {
+const AudioPlayerTimePrimitiveMemo = memo(AudioPlayerTimePrimitive);
+AudioPlayerTimePrimitiveMemo.displayName = 'AudioPlayerTimePrimitive';
+export { AudioPlayerTimePrimitiveMemo as AudioPlayerTimePrimitive };
+
+export type AudioPlayerTimeProps = Omit<AudioPlayerTimePrimitiveProps, 'currentTime' | 'duration'>;
+
+function AudioPlayerTime(props: AudioPlayerTimeProps) {
   const { currentTime, duration } = useAudioPlayerContextTime();
 
   const { currentTimeDisplay, durationDisplay } = useAudioPlayerTime({ currentTime, duration });
@@ -37,3 +51,7 @@ export function AudioPlayerTime(props: Omit<AudioPlayerTimeProps, 'currentTime' 
     />
   );
 }
+
+const AudioPlayerTimeMemo = memo(AudioPlayerTime);
+AudioPlayerTimeMemo.displayName = 'AudioPlayerTime';
+export { AudioPlayerTimeMemo as AudioPlayerTime };
