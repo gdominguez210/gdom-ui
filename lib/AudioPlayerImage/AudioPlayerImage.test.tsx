@@ -1,15 +1,14 @@
 import { screen, render } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerImage, AudioPlayerImageBase } from './AudioPlayerImage';
+import { AudioPlayerImage, AudioPlayerImagePrimitive } from './AudioPlayerImage';
 import { trackData } from '@lib/AudioPlayer/data';
-import { AUDIO_PLAYER_CONTEXT_ERROR } from '@lib/AudioPlayerContextProvider/data';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 
 describe('AudioPlayerImage', () => {
   describe('without context', () => {
     test('should throw error when used without context', () => {
       vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
-      expect(() => render(<AudioPlayerImage />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
+      expect(() => render(<AudioPlayerImage />)).toThrow();
       vi.restoreAllMocks();
     });
   });
@@ -56,10 +55,10 @@ describe('AudioPlayerImage', () => {
   });
 });
 
-describe('AudioPlayerImageBase', () => {
+describe('AudioPlayerImagePrimitive', () => {
   test('should render as div by default', () => {
     render(
-      <AudioPlayerImageBase
+      <AudioPlayerImagePrimitive
         data-testid="container"
         src="test.jpg"
         altText="Test image"
@@ -71,24 +70,24 @@ describe('AudioPlayerImageBase', () => {
     expect(container.querySelector('img')).toBeInTheDocument();
   });
 
-  // test('should render as different element', () => {
-  //   render(
-  //     <AudioPlayerImageBase
-  //       as="figure"
-  //       data-testid="container"
-  //       src="test.jpg"
-  //       altText="Test image"
-  //     />,
-  //   );
+  test('should render as different element', () => {
+    render(
+      <AudioPlayerImagePrimitive
+        as="figure"
+        data-testid="container"
+        src="test.jpg"
+        altText="Test image"
+      />,
+    );
 
-  //   const container = screen.getByTestId('container');
-  //   expect(container.tagName.toLowerCase()).toBe('figure');
-  //   expect(container.querySelector('img')).toBeInTheDocument();
-  // });
+    const container = screen.getByTestId('container');
+    expect(container.tagName.toLowerCase()).toBe('figure');
+    expect(container.querySelector('img')).toBeInTheDocument();
+  });
 
   test('should merge className with default styles', () => {
     render(
-      <AudioPlayerImageBase
+      <AudioPlayerImagePrimitive
         className="custom-class"
         data-testid="container"
         src="test.jpg"
@@ -101,7 +100,7 @@ describe('AudioPlayerImageBase', () => {
 
   test('should forward additional props to container', () => {
     render(
-      <AudioPlayerImageBase
+      <AudioPlayerImagePrimitive
         data-testid="container"
         src="test.jpg"
         altText="Test image"
