@@ -1,27 +1,13 @@
-import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
+import { type PropsWithChildren, useReducer, useMemo, useCallback, memo } from 'react';
 import { AudioPlayerContextTime } from './AudioPlayerContextTime';
 import { timeReducer, TIME_ACTIONS } from './reducer';
 
-type ActionPayloads = {
-  [TIME_ACTIONS.SET_CURRENT_TIME]: { currentTime: number };
-  [TIME_ACTIONS.SET_DURATION]: { duration: number };
-};
-
-type TimeAction = {
-  [K in keyof ActionPayloads]: { type: K; payload: ActionPayloads[K] };
-}[keyof ActionPayloads];
-
-type TimeState = {
-  currentTime: number;
-  duration: number;
-};
-
-export interface AudioPlayerContextTimeProviderProps extends PropsWithChildren {
+export type AudioPlayerContextTimeProviderProps = PropsWithChildren & {
   defaultDuration?: number;
   defaultCurrentTime?: number;
-}
+};
 
-export function AudioPlayerContextTimeProvider(props: AudioPlayerContextTimeProviderProps) {
+function AudioPlayerContextTimeProvider(props: AudioPlayerContextTimeProviderProps) {
   const { defaultDuration = 0, defaultCurrentTime = 0, children } = props;
 
   const [state, dispatch] = useReducer(timeReducer, {
@@ -52,3 +38,7 @@ export function AudioPlayerContextTimeProvider(props: AudioPlayerContextTimeProv
     </AudioPlayerContextTime.Provider>
   );
 }
+
+const AudioPlayerContextTimeProviderMemo = memo(AudioPlayerContextTimeProvider);
+AudioPlayerContextTimeProviderMemo.displayName = 'AudioPlayerContextTimeProvider';
+export { AudioPlayerContextTimeProviderMemo as AudioPlayerContextTimeProvider };
