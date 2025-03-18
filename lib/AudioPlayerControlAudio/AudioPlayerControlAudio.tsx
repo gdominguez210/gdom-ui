@@ -3,6 +3,7 @@ import {
   type ReactEventHandler,
   type RefObject,
   useCallback,
+  memo,
 } from 'react';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
@@ -10,9 +11,9 @@ import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
 import { useAudioPlayerMetadata } from '@lib/AudioPlayerControlAudio/useAudioPlayerMetadata';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 
-export type AudioPlayerControlAudioPrimitiveProps = ComponentPropsWithRef<'audio'>;
+export type AudioPlayerControlAudioProps = ComponentPropsWithRef<'audio'>;
 
-export function AudioPlayerControlAudioPrimitive(props: AudioPlayerControlAudioPrimitiveProps) {
+function AudioPlayerControlAudioPrimitive(props: AudioPlayerControlAudioProps) {
   const { src, onLoadedMetadata, ref, ...restProps } = props;
 
   return (
@@ -25,7 +26,11 @@ export function AudioPlayerControlAudioPrimitive(props: AudioPlayerControlAudioP
   );
 }
 
-export function AudioPlayerControlAudio(props: AudioPlayerControlAudioPrimitiveProps) {
+const AudioPlayerControlAudioPrimitiveMemo = memo(AudioPlayerControlAudioPrimitive);
+AudioPlayerControlAudioPrimitiveMemo.displayName = 'AudioPlayerControlAudioPrimitive';
+export { AudioPlayerControlAudioPrimitiveMemo as AudioPlayerControlAudioPrimitive };
+
+function AudioPlayerControlAudio(props: AudioPlayerControlAudioProps) {
   const { onLoadedMetadata, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
   const { setDuration } = useAudioPlayerContextTime();
@@ -56,3 +61,7 @@ export function AudioPlayerControlAudio(props: AudioPlayerControlAudioPrimitiveP
     />
   );
 }
+
+const AudioPlayerControlAudioMemo = memo(AudioPlayerControlAudio);
+AudioPlayerControlAudioMemo.displayName = 'AudioPlayerControlAudio';
+export { AudioPlayerControlAudioMemo as AudioPlayerControlAudio };
