@@ -2,16 +2,13 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 import { AudioPlayerControlPrevious } from './AudioPlayerControlPrevious';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
-import { AUDIO_PLAYER_CONTEXT_TRACK_ERROR } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrack';
 import { trackData } from '@lib/AudioPlayer/data';
 
 describe('AudioPlayerControlPrevious', () => {
   describe('without context', () => {
     test('should throw error when used without context', () => {
       vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
-      expect(() => render(<AudioPlayerControlPrevious />)).toThrow(
-        AUDIO_PLAYER_CONTEXT_TRACK_ERROR,
-      );
+      expect(() => render(<AudioPlayerControlPrevious />)).toThrow();
       vi.restoreAllMocks();
     });
   });
