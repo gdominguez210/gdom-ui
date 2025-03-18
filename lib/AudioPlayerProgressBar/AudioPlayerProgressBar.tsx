@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, type ChangeEventHandler, useCallback } from 'react';
+import { type ComponentPropsWithRef, type ChangeEventHandler, useCallback, memo } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
@@ -6,10 +6,10 @@ import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/useAudioP
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
 
-export type AudioPlayerProgressBarProps = ComponentPropsWithRef<'input'>;
+export type AudioPlayerProgressBarProps = Omit<ComponentPropsWithRef<'input'>, 'type'>;
 
-export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarProps) {
-  const { className, 'aria-label': ariaLabel, ...restProps } = props;
+function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarProps) {
+  const { className, ...restProps } = props;
 
   return (
     <input
@@ -41,16 +41,19 @@ export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarPro
           className,
         ),
       )}
+      aria-label={'Audio progress'}
+      role="slider"
+      defaultValue="0"
       {...restProps}
       type="range"
-      defaultValue="0"
-      aria-label={ariaLabel || 'Audio progress'}
-      role="slider"
     />
   );
 }
 
-export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
+const AudioPlayerProgressBarPrimitiveMemo = memo(AudioPlayerProgressBarPrimitive);
+export { AudioPlayerProgressBarPrimitiveMemo as AudioPlayerProgressBarPrimitive };
+
+function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
   const { onChange, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
 
@@ -82,3 +85,7 @@ export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
     />
   );
 }
+
+const AudioPlayerProgressBarMemo = memo(AudioPlayerProgressBar);
+AudioPlayerProgressBarMemo.displayName = 'AudioPlayerProgressBar';
+export { AudioPlayerProgressBarMemo as AudioPlayerProgressBar };
