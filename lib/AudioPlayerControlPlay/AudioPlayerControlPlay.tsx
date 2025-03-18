@@ -3,6 +3,7 @@ import {
   type MouseEventHandler,
   type RefObject,
   useCallback,
+  memo,
 } from 'react';
 import { Icon } from '@lib/Icon';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
@@ -14,23 +15,27 @@ export interface AudioPlayerControlPlayPrimitiveProps extends ComponentPropsWith
   active?: boolean;
 }
 
-export function AudioPlayerControlPlayPrimitive(props: AudioPlayerControlPlayPrimitiveProps) {
+function AudioPlayerControlPlayPrimitive(props: AudioPlayerControlPlayPrimitiveProps) {
   const { active = false, ...restProps } = props;
 
   return (
     <button
-      {...restProps}
       aria-label={active ? 'Pause' : 'Play'}
       aria-pressed={active}
+      {...restProps}
     >
       <Icon name={active ? 'pause-large-fill' : 'play-large-fill'} />
     </button>
   );
 }
 
-export function AudioPlayerControlPlay(
-  props: Omit<AudioPlayerControlPlayPrimitiveProps, 'active'>,
-) {
+const AudioPlayerControlPlayPrimitiveMemo = memo(AudioPlayerControlPlayPrimitive);
+AudioPlayerControlPlayPrimitiveMemo.displayName = 'AudioPlayerControlPlayPrimitive';
+export { AudioPlayerControlPlayPrimitiveMemo as AudioPlayerControlPlayPrimitive };
+
+export type AudioPlayerControlPlayProps = Omit<AudioPlayerControlPlayPrimitiveProps, 'active'>;
+
+function AudioPlayerControlPlay(props: AudioPlayerControlPlayProps) {
   const { onClick, ...restProps } = props;
   const { isPlaying, togglePlay } = useAudioPlayerContextAudio();
   const { audioRef } = useAudioPlayerContextRefs();
@@ -58,3 +63,7 @@ export function AudioPlayerControlPlay(
     />
   );
 }
+
+const AudioPlayerControlPlayMemo = memo(AudioPlayerControlPlay);
+AudioPlayerControlPlayMemo.displayName = 'AudioPlayerControlPlay';
+export { AudioPlayerControlPlayMemo as AudioPlayerControlPlay };
