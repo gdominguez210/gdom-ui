@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
+import { type ComponentPropsWithRef, type ElementType, memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 
@@ -7,7 +7,7 @@ export type AudioPlayerInfoProps<T extends ElementType = 'div'> = {
   as?: T;
 } & ComponentPropsWithRef<T>;
 
-export function AudioPlayerInfo<T extends ElementType>(props: AudioPlayerInfoProps<T>) {
+function AudioPlayerInfo<T extends ElementType>(props: AudioPlayerInfoProps<T>) {
   const { as: Element = 'div', className, children, ...restProps } = props;
 
   return (
@@ -19,3 +19,7 @@ export function AudioPlayerInfo<T extends ElementType>(props: AudioPlayerInfoPro
     </Element>
   );
 }
+
+const AudioPlayerInfoMemo = memo(AudioPlayerInfo);
+AudioPlayerInfoMemo.displayName = 'AudioPlayerInfo';
+export { AudioPlayerInfoMemo as AudioPlayerInfo };
