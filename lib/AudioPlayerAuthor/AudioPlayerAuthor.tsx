@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
+import { type ComponentPropsWithRef, type ElementType, memo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
@@ -8,9 +8,7 @@ export type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
   as?: T;
 } & ComponentPropsWithRef<T>;
 
-export function AudioPlayerAuthorPrimitive<T extends ElementType>(
-  props: AudioPlayerAuthorProps<T>,
-) {
+function AudioPlayerAuthorPrimitive<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
   const { as: Element = 'p', children, className, ...restProps } = props;
 
   return (
@@ -23,7 +21,11 @@ export function AudioPlayerAuthorPrimitive<T extends ElementType>(
   );
 }
 
-export function AudioPlayerAuthor<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
+const AudioPlayerAuthorPrimitiveMemo = memo(AudioPlayerAuthorPrimitive);
+AudioPlayerAuthorPrimitiveMemo.displayName = 'AudioPlayerAuthorPrimitive';
+export { AudioPlayerAuthorPrimitiveMemo as AudioPlayerAuthorPrimitive };
+
+function AudioPlayerAuthor<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
   const { currentTrack: { author } = {} } = useAudioPlayerContextTrack();
 
   if (!author) return null;
@@ -37,3 +39,7 @@ export function AudioPlayerAuthor<T extends ElementType>(props: AudioPlayerAutho
     </AudioPlayerAuthorPrimitive>
   );
 }
+
+const AudioPlayerAuthorMemo = memo(AudioPlayerAuthor);
+AudioPlayerAuthorMemo.displayName = 'AudioPlayerAuthor';
+export { AudioPlayerAuthorMemo as AudioPlayerAuthor };
