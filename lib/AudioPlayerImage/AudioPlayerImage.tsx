@@ -1,32 +1,25 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
-import { Icon } from '@lib/Icon/Icon';
+import { type ComponentPropsWithRef, type ElementType, memo } from 'react';
+import { Icon } from '@lib/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
 
-export type AudioPlayerImagePrimitiveProps<T extends ElementType = 'div'> = {
+export type AudioPlayerImageProps<T extends ElementType = 'div'> = {
   /** @default div */
   as?: T;
-  /** @default '' */
-  altText: string;
   /** @default 96 */
   width?: number;
   /** @default 96 */
   height?: number;
-  src?: string;
 } & ComponentPropsWithRef<T>;
 
-export interface AudioPlayerImageProps
-  extends Omit<AudioPlayerImagePrimitiveProps, 'src' | 'altText'> {
-  /** @default `${title} thumbnail` */
-  altText?: string;
-}
-
-export function AudioPlayerImagePrimitive(props: AudioPlayerImagePrimitiveProps) {
+function AudioPlayerImagePrimitive<T extends ElementType>(
+  props: AudioPlayerImageProps<T> & { src: string; altText: string },
+) {
   const {
     as: Element = 'div',
-    altText,
     className,
+    altText,
     width = 96,
     height = 96,
     src,
@@ -43,16 +36,15 @@ export function AudioPlayerImagePrimitive(props: AudioPlayerImagePrimitiveProps)
       )}
       {...restProps}
     >
-      {src && (
+      {src ? (
         <img
-          className="h-full w-full object-cover"
           src={src}
           alt={altText}
+          className="h-full w-full object-cover"
           width={width}
           height={height}
         />
-      )}
-      {!src && (
+      ) : (
         <div className="flex h-full w-full items-center justify-center">
           <span className="text-4xl">
             <Icon name="disc-fill" />
@@ -63,14 +55,22 @@ export function AudioPlayerImagePrimitive(props: AudioPlayerImagePrimitiveProps)
   );
 }
 
-export function AudioPlayerImage(props: AudioPlayerImageProps) {
+const AudioPlayerImagePrimitiveMemo = memo(AudioPlayerImagePrimitive);
+AudioPlayerImagePrimitiveMemo.displayName = 'AudioPlayerImagePrimitive';
+export { AudioPlayerImagePrimitiveMemo as AudioPlayerImagePrimitive };
+
+function AudioPlayerImage<T extends ElementType = 'div'>(props: AudioPlayerImageProps<T>) {
   const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContextTrack();
 
   return (
     <AudioPlayerImagePrimitive
       {...props}
       src={thumbnail}
-      altText={props.altText || `${title} thumbnail`}
+      altText={title ? `${title} thumbnail` : ''}
     />
   );
 }
+
+const AudioPlayerImageMemo = memo(AudioPlayerImage);
+AudioPlayerImageMemo.displayName = 'AudioPlayerImage';
+export { AudioPlayerImageMemo as AudioPlayerImage };
