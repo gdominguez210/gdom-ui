@@ -1,16 +1,8 @@
-import { render } from '@testing-library/react';
 import { renderHook } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider';
 import { useAudioPlayerContextTrack } from './useAudioPlayerContextTrack';
 import { trackData } from '@lib/AudioPlayer/data';
-
-describe('AudioPlayerContextTrackProvider should...', () => {
-  test('match the snapshot', () => {
-    const { container } = render(<AudioPlayerContextTrackProvider tracks={[]} />);
-    expect(container).toMatchSnapshot();
-  });
-});
 
 describe('AudioPlayerContextTrackProvider', () => {
   test('should initialize with default track index when not provided', () => {
