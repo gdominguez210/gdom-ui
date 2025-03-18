@@ -1,20 +1,20 @@
-import { type PropsWithChildren } from 'react';
-import { type AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
+import { type PropsWithChildren, memo } from 'react';
+import { type AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
 import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
 import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
 import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
 import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
 
-export interface AudioPlayerContextProviderProps extends PropsWithChildren {
+export type AudioPlayerContextProviderProps = {
   defaultTrackIndex?: number;
   defaultVolume?: number;
   defaultMute?: boolean;
   defaultShuffle?: boolean;
   defaultLoop?: boolean;
   tracks: AudioTrackData[];
-}
+} & PropsWithChildren;
 
-export function AudioPlayerContextProvider({
+function AudioPlayerContextProvider({
   children,
   defaultTrackIndex,
   defaultVolume,
@@ -43,3 +43,7 @@ export function AudioPlayerContextProvider({
     </AudioPlayerContextRefsProvider>
   );
 }
+
+const AudioPlayerContextProviderMemo = memo(AudioPlayerContextProvider);
+AudioPlayerContextProviderMemo.displayName = 'AudioPlayerContextProvider';
+export { AudioPlayerContextProviderMemo as AudioPlayerContextProvider };
