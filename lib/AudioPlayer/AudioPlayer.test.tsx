@@ -27,7 +27,7 @@ describe('AudioPlayer', () => {
         </AudioPlayerPrimitive>,
       );
 
-      const element = screen.getByTestId('audio-player-base');
+      const element = screen.getByTestId('audio-player-primitive');
       expect(element).toHaveClass('custom-class');
     });
 
