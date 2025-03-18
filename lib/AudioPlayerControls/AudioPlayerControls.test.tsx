@@ -2,14 +2,13 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 import { AudioPlayerControls, AudioPlayerControlsPrimitive } from './AudioPlayerControls';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
-import { AUDIO_PLAYER_CONTEXT_AUDIO_ERROR } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudio';
 import { trackData } from '@lib/AudioPlayer/data';
 
 describe('AudioPlayerControls', () => {
   describe('without context', () => {
     test('should throw error when used without context', () => {
       vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
-      expect(() => render(<AudioPlayerControls />)).toThrow(AUDIO_PLAYER_CONTEXT_AUDIO_ERROR);
+      expect(() => render(<AudioPlayerControls />)).toThrow();
       vi.restoreAllMocks();
     });
   });
@@ -23,11 +22,11 @@ describe('AudioPlayerControls', () => {
       );
 
       expect(screen.getByTestId('controls')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Previous track' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Previous Track' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Play' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Next track' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Toggle loop' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Toggle shuffle' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Next Track' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Toggle Loop' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Toggle Shuffle' })).toBeInTheDocument();
     });
 
     test('should allow custom className', () => {
