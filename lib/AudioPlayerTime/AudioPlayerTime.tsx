@@ -1,18 +1,29 @@
-import { type ComponentPropsWithRef, type ElementType, memo } from 'react';
+import { type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
 import { useAudioPlayerTime } from './useAudioPlayerTime';
 
+/**
+ * Props for the time display primitive component
+ */
 export type AudioPlayerTimePrimitiveProps<T extends ElementType = 'span'> = {
-  /** @default span */
+  /** Element to render as @default 'span' */
   as?: T;
+  /** Current playback time formatted as a string */
   currentTime?: string;
+  /** Total duration formatted as a string */
   duration?: string;
+  /** Separator between current time and duration @default " / " */
   separator?: string;
 } & ComponentPropsWithRef<T>;
 
-function AudioPlayerTimePrimitive<T extends ElementType>(props: AudioPlayerTimePrimitiveProps<T>) {
+/**
+ * Base component for displaying formatted audio playback time
+ */
+export function AudioPlayerTimePrimitive<T extends ElementType>(
+  props: AudioPlayerTimePrimitiveProps<T>,
+) {
   const {
     as: Element = 'span',
     className,
@@ -24,7 +35,9 @@ function AudioPlayerTimePrimitive<T extends ElementType>(props: AudioPlayerTimeP
 
   return (
     <Element
-      className={twMerge(clsx('text-sm', className))}
+      className={twMerge(
+        clsx('inline-block font-mono text-sm tabular-nums', 'min-w-[6ch]', 'text-right', className),
+      )}
       {...restProps}
     >
       {`${currentTime}${separator}${duration}`}
@@ -32,13 +45,15 @@ function AudioPlayerTimePrimitive<T extends ElementType>(props: AudioPlayerTimeP
   );
 }
 
-const AudioPlayerTimePrimitiveMemo = memo(AudioPlayerTimePrimitive);
-AudioPlayerTimePrimitiveMemo.displayName = 'AudioPlayerTimePrimitive';
-export { AudioPlayerTimePrimitiveMemo as AudioPlayerTimePrimitive };
-
+/**
+ * Props for the time display component (current time and duration from context)
+ */
 export type AudioPlayerTimeProps = Omit<AudioPlayerTimePrimitiveProps, 'currentTime' | 'duration'>;
 
-function AudioPlayerTime(props: AudioPlayerTimeProps) {
+/**
+ * Displays the current playback time and total duration from context
+ */
+export function AudioPlayerTime(props: AudioPlayerTimeProps) {
   const { currentTime, duration } = useAudioPlayerContextTime();
 
   const { currentTimeDisplay, durationDisplay } = useAudioPlayerTime({ currentTime, duration });
@@ -51,7 +66,3 @@ function AudioPlayerTime(props: AudioPlayerTimeProps) {
     />
   );
 }
-
-const AudioPlayerTimeMemo = memo(AudioPlayerTime);
-AudioPlayerTimeMemo.displayName = 'AudioPlayerTime';
-export { AudioPlayerTimeMemo as AudioPlayerTime };
