@@ -3,7 +3,6 @@ import {
   type MouseEventHandler,
   type RefObject,
   useCallback,
-  memo,
 } from 'react';
 import { Icon } from '@lib/Icon';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
@@ -11,11 +10,18 @@ import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 import { useAudioPlayerControlPlay } from './useAudioPlayerControlPlay';
 
+/**
+ * Props for the play/pause button primitive component
+ */
 export interface AudioPlayerControlPlayPrimitiveProps extends ComponentPropsWithRef<'button'> {
+  /** Whether the audio is currently playing */
   active?: boolean;
 }
 
-function AudioPlayerControlPlayPrimitive(props: AudioPlayerControlPlayPrimitiveProps) {
+/**
+ * Button component that toggles between play and pause icons
+ */
+export function AudioPlayerControlPlayPrimitive(props: AudioPlayerControlPlayPrimitiveProps) {
   const { active = false, ...restProps } = props;
 
   return (
@@ -29,13 +35,15 @@ function AudioPlayerControlPlayPrimitive(props: AudioPlayerControlPlayPrimitiveP
   );
 }
 
-const AudioPlayerControlPlayPrimitiveMemo = memo(AudioPlayerControlPlayPrimitive);
-AudioPlayerControlPlayPrimitiveMemo.displayName = 'AudioPlayerControlPlayPrimitive';
-export { AudioPlayerControlPlayPrimitiveMemo as AudioPlayerControlPlayPrimitive };
-
+/**
+ * Props for the play/pause control component
+ */
 export type AudioPlayerControlPlayProps = Omit<AudioPlayerControlPlayPrimitiveProps, 'active'>;
 
-function AudioPlayerControlPlay(props: AudioPlayerControlPlayProps) {
+/**
+ * Play/pause control component that integrates with the audio player context
+ */
+export function AudioPlayerControlPlay(props: AudioPlayerControlPlayProps) {
   const { onClick, ...restProps } = props;
   const { isPlaying, togglePlay } = useAudioPlayerContextAudio();
   const { audioRef } = useAudioPlayerContextRefs();
@@ -63,7 +71,3 @@ function AudioPlayerControlPlay(props: AudioPlayerControlPlayProps) {
     />
   );
 }
-
-const AudioPlayerControlPlayMemo = memo(AudioPlayerControlPlay);
-AudioPlayerControlPlayMemo.displayName = 'AudioPlayerControlPlay';
-export { AudioPlayerControlPlayMemo as AudioPlayerControlPlay };
