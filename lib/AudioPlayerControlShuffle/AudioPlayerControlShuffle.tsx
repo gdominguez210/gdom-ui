@@ -1,14 +1,21 @@
-import { type ComponentPropsWithRef, type MouseEventHandler, useCallback, memo } from 'react';
+import { type ComponentPropsWithRef, type MouseEventHandler, useCallback } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { Icon } from '@lib/Icon';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 
+/**
+ * Props for the shuffle button primitive component
+ */
 export interface AudioPlayerControlShufflePrimitiveProps extends ComponentPropsWithRef<'button'> {
+  /** Whether shuffle mode is currently active */
   active?: boolean;
 }
 
-function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShufflePrimitiveProps) {
+/**
+ * Base button component for toggling shuffle playback mode
+ */
+export function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShufflePrimitiveProps) {
   const { active = false, className, ...restProps } = props;
 
   return (
@@ -28,16 +35,18 @@ function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShufflePrim
   );
 }
 
-const AudioPlayerControlShufflePrimitiveMemo = memo(AudioPlayerControlShufflePrimitive);
-AudioPlayerControlShufflePrimitiveMemo.displayName = 'AudioPlayerControlShufflePrimitive';
-export { AudioPlayerControlShufflePrimitiveMemo as AudioPlayerControlShufflePrimitive };
-
+/**
+ * Props for the shuffle control component
+ */
 export type AudioPlayerControlShuffleProps = Omit<
   AudioPlayerControlShufflePrimitiveProps,
   'active'
 >;
 
-function AudioPlayerControlShuffle(props: AudioPlayerControlShuffleProps) {
+/**
+ * Shuffle control component that integrates with the audio player context
+ */
+export function AudioPlayerControlShuffle(props: AudioPlayerControlShuffleProps) {
   const { onClick, ...restProps } = props;
   const { shuffle, toggleShuffle } = useAudioPlayerContextAudio();
 
@@ -57,7 +66,3 @@ function AudioPlayerControlShuffle(props: AudioPlayerControlShuffleProps) {
     />
   );
 }
-
-const AudioPlayerControlShuffleMemo = memo(AudioPlayerControlShuffle);
-AudioPlayerControlShuffleMemo.displayName = 'AudioPlayerControlShuffle';
-export { AudioPlayerControlShuffleMemo as AudioPlayerControlShuffle };
