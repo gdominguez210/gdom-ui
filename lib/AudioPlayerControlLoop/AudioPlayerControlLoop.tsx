@@ -1,14 +1,21 @@
-import { type ComponentPropsWithRef, type MouseEventHandler, useCallback, memo } from 'react';
+import { type ComponentPropsWithRef, type MouseEventHandler, useCallback } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { Icon } from '@lib/Icon';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 
+/**
+ * Props for the loop button primitive component
+ */
 export interface AudioPlayerControlLoopPrimitiveProps extends ComponentPropsWithRef<'button'> {
+  /** Whether loop mode is currently active */
   active?: boolean;
 }
 
-function AudioPlayerControlLoopPrimitive(props: AudioPlayerControlLoopPrimitiveProps) {
+/**
+ * Base button component for toggling loop playback mode
+ */
+export function AudioPlayerControlLoopPrimitive(props: AudioPlayerControlLoopPrimitiveProps) {
   const { active = false, className, ...restProps } = props;
 
   return (
@@ -28,11 +35,15 @@ function AudioPlayerControlLoopPrimitive(props: AudioPlayerControlLoopPrimitiveP
   );
 }
 
-const AudioPlayerControlLoopPrimitiveMemo = memo(AudioPlayerControlLoopPrimitive);
-AudioPlayerControlLoopPrimitiveMemo.displayName = 'AudioPlayerControlLoopPrimitive';
-export { AudioPlayerControlLoopPrimitiveMemo as AudioPlayerControlLoopPrimitive };
+/**
+ * Props for the loop control component
+ */
+export type AudioPlayerControlLoopProps = Omit<AudioPlayerControlLoopPrimitiveProps, 'active'>;
 
-function AudioPlayerControlLoop(props: Omit<AudioPlayerControlLoopPrimitiveProps, 'active'>) {
+/**
+ * Loop control component that integrates with the audio player context
+ */
+export function AudioPlayerControlLoop(props: AudioPlayerControlLoopProps) {
   const { onClick, ...restProps } = props;
   const { loop, toggleLoop } = useAudioPlayerContextAudio();
 
@@ -52,7 +63,3 @@ function AudioPlayerControlLoop(props: Omit<AudioPlayerControlLoopPrimitiveProps
     />
   );
 }
-
-const AudioPlayerControlLoopMemo = memo(AudioPlayerControlLoop);
-AudioPlayerControlLoopMemo.displayName = 'AudioPlayerControlLoop';
-export { AudioPlayerControlLoopMemo as AudioPlayerControlLoop };
