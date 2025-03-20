@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef, type ElementType, memo } from 'react';
+import { type ComponentPropsWithRef, type ElementType, type ReactElement } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { AudioPlayerAuthor } from '@lib/AudioPlayerAuthor/AudioPlayerAuthor';
@@ -10,14 +10,30 @@ import { AudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/AudioPlayerP
 import { AudioPlayerTime } from '@lib/AudioPlayerTime/AudioPlayerTime';
 import { AudioPlayerTitle } from '@lib/AudioPlayerTitle/AudioPlayerTitle';
 import { AudioPlayerVolume } from '@lib/AudioPlayerVolume/AudioPlayerVolume';
+import { AudioPlayerVolumeButton } from '@lib/AudioPlayerVolumeButton/AudioPlayerVolumeButton';
+import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
+import { AudioPlayerControlAudio } from '@lib/AudioPlayerControlAudio/AudioPlayerControlAudio';
+import { AudioPlayerControlPlay } from '@lib/AudioPlayerControlPlay/AudioPlayerControlPlay';
+import { AudioPlayerControlPrevious } from '@lib/AudioPlayerControlPrevious/AudioPlayerControlPrevious';
+import { AudioPlayerControlNext } from '@lib/AudioPlayerControlNext/AudioPlayerControlNext';
+import { AudioPlayerControlShuffle } from '@lib/AudioPlayerControlShuffle/AudioPlayerControlShuffle';
+import { AudioPlayerControlLoop } from '@lib/AudioPlayerControlLoop/AudioPlayerControlLoop';
 import type { AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
 
+/**
+ * Props for the audio player wrapper component
+ */
 export type AudioPlayerPrimitiveProps<T extends ElementType = 'div'> = {
-  /** @default div */
+  /** Element to render as
+   * @default div
+   * */
   as?: T;
 } & ComponentPropsWithRef<T>;
 
-function AudioPlayerPrimitive<T extends ElementType>(props: AudioPlayerPrimitiveProps<T>) {
+/**
+ * Base wrapper component for the audio player UI
+ */
+export function AudioPlayerPrimitive<T extends ElementType>(props: AudioPlayerPrimitiveProps<T>) {
   const { as: Element = 'div', children, className, ...restProps } = props;
 
   return (
@@ -33,19 +49,47 @@ function AudioPlayerPrimitive<T extends ElementType>(props: AudioPlayerPrimitive
   );
 }
 
-const AudioPlayerPrimitiveMemo = memo(AudioPlayerPrimitive);
-AudioPlayerPrimitiveMemo.displayName = 'AudioPlayerPrimitive';
-export { AudioPlayerPrimitiveMemo as AudioPlayerPrimitive };
-
+/**
+ * Props for the main audio player component
+ */
 export type AudioPlayerProps<T extends ElementType = 'div'> = AudioPlayerPrimitiveProps<T> & {
-  tracks: AudioTrackData[];
-  /** @default 0 */
+  /** Initial track index to play @default 0 */
   defaultTrackIndex?: number;
-  /** @default 50 */
+  /** Initial volume level @default 50 */
   defaultVolume?: number;
+  /** Array of tracks to play */
+  tracks: AudioTrackData[];
 };
 
-function AudioPlayer<T extends ElementType = 'div'>(props: AudioPlayerProps<T>) {
+/**
+ * Type for the AudioPlayer compound component with all subcomponents
+ */
+export type AudioPlayerCompoundComponentType = (<T extends ElementType = 'div'>(
+  props: AudioPlayerProps<T>,
+) => ReactElement) & {
+  displayName: string;
+  Author: typeof AudioPlayerAuthor;
+  Controls: typeof AudioPlayerControls;
+  Image: typeof AudioPlayerImage;
+  Info: typeof AudioPlayerInfo;
+  ProgressBar: typeof AudioPlayerProgressBar;
+  Time: typeof AudioPlayerTime;
+  Title: typeof AudioPlayerTitle;
+  Volume: typeof AudioPlayerVolume;
+  VolumeButton: typeof AudioPlayerVolumeButton;
+  VolumeSlider: typeof AudioPlayerVolumeSlider;
+  ControlAudio: typeof AudioPlayerControlAudio;
+  ControlPlay: typeof AudioPlayerControlPlay;
+  ControlPrevious: typeof AudioPlayerControlPrevious;
+  ControlNext: typeof AudioPlayerControlNext;
+  ControlShuffle: typeof AudioPlayerControlShuffle;
+  ControlLoop: typeof AudioPlayerControlLoop;
+};
+
+/**
+ * Main audio player component with context provider
+ */
+export function AudioPlayer<T extends ElementType = 'div'>(props: AudioPlayerProps<T>) {
   const { tracks, defaultTrackIndex = 0, defaultVolume = 50, ...restProps } = props;
 
   return (
@@ -59,27 +103,40 @@ function AudioPlayer<T extends ElementType = 'div'>(props: AudioPlayerProps<T>) 
   );
 }
 
-const AudioPlayerRoot = memo(AudioPlayer);
-AudioPlayerRoot.displayName = 'AudioPlayer';
+// Set displayName on the base component
+AudioPlayer.displayName = 'AudioPlayer';
 
-const AudioPlayerComponent = Object.assign(AudioPlayerRoot, {
-  Author: AudioPlayerAuthor,
-  Controls: AudioPlayerControls,
-  Image: AudioPlayerImage,
-  Info: AudioPlayerInfo,
-  ProgressBar: AudioPlayerProgressBar,
-  Time: AudioPlayerTime,
-  Title: AudioPlayerTitle,
-  Volume: AudioPlayerVolume,
-}) as typeof AudioPlayerRoot & {
-  Author: typeof AudioPlayerAuthor;
-  Controls: typeof AudioPlayerControls;
-  Image: typeof AudioPlayerImage;
-  Info: typeof AudioPlayerInfo;
-  ProgressBar: typeof AudioPlayerProgressBar;
-  Time: typeof AudioPlayerTime;
-  Title: typeof AudioPlayerTitle;
-  Volume: typeof AudioPlayerVolume;
-};
+// Create the compound component with Object.assign
+const AudioPlayerCompoundComponent = Object.assign(AudioPlayer, {
+  Author: Object.assign(AudioPlayerAuthor, { displayName: 'AudioPlayer.Author' }),
+  Controls: Object.assign(AudioPlayerControls, { displayName: 'AudioPlayer.Controls' }),
+  Image: Object.assign(AudioPlayerImage, { displayName: 'AudioPlayer.Image' }),
+  Info: Object.assign(AudioPlayerInfo, { displayName: 'AudioPlayer.Info' }),
+  ProgressBar: Object.assign(AudioPlayerProgressBar, { displayName: 'AudioPlayer.ProgressBar' }),
+  Time: Object.assign(AudioPlayerTime, { displayName: 'AudioPlayer.Time' }),
+  Title: Object.assign(AudioPlayerTitle, { displayName: 'AudioPlayer.Title' }),
+  Volume: Object.assign(AudioPlayerVolume, { displayName: 'AudioPlayer.Volume' }),
+  VolumeButton: Object.assign(AudioPlayerVolumeButton, {
+    displayName: 'AudioPlayer.VolumeButton',
+  }),
+  VolumeSlider: Object.assign(AudioPlayerVolumeSlider, {
+    displayName: 'AudioPlayer.VolumeSlider',
+  }),
+  ControlAudio: Object.assign(AudioPlayerControlAudio, {
+    displayName: 'AudioPlayer.ControlAudio',
+  }),
+  ControlPlay: Object.assign(AudioPlayerControlPlay, { displayName: 'AudioPlayer.ControlPlay' }),
+  ControlPrevious: Object.assign(AudioPlayerControlPrevious, {
+    displayName: 'AudioPlayer.ControlPrevious',
+  }),
+  ControlNext: Object.assign(AudioPlayerControlNext, { displayName: 'AudioPlayer.ControlNext' }),
+  ControlShuffle: Object.assign(AudioPlayerControlShuffle, {
+    displayName: 'AudioPlayer.ControlShuffle',
+  }),
+  ControlLoop: Object.assign(AudioPlayerControlLoop, { displayName: 'AudioPlayer.ControlLoop' }),
+});
 
-export { AudioPlayerComponent as AudioPlayer };
+// Create the final exported component with explicit displayName for Storybook
+AudioPlayerCompoundComponent.displayName = 'AudioPlayer';
+
+export { AudioPlayerCompoundComponent };
