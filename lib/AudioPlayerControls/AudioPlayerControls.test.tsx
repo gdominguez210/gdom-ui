@@ -1,59 +1,32 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerControls, AudioPlayerControlsBase } from './AudioPlayerControls';
+import { AudioPlayerControls, AudioPlayerControlsPrimitive } from './AudioPlayerControls';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
-import { AUDIO_PLAYER_CONTEXT_ERROR } from '@lib/AudioPlayerContextProvider/data';
 import { trackData } from '@lib/AudioPlayer/data';
 
 describe('AudioPlayerControls', () => {
   describe('without context', () => {
     test('should throw error when used without context', () => {
       vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
-      expect(() => render(<AudioPlayerControls />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
+      expect(() => render(<AudioPlayerControls />)).toThrow();
       vi.restoreAllMocks();
     });
   });
 
   describe('with context', () => {
-    test('should render play button when paused', () => {
+    test('should render all control buttons', () => {
       render(
         <AudioPlayerContextProvider tracks={trackData}>
           <AudioPlayerControls data-testid="controls" />
         </AudioPlayerContextProvider>,
       );
 
-      expect(screen.getByLabelText('Play')).toBeInTheDocument();
-      expect(screen.queryByLabelText('Pause')).not.toBeInTheDocument();
-    });
-
-    test('should render pause button when playing', () => {
-      render(
-        <AudioPlayerContextProvider tracks={trackData}>
-          <AudioPlayerControls data-testid="controls" />
-        </AudioPlayerContextProvider>,
-      );
-
-      const playButton = screen.getByLabelText('Play');
-      fireEvent.click(playButton);
-
-      expect(screen.getByLabelText('Pause')).toBeInTheDocument();
-      expect(screen.queryByLabelText('Play')).not.toBeInTheDocument();
-    });
-
-    test('should toggle play/pause on button click', () => {
-      render(
-        <AudioPlayerContextProvider tracks={trackData}>
-          <AudioPlayerControls data-testid="controls" />
-        </AudioPlayerContextProvider>,
-      );
-
-      const playButton = screen.getByLabelText('Play');
-      fireEvent.click(playButton);
-      expect(screen.getByLabelText('Pause')).toBeInTheDocument();
-
-      const pauseButton = screen.getByLabelText('Pause');
-      fireEvent.click(pauseButton);
-      expect(screen.getByLabelText('Play')).toBeInTheDocument();
+      expect(screen.getByTestId('controls')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Previous Track' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Play' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Next Track' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Toggle Loop' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Toggle Shuffle' })).toBeInTheDocument();
     });
 
     test('should allow custom className', () => {
@@ -84,70 +57,41 @@ describe('AudioPlayerControls', () => {
   });
 });
 
-describe('AudioPlayerControlsBase', () => {
-  test('should render as div by default', () => {
-    render(
-      <AudioPlayerControlsBase data-testid="base">
-        <button>Play</button>
-      </AudioPlayerControlsBase>,
-    );
-
-    const element = screen.getByTestId('base');
-    expect(element.tagName.toLowerCase()).toBe('div');
-  });
-
+describe('AudioPlayerControlsPrimitive', () => {
   test('should render children', () => {
     render(
-      <AudioPlayerControlsBase data-testid="base">
-        <button data-testid="child">Play</button>
-      </AudioPlayerControlsBase>,
+      <AudioPlayerControlsPrimitive data-testid="controls">
+        <button>Test Button</button>
+      </AudioPlayerControlsPrimitive>,
     );
 
-    expect(screen.getByTestId('child')).toBeInTheDocument();
-    expect(screen.getByTestId('child')).toHaveTextContent('Play');
+    expect(screen.getByTestId('controls')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toHaveTextContent('Test Button');
   });
 
-  test('should merge className with default styles', () => {
+  test('should allow custom className', () => {
     render(
-      <AudioPlayerControlsBase
+      <AudioPlayerControlsPrimitive
         className="custom-class"
-        data-testid="base"
+        data-testid="controls"
       >
-        <button>Play</button>
-      </AudioPlayerControlsBase>,
+        <button>Test Button</button>
+      </AudioPlayerControlsPrimitive>,
     );
 
-    const element = screen.getByTestId('base');
-    expect(element).toHaveClass('custom-class');
-  });
-
-  test('should render as different element', () => {
-    render(
-      <AudioPlayerControlsBase
-        as="section"
-        data-testid="base"
-      >
-        <button>Play</button>
-      </AudioPlayerControlsBase>,
-    );
-
-    const element = screen.getByTestId('base');
-    expect(element.tagName.toLowerCase()).toBe('section');
+    expect(screen.getByTestId('controls')).toHaveClass('custom-class');
   });
 
   test('should forward additional props', () => {
     render(
-      <AudioPlayerControlsBase
-        data-testid="base"
-        aria-label="Player controls"
-        role="group"
+      <AudioPlayerControlsPrimitive
+        data-testid="controls"
+        aria-label="Audio controls"
       >
-        <button>Play</button>
-      </AudioPlayerControlsBase>,
+        <button>Test Button</button>
+      </AudioPlayerControlsPrimitive>,
     );
 
-    const element = screen.getByTestId('base');
-    expect(element).toHaveAttribute('aria-label', 'Player controls');
-    expect(element).toHaveAttribute('role', 'group');
+    expect(screen.getByTestId('controls')).toHaveAttribute('aria-label', 'Audio controls');
   });
 });

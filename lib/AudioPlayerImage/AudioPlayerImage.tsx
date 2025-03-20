@@ -1,31 +1,31 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
-import { Icon } from '@lib/Icon/Icon';
+import { type ComponentPropsWithRef, type ElementType } from 'react';
+import { Icon } from '@lib/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
+import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
 
-export type AudioPlayerImageBaseProps<T extends ElementType = 'div'> = {
-  /** @default div */
+/**
+ * Props for the audio track image component
+ */
+export type AudioPlayerImageProps<T extends ElementType = 'div'> = {
+  /** Element to render as @default div */
   as?: T;
-  /** @default '' */
-  altText: string;
-  /** @default 96 */
+  /** Image width in pixels @default 96 */
   width?: number;
-  /** @default 96 */
+  /** Image height in pixels @default 96 */
   height?: number;
-  src?: string;
 } & ComponentPropsWithRef<T>;
 
-export interface AudioPlayerImageProps extends Omit<AudioPlayerImageBaseProps, 'src' | 'altText'> {
-  /** @default `${title} thumbnail` */
-  altText?: string;
-}
-
-export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
+/**
+ * Base component for displaying an audio track image or placeholder
+ */
+export function AudioPlayerImagePrimitive<T extends ElementType>(
+  props: AudioPlayerImageProps<T> & { src: string; altText: string },
+) {
   const {
     as: Element = 'div',
-    altText,
     className,
+    altText,
     width = 96,
     height = 96,
     src,
@@ -42,16 +42,15 @@ export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
       )}
       {...restProps}
     >
-      {src && (
+      {src ? (
         <img
-          className="h-full w-full object-cover"
           src={src}
           alt={altText}
+          className="h-full w-full object-cover"
           width={width}
           height={height}
         />
-      )}
-      {!src && (
+      ) : (
         <div className="flex h-full w-full items-center justify-center">
           <span className="text-4xl">
             <Icon name="disc-fill" />
@@ -62,14 +61,18 @@ export function AudioPlayerImageBase(props: AudioPlayerImageBaseProps) {
   );
 }
 
-export function AudioPlayerImage(props: AudioPlayerImageProps) {
-  const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContextState();
+/**
+ * Displays the thumbnail for the current audio track
+ * Shows a placeholder icon if no thumbnail is available
+ */
+export function AudioPlayerImage<T extends ElementType = 'div'>(props: AudioPlayerImageProps<T>) {
+  const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContextTrack();
 
   return (
-    <AudioPlayerImageBase
+    <AudioPlayerImagePrimitive
       {...props}
       src={thumbnail}
-      altText={props.altText || `${title} thumbnail`}
+      altText={title ? `${title} thumbnail` : ''}
     />
   );
 }

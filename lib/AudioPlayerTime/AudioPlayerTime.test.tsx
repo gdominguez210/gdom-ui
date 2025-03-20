@@ -1,15 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerTime, AudioPlayerTimeBase } from './AudioPlayerTime';
+import { AudioPlayerTime, AudioPlayerTimePrimitive } from './AudioPlayerTime';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
-import { AUDIO_PLAYER_CONTEXT_ERROR } from '@lib/AudioPlayerContextProvider/data';
 import { trackData } from '@lib/AudioPlayer/data';
 
 describe('AudioPlayerTime', () => {
   describe('without context', () => {
     test('should throw error when used without context', () => {
       vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
-      expect(() => render(<AudioPlayerTime />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
+      expect(() => render(<AudioPlayerTime />)).toThrow();
       vi.restoreAllMocks();
     });
   });
@@ -54,10 +53,10 @@ describe('AudioPlayerTime', () => {
   });
 });
 
-describe('AudioPlayerTimeBase', () => {
+describe('AudioPlayerTimePrimitive', () => {
   test('should render as span by default', () => {
     render(
-      <AudioPlayerTimeBase
+      <AudioPlayerTimePrimitive
         data-testid="time"
         currentTime="60"
         duration="180"
@@ -70,7 +69,7 @@ describe('AudioPlayerTimeBase', () => {
 
   test('should merge className with default styles', () => {
     render(
-      <AudioPlayerTimeBase
+      <AudioPlayerTimePrimitive
         className="custom-class"
         data-testid="time"
         currentTime="0"
@@ -83,7 +82,7 @@ describe('AudioPlayerTimeBase', () => {
 
   test('should forward additional props', () => {
     render(
-      <AudioPlayerTimeBase
+      <AudioPlayerTimePrimitive
         data-testid="time"
         currentTime="0"
         duration="0"

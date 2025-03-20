@@ -1,14 +1,22 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
+import { type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
+import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 
+/**
+ * Props for the track author component
+ */
 export type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
-  /** @default p */
+  /** Element to render as @default p */
   as?: T;
 } & ComponentPropsWithRef<T>;
 
-export function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
+/**
+ * Base component for displaying author information with appropriate styling
+ */
+export function AudioPlayerAuthorPrimitive<T extends ElementType>(
+  props: AudioPlayerAuthorProps<T>,
+) {
   const { as: Element = 'p', children, className, ...restProps } = props;
 
   return (
@@ -21,17 +29,21 @@ export function AudioPlayerAuthorBase<T extends ElementType>(props: AudioPlayerA
   );
 }
 
-export function AudioPlayerAuthor<T extends ElementType>(props: AudioPlayerAuthorProps<T>) {
-  const { currentTrack: { author } = {} } = useAudioPlayerContextState();
+/**
+ * Displays the author of the current audio track
+ * Returns null if no author is available
+ */
+export function AudioPlayerAuthor<T extends ElementType = 'p'>(props: AudioPlayerAuthorProps<T>) {
+  const { currentTrack: { author } = {} } = useAudioPlayerContextTrack();
 
   if (!author) return null;
 
   return (
-    <AudioPlayerAuthorBase
+    <AudioPlayerAuthorPrimitive
       {...props}
       title={author}
     >
       {author}
-    </AudioPlayerAuthorBase>
+    </AudioPlayerAuthorPrimitive>
   );
 }

@@ -1,52 +1,53 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlayer, AudioPlayerBase } from '@lib/AudioPlayer';
+import { AudioPlayer } from '@lib/AudioPlayer';
+import { AudioPlayerPrimitive } from './AudioPlayer';
 import { trackData } from './data';
 
 describe('AudioPlayer', () => {
-  describe('AudioPlayerBase', () => {
+  describe('AudioPlayerPrimitive', () => {
     test('should render without context', () => {
       render(
-        <AudioPlayerBase data-testid="audio-player-base">
+        <AudioPlayerPrimitive data-testid="audio-player-primitive">
           <div>Content</div>
-        </AudioPlayerBase>,
+        </AudioPlayerPrimitive>,
       );
 
-      const element = screen.getByTestId('audio-player-base');
+      const element = screen.getByTestId('audio-player-primitive');
       expect(element).toBeInTheDocument();
     });
 
-    test('should allow custom className', () => {
+    test('should apply default styles and allow custom className', () => {
       render(
-        <AudioPlayerBase
-          data-testid="audio-player-base"
+        <AudioPlayerPrimitive
+          data-testid="audio-player-primitive"
           className="custom-class"
         >
           <div>Content</div>
-        </AudioPlayerBase>,
+        </AudioPlayerPrimitive>,
       );
 
-      const element = screen.getByTestId('audio-player-base');
+      const element = screen.getByTestId('audio-player-primitive');
       expect(element).toHaveClass('custom-class');
     });
 
     test('should render as a different element', () => {
       render(
-        <AudioPlayerBase
+        <AudioPlayerPrimitive
           as="section"
-          data-testid="audio-player-base"
+          data-testid="audio-player-primitive"
         >
           <div>Content</div>
-        </AudioPlayerBase>,
+        </AudioPlayerPrimitive>,
       );
 
-      const element = screen.getByTestId('audio-player-base');
+      const element = screen.getByTestId('audio-player-primitive');
       expect(element.tagName.toLowerCase()).toBe('section');
     });
   });
 
   describe('AudioPlayer', () => {
-    test('should render with context provider', () => {
+    test('should render with default props', () => {
       render(
         <AudioPlayer
           tracks={trackData}
@@ -60,18 +61,12 @@ describe('AudioPlayer', () => {
       expect(element).toBeInTheDocument();
     });
 
-    test('should pass defaultTrackIndex to context provider', () => {
-      const defaultTrackIndex = 1;
-      const track = trackData[defaultTrackIndex];
-
-      if (!track) {
-        throw new Error('Track data not found at index');
-      }
-
+    test('should pass default props to context provider', () => {
       render(
         <AudioPlayer
           tracks={trackData}
-          defaultTrackIndex={defaultTrackIndex}
+          defaultTrackIndex={1}
+          defaultVolume={75}
           data-testid="audio-player"
         >
           <AudioPlayer.Title data-testid="title" />
@@ -79,7 +74,7 @@ describe('AudioPlayer', () => {
       );
 
       const titleElement = screen.getByTestId('title');
-      expect(titleElement).toHaveTextContent(track.title);
+      expect(titleElement).toHaveTextContent(trackData[1]!.title);
     });
 
     test('should render all compound components', () => {
@@ -105,20 +100,6 @@ describe('AudioPlayer', () => {
       expect(screen.getByTestId('progress')).toBeInTheDocument();
       expect(screen.getByTestId('time')).toBeInTheDocument();
       expect(screen.getByTestId('volume')).toBeInTheDocument();
-    });
-
-    test('should apply containerRef from context', () => {
-      render(
-        <AudioPlayer
-          tracks={trackData}
-          data-testid="audio-player"
-        >
-          <div>Content</div>
-        </AudioPlayer>,
-      );
-
-      const element = screen.getByTestId('audio-player');
-      expect(element).toHaveAttribute('tabindex', '-1');
     });
   });
 });

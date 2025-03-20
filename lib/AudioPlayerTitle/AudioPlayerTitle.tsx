@@ -1,14 +1,28 @@
 import clsx from 'clsx';
-import type { ComponentPropsWithRef, ElementType } from 'react';
+import { type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useAudioPlayerContextState } from '@lib/AudioPlayerContextProvider/useAudioPlayerContextState';
+import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 
+/**
+ * Props for the track title component
+ */
 export type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
-  /** @default p */
+  /** Element to render as @default p */
   as?: T;
+
+  /**
+   * Additional CSS classes to apply to the component
+   * @example
+   * // Apply custom classes
+   * <AudioPlayerTitle className="text-2xl text-blue-500" />
+   */
+  className?: string;
 } & ComponentPropsWithRef<T>;
 
-export function AudioPlayerTitleBase<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
+/**
+ * Base component for displaying track title with appropriate styling
+ */
+export function AudioPlayerTitlePrimitive<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
   const { as: Element = 'p', children, className, ...restProps } = props;
 
   return (
@@ -21,17 +35,21 @@ export function AudioPlayerTitleBase<T extends ElementType>(props: AudioPlayerTi
   );
 }
 
-export function AudioPlayerTitle<T extends ElementType = 'p'>(props: AudioPlayerTitleProps<T>) {
-  const { currentTrack: { title } = {} } = useAudioPlayerContextState();
+/**
+ * Displays the title of the current audio track
+ * Returns null if no title is available
+ */
+export function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
+  const { currentTrack: { title } = {} } = useAudioPlayerContextTrack();
 
   if (!title) return null;
 
   return (
-    <AudioPlayerTitleBase
+    <AudioPlayerTitlePrimitive
       title={title}
       {...props}
     >
       {title}
-    </AudioPlayerTitleBase>
+    </AudioPlayerTitlePrimitive>
   );
 }

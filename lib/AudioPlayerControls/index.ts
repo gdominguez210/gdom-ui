@@ -1,2 +1,5 @@
-export * from './AudioPlayerControls';
-export * from './useAudioPlayerControls';
+export {
+  AudioPlayerControls,
+  AudioPlayerControlsPrimitive,
+  type AudioPlayerControlsProps,
+} from './AudioPlayerControls';

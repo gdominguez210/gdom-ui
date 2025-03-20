@@ -2,7 +2,6 @@ import { useRef, useCallback, useEffect, type ChangeEventHandler, type RefObject
 
 interface UseAudioPlayerProgressBarProps {
   audioRef: RefObject<HTMLAudioElement | null>;
-  currentTrack?: { src: string };
   cssVariableName?: string;
   duration: number;
   isPlaying: boolean;
@@ -12,7 +11,6 @@ interface UseAudioPlayerProgressBarProps {
 
 export function useAudioPlayerProgressBar({
   audioRef,
-  currentTrack,
   cssVariableName = '--range-progress',
   duration,
   isPlaying,
@@ -53,23 +51,26 @@ export function useAudioPlayerProgressBar({
   }, [audioRef, progressBarRef, duration, updateProgress]);
 
   useEffect(() => {
+    const currentAnimationFrame = animationRef.current;
+
     if (isPlaying) {
       startAnimation();
-    } else {
-      if (animationRef.current !== null) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
-      }
-
-      updateProgress();
+      return;
     }
 
+    if (currentAnimationFrame !== null) {
+      cancelAnimationFrame(currentAnimationFrame);
+      animationRef.current = null;
+    }
+
+    updateProgress();
+
     return () => {
-      if (animationRef.current !== null) {
-        cancelAnimationFrame(animationRef.current);
+      if (currentAnimationFrame) {
+        cancelAnimationFrame(currentAnimationFrame);
       }
     };
-  }, [isPlaying, duration, currentTrack, startAnimation, updateProgress]);
+  }, [isPlaying, duration, startAnimation, updateProgress]);
 
   return {
     handleProgressChange,

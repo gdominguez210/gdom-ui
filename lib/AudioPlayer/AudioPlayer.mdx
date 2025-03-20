@@ -1,4 +1,4 @@
-import { Meta, Controls, Story, Source, Canvas } from '@storybook/blocks';
+import { Meta, Controls, Story, Source, Canvas, Stories } from '@storybook/blocks';
 import * as AudioPlayerStories from './AudioPlayer.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 
@@ -6,255 +6,323 @@ import { DocumentationNav } from '@storybook-components/DocumentationNav/Documen
 
 # AudioPlayer
 
-The AudioPlayer is a flexible, composable audio playback interface that provides a comprehensive set of controls and display elements for audio content. Built using a polymorphic component pattern, it allows for maximum customization and flexibility in implementation.
+The AudioPlayer is a flexible, composable audio playback interface that provides a comprehensive set of controls and display elements for audio content. Built using a compound component pattern, it allows for maximum customization and flexibility in implementation.
 
 <DocumentationNav />
 
-<Canvas sourceState="shown">
-  <Story of={AudioPlayerStories.AudioPlayer} />
-</Canvas>
+## Usage Examples
 
-## Overview
+The following examples demonstrate different configurations of the AudioPlayer component. You can use these as a starting point for your own implementation.
 
-The AudioPlayer uses a compound component pattern, where multiple specialized components work together through a shared context. This approach allows developers to:
+> **Note:** The `trackData` array is of type `AudioTrackData[]` and has been simplified in the source code examples for brevity.
+>
+> ```typescript
+> type AudioTrackData = {
+>   title: string;
+>   src: string;
+>   author: string;
+>   thumbnail?: string;
+> };
+> ```
 
-- Customize the layout and appearance of the player
-- Include or exclude specific controls and information displays
-- Maintain full control over styling while leveraging built-in functionality
-- Use semantic HTML elements through polymorphic components
+<Stories />
 
-## Basic Usage
+## Component Structure
 
-The AudioPlayer requires a `ContextProvider` that manages the audio state and provides track data to all child components. Here's a basic implementation:
+The AudioPlayer uses a compound component pattern where the main `AudioPlayer` exports all the necessary subcomponents. Each component can be used individually or combined to create a custom audio player interface.
 
-  <Source
-    language="tsx"
-    dark
-    code={`
+```typescript
+// AudioPlayer - Main component that serves as the entry point and provides context for all subcomponents
 import { AudioPlayer } from '@lib/AudioPlayer';
-
-function MyAudioPlayer() {
-const tracks = [
-{
-id: '1',
-title: 'Song Title',
-artist: 'Artist Name',
-audioUrl: '/path/to/audio.mp3',
-imageUrl: '/path/to/cover.jpg',
-},
-];
-
-return (
-
-    <AudioPlayer.ContextProvider tracks={tracks}>
-      <AudioPlayer>
-        <AudioPlayer.Info>
-          <AudioPlayer.Image />
-          <AudioPlayer.Title />
-          <AudioPlayer.Author />
-        </AudioPlayer.Info>
-        <AudioPlayer.Controls />
-        <AudioPlayer.ProgressBar />
-      </AudioPlayer>
-    </AudioPlayer.ContextProvider>
-
-); }`} />
-
-## Advanced Implementation
-
-The interactive example above demonstrates a more sophisticated implementation that showcases all available components and custom styling. You can view its source code by expanding the "Show code" panel in the example.
+```
 
 ## Polymorphic Components
 
-All components in the AudioPlayer system are polymorphic, meaning they can be rendered as any HTML element or custom component using the `as` prop:
+All AudioPlayer components are built as polymorphic components, which means they can render as any HTML element or React component. This provides maximum flexibility for integration into various UI patterns.
 
 <Source
   language="tsx"
   dark
   code={`
-<AudioPlayer.Info as="section">
-  <AudioPlayer.Title as="h2" />
-  <AudioPlayer.Author as="span" />
+// Render as a div (default)
+<AudioPlayer.Info>
+  Content goes here
 </AudioPlayer.Info>
-`}
-/>
 
-## Styling
+// Render as a section
 
-The AudioPlayer components come with minimal default styling and can be customized using:
+<AudioPlayer.Info as="section">Content goes here</AudioPlayer.Info>
 
-- className props for Tailwind CSS classes
-- Custom CSS
-- Styled-components or other CSS-in-JS solutions
+// Render as a custom component
 
-The base component uses Tailwind CSS utilities for basic layout and appearance, which can be overridden or extended as needed.
+<AudioPlayer.Info as={CustomContainer}>Content goes here</AudioPlayer.Info>
+`} />
 
-## Accessibility
+Each component accepts an `as` prop that determines the rendered element, along with all props valid for that element type. This allows you to maintain semantic HTML structure while using AudioPlayer components.
 
-The AudioPlayer components are built with accessibility in mind, providing:
+### Available Subcomponents
 
-- Proper ARIA attributes for media controls
-- Keyboard navigation support
-- Screen reader-friendly status updates
-- Semantic HTML structure
+All subcomponents are accessible through the main `AudioPlayer`, via `AudioPlayer.ComponentName`.
 
-## Available Components
+#### Information Display
 
-All context-connected components are available through the main `AudioPlayer` import (e.g. `AudioPlayer.Controls`, `AudioPlayer.ProgressBar`). Base components can be imported directly from their respective modules.
+```typescript
+// AudioPlayerInfo - Container for track information
+import { AudioPlayerInfo } from '@lib/AudioPlayerInfo';
 
-### Main Container
+// AudioPlayerImage - Album art/thumbnail display
+import { AudioPlayerImage } from '@lib/AudioPlayerImage';
 
-- **AudioPlayer** - The main container component with context integration
-- **AudioPlayerBase** - The base container component without context dependencies
+// AudioPlayerTitle - Track title display
+import { AudioPlayerTitle } from '@lib/AudioPlayerTitle';
 
-<Source
-  language="typescript"
-  dark
-  code={`
-import { AudioPlayer, AudioPlayerBase } from '@lib/AudioPlayer';
-`}
-/>
+// AudioPlayerAuthor - Track artist/author display
+import { AudioPlayerAuthor } from '@lib/AudioPlayerAuthor';
 
-### Controls
+// AudioPlayerTime - Current and total duration display
+import { AudioPlayerTime } from '@lib/AudioPlayerTime';
+```
 
-- **AudioPlayerControls** - The controls container with play/pause, next/previous, loop, and shuffle buttons
-- **AudioPlayerControlsBase** - The base controls container for custom implementations
+#### Controls
 
-<Source
-  language="typescript"
-  dark
-  code={`
-import { AudioPlayerControls, AudioPlayerControlsBase } from '@lib/AudioPlayerControls';
-`}
-/>
+```typescript
+// AudioPlayerControls - Container for playback controls
+import { AudioPlayerControls } from '@lib/AudioPlayerControls';
 
-### Progress Bar
+// AudioPlayerControlPlay - Play/pause toggle
+import { AudioPlayerControlPlay } from '@lib/AudioPlayerControlPlay';
 
-- **AudioPlayerProgressBar** - The progress bar with time tracking and context integration
-- **AudioPlayerProgressBarBase** - The base progress bar input component
+// AudioPlayerControlNext - Skip to next track
+import { AudioPlayerControlNext } from '@lib/AudioPlayerControlNext';
 
-<Source
-  language="typescript"
-  dark
-  code={`
-import { AudioPlayerProgressBar, AudioPlayerProgressBarBase } from '@lib/AudioPlayerProgressBar';
-`}
-/>
+// AudioPlayerControlPrevious - Return to previous track
+import { AudioPlayerControlPrevious } from '@lib/AudioPlayerControlPrevious';
 
-### Volume
+// AudioPlayerControlLoop - Toggle repeat mode
+import { AudioPlayerControlLoop } from '@lib/AudioPlayerControlLoop';
 
-- **AudioPlayerVolume** - The volume controls with mute functionality and context integration
-- **AudioPlayerVolumeBase** - The base volume controls component
+// AudioPlayerControlShuffle - Toggle shuffle mode
+import { AudioPlayerControlShuffle } from '@lib/AudioPlayerControlShuffle';
 
-<Source
-  language="typescript"
-  dark
-  code={`
-import { AudioPlayerVolume, AudioPlayerVolumeBase } from '@lib/AudioPlayerVolume';
-`}
-/>
+// AudioPlayerControlAudio - Toggle audio on/off
+import { AudioPlayerControlAudio } from '@lib/AudioPlayerControlAudio';
+```
 
-### Track Information
+#### Playback
 
-- **AudioPlayerInfo** - The track information container
-- **AudioPlayerInfoBase** - The base info container component
-- **AudioPlayerTitle** - The track title display
-- **AudioPlayerTitleBase** - The base title component
-- **AudioPlayerAuthor** - The track author display
-- **AudioPlayerAuthorBase** - The base author component
+```typescript
+// AudioPlayerProgressBar - Track progress display and seek control
+import { AudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar';
 
-<Source
-  language="typescript"
-  dark
-  code={`
-import { AudioPlayerInfo, AudioPlayerInfoBase } from '@lib/AudioPlayerInfo';
-import { AudioPlayerTitle, AudioPlayerTitleBase } from '@lib/AudioPlayerTitle';
-import { AudioPlayerAuthor, AudioPlayerAuthorBase } from '@lib/AudioPlayerAuthor';
-`}
-/>
+// AudioPlayerVolume - Volume controls with expand/collapse
+import { AudioPlayerVolume } from '@lib/AudioPlayerVolume';
 
-### Media
+// AudioPlayerVolumeButton - Mute/unmute toggle
+import { AudioPlayerVolumeButton } from '@lib/AudioPlayerVolumeButton';
 
-- **AudioPlayerImage** - The album art/thumbnail display
-- **AudioPlayerImageBase** - The base image component
+// AudioPlayerVolumeSlider - Volume level control
+import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider';
+```
 
-<Source
-  language="typescript"
-  dark
-  code={`
-import { AudioPlayerImage, AudioPlayerImageBase } from '@lib/AudioPlayerImage';
-`}
-/>
+#### Context Providers
 
-### Time
+These providers are not exposed as subcomponents on the main `AudioPlayer` component. Instead, they can be imported individually and composed however you see fit for custom implementations.
 
-- **AudioPlayerTime** - The time display with current and total duration
-- **AudioPlayerTimeBase** - The base time display component
+```typescript
+// AudioPlayerContextProvider - Main provider that manages all state
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
 
-<Source
-  language="typescript"
-  dark
-  code={`
-import { AudioPlayerTime, AudioPlayerTimeBase } from '@lib/AudioPlayerTime';
-`}
-/>
+// AudioPlayerContextTrackProvider - Manages track list and current track
+import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider';
 
-Each base component provides the same UI structure as its context-connected counterpart but without the built-in state management, allowing for custom implementations when needed.
+// AudioPlayerContextTimeProvider - Manages playback time and duration
+import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider';
 
-## Available Hooks
+// AudioPlayerContextAudioProvider - Manages audio state (play, volume, etc.)
+import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider';
 
-All hooks can be imported from either the barrel file of their related component (e.g. `@lib/AudioPlayerControls`) or directly from their respective modules. Some hooks are designed to work with the AudioPlayer context, while others can be used independently.
-
-### Context Hooks
-
-- **useAudioPlayerContextState** - Hook to access the AudioPlayer state context
-- **useAudioPlayerContextDispatch** - Hook to access the AudioPlayer dispatch context
-
-<Source
-  language="typescript"
-  dark
-  code={`
-import { useAudioPlayerContextState, useAudioPlayerContextDispatch } from '@lib/AudioPlayerContextProvider';
-`}
-/>
-
-### Control Hooks
-
-- **useAudioPlayerControls** - Hook for managing audio playback controls (play/pause, next/previous, loop, shuffle)
-- **useAudioPlayerKeyboardControls** - Hook for handling keyboard shortcuts
-
-<Source
-  language="typescript"
-  dark
-  code={`
-import { useAudioPlayerControls, useAudioPlayerKeyboardControls } from '@lib/AudioPlayerControls';
-`}
-/>
-
-### Progress Bar Hook
-
-- **useAudioPlayerProgressBar** - Hook for managing progress bar interactions and animations
-
-<Source
-  language="typescript"
-  dark
-  code={`
-import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar';
-`}
-/>
-
-### Time Hook
-
-- **useAudioPlayerTime** - Hook for formatting and displaying audio duration
-
-<Source
-  language="typescript"
-  dark
-  code={`
-import { useAudioPlayerTime } from '@lib/AudioPlayerTime';
-`}
-/>
+// AudioPlayerContextRefsProvider - Manages references to audio elements
+import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider';
+```
 
 ## Props
 
+### AudioPlayer Props
+
 <Controls />
+
+### Track Data Structure
+
+The `tracks` prop accepts an array of objects with the following structure:
+
+```typescript
+type AudioTrackData = {
+  id: string;
+  title: string;
+  artist: string;
+  audioUrl: string;
+  imageUrl?: string;
+};
+```
+
+## Event Handling
+
+Components that handle events (like ProgressBar, ControlPlay, ControlNext, ControlPrevious, etc.) follow a consistent pattern:
+
+1. They accept standard event handlers as props
+2. Internal handlers run first to maintain functionality
+3. Custom handlers are called afterward with the event
+
+This allows you to add custom behavior while maintaining the core functionality:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+<AudioPlayer.ProgressBar
+  onChange={(e) => {
+    console.log('Progress changed:', e.target.value);
+  }}
+/>
+
+<AudioPlayer.ControlNext
+  onClick={(e) => {
+    console.log('Next track clicked');
+  }}
+/>
+`} />
+
+## Styling
+
+Components can be styled using multiple approaches:
+
+- **className props** with Tailwind CSS classes
+- **Custom CSS classes**
+- **Inline style objects**
+- **CSS-in-JS solutions** like styled-components
+
+The AudioPlayer components use `twMerge` internally to intelligently merge Tailwind CSS classes. This means when you pass your own tailwind classes, they will override the default styles rather than conflicting with them:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Override the background color and padding
+<AudioPlayer.Info className="bg-blue-800 p-6 rounded-xl">
+  <AudioPlayer.Title className="text-2xl font-bold text-white" />
+</AudioPlayer.Info>
+
+// Using inline styles
+
+<AudioPlayer.Controls style={{ marginTop: '2rem', opacity: 0.9 }} />
+
+// Combining multiple styling approaches
+
+<AudioPlayer.ProgressBar
+  className="h-3 rounded-full bg-gray-200"
+  style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
+/>
+`} />
+
+All components accept standard HTML attributes, making them fully customizable while maintaining their core functionality:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+<AudioPlayer.VolumeButton 
+  className="hover:bg-gray-100 transition-colors" 
+  aria-label="Adjust volume"
+  data-testid="volume-control"
+/>
+`}
+/>
+
+## Accessibility
+
+The AudioPlayer components are built with accessibility in mind:
+
+- All controls use semantic HTML elements
+- Proper ARIA attributes for media controls
+- Keyboard navigation support for interactive elements
+- Screen reader-friendly status updates
+- Proper focus management for controls
+- Support for reduced motion preferences
+- High contrast color options
+
+Each component is tested against WCAG 2.1 guidelines to ensure they work well with assistive technologies:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Example of accessibility attributes automatically applied
+<AudioPlayer.ControlPlay />
+// Renders with:
+// - aria-label that changes based on play/pause state
+// - role="button" 
+// - keyboard focus handling
+// - screen reader announcements for state changes
+`}
+/>
+
+## Primitive Components
+
+For advanced customization, the AudioPlayer provides primitive versions of all components that are disconnected from the context. These primitive components are purely prop-driven and allow you to build completely custom implementations:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Import the primitive component
+import { AudioPlayerProgressBarPrimitive } from '@lib/AudioPlayerProgressBar/AudioPlayerProgressBarPrimitive';
+
+// Create a custom implementation
+function MyCustomProgressBar({ value, max, onChange }) {
+return (
+
+<AudioPlayerProgressBarPrimitive
+  value={value}
+  max={max}
+  onChange={onChange}
+  className="my-custom-styles"
+/>
+); } `} />
+
+Primitive components provide just the structure and accessibility features without any built-in state management or event handling. This gives you complete control when:
+
+- Implementing a different state management solution
+- Creating a custom audio player with unique interactions
+- Integrating with third-party audio libraries
+- Building specialized audio players for particular use cases
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Example of a fully custom implementation
+import { 
+  AudioPlayerPrimitive,
+  AudioPlayerControlPlayPrimitive,
+  AudioPlayerProgressBarPrimitive 
+} from '@lib/AudioPlayer/primitives';
+
+function MyCustomPlayer() {
+const [isPlaying, setIsPlaying] = useState(false);
+const [progress, setProgress] = useState(0);
+// Custom audio handling logic...
+
+return (
+
+<AudioPlayerPrimitive>
+  <AudioPlayerControlPlayPrimitive
+    isPlaying={isPlaying}
+    onClick={() => setIsPlaying(!isPlaying)}
+  />
+  <AudioPlayerProgressBarPrimitive
+    value={progress}
+    max={100}
+    onChange={(e) => setProgress(Number(e.target.value))}
+  />
+</AudioPlayerPrimitive>
+); } `} />

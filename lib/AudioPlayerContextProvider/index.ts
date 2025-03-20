@@ -1,3 +1,4 @@
-export * from './AudioPlayerContextProvider';
-export * from './useAudioPlayerContextState';
-export * from './useAudioPlayerContextDispatch';
+export {
+  AudioPlayerContextProvider,
+  type AudioPlayerContextProviderProps,
+} from './AudioPlayerContextProvider';

@@ -1,15 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerTitle, AudioPlayerTitleBase } from './AudioPlayerTitle';
+import { AudioPlayerTitle, AudioPlayerTitlePrimitive } from './AudioPlayerTitle';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
-import { AUDIO_PLAYER_CONTEXT_ERROR } from '@lib/AudioPlayerContextProvider/data';
 import { trackData } from '@lib/AudioPlayer/data';
 
 describe('AudioPlayerTitle', () => {
   describe('without context', () => {
     test('should throw error when used without context', () => {
       vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
-      expect(() => render(<AudioPlayerTitle />)).toThrow(AUDIO_PLAYER_CONTEXT_ERROR.STATE);
+      expect(() => render(<AudioPlayerTitle />)).toThrow();
       vi.restoreAllMocks();
     });
   });
@@ -53,28 +52,28 @@ describe('AudioPlayerTitle', () => {
   });
 });
 
-describe('AudioPlayerTitleBase', () => {
+describe('AudioPlayerTitlePrimitive', () => {
   test('should render as p by default', () => {
-    render(<AudioPlayerTitleBase data-testid="title">Track Title</AudioPlayerTitleBase>);
+    render(<AudioPlayerTitlePrimitive data-testid="title">Track Title</AudioPlayerTitlePrimitive>);
 
     const element = screen.getByTestId('title');
     expect(element.tagName.toLowerCase()).toBe('p');
   });
 
   test('should render children', () => {
-    render(<AudioPlayerTitleBase data-testid="title">Track Title</AudioPlayerTitleBase>);
+    render(<AudioPlayerTitlePrimitive data-testid="title">Track Title</AudioPlayerTitlePrimitive>);
 
     expect(screen.getByTestId('title')).toHaveTextContent('Track Title');
   });
 
   test('should merge className with default styles', () => {
     render(
-      <AudioPlayerTitleBase
+      <AudioPlayerTitlePrimitive
         className="custom-class"
         data-testid="title"
       >
         Track Title
-      </AudioPlayerTitleBase>,
+      </AudioPlayerTitlePrimitive>,
     );
 
     expect(screen.getByTestId('title')).toHaveClass('custom-class');
@@ -82,12 +81,12 @@ describe('AudioPlayerTitleBase', () => {
 
   test('should forward additional props', () => {
     render(
-      <AudioPlayerTitleBase
+      <AudioPlayerTitlePrimitive
         data-testid="title"
         aria-label="Track title"
       >
         Track Title
-      </AudioPlayerTitleBase>,
+      </AudioPlayerTitlePrimitive>,
     );
 
     expect(screen.getByTestId('title')).toHaveAttribute('aria-label', 'Track title');

@@ -1,1 +1,5 @@
-export * from './AudioPlayerTitle';
+export {
+  AudioPlayerTitle,
+  AudioPlayerTitlePrimitive,
+  type AudioPlayerTitleProps,
+} from './AudioPlayerTitle';

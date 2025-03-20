@@ -1,108 +1,113 @@
-import { render, screen, act } from '@testing-library/react';
-import { describe, expect, test, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, test } from 'vitest';
 import { AudioPlayerContextProvider } from './AudioPlayerContextProvider';
-import { useAudioPlayerContextState } from './useAudioPlayerContextState';
-import { useAudioPlayerContextDispatch } from './useAudioPlayerContextDispatch';
+import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
+import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
+import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
+import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 import { trackData } from '@lib/AudioPlayer/data';
 
-// Test component that uses both contexts
-function TestComponent() {
-  const state = useAudioPlayerContextState();
-  const { actions, dispatch } = useAudioPlayerContextDispatch();
-
+// Test components that consume each context
+function RefsConsumer() {
+  const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
   return (
-    <div>
-      <span data-testid="current-track">{state.currentTrack?.title}</span>
-      <button
-        data-testid="next-track"
-        onClick={() =>
-          dispatch({
-            type: actions.SET_CURRENT_TRACK_INDEX,
-            payload: {
-              currentTrackIndex: state.currentTrackIndex + 1,
-            },
-          })
-        }
-      >
-        Next
-      </button>
+    <div data-testid="refs-consumer">
+      {Boolean(audioRef) && Boolean(progressBarRef) ? 'Refs Available' : 'No Refs'}
+    </div>
+  );
+}
+
+function TrackConsumer() {
+  const { currentTrack, currentTrackIndex } = useAudioPlayerContextTrack();
+  return (
+    <div data-testid="track-consumer">
+      {currentTrack ? `Track ${currentTrackIndex}: ${currentTrack.title}` : 'No Track'}
+    </div>
+  );
+}
+
+function TimeConsumer() {
+  const { currentTime, duration } = useAudioPlayerContextTime();
+  return <div data-testid="time-consumer">{`Time: ${currentTime}/${duration}`}</div>;
+}
+
+function AudioConsumer() {
+  const { isPlaying, volume, mute, shuffle, loop } = useAudioPlayerContextAudio();
+  return (
+    <div data-testid="audio-consumer">
+      {`Playing: ${isPlaying}, Volume: ${volume}, Mute: ${mute}, Shuffle: ${shuffle}, Loop: ${loop}`}
     </div>
   );
 }
 
 describe('AudioPlayerContextProvider', () => {
-  test('should provide initial state with first track', () => {
+  test('should provide all contexts to children', () => {
     render(
       <AudioPlayerContextProvider tracks={trackData}>
-        <TestComponent />
+        <RefsConsumer />
+        <TrackConsumer />
+        <TimeConsumer />
+        <AudioConsumer />
       </AudioPlayerContextProvider>,
     );
 
-    const currentTrack = screen.getByTestId('current-track');
-    expect(currentTrack).toHaveTextContent(trackData[0]!.title);
+    expect(screen.getByTestId('refs-consumer')).toHaveTextContent('Refs Available');
+    expect(screen.getByTestId('track-consumer')).toHaveTextContent(
+      `Track 0: ${trackData[0]!.title}`,
+    );
+    expect(screen.getByTestId('time-consumer')).toHaveTextContent('Time: 0/0');
+    expect(screen.getByTestId('audio-consumer')).toHaveTextContent(
+      'Playing: false, Volume: 1, Mute: false, Shuffle: false, Loop: false',
+    );
   });
 
-  test('should initialize with specified track index', () => {
-    const defaultTrackIndex = 1;
-
+  test('should accept and apply default track index', () => {
     render(
       <AudioPlayerContextProvider
         tracks={trackData}
-        defaultTrackIndex={defaultTrackIndex}
+        defaultTrackIndex={1}
       >
-        <TestComponent />
+        <TrackConsumer />
       </AudioPlayerContextProvider>,
     );
 
-    const currentTrack = screen.getByTestId('current-track');
-    expect(currentTrack).toHaveTextContent(trackData[defaultTrackIndex]!.title);
+    expect(screen.getByTestId('track-consumer')).toHaveTextContent(
+      `Track 1: ${trackData[1]!.title}`,
+    );
   });
 
-  test('should update state when dispatch is called', () => {
+  test('should accept and apply default audio settings', () => {
     render(
-      <AudioPlayerContextProvider tracks={trackData}>
-        <TestComponent />
+      <AudioPlayerContextProvider
+        tracks={trackData}
+        defaultVolume={75}
+        defaultMute={true}
+        defaultShuffle={true}
+        defaultLoop={true}
+      >
+        <AudioConsumer />
       </AudioPlayerContextProvider>,
     );
 
-    const nextButton = screen.getByTestId('next-track');
-    act(() => {
-      nextButton.click();
-    });
-
-    const currentTrack = screen.getByTestId('current-track');
-    expect(currentTrack).toHaveTextContent(trackData[1]!.title);
+    const audioConsumer = screen.getByTestId('audio-consumer');
+    expect(audioConsumer).toHaveTextContent('Volume: 75');
+    expect(audioConsumer).toHaveTextContent('Mute: true');
+    expect(audioConsumer).toHaveTextContent('Shuffle: true');
+    expect(audioConsumer).toHaveTextContent('Loop: true');
   });
 
-  test('should initialize with paused state', () => {
-    function TestPlayingState() {
-      const { isPlaying } = useAudioPlayerContextState();
-      return <div data-testid="playing-state">{isPlaying ? 'playing' : 'paused'}</div>;
-    }
-
+  test('should render children', () => {
     render(
       <AudioPlayerContextProvider tracks={trackData}>
-        <TestPlayingState />
+        <div data-testid="child">Child Content</div>
       </AudioPlayerContextProvider>,
     );
 
-    const playingState = screen.getByTestId('playing-state');
-    expect(playingState).toHaveTextContent('paused');
+    expect(screen.getByTestId('child')).toHaveTextContent('Child Content');
   });
 
-  test('should initialize with 0 duration', () => {
-    function TestDuration() {
-      const { duration } = useAudioPlayerContextState();
-      return <div data-testid="duration">{duration}</div>;
-    }
-
-    render(
-      <AudioPlayerContextProvider tracks={trackData}>
-        <TestDuration />
-      </AudioPlayerContextProvider>,
-    );
-
-    const duration = screen.getByTestId('duration');
-    expect(duration).toHaveTextContent('0');
+  test('should require tracks prop', () => {
+    // @ts-expect-error - Testing missing required prop
+    expect(() => render(<AudioPlayerContextProvider />)).toThrow();
   });
 });

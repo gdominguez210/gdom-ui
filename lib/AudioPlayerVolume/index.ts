@@ -1,1 +1,5 @@
-export * from './AudioPlayerVolume';
+export {
+  AudioPlayerVolume,
+  AudioPlayerVolumePrimitive,
+  type AudioPlayerVolumeProps,
+} from './AudioPlayerVolume';
