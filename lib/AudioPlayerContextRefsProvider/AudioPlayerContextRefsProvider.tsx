@@ -1,9 +1,15 @@
-import { useMemo, useRef, type PropsWithChildren, memo } from 'react';
+import { useMemo, useRef, type PropsWithChildren } from 'react';
 import { AudioPlayerContextRefs } from './AudioPlayerContextRefs';
 
+/**
+ * Props for the DOM references context provider
+ */
 export type AudioPlayerContextRefsProviderProps = PropsWithChildren;
 
-function AudioPlayerContextRefsProvider(props: AudioPlayerContextRefsProviderProps) {
+/**
+ * Provides references to important DOM elements used by the audio player
+ */
+export function AudioPlayerContextRefsProvider(props: AudioPlayerContextRefsProviderProps) {
   const { children } = props;
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -17,7 +23,3 @@ function AudioPlayerContextRefsProvider(props: AudioPlayerContextRefsProviderPro
     </AudioPlayerContextRefs.Provider>
   );
 }
-
-const AudioPlayerContextRefsProviderMemo = memo(AudioPlayerContextRefsProvider);
-AudioPlayerContextRefsProviderMemo.displayName = 'AudioPlayerContextRefsProvider';
-export { AudioPlayerContextRefsProviderMemo as AudioPlayerContextRefsProvider };
