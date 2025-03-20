@@ -1,2 +1,5 @@
-export * from './AudioPlayerContextTrackProvider';
-export * from './useAudioPlayerContextTrack';
+export {
+  AudioPlayerContextTrackProvider,
+  type AudioPlayerContextTrackProviderProps,
+} from './AudioPlayerContextTrackProvider';
+export { useAudioPlayerContextTrack } from './useAudioPlayerContextTrack';
