@@ -1,1 +1,4 @@
-export * from './AudioPlayerContextProvider';
+export {
+  AudioPlayerContextProvider,
+  type AudioPlayerContextProviderProps,
+} from './AudioPlayerContextProvider';

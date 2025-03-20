@@ -1,20 +1,32 @@
-import { type PropsWithChildren, memo } from 'react';
+import { type PropsWithChildren } from 'react';
 import { type AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
 import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
 import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
 import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
 import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
 
+/**
+ * Props for the main audio player context provider
+ */
 export type AudioPlayerContextProviderProps = {
+  /** Initial track to play @default 0 */
   defaultTrackIndex?: number;
+  /** Initial volume level @default 50 */
   defaultVolume?: number;
+  /** Whether audio is initially muted @default false */
   defaultMute?: boolean;
+  /** Whether shuffle is initially enabled @default false */
   defaultShuffle?: boolean;
+  /** Whether loop is initially enabled @default false */
   defaultLoop?: boolean;
+  /** Array of tracks to play */
   tracks: AudioTrackData[];
 } & PropsWithChildren;
 
-function AudioPlayerContextProvider({
+/**
+ * Main provider that composes all context providers needed for the audio player
+ */
+export function AudioPlayerContextProvider({
   children,
   defaultTrackIndex,
   defaultVolume,
@@ -43,7 +55,3 @@ function AudioPlayerContextProvider({
     </AudioPlayerContextRefsProvider>
   );
 }
-
-const AudioPlayerContextProviderMemo = memo(AudioPlayerContextProvider);
-AudioPlayerContextProviderMemo.displayName = 'AudioPlayerContextProvider';
-export { AudioPlayerContextProviderMemo as AudioPlayerContextProvider };
