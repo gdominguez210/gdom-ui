@@ -1,2 +1,5 @@
-export * from './AudioPlayerContextTimeProvider';
-export * from './useAudioPlayerContextTime';
+export {
+  AudioPlayerContextTimeProvider,
+  type AudioPlayerContextTimeProviderProps,
+} from './AudioPlayerContextTimeProvider';
+export { useAudioPlayerContextTime } from './useAudioPlayerContextTime';

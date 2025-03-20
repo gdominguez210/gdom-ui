@@ -1,13 +1,21 @@
-import { type PropsWithChildren, useReducer, useMemo, useCallback, memo } from 'react';
+import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
 import { AudioPlayerContextTime } from './AudioPlayerContextTime';
 import { timeReducer, TIME_ACTIONS } from './reducer';
 
+/**
+ * Props for the time tracking context provider
+ */
 export type AudioPlayerContextTimeProviderProps = PropsWithChildren & {
+  /** Initial total duration in seconds @default 0 */
   defaultDuration?: number;
+  /** Initial playback position in seconds @default 0 */
   defaultCurrentTime?: number;
 };
 
-function AudioPlayerContextTimeProvider(props: AudioPlayerContextTimeProviderProps) {
+/**
+ * Provides context for tracking and controlling audio playback time
+ */
+export function AudioPlayerContextTimeProvider(props: AudioPlayerContextTimeProviderProps) {
   const { defaultDuration = 0, defaultCurrentTime = 0, children } = props;
 
   const [state, dispatch] = useReducer(timeReducer, {
@@ -38,7 +46,3 @@ function AudioPlayerContextTimeProvider(props: AudioPlayerContextTimeProviderPro
     </AudioPlayerContextTime.Provider>
   );
 }
-
-const AudioPlayerContextTimeProviderMemo = memo(AudioPlayerContextTimeProvider);
-AudioPlayerContextTimeProviderMemo.displayName = 'AudioPlayerContextTimeProvider';
-export { AudioPlayerContextTimeProviderMemo as AudioPlayerContextTimeProvider };
