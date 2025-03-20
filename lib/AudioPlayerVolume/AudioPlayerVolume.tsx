@@ -1,25 +1,29 @@
-import { memo, type ComponentPropsWithRef, type ElementType } from 'react';
+import type { ComponentPropsWithRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { AudioPlayerVolumeButton } from '@lib/AudioPlayerVolumeButton/AudioPlayerVolumeButton';
 import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
+import { Collapsible } from '@lib/Collapsible/Collapsible';
 
+/**
+ * Props for the volume control component
+ */
 export type AudioPlayerVolumeProps<T extends ElementType = 'div'> = ComponentPropsWithRef<T> & {
-  /**
-   * The element to render the component as.
-   * @default 'div'
-   */
+  /** Element to render as @default div */
   as?: T;
 };
 
-function AudioPlayerVolumePrimitive<T extends ElementType = 'div'>(
+/**
+ * Base container component for volume controls
+ */
+export function AudioPlayerVolumePrimitive<T extends ElementType = 'div'>(
   props: AudioPlayerVolumeProps<T>,
 ) {
   const { as: Element = 'div', className, children, ...restProps } = props;
 
   return (
     <Element
-      className={twMerge(clsx('items-center gap-3', className))}
+      className={twMerge(clsx('flex items-center gap-3', className))}
       {...restProps}
     >
       {children}
@@ -27,32 +31,14 @@ function AudioPlayerVolumePrimitive<T extends ElementType = 'div'>(
   );
 }
 
-const AudioPlayerVolumePrimitiveMemo = memo(AudioPlayerVolumePrimitive);
-AudioPlayerVolumePrimitiveMemo.displayName = 'AudioPlayerVolumePrimitive';
-export { AudioPlayerVolumePrimitiveMemo as AudioPlayerVolumePrimitive };
-
-function AudioPlayerVolume<T extends ElementType = 'div'>(props: AudioPlayerVolumeProps<T>) {
-  const { className, ...restProps } = props;
-
+/**
+ * Volume control with button and expandable slider
+ */
+export function AudioPlayerVolume<T extends ElementType = 'div'>(props: AudioPlayerVolumeProps<T>) {
   return (
-    <AudioPlayerVolumePrimitive
-      {...(restProps as AudioPlayerVolumeProps)}
-      className={twMerge(
-        clsx(
-          'grid grid-cols-[auto_0fr] focus-within:grid-cols-[auto_1fr] hover:grid-cols-[auto_1fr]',
-          'transition-[grid-template-columns] duration-200',
-          className,
-        ),
-      )}
-    >
+    <AudioPlayerVolumePrimitive {...props}>
       <AudioPlayerVolumeButton />
-      <div className="overflow-hidden">
-        <AudioPlayerVolumeSlider />
-      </div>
+      <AudioPlayerVolumeSlider />
     </AudioPlayerVolumePrimitive>
   );
 }
-
-const AudioPlayerVolumeMemo = memo(AudioPlayerVolume);
-AudioPlayerVolumeMemo.displayName = 'AudioPlayerVolume';
-export { AudioPlayerVolumeMemo as AudioPlayerVolume };
