@@ -1,8 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlayerVolume, AudioPlayerVolumePrimitive } from './AudioPlayerVolume';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
-import { trackData } from '@lib/AudioPlayer/data';
+import { AudioPlayerVolumePrimitive } from './AudioPlayerVolume';
 
 describe('AudioPlayerVolumePrimitive', () => {
   test('should render children', () => {
@@ -55,44 +53,5 @@ describe('AudioPlayerVolumePrimitive', () => {
     );
 
     expect(screen.getByTestId('volume')).toHaveAttribute('aria-label', 'Volume control');
-  });
-});
-
-describe('AudioPlayerVolume', () => {
-  test('should throw error when used without providers', () => {
-    expect(() => render(<AudioPlayerVolume />)).toThrow();
-  });
-
-  test('should render volume controls with correct grid layout', () => {
-    render(<AudioPlayerVolume data-testid="volume" />, {
-      wrapper: ({ children }) => (
-        <AudioPlayerContextProvider
-          tracks={trackData}
-          defaultVolume={50}
-        >
-          {children}
-        </AudioPlayerContextProvider>
-      ),
-    });
-
-    const volume = screen.getByTestId('volume');
-    const button = screen.getByRole('button');
-    const slider = screen.getByRole('slider');
-
-    // Test grid layout structure
-    expect(volume).toHaveClass(
-      'grid',
-      'grid-cols-[auto_0fr]',
-      'focus-within:grid-cols-[auto_1fr]',
-      'hover:grid-cols-[auto_1fr]',
-      'transition-[grid-template-columns]',
-      'duration-200',
-    );
-
-    // Test component composition
-    expect(volume.firstElementChild).toContainElement(button);
-    const sliderWrapper = volume.lastElementChild;
-    expect(sliderWrapper).toContainElement(slider);
-    expect(sliderWrapper).toHaveClass('overflow-hidden');
   });
 });

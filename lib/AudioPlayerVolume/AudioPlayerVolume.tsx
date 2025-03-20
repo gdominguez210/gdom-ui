@@ -31,7 +31,7 @@ export function AudioPlayerVolumePrimitive<T extends ElementType = 'div'>(
 }
 
 /**
- * Volume control with button and expandable slider
+ * Volume control with button and slider
  */
 export function AudioPlayerVolume<T extends ElementType = 'div'>(props: AudioPlayerVolumeProps<T>) {
   return (
