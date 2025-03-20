@@ -1,6 +1,7 @@
 import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
 import { AudioPlayerContextTrack } from './AudioPlayerContextTrack';
-import { trackReducer, TRACK_ACTIONS, type AudioTrackData } from './reducer';
+import { trackReducer, TRACK_ACTIONS } from './reducer';
+import type { AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
 
 /**
  * Props for the track management context provider

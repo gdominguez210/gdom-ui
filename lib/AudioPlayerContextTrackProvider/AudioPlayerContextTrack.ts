@@ -1,6 +1,5 @@
 import { createContext } from 'react';
-import type { AudioTrackData } from './AudioPlayerContextTrackProvider';
-
+import type { AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
 export const AUDIO_PLAYER_CONTEXT_TRACK_ERROR =
   'useAudioPlayerContextTrack must be used within an AudioPlayerContextTrackProvider';
 
