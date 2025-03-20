@@ -3,7 +3,6 @@ import {
   type ReactEventHandler,
   type RefObject,
   useCallback,
-  memo,
 } from 'react';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
@@ -11,9 +10,15 @@ import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
 import { useAudioPlayerMetadata } from '@lib/AudioPlayerControlAudio/useAudioPlayerMetadata';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 
+/**
+ * Props for the audio element component
+ */
 export type AudioPlayerControlAudioProps = ComponentPropsWithRef<'audio'>;
 
-function AudioPlayerControlAudioPrimitive(props: AudioPlayerControlAudioProps) {
+/**
+ * Base audio element component that handles audio playback
+ */
+export function AudioPlayerControlAudioPrimitive(props: AudioPlayerControlAudioProps) {
   const { src, onLoadedMetadata, ref, ...restProps } = props;
 
   return (
@@ -26,11 +31,10 @@ function AudioPlayerControlAudioPrimitive(props: AudioPlayerControlAudioProps) {
   );
 }
 
-const AudioPlayerControlAudioPrimitiveMemo = memo(AudioPlayerControlAudioPrimitive);
-AudioPlayerControlAudioPrimitiveMemo.displayName = 'AudioPlayerControlAudioPrimitive';
-export { AudioPlayerControlAudioPrimitiveMemo as AudioPlayerControlAudioPrimitive };
-
-function AudioPlayerControlAudio(props: AudioPlayerControlAudioProps) {
+/**
+ * Audio element that integrates with the audio player context
+ */
+export function AudioPlayerControlAudio(props: AudioPlayerControlAudioProps) {
   const { onLoadedMetadata, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
   const { setDuration } = useAudioPlayerContextTime();
@@ -61,7 +65,3 @@ function AudioPlayerControlAudio(props: AudioPlayerControlAudioProps) {
     />
   );
 }
-
-const AudioPlayerControlAudioMemo = memo(AudioPlayerControlAudio);
-AudioPlayerControlAudioMemo.displayName = 'AudioPlayerControlAudio';
-export { AudioPlayerControlAudioMemo as AudioPlayerControlAudio };
