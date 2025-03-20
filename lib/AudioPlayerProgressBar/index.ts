@@ -1,2 +1,7 @@
-export * from './AudioPlayerProgressBar';
-export * from './useAudioPlayerProgressBar';
+export {
+  AudioPlayerProgressBar,
+  AudioPlayerProgressBarPrimitive,
+  type AudioPlayerProgressBarProps,
+} from './AudioPlayerProgressBar';
+
+export { useAudioPlayerProgressBar } from './useAudioPlayerProgressBar';
