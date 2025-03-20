@@ -1,14 +1,28 @@
 import clsx from 'clsx';
-import { type ComponentPropsWithRef, type ElementType, memo } from 'react';
+import { type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 
+/**
+ * Props for the track title component
+ */
 export type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
-  /** @default p */
+  /** Element to render as @default p */
   as?: T;
+
+  /**
+   * Additional CSS classes to apply to the component
+   * @example
+   * // Apply custom classes
+   * <AudioPlayerTitle className="text-2xl text-blue-500" />
+   */
+  className?: string;
 } & ComponentPropsWithRef<T>;
 
-function AudioPlayerTitlePrimitive<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
+/**
+ * Base component for displaying track title with appropriate styling
+ */
+export function AudioPlayerTitlePrimitive<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
   const { as: Element = 'p', children, className, ...restProps } = props;
 
   return (
@@ -21,11 +35,11 @@ function AudioPlayerTitlePrimitive<T extends ElementType>(props: AudioPlayerTitl
   );
 }
 
-const AudioPlayerTitlePrimitiveMemo = memo(AudioPlayerTitlePrimitive);
-AudioPlayerTitlePrimitiveMemo.displayName = 'AudioPlayerTitlePrimitive';
-export { AudioPlayerTitlePrimitiveMemo as AudioPlayerTitlePrimitive };
-
-function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
+/**
+ * Displays the title of the current audio track
+ * Returns null if no title is available
+ */
+export function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
   const { currentTrack: { title } = {} } = useAudioPlayerContextTrack();
 
   if (!title) return null;
@@ -39,7 +53,3 @@ function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>
     </AudioPlayerTitlePrimitive>
   );
 }
-
-const AudioPlayerTitleMemo = memo(AudioPlayerTitle);
-AudioPlayerTitleMemo.displayName = 'AudioPlayerTitle';
-export { AudioPlayerTitleMemo as AudioPlayerTitle };
