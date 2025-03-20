@@ -3,7 +3,6 @@ import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { AudioPlayerVolumeButton } from '@lib/AudioPlayerVolumeButton/AudioPlayerVolumeButton';
 import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
-import { Collapsible } from '@lib/Collapsible/Collapsible';
 
 /**
  * Props for the volume control component
