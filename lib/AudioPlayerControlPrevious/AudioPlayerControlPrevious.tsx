@@ -3,7 +3,6 @@ import {
   type MouseEventHandler,
   type RefObject,
   useCallback,
-  memo,
 } from 'react';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
@@ -12,7 +11,10 @@ import { useAudioPlayerPreviousTrack } from './useAudioPlayerPreviousTrack';
 import { Icon } from '@lib/Icon/Icon';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 
-function AudioPlayerControlPreviousPrimitive(props: AudioPlayerControlPreviousProps) {
+/**
+ * Base button component for previous track navigation
+ */
+export function AudioPlayerControlPreviousPrimitive(props: AudioPlayerControlPreviousProps) {
   return (
     <button
       aria-label="Previous Track"
@@ -26,13 +28,15 @@ function AudioPlayerControlPreviousPrimitive(props: AudioPlayerControlPreviousPr
   );
 }
 
-const AudioPlayerControlPreviousPrimitiveMemo = memo(AudioPlayerControlPreviousPrimitive);
-AudioPlayerControlPreviousPrimitiveMemo.displayName = 'AudioPlayerControlPreviousPrimitive';
-export { AudioPlayerControlPreviousPrimitiveMemo as AudioPlayerControlPreviousPrimitive };
-
+/**
+ * Props for the previous track control button
+ */
 export type AudioPlayerControlPreviousProps = ComponentPropsWithRef<'button'>;
 
-function AudioPlayerControlPrevious(props: AudioPlayerControlPreviousProps) {
+/**
+ * Previous track control button that integrates with the audio player context
+ */
+export function AudioPlayerControlPrevious(props: AudioPlayerControlPreviousProps) {
   const { onClick, ...restProps } = props;
   const { seek } = useAudioPlayerContextTime();
   const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
@@ -64,7 +68,3 @@ function AudioPlayerControlPrevious(props: AudioPlayerControlPreviousProps) {
     />
   );
 }
-
-const AudioPlayerControlPreviousMemo = memo(AudioPlayerControlPrevious);
-AudioPlayerControlPreviousMemo.displayName = 'AudioPlayerControlPrevious';
-export { AudioPlayerControlPreviousMemo as AudioPlayerControlPrevious };
