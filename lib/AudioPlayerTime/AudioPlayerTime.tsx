@@ -8,13 +8,13 @@ import { useAudioPlayerTime } from './useAudioPlayerTime';
  * Props for the time display primitive component
  */
 export type AudioPlayerTimePrimitiveProps<T extends ElementType = 'span'> = {
-  /** Element to render as @default 'span' */
+  /** Element to render as @default span */
   as?: T;
   /** Current playback time formatted as a string */
   currentTime?: string;
   /** Total duration formatted as a string */
   duration?: string;
-  /** Separator between current time and duration @default " / " */
+  /** Separator between current time and duration @default /  */
   separator?: string;
 } & ComponentPropsWithRef<T>;
 
