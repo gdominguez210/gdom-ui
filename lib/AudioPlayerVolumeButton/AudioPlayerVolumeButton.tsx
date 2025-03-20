@@ -1,4 +1,4 @@
-import { useCallback, memo, type ComponentPropsWithRef, type MouseEventHandler } from 'react';
+import { useCallback, type ComponentPropsWithRef, type MouseEventHandler } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { Icon } from '@lib/Icon';
@@ -20,11 +20,18 @@ function getVolumeIconProperties(
   return VOLUME_ICON_PROPERTIES.LOW;
 }
 
-type AudioPlayerVolumeButtonPrimitiveProps = {
+/**
+ * Props for the volume button primitive component
+ */
+export type AudioPlayerVolumeButtonPrimitiveProps = {
+  /** Icon name for the volume button */
   iconName: VolumeIconName;
 } & ComponentPropsWithRef<'button'>;
 
-function AudioPlayerVolumeButtonPrimitive(props: AudioPlayerVolumeButtonPrimitiveProps) {
+/**
+ * Base button component for volume controls
+ */
+export function AudioPlayerVolumeButtonPrimitive(props: AudioPlayerVolumeButtonPrimitiveProps) {
   const { iconName, title, className, ...restProps } = props;
 
   return (
@@ -38,13 +45,15 @@ function AudioPlayerVolumeButtonPrimitive(props: AudioPlayerVolumeButtonPrimitiv
   );
 }
 
-const AudioPlayerVolumeButtonPrimitiveMemo = memo(AudioPlayerVolumeButtonPrimitive);
-AudioPlayerVolumeButtonPrimitiveMemo.displayName = 'AudioPlayerVolumeButtonPrimitive';
-export { AudioPlayerVolumeButtonPrimitiveMemo as AudioPlayerVolumeButtonPrimitive };
-
+/**
+ * Props for the volume control button
+ */
 export type AudioPlayerVolumeButtonProps = ComponentPropsWithRef<'button'>;
 
-function AudioPlayerVolumeButton(props: AudioPlayerVolumeButtonProps) {
+/**
+ * Volume button that toggles mute and displays appropriate icon based on volume level
+ */
+export function AudioPlayerVolumeButton(props: AudioPlayerVolumeButtonProps) {
   const { onClick, ...restProps } = props;
   const { mute, volume, toggleMute } = useAudioPlayerContextAudio();
 
@@ -69,7 +78,3 @@ function AudioPlayerVolumeButton(props: AudioPlayerVolumeButtonProps) {
     />
   );
 }
-
-const AudioPlayerVolumeButtonMemo = memo(AudioPlayerVolumeButton);
-AudioPlayerVolumeButtonMemo.displayName = 'AudioPlayerVolumeButton';
-export { AudioPlayerVolumeButtonMemo as AudioPlayerVolumeButton };
