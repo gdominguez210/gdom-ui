@@ -1,3 +1,28 @@
+# [1.15.0](https://github.com/gdominguez210/gdom-ui/compare/v1.14.0...v1.15.0) (2025-03-20)
+
+
+### Features
+
+* **lib/AudioPlayerContextAudioProvider:** create new context slice ([8adf84e](https://github.com/gdominguez210/gdom-ui/commit/8adf84e617a80000c79ec42f066210683fb04799))
+* **lib/AudioPlayerContextRefsProvider:** create new context slice ([129ef02](https://github.com/gdominguez210/gdom-ui/commit/129ef029e190547ed9df9d496831aa9155d9371c))
+* **lib/AudioPlayerContextTimeProvider:** create new context slice ([b3e5bb3](https://github.com/gdominguez210/gdom-ui/commit/b3e5bb39179cd0b187ab29b4aa7160971fbedee1))
+* **lib/AudioPlayerContextTrackProvider:** create new context slice ([afda286](https://github.com/gdominguez210/gdom-ui/commit/afda286a7ad5882bd82da6a0f968b682f8513851))
+* **lib/AudioPlayerControlAudio:** add AudioPlayerControlAudio, useAudioPlayerMetadata ([483efbd](https://github.com/gdominguez210/gdom-ui/commit/483efbde9a5f8a9a327905ac349e83019d019217))
+* **lib/AudioPlayerControlLoop:** add AudioPlayerControlLoop, useAudioPlayerControlLoop ([26d033e](https://github.com/gdominguez210/gdom-ui/commit/26d033e935e056d761aa7a3e9bd20fcf83fe3dee))
+* **lib/AudioPlayerControlNext:** add AudioPlayerControlNext, useAudioPlayerNextTrack ([0f806c1](https://github.com/gdominguez210/gdom-ui/commit/0f806c153619bac8a9f5ce8a4811dda82fc632b0))
+* **lib/AudioPlayerControlPlay:** add AudioPlayerControl, useAudioPlayerControlPlay ([bee32ec](https://github.com/gdominguez210/gdom-ui/commit/bee32ecbd107bf0dcdf283767749534e06a0766a))
+* **lib/AudioPlayerControlPrevious:** add AudioPlayerControlPrevious, useAudioPlayerPreviousTrack ([bec4197](https://github.com/gdominguez210/gdom-ui/commit/bec419707e4cdf43f3a1b3500acea879859a442c))
+* **lib/AudioPlayerControls/useAudioPlayerMetadata:** add useAudioPlayerMetadata ([bda31ff](https://github.com/gdominguez210/gdom-ui/commit/bda31ff072818654331809d3149c2e9b6e911290))
+* **lib/AudioPlayerControls/useAudioPlayerPlay:** add useAudioPlayerPlay ([c0eaee3](https://github.com/gdominguez210/gdom-ui/commit/c0eaee3d24687e78a82a1c802d0d2f7b289c90fe))
+* **lib/AudioPlayerControls/useAudioPlayerTrackControls:** add useAudioPlayerTrackControls ([7be1046](https://github.com/gdominguez210/gdom-ui/commit/7be104612c8e1c375495e0264a33f7a98efb5b50))
+* **lib/AudioPlayerControls/utils:** add getNextIndex, getRandomNumber ([40506fc](https://github.com/gdominguez210/gdom-ui/commit/40506fcb88278faa4b37d798db39068fc29f5f78))
+* **lib/AudioPlayerControlShuffle:** add AudioPlayerControlShuffle ([6066c7d](https://github.com/gdominguez210/gdom-ui/commit/6066c7dd585b1efa84eb728d794bf4fbfed47e97))
+* **lib/AudioPlayerProgressBar:** accept onChange function in context connected component ([281eabc](https://github.com/gdominguez210/gdom-ui/commit/281eabc25991171f120b79df5ef161d9bd3ac920))
+* **lib/AudioPlayerProgressBar:** add cross-browser styles ([45bc8f7](https://github.com/gdominguez210/gdom-ui/commit/45bc8f7a93b90dfd40ac7e9d533567b51aa824ed))
+* **lib/AudioPlayerVolumeButton:** add AudioPlayerVolumeButton ([6412004](https://github.com/gdominguez210/gdom-ui/commit/641200460946ccdeee705803d4be5bf769e42c90))
+* **lib/AudioPlayerVolumeSlider:** add AudioPlayerVolumeSlider ([ed078fd](https://github.com/gdominguez210/gdom-ui/commit/ed078fde28bb0f30780998e62706c9c47cf801b2))
+* **lib/Icon/data:** add IconSubset, VolumeIconName types ([cf5234c](https://github.com/gdominguez210/gdom-ui/commit/cf5234cc9c66bd182b6107c9415fb471486920d4))
+
 # [1.14.0](https://github.com/gdominguez210/gdom-ui/compare/v1.13.0...v1.14.0) (2025-03-10)
 
 
