@@ -1,2 +1,5 @@
-export * from './AudioPlayerContextAudioProvider';
-export * from './useAudioPlayerContextAudio';
+export {
+  AudioPlayerContextAudioProvider,
+  type AudioPlayerContextAudioProviderProps,
+} from './AudioPlayerContextAudioProvider';
+export { useAudioPlayerContextAudio } from './useAudioPlayerContextAudio';
