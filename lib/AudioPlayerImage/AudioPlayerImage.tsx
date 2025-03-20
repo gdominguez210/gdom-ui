@@ -1,19 +1,25 @@
-import { type ComponentPropsWithRef, type ElementType, memo } from 'react';
+import { type ComponentPropsWithRef, type ElementType } from 'react';
 import { Icon } from '@lib/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
 
+/**
+ * Props for the audio track image component
+ */
 export type AudioPlayerImageProps<T extends ElementType = 'div'> = {
-  /** @default div */
+  /** Element to render as @default div */
   as?: T;
-  /** @default 96 */
+  /** Image width in pixels @default 96 */
   width?: number;
-  /** @default 96 */
+  /** Image height in pixels @default 96 */
   height?: number;
 } & ComponentPropsWithRef<T>;
 
-function AudioPlayerImagePrimitive<T extends ElementType>(
+/**
+ * Base component for displaying an audio track image or placeholder
+ */
+export function AudioPlayerImagePrimitive<T extends ElementType>(
   props: AudioPlayerImageProps<T> & { src: string; altText: string },
 ) {
   const {
@@ -55,11 +61,11 @@ function AudioPlayerImagePrimitive<T extends ElementType>(
   );
 }
 
-const AudioPlayerImagePrimitiveMemo = memo(AudioPlayerImagePrimitive);
-AudioPlayerImagePrimitiveMemo.displayName = 'AudioPlayerImagePrimitive';
-export { AudioPlayerImagePrimitiveMemo as AudioPlayerImagePrimitive };
-
-function AudioPlayerImage<T extends ElementType = 'div'>(props: AudioPlayerImageProps<T>) {
+/**
+ * Displays the thumbnail for the current audio track
+ * Shows a placeholder icon if no thumbnail is available
+ */
+export function AudioPlayerImage<T extends ElementType = 'div'>(props: AudioPlayerImageProps<T>) {
   const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContextTrack();
 
   return (
@@ -70,7 +76,3 @@ function AudioPlayerImage<T extends ElementType = 'div'>(props: AudioPlayerImage
     />
   );
 }
-
-const AudioPlayerImageMemo = memo(AudioPlayerImage);
-AudioPlayerImageMemo.displayName = 'AudioPlayerImage';
-export { AudioPlayerImageMemo as AudioPlayerImage };

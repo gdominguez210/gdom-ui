@@ -1,1 +1,5 @@
-export * from './AudioPlayerImage';
+export {
+  AudioPlayerImage,
+  AudioPlayerImagePrimitive,
+  type AudioPlayerImageProps,
+} from './AudioPlayerImage';
