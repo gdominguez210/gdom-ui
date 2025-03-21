@@ -129,7 +129,7 @@ import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider';
 These providers are not exposed as subcomponents on the main `AudioPlayer` component. Instead, they can be imported individually and composed however you see fit for custom implementations.
 
 ```typescript
-// AudioPlayerContextProvider - Main provider that manages all state
+// AudioPlayerContextProvider - Main provider that composes all context providers
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
 
 // AudioPlayerContextTrackProvider - Manages track list and current track
@@ -147,23 +147,7 @@ import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvi
 
 ## Props
 
-### AudioPlayer Props
-
 <Controls />
-
-### Track Data Structure
-
-The `tracks` prop accepts an array of objects with the following structure:
-
-```typescript
-type AudioTrackData = {
-  id: string;
-  title: string;
-  artist: string;
-  audioUrl: string;
-  imageUrl?: string;
-};
-```
 
 ## Event Handling
 
@@ -216,10 +200,10 @@ The AudioPlayer components use `twMerge` internally to intelligently merge Tailw
 
 <AudioPlayer.Controls style={{ marginTop: '2rem', opacity: 0.9 }} />
 
-// Combining multiple styling approaches
+// Combining multiple styling approaches (Tailwind classes, style object, custom css class)
 
 <AudioPlayer.ProgressBar
-  className="h-3 rounded-full bg-gray-200"
+  className="my-custom-class h-3 rounded-full bg-gray-200"
   style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
 />
 `} />
