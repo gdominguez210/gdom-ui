@@ -566,6 +566,8 @@ declare const icons: {
     readonly 'volume-down-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
     readonly 'volume-up-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
     readonly 'disc-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'play-list-2-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'play-list-add-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
 };
 
 declare type Size = SizesAsTypes[number];

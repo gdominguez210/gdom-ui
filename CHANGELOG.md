@@ -1,3 +1,11 @@
+# [1.17.0](https://github.com/gdominguez210/gdom-ui/compare/v1.16.0...v1.17.0) (2025-03-24)
+
+
+### Features
+
+* **lib/AudioPlayerControlButton:** add active prop support ([e6efac0](https://github.com/gdominguez210/gdom-ui/commit/e6efac052108c8fda46bf2c06e7f0a2c2f37f714))
+* **lib/Icon:** add new Playlist icons ([9b8c5a4](https://github.com/gdominguez210/gdom-ui/commit/9b8c5a4c12e78fcb5634b42c791ac0a79ceb82d6))
+
 # [1.16.0](https://github.com/gdominguez210/gdom-ui/compare/v1.15.0...v1.16.0) (2025-03-24)
 
 
