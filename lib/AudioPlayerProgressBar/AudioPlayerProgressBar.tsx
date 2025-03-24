@@ -29,6 +29,7 @@ export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarPro
           'w-full',
           'h-2',
           'cursor-pointer',
+          'focus-within:outline-white',
           // Progress bar styles
           'before:block',
           'before:w-[--range-progress]',
