@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Icon } from '@lib/Icon';
 import { type VolumeIconName } from '@lib/Icon/data';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
-
+import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
 const VOLUME_ICON_PROPERTIES = {
   MUTE: { name: 'volume-mute-fill', label: 'Volume Muted' },
   LOW: { name: 'volume-down-fill', label: 'Volume Low' },
@@ -35,13 +35,13 @@ export function AudioPlayerVolumeButtonPrimitive(props: AudioPlayerVolumeButtonP
   const { iconName, title, className, ...restProps } = props;
 
   return (
-    <button
+    <AudioPlayerControlButton
       className={twMerge(clsx('text-2xl', className))}
       title={title}
       {...restProps}
     >
       <Icon name={iconName} />
-    </button>
+    </AudioPlayerControlButton>
   );
 }
 
