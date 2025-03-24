@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import { Icon } from '@lib/Icon';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
-
+import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
 /**
  * Props for the shuffle button primitive component
  */
@@ -19,9 +19,14 @@ export function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShuf
   const { active = false, className, ...restProps } = props;
 
   return (
-    <button
+    <AudioPlayerControlButton
       className={twMerge(
-        clsx({ 'text-neutral-100/50': !active }, 'hover:text-neutral-100', className),
+        clsx(
+          { 'text-neutral-100/50': !active },
+          'hover:text-neutral-100',
+          'focus:text-neutral-100',
+          className,
+        ),
       )}
       aria-label="Toggle Shuffle"
       aria-pressed={active}
@@ -31,7 +36,7 @@ export function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShuf
         name="shuffle-fill"
         className="scale-75"
       />
-    </button>
+    </AudioPlayerControlButton>
   );
 }
 
