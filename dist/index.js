@@ -2869,10 +2869,28 @@ function useAudioPlayerControlPlay(props) {
   }, [audioRef, isPlaying, currentTrackIndex]);
 }
 
+function AudioPlayerControlButton(props) {
+  const { className, children, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    "button",
+    {
+      className: twMerge(
+        clsx(
+          "rounded-md p-2 hover:bg-black/30",
+          "focus-within:outline-1 focus-within:outline-white focus-visible:bg-black/30",
+          className
+        )
+      ),
+      ...restProps,
+      children
+    }
+  );
+}
+
 function AudioPlayerControlPlayPrimitive(props) {
   const { active = false, ...restProps } = props;
   return /* @__PURE__ */ jsx(
-    "button",
+    AudioPlayerControlButton,
     {
       "aria-label": active ? "Pause" : "Play",
       "aria-pressed": active,
@@ -2911,10 +2929,15 @@ function AudioPlayerControlPlay(props) {
 function AudioPlayerControlLoopPrimitive(props) {
   const { active = false, className, ...restProps } = props;
   return /* @__PURE__ */ jsx(
-    "button",
+    AudioPlayerControlButton,
     {
       className: twMerge(
-        clsx({ "text-neutral-100/50": !active }, "hover:text-neutral-100", className)
+        clsx(
+          { "text-neutral-100/50": !active },
+          "hover:text-neutral-100",
+          "focus-within:text-neutral-100",
+          className
+        )
       ),
       "aria-label": "Toggle Loop",
       "aria-pressed": active,
@@ -2952,10 +2975,15 @@ function AudioPlayerControlLoop(props) {
 function AudioPlayerControlShufflePrimitive(props) {
   const { active = false, className, ...restProps } = props;
   return /* @__PURE__ */ jsx(
-    "button",
+    AudioPlayerControlButton,
     {
       className: twMerge(
-        clsx({ "text-neutral-100/50": !active }, "hover:text-neutral-100", className)
+        clsx(
+          { "text-neutral-100/50": !active },
+          "hover:text-neutral-100",
+          "focus:text-neutral-100",
+          className
+        )
       ),
       "aria-label": "Toggle Shuffle",
       "aria-pressed": active,
@@ -3097,7 +3125,7 @@ function useAudioPlayerPreviousTrack({
 
 function AudioPlayerControlPreviousPrimitive(props) {
   return /* @__PURE__ */ jsx(
-    "button",
+    AudioPlayerControlButton,
     {
       "aria-label": "Previous Track",
       ...props,
@@ -3186,7 +3214,7 @@ function useAudioPlayerNextTrack({
 
 function AudioPlayerControlNextPrimitive(props) {
   return /* @__PURE__ */ jsx(
-    "button",
+    AudioPlayerControlButton,
     {
       "aria-label": "Next Track",
       ...props,
@@ -3236,7 +3264,7 @@ function AudioPlayerControlsPrimitive(props) {
   return /* @__PURE__ */ jsx(
     Element,
     {
-      className: twMerge(clsx("flex items-center justify-center gap-4 p-4 text-2xl", className)),
+      className: twMerge(clsx("flex items-center justify-center gap-1 p-4 text-2xl", className)),
       ...restProps,
       children
     }
@@ -3343,19 +3371,19 @@ function useAudioPlayerProgressBar({
     }
   }, [audioRef, progressBarRef, duration, updateProgress]);
   useEffect(() => {
-    const currentAnimationFrame = animationRef.current;
+    if (animationRef.current !== null) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
     if (isPlaying) {
       startAnimation();
       return;
     }
-    if (currentAnimationFrame !== null) {
-      cancelAnimationFrame(currentAnimationFrame);
-      animationRef.current = null;
-    }
     updateProgress();
     return () => {
-      if (currentAnimationFrame) {
-        cancelAnimationFrame(currentAnimationFrame);
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
       }
     };
   }, [isPlaying, duration, startAnimation, updateProgress]);
@@ -4613,7 +4641,7 @@ function getVolumeIconProperties(volume, isMuted) {
 function AudioPlayerVolumeButtonPrimitive(props) {
   const { iconName, title, className, ...restProps } = props;
   return /* @__PURE__ */ jsx(
-    "button",
+    AudioPlayerControlButton,
     {
       className: twMerge(clsx("text-2xl", className)),
       title,
@@ -4750,7 +4778,7 @@ function AudioPlayerVolumePrimitive(props) {
   return /* @__PURE__ */ jsx(
     Element,
     {
-      className: twMerge(clsx("flex items-center gap-3", className)),
+      className: twMerge(clsx("flex items-center gap-2", className)),
       ...restProps,
       children
     }

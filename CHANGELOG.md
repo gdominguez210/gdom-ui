@@ -1,3 +1,15 @@
+# [1.16.0](https://github.com/gdominguez210/gdom-ui/compare/v1.15.0...v1.16.0) (2025-03-24)
+
+
+### Bug Fixes
+
+* **lib/AudioPlayerProgressBar/useAudioPlayerProgressBar:** resolve existing animations properly ([3bb0375](https://github.com/gdominguez210/gdom-ui/commit/3bb037599e729e18e8f1e5a4f75adc3c6837cd7d))
+
+
+### Features
+
+* **lib/AudioPlayerControlButton:** add AudioPlayerControlButton ([6d292b9](https://github.com/gdominguez210/gdom-ui/commit/6d292b9b2a17dc03efec89ad56f7828817c915a1))
+
 # [1.15.0](https://github.com/gdominguez210/gdom-ui/compare/v1.14.0...v1.15.0) (2025-03-20)
 
 
