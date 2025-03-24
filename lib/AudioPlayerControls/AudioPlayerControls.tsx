@@ -26,7 +26,7 @@ export function AudioPlayerControlsPrimitive<T extends ElementType>(
 
   return (
     <Element
-      className={twMerge(clsx('flex items-center justify-center gap-4 p-4 text-2xl', className))}
+      className={twMerge(clsx('flex items-center justify-center gap-1 p-4 text-2xl', className))}
       {...restProps}
     >
       {children}
