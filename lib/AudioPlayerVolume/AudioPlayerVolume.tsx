@@ -22,7 +22,7 @@ export function AudioPlayerVolumePrimitive<T extends ElementType = 'div'>(
 
   return (
     <Element
-      className={twMerge(clsx('flex items-center gap-3', className))}
+      className={twMerge(clsx('flex items-center gap-2', className))}
       {...restProps}
     >
       {children}
