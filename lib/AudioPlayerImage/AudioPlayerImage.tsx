@@ -36,7 +36,7 @@ export function AudioPlayerImagePrimitive<T extends ElementType>(
     <Element
       className={twMerge(
         clsx(
-          'flex h-24 w-24 items-center justify-center overflow-hidden rounded-md bg-neutral-100/10',
+          'flex h-24 w-24 items-center justify-center overflow-hidden bg-neutral-100/10',
           className,
         ),
       )}
