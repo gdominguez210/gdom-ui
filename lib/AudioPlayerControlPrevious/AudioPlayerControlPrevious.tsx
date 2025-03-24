@@ -10,13 +10,13 @@ import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider
 import { useAudioPlayerPreviousTrack } from './useAudioPlayerPreviousTrack';
 import { Icon } from '@lib/Icon/Icon';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
-
+import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
 /**
  * Base button component for previous track navigation
  */
 export function AudioPlayerControlPreviousPrimitive(props: AudioPlayerControlPreviousProps) {
   return (
-    <button
+    <AudioPlayerControlButton
       aria-label="Previous Track"
       {...props}
     >
@@ -24,7 +24,7 @@ export function AudioPlayerControlPreviousPrimitive(props: AudioPlayerControlPre
         name="rewind-start-fill"
         className="scale-90"
       />
-    </button>
+    </AudioPlayerControlButton>
   );
 }
 
