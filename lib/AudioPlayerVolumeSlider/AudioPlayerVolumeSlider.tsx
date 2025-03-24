@@ -63,6 +63,7 @@ export function AudioPlayerVolumeSliderPrimitive(props: AudioPlayerVolumeSliderP
           'bg-gray-500',
           'relative',
           'cursor-pointer',
+          'focus-within:outline-white',
           orientation === 'horizontal'
             ? ['w-full', 'h-2']
             : ['[writing-mode:bt-lr]', '[appearance:slider-vertical]', 'h-32', 'w-2'],
