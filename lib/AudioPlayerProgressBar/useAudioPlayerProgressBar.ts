@@ -51,23 +51,22 @@ export function useAudioPlayerProgressBar({
   }, [audioRef, progressBarRef, duration, updateProgress]);
 
   useEffect(() => {
-    const currentAnimationFrame = animationRef.current;
+    if (animationRef.current !== null) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
 
     if (isPlaying) {
       startAnimation();
       return;
     }
 
-    if (currentAnimationFrame !== null) {
-      cancelAnimationFrame(currentAnimationFrame);
-      animationRef.current = null;
-    }
-
     updateProgress();
 
     return () => {
-      if (currentAnimationFrame) {
-        cancelAnimationFrame(currentAnimationFrame);
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
       }
     };
   }, [isPlaying, duration, startAnimation, updateProgress]);
