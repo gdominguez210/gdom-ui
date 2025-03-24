@@ -9,7 +9,7 @@ import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 import { useAudioPlayerControlPlay } from './useAudioPlayerControlPlay';
-
+import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
 /**
  * Props for the play/pause button primitive component
  */
@@ -25,13 +25,13 @@ export function AudioPlayerControlPlayPrimitive(props: AudioPlayerControlPlayPri
   const { active = false, ...restProps } = props;
 
   return (
-    <button
+    <AudioPlayerControlButton
       aria-label={active ? 'Pause' : 'Play'}
       aria-pressed={active}
       {...restProps}
     >
       <Icon name={active ? 'pause-large-fill' : 'play-large-fill'} />
-    </button>
+    </AudioPlayerControlButton>
   );
 }
 
