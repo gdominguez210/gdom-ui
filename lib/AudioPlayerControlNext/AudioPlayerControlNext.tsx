@@ -10,13 +10,13 @@ import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 import { useAudioPlayerNextTrack } from './useAudioPlayerNextTrack';
 import { Icon } from '@lib/Icon/Icon';
-
+import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
 /**
  * Base button component for next track navigation
  */
 export function AudioPlayerControlNextPrimitive(props: AudioPlayerControlNextProps) {
   return (
-    <button
+    <AudioPlayerControlButton
       aria-label="Next Track"
       {...props}
     >
@@ -24,7 +24,7 @@ export function AudioPlayerControlNextPrimitive(props: AudioPlayerControlNextPro
         name="forward-end-fill"
         className="scale-90"
       />
-    </button>
+    </AudioPlayerControlButton>
   );
 }
 
