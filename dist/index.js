@@ -3052,6 +3052,36 @@ function useAudioPlayerMetadata({
   return { handleLoadedMetadata };
 }
 
+function setRef(ref, instance) {
+  if (!ref) return void 0;
+  if (typeof ref === "function") {
+    const result = ref(instance);
+    if (typeof result === "function") {
+      return result;
+    }
+  } else if ("current" in ref) {
+    ref.current = instance;
+  }
+  return void 0;
+}
+function composeRefs(...refs) {
+  return (instance) => {
+    const evaluatedRefs = refs.map((ref) => setRef(ref, instance));
+    return () => {
+      evaluatedRefs.forEach((value, index) => {
+        if (typeof value === "function") {
+          value();
+        } else {
+          setRef(refs[index], null);
+        }
+      });
+    };
+  };
+}
+function useComposedRefs(...refs) {
+  return useCallback(composeRefs(...refs), [refs]);
+}
+
 function AudioPlayerControlAudioPrimitive(props) {
   const { src, onLoadedMetadata, ref, ...restProps } = props;
   return /* @__PURE__ */ jsx(
@@ -3065,7 +3095,7 @@ function AudioPlayerControlAudioPrimitive(props) {
   );
 }
 function AudioPlayerControlAudio(props) {
-  const { onLoadedMetadata, ...restProps } = props;
+  const { onLoadedMetadata, ref, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
   const { setDuration } = useAudioPlayerContextTime();
   const { currentTrack } = useAudioPlayerContextTrack();
@@ -3082,11 +3112,12 @@ function AudioPlayerControlAudio(props) {
     },
     [handleLoadedMetadata, onLoadedMetadata]
   );
+  const composedRef = useComposedRefs(audioRef, ref);
   return /* @__PURE__ */ jsx(
     AudioPlayerControlAudioPrimitive,
     {
       ...restProps,
-      ref: audioRef,
+      ref: composedRef,
       src: currentTrack?.src,
       onLoadedMetadata: handleMetadata,
       muted: mute
@@ -3472,7 +3503,7 @@ function AudioPlayerProgressBarPrimitive(props) {
   );
 }
 function AudioPlayerProgressBar(props) {
-  const { onChange, ...restProps } = props;
+  const { onChange, ref, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
   const { isPlaying } = useAudioPlayerContextAudio();
   const { duration, seek } = useAudioPlayerContextTime();
@@ -3490,12 +3521,13 @@ function AudioPlayerProgressBar(props) {
     },
     [handleProgressChange, onChange]
   );
+  const composedRef = useComposedRefs(progressBarRef, ref);
   return /* @__PURE__ */ jsx(
     AudioPlayerProgressBarPrimitive,
     {
       ...restProps,
       onChange: handleChange,
-      ref: progressBarRef
+      ref: composedRef
     }
   );
 }

@@ -1,3 +1,12 @@
+# [1.18.0](https://github.com/gdominguez210/gdom-ui/compare/v1.17.0...v1.18.0) (2025-03-25)
+
+
+### Features
+
+* **lib/AudioPlayerAudio:** support ref from props ([72cb02d](https://github.com/gdominguez210/gdom-ui/commit/72cb02dc4071e8632b6ea0fb88ed3a825e792785))
+* **lib/AudioPlayerProgressBar:** support ref from props ([91bf46a](https://github.com/gdominguez210/gdom-ui/commit/91bf46abdc2fda9260c34534233e9abea2b77bd5))
+* **lib/useComposedRef:** add useComposedRef hook to merge local and prop refs ([133e80e](https://github.com/gdominguez210/gdom-ui/commit/133e80e3ab2bc8d6f2d78e10762d7e5ac694cc19))
+
 # [1.17.0](https://github.com/gdominguez210/gdom-ui/compare/v1.16.0...v1.17.0) (2025-03-24)
 
 
