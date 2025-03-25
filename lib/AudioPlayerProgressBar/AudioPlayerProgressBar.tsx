@@ -5,7 +5,7 @@ import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/u
 import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/useAudioPlayerProgressBar';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
-
+import { useComposedRefs } from '@lib/useComposedRefs';
 /**
  * Props for the progress bar component
  */
@@ -89,7 +89,7 @@ export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarPro
  * Progress bar that integrates with the audio player context for playback control
  */
 export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
-  const { onChange, ...restProps } = props;
+  const { onChange, ref, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
 
   const { isPlaying } = useAudioPlayerContextAudio();
@@ -112,11 +112,13 @@ export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
     [handleProgressChange, onChange],
   );
 
+  const composedRef = useComposedRefs(progressBarRef, ref);
+
   return (
     <AudioPlayerProgressBarPrimitive
       {...restProps}
       onChange={handleChange}
-      ref={progressBarRef}
+      ref={composedRef}
     />
   );
 }
