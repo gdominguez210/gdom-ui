@@ -16,11 +16,17 @@ export type AudioPlayerImageProps<T extends ElementType = 'div'> = {
   height?: number;
 } & ComponentPropsWithRef<T>;
 
+export type AudioPlayerImagePrimitiveProps<T extends ElementType = 'div'> =
+  AudioPlayerImageProps<T> & {
+    src: string;
+    altText: string;
+  };
+
 /**
  * Base component for displaying an audio track image or placeholder
  */
 export function AudioPlayerImagePrimitive<T extends ElementType>(
-  props: AudioPlayerImageProps<T> & { src: string; altText: string },
+  props: AudioPlayerImagePrimitiveProps<T>,
 ) {
   const {
     as: Element = 'div',
