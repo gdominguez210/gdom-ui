@@ -16,6 +16,7 @@ import { ReactComponent as Repeat2Fill } from '@lib/assets/svgs/repeat-2-fill.sv
 import { ReactComponent as DiscFill } from '@lib/assets/svgs/disc-fill.svg';
 import { ReactComponent as Playlist2Fill } from '@lib/assets/svgs/play-list-2-fill.svg';
 import { ReactComponent as PlaylistAddFill } from '@lib/assets/svgs/play-list-add-fill.svg';
+import { ReactComponent as CloseFill } from '@lib/assets/svgs/close-fill.svg';
 
 export const icons = {
   'star-line': StarLine,
@@ -36,6 +37,7 @@ export const icons = {
   'disc-fill': DiscFill,
   'play-list-2-fill': Playlist2Fill,
   'play-list-add-line': PlaylistAddFill,
+  'close-fill': CloseFill,
 } as const;
 
 export type IconName = keyof typeof icons;
