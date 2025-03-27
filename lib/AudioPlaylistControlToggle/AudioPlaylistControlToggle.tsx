@@ -9,7 +9,7 @@ import { useAudioPlaylistContext } from '@lib/AudioPlaylistContextProvider';
  */
 export type AudioPlaylistControlTogglePrimitiveProps = ComponentPropsWithRef<'button'> & {
   /** Whether the playlist is currently expanded/visible */
-  isExpanded?: boolean;
+  active?: boolean;
 };
 
 /**
@@ -18,13 +18,13 @@ export type AudioPlaylistControlTogglePrimitiveProps = ComponentPropsWithRef<'bu
 export function AudioPlaylistControlTogglePrimitive(
   props: AudioPlaylistControlTogglePrimitiveProps,
 ) {
-  const { isExpanded = false, ...restProps } = props;
+  const { active = false, ...restProps } = props;
 
   return (
     <AudioPlayerControlButton
-      active={isExpanded}
-      aria-label={isExpanded ? 'Hide playlist' : 'Show playlist'}
-      aria-expanded={isExpanded}
+      active={active}
+      aria-label={active ? 'Hide playlist' : 'Show playlist'}
+      aria-expanded={active}
       {...restProps}
     >
       <Icon name="play-list-2-fill" />
@@ -60,7 +60,7 @@ export function AudioPlaylistControlToggle(props: AudioPlaylistControlToggleProp
   return (
     <AudioPlaylistControlTogglePrimitive
       ref={composedRef}
-      isExpanded={isPlaylistVisible}
+      active={isPlaylistVisible}
       onClick={handleClick}
       {...restProps}
     />
