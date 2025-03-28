@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { AudioPlayer, AudioPlayerCompoundComponent } from '@lib/AudioPlayer/AudioPlayer';
+import { AudioPlayerPrimitive } from '@lib/AudioPlayer/AudioPlayer';
+import { AudioPlayerCompoundComponent } from '@lib/AudioPlayer/namespace';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 import { trackData } from './data';
 import { AudioPlayerControlPlay } from '@lib/AudioPlayerControlPlay/AudioPlayerControlPlay';
@@ -28,10 +29,12 @@ import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioPro
 import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
 import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
 import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
+import { AudioPlaylistCompoundComponent } from '@lib/AudioPlaylist/namespace';
+import { AudioPlaylistControlToggle } from '@lib/AudioPlaylistControlToggle/AudioPlaylistControlToggle';
 
 export default {
   title: 'components/AudioPlayer',
-  component: AudioPlayer,
+  component: AudioPlayerPrimitive,
   tags: ['autodocs'],
   parameters: {
     componentSubtitle: 'A customizable audio player component',
@@ -69,9 +72,9 @@ export default {
     AudioPlayerContextTrackProvider,
     AudioPlayerContextRefsProvider,
   },
-} as Meta<typeof AudioPlayer>;
+} as Meta<typeof AudioPlayerPrimitive>;
 
-export const Example: StoryObj<typeof AudioPlayer> = {
+export const Example: StoryObj<typeof AudioPlayerPrimitive> = {
   parameters: {
     docs: {
       description: {
@@ -83,25 +86,27 @@ export const Example: StoryObj<typeof AudioPlayer> = {
     },
   },
   render: () => (
-    <AudioPlayerCompoundComponent tracks={trackData}>
-      <div className="justify-space-between flex flex-grow gap-4">
-        <AudioPlayerCompoundComponent.Info className="basis-1/3">
-          <AudioPlayerCompoundComponent.Image />
-          <div className="py-2">
-            <AudioPlayerCompoundComponent.Title />
-            <AudioPlayerCompoundComponent.Author />
-            <AudioPlayerCompoundComponent.Time />
-          </div>
-        </AudioPlayerCompoundComponent.Info>
-        <AudioPlayerCompoundComponent.Controls className="basis-1/3" />
-        <AudioPlayerCompoundComponent.Volume className="ml-auto pr-4" />
-      </div>
-      <AudioPlayerCompoundComponent.ProgressBar />
-    </AudioPlayerCompoundComponent>
+    <AudioPlayerCompoundComponent.Provider tracks={trackData}>
+      <AudioPlayerCompoundComponent.Root>
+        <div className="justify-space-between flex flex-grow gap-4">
+          <AudioPlayerCompoundComponent.Info className="basis-1/3">
+            <AudioPlayerCompoundComponent.Image />
+            <div className="py-2">
+              <AudioPlayerCompoundComponent.Title />
+              <AudioPlayerCompoundComponent.Author />
+              <AudioPlayerCompoundComponent.Time />
+            </div>
+          </AudioPlayerCompoundComponent.Info>
+          <AudioPlayerCompoundComponent.Controls className="basis-1/3" />
+          <AudioPlayerCompoundComponent.Volume className="ml-auto pr-4" />
+        </div>
+        <AudioPlayerCompoundComponent.ProgressBar />
+      </AudioPlayerCompoundComponent.Root>
+    </AudioPlayerCompoundComponent.Provider>
   ),
 };
 
-export const Compact: StoryObj<typeof AudioPlayer> = {
+export const Compact: StoryObj<typeof AudioPlayerPrimitive> = {
   parameters: {
     docs: {
       description: {
@@ -113,36 +118,87 @@ export const Compact: StoryObj<typeof AudioPlayer> = {
     },
   },
   render: () => (
-    <AudioPlayerCompoundComponent tracks={trackData}>
-      <div className="flex flex-grow items-center justify-between gap-4">
-        <AudioPlayerControlsPrimitive className="py-2">
-          <AudioPlayerCompoundComponent.ControlAudio />
-          <AudioPlayerCompoundComponent.ControlPrevious />
-          <AudioPlayerCompoundComponent.ControlPlay />
-          <AudioPlayerCompoundComponent.ControlNext />
-          <AudioPlayerCompoundComponent.Time />
-        </AudioPlayerControlsPrimitive>
-        <AudioPlayerCompoundComponent.Info className="grow justify-center">
-          <AudioPlayerCompoundComponent.Image
-            width={64}
-            height={64}
-            className="h-16 w-16"
-          />
-          <div className="py-2">
-            <AudioPlayerCompoundComponent.Title />
-            <AudioPlayerCompoundComponent.Author />
+    <AudioPlayerCompoundComponent.Provider tracks={trackData}>
+      <AudioPlayerCompoundComponent.Root>
+        <div className="flex flex-grow items-center justify-between gap-4">
+          <AudioPlayerControlsPrimitive className="py-2">
+            <AudioPlayerCompoundComponent.ControlAudio />
+            <AudioPlayerCompoundComponent.ControlPrevious />
+            <AudioPlayerCompoundComponent.ControlPlay />
+            <AudioPlayerCompoundComponent.ControlNext />
+            <AudioPlayerCompoundComponent.Time />
+          </AudioPlayerControlsPrimitive>
+          <AudioPlayerCompoundComponent.Info className="grow justify-center">
+            <AudioPlayerCompoundComponent.Image
+              width={64}
+              height={64}
+              className="h-16 w-16"
+            />
+            <div className="py-2">
+              <AudioPlayerCompoundComponent.Title />
+              <AudioPlayerCompoundComponent.Author />
+            </div>
+          </AudioPlayerCompoundComponent.Info>
+          <AudioPlayerVolumePrimitive className="flex basis-[165px]">
+            <AudioPlayerVolumeButton />
+            <AudioPlayerVolumeSlider />
+          </AudioPlayerVolumePrimitive>
+          <AudioPlayerControlsPrimitive className="py-2">
+            <AudioPlayerCompoundComponent.ControlShuffle className="text-2xl" />
+            <AudioPlayerCompoundComponent.ControlLoop className="text-2xl" />
+          </AudioPlayerControlsPrimitive>
+        </div>
+        <AudioPlayerCompoundComponent.ProgressBar className="before:bg-red-600" />
+      </AudioPlayerCompoundComponent.Root>
+    </AudioPlayerCompoundComponent.Provider>
+  ),
+};
+
+export const WithCollapsiblePlaylist: StoryObj<typeof AudioPlayerPrimitive> = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A player with a collapsible playlist that can be toggled with a button or dismissed with the close button in the header',
+      },
+      source: {
+        type: 'dynamic',
+      },
+    },
+  },
+  render: () => (
+    <AudioPlayerCompoundComponent.Provider tracks={trackData}>
+      <AudioPlaylistCompoundComponent.Provider tracks={trackData}>
+        <AudioPlayerCompoundComponent.Root className="flex flex-col">
+          {/* Collapsible Playlist that appears above */}
+          <AudioPlaylistCompoundComponent.ExpandableContainer>
+            <AudioPlaylistCompoundComponent.Root>
+              <AudioPlaylistCompoundComponent.Header>
+                <span>Playlist</span>
+                <AudioPlaylistCompoundComponent.Dismiss />
+              </AudioPlaylistCompoundComponent.Header>
+              <AudioPlaylistCompoundComponent.Tracks className="max-h-[227px] overflow-y-auto" />
+            </AudioPlaylistCompoundComponent.Root>
+          </AudioPlaylistCompoundComponent.ExpandableContainer>
+          <div className="flex flex-grow justify-between gap-4">
+            {/* Main Player UI */}
+            <AudioPlayerCompoundComponent.Info className="basis-1/3">
+              <AudioPlayerCompoundComponent.Image />
+              <div className="py-2">
+                <AudioPlayerCompoundComponent.Title />
+                <AudioPlayerCompoundComponent.Author />
+                <AudioPlayerCompoundComponent.Time />
+              </div>
+            </AudioPlayerCompoundComponent.Info>
+            <AudioPlayerCompoundComponent.Controls />
+            <div className="flex basis-1/3 items-center justify-end gap-2 px-2">
+              <AudioPlayerCompoundComponent.Volume />
+              <AudioPlaylistControlToggle className="text-2xl" />
+            </div>
           </div>
-        </AudioPlayerCompoundComponent.Info>
-        <AudioPlayerVolumePrimitive className="flex basis-[165px]">
-          <AudioPlayerVolumeButton />
-          <AudioPlayerVolumeSlider />
-        </AudioPlayerVolumePrimitive>
-        <AudioPlayerControlsPrimitive className="py-2">
-          <AudioPlayerCompoundComponent.ControlShuffle className="text-2xl" />
-          <AudioPlayerCompoundComponent.ControlLoop className="text-2xl" />
-        </AudioPlayerControlsPrimitive>
-      </div>
-      <AudioPlayerCompoundComponent.ProgressBar className="before:bg-red-600" />
-    </AudioPlayerCompoundComponent>
+          <AudioPlayerCompoundComponent.ProgressBar />
+        </AudioPlayerCompoundComponent.Root>
+      </AudioPlaylistCompoundComponent.Provider>
+    </AudioPlayerCompoundComponent.Provider>
   ),
 };

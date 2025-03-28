@@ -1,2 +1,2 @@
-export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerPrimitive } from './AudioPlayer';
-export type { AudioPlayerProps, AudioPlayerPrimitiveProps } from './AudioPlayer';
+export { AudioPlayerCompoundComponent as AudioPlayer } from './namespace';
+export { AudioPlayerPrimitive, type AudioPlayerPrimitiveProps } from './AudioPlayer';
