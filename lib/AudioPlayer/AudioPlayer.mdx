@@ -27,24 +27,33 @@ The following examples demonstrate different configurations of the AudioPlayer c
 
 <Stories />
 
-## Component Structure
+## Component Architecture
 
-The AudioPlayer uses a compound component pattern where the main `AudioPlayer` exports all the necessary subcomponents. Each component can be used individually or combined to create a custom audio player interface.
+The AudioPlayer uses a compound component pattern with a two-tier architecture:
 
 ```typescript
-// AudioPlayer - Main component that serves as the entry point and provides context for all subcomponents
+// Import the AudioPlayer namespace that contains all components
 import { AudioPlayer } from '@lib/AudioPlayer';
 ```
 
-## Component Architecture
+### Context-Connected Components
 
-The AudioPlayer follows a consistent architecture where each component is split into two parts:
+The main `AudioPlayer` namespace exports all subcomponents that integrate with the audio player context:
 
-1. **Context-Connected Components**: These components integrate with the AudioPlayer context and handle state management automatically. They're available directly from the `AudioPlayer` namespace. These are client components that use React hooks and context.
+- These components handle state management and audio playback automatically
+- They're accessible through the `AudioPlayer.ComponentName` pattern
+- These are client components that use React hooks and context
 
-2. **Primitive Components**: These base components are completely decoupled from context and are purely prop-driven. They're used by the context-connected components internally but can also be imported directly for custom implementations. Since they don't use React hooks or browser APIs directly, **primitive components can be used as server components** in Next.js or similar frameworks.
+### Primitive Components
 
-This separation creates a flexible system that supports both quick implementation and advanced customization, while also allowing for server-side rendering optimizations.
+Each context-connected component is built on top of a primitive component:
+
+- Primitive components are purely prop-driven with no dependency on context
+- They handle presentation, and some default assignments for accessibility
+- They can be imported directly for custom implementations
+- Since they don't use React hooks or browser APIs, **primitive components can be used as server components** in Next.js
+
+This separation creates a flexible system that enables both quick implementation through the context components and advanced customization through primitives, while also allowing for server-side rendering optimizations.
 
 ## Polymorphic Components
 
@@ -257,10 +266,6 @@ return (
 </AudioPlayerPrimitive>
 ); } `} />
 
-## Props
-
-<Controls />
-
 ## Event Handling
 
 Components that handle events (like ProgressBar, ControlPlay, ControlNext, ControlPrevious, etc.) follow a consistent pattern:
@@ -361,3 +366,7 @@ Each component is tested against WCAG 2.1 guidelines to ensure they work well wi
 // - screen reader announcements for state changes
 `}
 />
+
+## Props
+
+<Controls />
