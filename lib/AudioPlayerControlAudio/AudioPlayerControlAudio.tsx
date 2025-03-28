@@ -1,3 +1,5 @@
+'use client';
+
 import {
   type ComponentPropsWithRef,
   type ReactEventHandler,
@@ -10,26 +12,12 @@ import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
 import { useAudioPlayerMetadata } from '@lib/AudioPlayerControlAudio/useAudioPlayerMetadata';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 import { useComposedRefs } from '@lib/useComposedRefs';
+import { AudioPlayerControlAudioPrimitive } from './AudioPlayerControlAudioPrimitive';
+
 /**
  * Props for the audio element component
  */
 export type AudioPlayerControlAudioProps = ComponentPropsWithRef<'audio'>;
-
-/**
- * Base audio element component that handles audio playback
- */
-export function AudioPlayerControlAudioPrimitive(props: AudioPlayerControlAudioProps) {
-  const { src, onLoadedMetadata, ref, ...restProps } = props;
-
-  return (
-    <audio
-      ref={ref}
-      src={src}
-      onLoadedMetadata={onLoadedMetadata}
-      {...restProps}
-    />
-  );
-}
 
 /**
  * Audio element that integrates with the audio player context

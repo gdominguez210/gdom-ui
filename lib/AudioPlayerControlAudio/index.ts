@@ -1,7 +1,9 @@
 export {
   AudioPlayerControlAudio,
-  AudioPlayerControlAudioPrimitive,
   type AudioPlayerControlAudioProps,
 } from './AudioPlayerControlAudio';
-
+export {
+  AudioPlayerControlAudioPrimitive,
+  type AudioPlayerControlAudioPrimitiveProps,
+} from './AudioPlayerControlAudioPrimitive';
 export { useAudioPlayerMetadata } from './useAudioPlayerMetadata';
