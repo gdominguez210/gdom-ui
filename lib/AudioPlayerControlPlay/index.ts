@@ -1,8 +1,8 @@
+export { AudioPlayerControlPlay, type AudioPlayerControlPlayProps } from './AudioPlayerControlPlay';
+
 export {
-  AudioPlayerControlPlay,
   AudioPlayerControlPlayPrimitive,
-  type AudioPlayerControlPlayProps,
   type AudioPlayerControlPlayPrimitiveProps,
-} from './AudioPlayerControlPlay';
+} from './AudioPlayerControlPlayPrimitive';
 
 export { useAudioPlayerControlPlay } from './useAudioPlayerControlPlay';

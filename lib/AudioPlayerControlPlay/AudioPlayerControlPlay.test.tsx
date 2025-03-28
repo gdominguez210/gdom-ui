@@ -1,7 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerControlPlay, AudioPlayerControlPlayPrimitive } from './AudioPlayerControlPlay';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
+import { AudioPlayerControlPlay } from '@lib/AudioPlayerControlPlay/AudioPlayerControlPlay';
+import { AudioPlayerControlPlayPrimitive } from '@lib/AudioPlayerControlPlay/AudioPlayerControlPlayPrimitive';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 import { AUDIO_PLAYER_CONTEXT_AUDIO_ERROR } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudio';
 import { trackData } from '@lib/AudioPlayer/data';
 

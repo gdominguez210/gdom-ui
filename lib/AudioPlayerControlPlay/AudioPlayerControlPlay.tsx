@@ -1,39 +1,14 @@
-import {
-  type ComponentPropsWithRef,
-  type MouseEventHandler,
-  type RefObject,
-  useCallback,
-} from 'react';
-import { Icon } from '@lib/Icon';
+'use client';
+
+import { type MouseEventHandler, type RefObject, useCallback } from 'react';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 import { useAudioPlayerControlPlay } from './useAudioPlayerControlPlay';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
-/**
- * Props for the play/pause button primitive component
- */
-export interface AudioPlayerControlPlayPrimitiveProps extends ComponentPropsWithRef<'button'> {
-  /** Whether the audio is currently playing */
-  active?: boolean;
-}
-
-/**
- * Button component that toggles between play and pause icons
- */
-export function AudioPlayerControlPlayPrimitive(props: AudioPlayerControlPlayPrimitiveProps) {
-  const { active = false, ...restProps } = props;
-
-  return (
-    <AudioPlayerControlButton
-      aria-label={active ? 'Pause' : 'Play'}
-      aria-pressed={active}
-      {...restProps}
-    >
-      <Icon name={active ? 'pause-large-fill' : 'play-large-fill'} />
-    </AudioPlayerControlButton>
-  );
-}
+import {
+  AudioPlayerControlPlayPrimitive,
+  type AudioPlayerControlPlayPrimitiveProps,
+} from './AudioPlayerControlPlayPrimitive';
 
 /**
  * Props for the play/pause control component
