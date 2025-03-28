@@ -1,41 +1,32 @@
-import { type ComponentPropsWithRef, type ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
+'use client';
+
+import { type ElementType, type ComponentPropsWithRef } from 'react';
+import { useAudioPlaylistContext } from '@lib/AudioPlaylistContextProvider';
+import { AudioPlaylistExpandableContainerPrimitive } from './AudioPlaylistExpandableContainerPrimitive';
 
 /**
- * Props for the expandable container component
+ * Props for the context-connected expandable container component - same as primitive
+ * but without the isExpanded prop which comes from context
  */
 export type AudioPlaylistExpandableContainerProps<T extends ElementType = 'div'> = {
   /** Element to render as @default div */
   as?: T;
-  /** Whether the content is expanded/visible */
-  isExpanded: boolean;
 } & ComponentPropsWithRef<T>;
-
 /**
- * Container component that can expand/collapse its content
+ * Container component that connects to AudioPlaylistContext and expands/collapses based on context state
+ * This component is a client component as it uses React hooks and context
  */
 export function AudioPlaylistExpandableContainer<T extends ElementType = 'div'>(
   props: AudioPlaylistExpandableContainerProps<T>,
 ) {
-  const { as: Element = 'div', isExpanded, children, className, ...restProps } = props;
+  const { isPlaylistVisible } = useAudioPlaylistContext();
 
   return (
-    <Element
-      className={twMerge(
-        clsx(
-          'relative overflow-hidden shadow-lg transition-all duration-300',
-          {
-            'max-h-[300px] opacity-100': isExpanded,
-            'pointer-events-none max-h-0 opacity-0': !isExpanded,
-          },
-          className,
-        ),
-      )}
-      aria-hidden={!isExpanded}
-      {...restProps}
-    >
-      {children}
-    </Element>
+    <AudioPlaylistExpandableContainerPrimitive
+      isExpanded={isPlaylistVisible}
+      {...props}
+    />
   );
 }
+
+export default AudioPlaylistExpandableContainer;
