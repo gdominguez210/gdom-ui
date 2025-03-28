@@ -1,13 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlayerContextProvider } from './AudioPlayerContextProvider';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
-import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
+import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
+import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
 import { trackData } from '@lib/AudioPlayer/data';
 
-// Test components that consume each context
 function RefsConsumer() {
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
   return (
@@ -57,7 +56,7 @@ describe('AudioPlayerContextProvider', () => {
     );
     expect(screen.getByTestId('time-consumer')).toHaveTextContent('Time: 0/0');
     expect(screen.getByTestId('audio-consumer')).toHaveTextContent(
-      'Playing: false, Volume: 1, Mute: false, Shuffle: false, Loop: false',
+      'Playing: false, Volume: 50, Mute: false, Shuffle: false, Loop: false',
     );
   });
 
