@@ -9,32 +9,11 @@ import { DocumentationNav } from '@storybook-components/DocumentationNav/Documen
 The AudioPlayer is a flexible, composable audio playback interface that provides a comprehensive set of controls and display elements for audio content. Built using a compound component pattern, it allows for maximum customization and flexibility in implementation.
 
 <DocumentationNav />
-
-## Usage Examples
-
-The following examples demonstrate different configurations of the AudioPlayer component. You can use these as a starting point for your own implementation.
-
-> **Note:** The `trackData` array is of type `AudioTrackData[]` and has been simplified in the source code examples for brevity.
->
-> ```typescript
-> type AudioTrackData = {
->   title: string;
->   src: string;
->   author: string;
->   thumbnail?: string;
-> };
-> ```
-
 <Stories />
 
 ## Component Architecture
 
 The AudioPlayer uses a compound component pattern with a two-tier architecture:
-
-```typescript
-// Import the AudioPlayer namespace that contains all components
-import { AudioPlayer } from '@lib/AudioPlayer';
-```
 
 ### Context-Connected Components
 
@@ -43,6 +22,31 @@ The main `AudioPlayer` namespace exports all subcomponents that integrate with t
 - These components handle state management and audio playback automatically
 - They're accessible through the `AudioPlayer.ComponentName` pattern
 - These are client components that use React hooks and context
+
+Components that handle events (like AudioPlayer.ProgressBar, AudioPlayer.ControlPlay, AudioPlayer.ControlNext, etc.) follow a consistent pattern:
+
+- They accept standard event handlers as props (onClick, onChange, etc.)
+- Internal handlers run first to maintain core functionality
+- Your custom handlers are called afterward with the event object
+
+<Source
+  language="tsx"
+  dark
+  code={`
+<AudioPlayer.ProgressBar
+  onChange={(e) => {
+    console.log('Progress changed:', e.target.value);
+  }}
+/>
+
+<AudioPlayer.ControlNext
+  onClick={(e) => {
+    console.log('Next track clicked');
+  }}
+/>
+`} />
+
+This approach allows you to add custom behavior while the components automatically maintain their connection to the audio player context.
 
 ### Primitive Components
 
@@ -55,7 +59,7 @@ Each context-connected component is built on top of a primitive component:
 
 This separation creates a flexible system that enables both quick implementation through the context components and advanced customization through primitives, while also allowing for server-side rendering optimizations.
 
-## Polymorphic Components
+### Polymorphic Components
 
 All AudioPlayer components are built as polymorphic components, which means they can render as any HTML element or React component. This provides maximum flexibility for integration into various UI patterns.
 
@@ -79,230 +83,16 @@ All AudioPlayer components are built as polymorphic components, which means they
 
 Each component accepts an `as` prop that determines the rendered element, along with all props valid for that element type. This allows you to maintain semantic HTML structure while using AudioPlayer components.
 
-## Basic Usage
+### Styling Approach
 
-The complete AudioPlayer requires wrapping your components with the Provider component and using the Root component as a container:
+All AudioPlayer components are designed for flexible styling:
 
-<Source
-  language="tsx"
-  dark
-  code={`
-<AudioPlayer.Provider tracks={trackData}>
-  <AudioPlayer.Root>
-    {/* Audio player components */}
-    <AudioPlayer.Info>
-      <AudioPlayer.Image />
-      <AudioPlayer.Title />
-      <AudioPlayer.Author />
-    </AudioPlayer.Info>
-    <AudioPlayer.Controls>
-      <AudioPlayer.ControlPlay />
-      <AudioPlayer.ControlPrevious />
-      <AudioPlayer.ControlNext />
-      <AudioPlayer.ControlShuffle />
-      <AudioPlayer.ControlLoop />
-    </AudioPlayer.Controls>
-    <AudioPlayer.ProgressBar />
-    <AudioPlayer.Time />
-    <AudioPlayer.Volume>
-      <AudioPlayer.VolumeButton />
-      <AudioPlayer.VolumeSlider />
-    </AudioPlayer.Volume>
-    <AudioPlayer.ControlAudio />
-  </AudioPlayer.Root>
-</AudioPlayer.Provider>
-`}
-/>
+- Use **className props** with Tailwind CSS classes
+- Apply **custom CSS classes**
+- Use **inline style objects**
+- Work with **CSS-in-JS solutions** like styled-components
 
-### Available Subcomponents
-
-All subcomponents are accessible through the main `AudioPlayer`, via `AudioPlayer.ComponentName`.
-
-#### Core Components
-
-```typescript
-// AudioPlayer.Root - The main container component
-// AudioPlayer.Provider - The context provider that manages all state
-```
-
-#### Information Display
-
-```typescript
-// AudioPlayer.Info - Container for track information
-// AudioPlayer.Image - Album art/thumbnail display
-// AudioPlayer.Title - Track title display
-// AudioPlayer.Author - Track artist/author display
-// AudioPlayer.Time - Current and total duration display
-```
-
-#### Controls
-
-```typescript
-// AudioPlayer.Controls - Container for playback controls
-// AudioPlayer.ControlPlay - Play/pause toggle
-// AudioPlayer.ControlNext - Skip to next track
-// AudioPlayer.ControlPrevious - Return to previous track
-// AudioPlayer.ControlLoop - Toggle repeat mode
-// AudioPlayer.ControlShuffle - Toggle shuffle mode
-// AudioPlayer.ControlAudio - Hidden audio element that handles playback
-```
-
-#### Playback
-
-```typescript
-// AudioPlayer.ProgressBar - Track progress display and seek control
-// AudioPlayer.Volume - Volume controls with expand/collapse
-// AudioPlayer.VolumeButton - Mute/unmute toggle
-// AudioPlayer.VolumeSlider - Volume level control
-```
-
-## Primitive Components
-
-Every component in the AudioPlayer has a corresponding primitive version that is decoupled from the context. These primitive components are purely prop-driven and can be imported directly from each component's module:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Import the context-connected component
-import { AudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar';
-
-// Import the primitive component
-import { AudioPlayerProgressBarPrimitive } from '@lib/AudioPlayerProgressBar';
-
-// Or import both from the index file
-import {
-AudioPlayerProgressBar,
-AudioPlayerProgressBarPrimitive
-} from '@lib/AudioPlayerProgressBar';
-`} />
-
-Primitive components are ideal for:
-
-- Creating custom implementations with different state management
-- Building specialized audio players for particular use cases
-- Integration with third-party audio libraries
-- Complete control over every aspect of behavior and appearance
-- **Server Components in Next.js** - Use primitives in server components for improved performance
-
-### Server Component Usage
-
-Since the primitive components don't rely on React hooks, browser APIs, or client-side state, they can be used directly in server components:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// In a Next.js app directory file (server component)
-import { AudioPlayerProgressBarPrimitive } from '@lib/AudioPlayerProgressBar';
-
-// This component can be a server component
-export default function MyServerComponent() {
-return (
-
-<div>
-  <h2>Static Progress Bar</h2>
-  <AudioPlayerProgressBarPrimitive
-    value={50}
-    max={100}
-    // Event handlers would need to be added in a client component
-  />
-</div>
-); } `} />
-
-For interactive features, you can use the client components or create your own client components that wrap the primitives:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// client-components/MyProgressBar.tsx
-'use client';
-
-import { useState } from 'react';
-import { AudioPlayerProgressBarPrimitive } from '@lib/AudioPlayerProgressBar';
-
-export function MyProgressBar() {
-  const [value, setValue] = useState(50);
-  
-  return (
-    <AudioPlayerProgressBarPrimitive
-      value={value}
-      max={100}
-      onChange={(e) => setValue(Number(e.target.value))}
-    />
-  );
-}
-`} />
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Example of a custom implementation using primitives
-import { 
-  AudioPlayerPrimitive,
-  AudioPlayerControlPlayPrimitive,
-  AudioPlayerProgressBarPrimitive 
-} from '@lib/AudioPlayer';
-
-function MyCustomPlayer() {
-const [isPlaying, setIsPlaying] = useState(false);
-const [progress, setProgress] = useState(0);
-// Custom audio handling logic...
-
-return (
-
-<AudioPlayerPrimitive>
-  <AudioPlayerControlPlayPrimitive
-    isPlaying={isPlaying}
-    onClick={() => setIsPlaying(!isPlaying)}
-  />
-  <AudioPlayerProgressBarPrimitive
-    value={progress}
-    max={100}
-    onChange={(e) => setProgress(Number(e.target.value))}
-  />
-</AudioPlayerPrimitive>
-); } `} />
-
-## Event Handling
-
-Components that handle events (like ProgressBar, ControlPlay, ControlNext, ControlPrevious, etc.) follow a consistent pattern:
-
-1. They accept standard event handlers as props
-2. Internal handlers run first to maintain functionality
-3. Custom handlers are called afterward with the event
-
-This allows you to add custom behavior while maintaining the core functionality:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-<AudioPlayer.ProgressBar
-  onChange={(e) => {
-    console.log('Progress changed:', e.target.value);
-  }}
-/>
-
-<AudioPlayer.ControlNext
-  onClick={(e) => {
-    console.log('Next track clicked');
-  }}
-/>
-`} />
-
-## Styling
-
-Components can be styled using multiple approaches:
-
-- **className props** with Tailwind CSS classes
-- **Custom CSS classes**
-- **Inline style objects**
-- **CSS-in-JS solutions** like styled-components
-
-The AudioPlayer components use `twMerge` internally to intelligently merge Tailwind CSS classes. This means when you pass your own tailwind classes, they will override the default styles rather than conflicting with them:
+Components use `twMerge` internally to intelligently merge Tailwind CSS classes, so your classes override defaults rather than conflicting with them:
 
 <Source
   language="tsx"
@@ -317,7 +107,7 @@ The AudioPlayer components use `twMerge` internally to intelligently merge Tailw
 
 <AudioPlayer.Controls style={{ marginTop: '2rem', opacity: 0.9 }} />
 
-// Combining multiple styling approaches (Tailwind classes, style object, custom css class)
+// Combining approaches (Tailwind, style object, custom class)
 
 <AudioPlayer.ProgressBar
   className="my-custom-class h-3 rounded-full bg-gray-200"
@@ -325,33 +115,14 @@ The AudioPlayer components use `twMerge` internally to intelligently merge Tailw
 />
 `} />
 
-All components accept standard HTML attributes, making them fully customizable while maintaining their core functionality:
+### Accessibility Features
 
-<Source
-  language="tsx"
-  dark
-  code={`
-<AudioPlayer.VolumeButton 
-  className="hover:bg-gray-100 transition-colors" 
-  aria-label="Adjust volume"
-  data-testid="volume-control"
-/>
-`}
-/>
-
-## Accessibility
-
-The AudioPlayer components are built with accessibility in mind:
+The AudioPlayer components are built with accessibility as a core principle:
 
 - All controls use semantic HTML elements
 - Proper ARIA attributes for media controls
-- Keyboard navigation support for interactive elements
-- Screen reader-friendly status updates
-- Proper focus management for controls
-- Support for reduced motion preferences
-- High contrast color options
-
-Each component is tested against WCAG 2.1 guidelines to ensure they work well with assistive technologies:
+- Keyboard navigation support
+- Focus management for interactive elements
 
 <Source
   language="tsx"
@@ -366,6 +137,330 @@ Each component is tested against WCAG 2.1 guidelines to ensure they work well wi
 // - screen reader announcements for state changes
 `}
 />
+
+## Available Subcomponents
+
+Each component is available through the main `AudioPlayer` namespace or can be imported directly. Primitive components are also available for advanced customization.
+
+### Core Components
+
+#### Root Container
+
+The main wrapper component that provides layout and styling for the audio player.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.Root>...</AudioPlayer.Root>
+
+// Direct import
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer/AudioPlayer';
+<AudioPlayer>...</AudioPlayer>
+
+// Primitive component
+import { AudioPlayerPrimitive } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayerPrimitive>...</AudioPlayerPrimitive>
+```
+
+#### Provider
+
+Provides audio state and context to all child components. Required at the root level.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.Provider tracks={tracks}>...</AudioPlayer.Provider>
+
+// Direct import
+import { AudioPlayerContextProvider } from '@gdominguez210/gdom-ui/AudioPlayerContextProvider';
+<AudioPlayerContextProvider tracks={tracks}>...</AudioPlayerContextProvider>
+```
+
+### Information Display
+
+#### Info Container
+
+Container for track information such as image, title, and author.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.Info>...</AudioPlayer.Info>
+
+// Direct import
+import { AudioPlayerInfo } from '@gdominguez210/gdom-ui/AudioPlayerInfo';
+<AudioPlayerInfo>...</AudioPlayerInfo>
+```
+
+#### Image
+
+Displays the album artwork or track thumbnail image.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.Image />
+
+// Direct import
+import { AudioPlayerImage } from '@gdominguez210/gdom-ui/AudioPlayerImage';
+<AudioPlayerImage />
+
+// Primitive component
+import { AudioPlayerImagePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerImage';
+<AudioPlayerImagePrimitive src="path/to/image.jpg" alt="Album cover" />
+```
+
+#### Title
+
+Displays the track title from the current track.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.Title />
+
+// Direct import
+import { AudioPlayerTitle } from '@gdominguez210/gdom-ui/AudioPlayerTitle';
+<AudioPlayerTitle />
+
+// Primitive component
+import { AudioPlayerTitlePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerTitle';
+<AudioPlayerTitlePrimitive>Song Title</AudioPlayerTitlePrimitive>
+```
+
+#### Author
+
+Displays the track artist/author name from the current track.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.Author />
+
+// Direct import
+import { AudioPlayerAuthor } from '@gdominguez210/gdom-ui/AudioPlayerAuthor';
+<AudioPlayerAuthor />
+
+// Primitive component
+import { AudioPlayerAuthorPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerAuthor';
+<AudioPlayerAuthorPrimitive>Artist Name</AudioPlayerAuthorPrimitive>
+```
+
+#### Time
+
+Displays current playback time and total duration in MM:SS format.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.Time />
+
+// Direct import
+import { AudioPlayerTime } from '@gdominguez210/gdom-ui/AudioPlayerTime';
+<AudioPlayerTime />
+
+// Primitive component
+import { AudioPlayerTimePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerTime';
+<AudioPlayerTimePrimitive currentTime={60} duration={180} />
+```
+
+### Controls
+
+#### Controls Container
+
+Flexible container for grouping playback control buttons.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.Controls>...</AudioPlayer.Controls>
+
+// Direct import
+import { AudioPlayerControls } from '@gdominguez210/gdom-ui/AudioPlayerControls';
+<AudioPlayerControls>...</AudioPlayerControls>
+```
+
+#### Play/Pause Control
+
+Toggles playback state with dynamic icon that changes between play and pause.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.ControlPlay />
+
+// Direct import
+import { AudioPlayerControlPlay } from '@gdominguez210/gdom-ui/AudioPlayerControlPlay';
+<AudioPlayerControlPlay />
+
+// Primitive component
+import { AudioPlayerControlPlayPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlPlay';
+<AudioPlayerControlPlayPrimitive isPlaying={true} onClick={() => {}} />
+```
+
+#### Next Track Control
+
+Button to skip to the next track in the playlist.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.ControlNext />
+
+// Direct import
+import { AudioPlayerControlNext } from '@gdominguez210/gdom-ui/AudioPlayerControlNext';
+<AudioPlayerControlNext />
+
+// Primitive component
+import { AudioPlayerControlNextPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlNext';
+<AudioPlayerControlNextPrimitive onClick={() => {}} />
+```
+
+#### Previous Track Control
+
+Button to return to the previous track or restart the current track.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.ControlPrevious />
+
+// Direct import
+import { AudioPlayerControlPrevious } from '@gdominguez210/gdom-ui/AudioPlayerControlPrevious';
+<AudioPlayerControlPrevious />
+
+// Primitive component
+import { AudioPlayerControlPreviousPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlPrevious';
+<AudioPlayerControlPreviousPrimitive onClick={() => {}} />
+```
+
+#### Loop Control
+
+Toggles repeat mode for single track or playlist with visual indicator.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.ControlLoop />
+
+// Direct import
+import { AudioPlayerControlLoop } from '@gdominguez210/gdom-ui/AudioPlayerControlLoop';
+<AudioPlayerControlLoop />
+
+// Primitive component
+import { AudioPlayerControlLoopPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlLoop';
+<AudioPlayerControlLoopPrimitive active={true} onClick={() => {}} />
+```
+
+#### Shuffle Control
+
+Toggles shuffle playback mode with visual indicator for active state.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.ControlShuffle />
+
+// Direct import
+import { AudioPlayerControlShuffle } from '@gdominguez210/gdom-ui/AudioPlayerControlShuffle';
+<AudioPlayerControlShuffle />
+
+// Primitive component
+import { AudioPlayerControlShufflePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlShuffle';
+<AudioPlayerControlShufflePrimitive active={true} onClick={() => {}} />
+```
+
+#### Audio Element
+
+The core HTML audio element that handles actual audio playback (typically hidden).
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.ControlAudio />
+
+// Direct import
+import { AudioPlayerControlAudio } from '@gdominguez210/gdom-ui/AudioPlayerControlAudio';
+<AudioPlayerControlAudio />
+
+// Primitive component
+import { AudioPlayerControlAudioPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlAudio';
+<AudioPlayerControlAudioPrimitive src="path/to/audio.mp3" />
+```
+
+### Playback Controls
+
+#### Progress Bar
+
+Interactive slider that displays and controls playback progress.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.ProgressBar />
+
+// Direct import
+import { AudioPlayerProgressBar } from '@gdominguez210/gdom-ui/AudioPlayerProgressBar';
+<AudioPlayerProgressBar />
+
+// Primitive component
+import { AudioPlayerProgressBarPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerProgressBar';
+<AudioPlayerProgressBarPrimitive value={50} max={100} onChange={() => {}} />
+```
+
+#### Volume Container
+
+Container for volume controls that can be configured to expand/collapse.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.Volume>...</AudioPlayer.Volume>
+
+// Direct import
+import { AudioPlayerVolume } from '@gdominguez210/gdom-ui/AudioPlayerVolume';
+<AudioPlayerVolume>...</AudioPlayerVolume>
+
+// Primitive component
+import { AudioPlayerVolumePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerVolume';
+<AudioPlayerVolumePrimitive>...</AudioPlayerVolumePrimitive>
+```
+
+#### Volume Button
+
+Button that toggles mute state with dynamic icon based on volume level.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.VolumeButton />
+
+// Direct import
+import { AudioPlayerVolumeButton } from '@gdominguez210/gdom-ui/AudioPlayerVolumeButton';
+<AudioPlayerVolumeButton />
+
+// Primitive component
+import { AudioPlayerVolumeButtonPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerVolumeButton';
+<AudioPlayerVolumeButtonPrimitive muted={false} onClick={() => {}} />
+```
+
+#### Volume Slider
+
+Interactive slider that displays and controls audio volume level.
+
+```typescript
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.VolumeSlider />
+
+// Direct import
+import { AudioPlayerVolumeSlider } from '@gdominguez210/gdom-ui/AudioPlayerVolumeSlider';
+<AudioPlayerVolumeSlider />
+
+// Primitive component
+import { AudioPlayerVolumeSliderPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerVolumeSlider';
+<AudioPlayerVolumeSliderPrimitive value={75} onChange={() => {}} />
+```
 
 ## Props
 

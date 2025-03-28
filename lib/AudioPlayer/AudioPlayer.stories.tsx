@@ -92,11 +92,11 @@ export const Example: StoryObj<typeof AudioPlayer> = {
           </AudioPlayerCompoundComponent.Info>
           <AudioPlayerCompoundComponent.Controls className="basis-1/3">
             <AudioPlayerCompoundComponent.ControlAudio />
+            <AudioPlayerCompoundComponent.ControlLoop />
             <AudioPlayerCompoundComponent.ControlPrevious />
             <AudioPlayerCompoundComponent.ControlPlay />
             <AudioPlayerCompoundComponent.ControlNext />
             <AudioPlayerCompoundComponent.ControlShuffle />
-            <AudioPlayerCompoundComponent.ControlLoop />
           </AudioPlayerCompoundComponent.Controls>
           <AudioPlayerCompoundComponent.Volume className="ml-auto pr-4">
             <AudioPlayerCompoundComponent.VolumeButton />
@@ -124,14 +124,14 @@ export const Compact: StoryObj<typeof AudioPlayer> = {
     <AudioPlayerCompoundComponent.Provider tracks={trackData}>
       <AudioPlayerCompoundComponent.Root>
         <div className="flex flex-grow items-center justify-between gap-4">
-          <AudioPlayerCompoundComponent.Controls className="py-2">
+          <AudioPlayerCompoundComponent.Controls className="basis-[275px] py-2">
             <AudioPlayerCompoundComponent.ControlAudio />
             <AudioPlayerCompoundComponent.ControlPrevious />
             <AudioPlayerCompoundComponent.ControlPlay />
             <AudioPlayerCompoundComponent.ControlNext />
             <AudioPlayerCompoundComponent.Time />
           </AudioPlayerCompoundComponent.Controls>
-          <AudioPlayerCompoundComponent.Info className="grow justify-center">
+          <AudioPlayerCompoundComponent.Info className="ml-auto basis-1/3">
             <AudioPlayerCompoundComponent.Image
               width={64}
               height={64}
@@ -142,14 +142,16 @@ export const Compact: StoryObj<typeof AudioPlayer> = {
               <AudioPlayerCompoundComponent.Author />
             </div>
           </AudioPlayerCompoundComponent.Info>
-          <AudioPlayerCompoundComponent.Volume className="flex basis-[165px]">
-            <AudioPlayerCompoundComponent.VolumeButton />
-            <AudioPlayerCompoundComponent.VolumeSlider />
-          </AudioPlayerCompoundComponent.Volume>
-          <AudioPlayerCompoundComponent.Controls className="py-2">
-            <AudioPlayerCompoundComponent.ControlShuffle className="text-2xl" />
-            <AudioPlayerCompoundComponent.ControlLoop className="text-2xl" />
-          </AudioPlayerCompoundComponent.Controls>
+          <div className="ml-auto flex justify-end">
+            <AudioPlayerCompoundComponent.Volume className="flex basis-[165px]">
+              <AudioPlayerCompoundComponent.VolumeButton />
+              <AudioPlayerCompoundComponent.VolumeSlider />
+            </AudioPlayerCompoundComponent.Volume>
+            <AudioPlayerCompoundComponent.Controls className="py-2">
+              <AudioPlayerCompoundComponent.ControlShuffle className="text-2xl" />
+              <AudioPlayerCompoundComponent.ControlLoop className="text-2xl" />
+            </AudioPlayerCompoundComponent.Controls>
+          </div>
         </div>
         <AudioPlayerCompoundComponent.ProgressBar className="before:bg-red-600" />
       </AudioPlayerCompoundComponent.Root>
