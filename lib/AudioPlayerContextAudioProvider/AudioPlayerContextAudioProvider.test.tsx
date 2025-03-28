@@ -11,7 +11,7 @@ describe('AudioPlayerContextAudioProvider', () => {
 
     expect(result.current).toEqual({
       isPlaying: false,
-      volume: 1,
+      volume: 50,
       mute: false,
       shuffle: false,
       loop: false,
