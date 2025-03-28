@@ -1,3 +1,5 @@
+'use client';
+
 import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
 import { AudioPlayerContextTrack } from './AudioPlayerContextTrack';
 import { trackReducer, TRACK_ACTIONS } from './reducer';
