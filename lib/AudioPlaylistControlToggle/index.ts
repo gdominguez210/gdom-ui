@@ -1,6 +1,8 @@
 export {
   AudioPlaylistControlToggle,
-  AudioPlaylistControlTogglePrimitive,
   type AudioPlaylistControlToggleProps,
-  type AudioPlaylistControlTogglePrimitiveProps,
 } from './AudioPlaylistControlToggle';
+export {
+  AudioPlaylistControlTogglePrimitive,
+  type AudioPlaylistControlTogglePrimitiveProps,
+} from './AudioPlaylistControlTogglePrimitive';

@@ -1,43 +1,19 @@
-import { type ComponentPropsWithRef, type MouseEventHandler, useCallback } from 'react';
-import { Icon } from '@lib/Icon';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
+'use client';
+
+import { type MouseEventHandler, useCallback } from 'react';
 import { useComposedRefs } from '@lib/useComposedRefs';
 import { useAudioPlaylistContext } from '@lib/AudioPlaylistContextProvider';
-
-/**
- * Props for the playlist toggle button primitive component
- */
-export type AudioPlaylistControlTogglePrimitiveProps = ComponentPropsWithRef<'button'> & {
-  /** Whether the playlist is currently expanded/visible */
-  active?: boolean;
-};
-
-/**
- * Button component for toggling playlist visibility
- */
-export function AudioPlaylistControlTogglePrimitive(
-  props: AudioPlaylistControlTogglePrimitiveProps,
-) {
-  const { active = false, ...restProps } = props;
-
-  return (
-    <AudioPlayerControlButton
-      active={active}
-      aria-label={active ? 'Hide playlist' : 'Show playlist'}
-      aria-expanded={active}
-      {...restProps}
-    >
-      <Icon name="play-list-2-fill" />
-    </AudioPlayerControlButton>
-  );
-}
+import {
+  AudioPlaylistControlTogglePrimitive,
+  type AudioPlaylistControlTogglePrimitiveProps,
+} from '@lib/AudioPlaylistControlToggle/AudioPlaylistControlTogglePrimitive';
 
 /**
  * Props for the playlist toggle component
  */
 export type AudioPlaylistControlToggleProps = Omit<
   AudioPlaylistControlTogglePrimitiveProps,
-  'isExpanded'
+  'active'
 >;
 
 /**
