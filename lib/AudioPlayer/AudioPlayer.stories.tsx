@@ -23,7 +23,7 @@ import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioPro
 import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
 import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
 import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
-// import { AudioPlaylistCompoundComponent } from '@lib/AudioPlaylist/namespace';
+import { AudioPlaylistCompoundComponent } from '@lib/AudioPlaylist/namespace';
 
 export default {
   title: 'components/AudioPlayer',
@@ -159,61 +159,61 @@ export const Compact: StoryObj<typeof AudioPlayer> = {
   ),
 };
 
-// export const WithCollapsiblePlaylist: StoryObj<typeof AudioPlayer> = {
-//   parameters: {
-//     docs: {
-//       description: {
-//         story:
-//           'A player with a collapsible playlist that can be toggled with a button or dismissed with the close button in the header',
-//       },
-//       source: {
-//         type: 'dynamic',
-//       },
-//     },
-//   },
-//   render: () => (
-//     <AudioPlayerCompoundComponent.Provider tracks={trackData}>
-//       <AudioPlaylistCompoundComponent.Provider tracks={trackData}>
-//         <AudioPlayerCompoundComponent.Root className="flex flex-col">
-//           {/* Collapsible Playlist that appears above */}
-//           <AudioPlaylistCompoundComponent.ExpandableContainer>
-//             <AudioPlaylistCompoundComponent.Root>
-//               <AudioPlaylistCompoundComponent.Header>
-//                 <span>Playlist</span>
-//                 <AudioPlaylistCompoundComponent.Dismiss />
-//               </AudioPlaylistCompoundComponent.Header>
-//               <AudioPlaylistCompoundComponent.Tracks className="max-h-[227px] overflow-y-auto" />
-//             </AudioPlaylistCompoundComponent.Root>
-//           </AudioPlaylistCompoundComponent.ExpandableContainer>
-//           <div className="flex flex-grow justify-between gap-4">
-//             {/* Main Player UI */}
-//             <AudioPlayerCompoundComponent.Info className="basis-1/3">
-//               <AudioPlayerCompoundComponent.Image />
-//               <div className="py-2">
-//                 <AudioPlayerCompoundComponent.Title />
-//                 <AudioPlayerCompoundComponent.Author />
-//                 <AudioPlayerCompoundComponent.Time />
-//               </div>
-//             </AudioPlayerCompoundComponent.Info>
-//             <AudioPlayerCompoundComponent.Controls>
-//               <AudioPlayerCompoundComponent.ControlAudio />
-//               <AudioPlayerCompoundComponent.ControlPrevious />
-//               <AudioPlayerCompoundComponent.ControlPlay />
-//               <AudioPlayerCompoundComponent.ControlNext />
-//               <AudioPlayerCompoundComponent.ControlShuffle />
-//               <AudioPlayerCompoundComponent.ControlLoop />
-//             </AudioPlayerCompoundComponent.Controls>
-//             <div className="flex basis-1/3 items-center justify-end gap-2 px-2">
-//               <AudioPlayerCompoundComponent.Volume>
-//                 <AudioPlayerCompoundComponent.VolumeButton />
-//                 <AudioPlayerCompoundComponent.VolumeSlider />
-//               </AudioPlayerCompoundComponent.Volume>
-//               <AudioPlaylistCompoundComponent.ControlToggle className="text-2xl" />
-//             </div>
-//           </div>
-//           <AudioPlayerCompoundComponent.ProgressBar />
-//         </AudioPlayerCompoundComponent.Root>
-//       </AudioPlaylistCompoundComponent.Provider>
-//     </AudioPlayerCompoundComponent.Provider>
-//   ),
-// };
+export const WithCollapsiblePlaylist: StoryObj<typeof AudioPlayer> = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A player with a collapsible playlist that can be toggled with a button or dismissed with the close button in the header',
+      },
+      source: {
+        type: 'dynamic',
+      },
+    },
+  },
+  render: () => (
+    <AudioPlayerCompoundComponent.Provider tracks={trackData}>
+      <AudioPlaylistCompoundComponent.Provider tracks={trackData}>
+        <AudioPlayerCompoundComponent.Root className="flex flex-col">
+          {/* Collapsible Playlist that appears above */}
+          <AudioPlaylistCompoundComponent.ExpandableContainer>
+            <AudioPlaylistCompoundComponent.Root>
+              <AudioPlaylistCompoundComponent.Header>
+                <span>Playlist</span>
+                <AudioPlaylistCompoundComponent.Dismiss />
+              </AudioPlaylistCompoundComponent.Header>
+              <AudioPlaylistCompoundComponent.Tracks className="max-h-[227px] overflow-y-auto" />
+            </AudioPlaylistCompoundComponent.Root>
+          </AudioPlaylistCompoundComponent.ExpandableContainer>
+          <div className="flex flex-grow justify-between gap-4">
+            {/* Main Player UI */}
+            <AudioPlayerCompoundComponent.Info className="basis-1/3">
+              <AudioPlayerCompoundComponent.Image />
+              <div className="py-2">
+                <AudioPlayerCompoundComponent.Title />
+                <AudioPlayerCompoundComponent.Author />
+                <AudioPlayerCompoundComponent.Time />
+              </div>
+            </AudioPlayerCompoundComponent.Info>
+            <AudioPlayerCompoundComponent.Controls>
+              <AudioPlayerCompoundComponent.ControlAudio />
+              <AudioPlayerCompoundComponent.ControlLoop />
+              <AudioPlayerCompoundComponent.ControlPrevious />
+              <AudioPlayerCompoundComponent.ControlPlay />
+              <AudioPlayerCompoundComponent.ControlNext />
+              <AudioPlayerCompoundComponent.ControlShuffle />
+            </AudioPlayerCompoundComponent.Controls>
+            <div className="flex basis-1/3 items-center justify-end gap-2 px-2">
+              <AudioPlayerCompoundComponent.Volume>
+                <AudioPlayerCompoundComponent.VolumeButton />
+                <AudioPlayerCompoundComponent.VolumeSlider />
+              </AudioPlayerCompoundComponent.Volume>
+              <AudioPlaylistCompoundComponent.ControlToggle className="text-2xl" />
+            </div>
+          </div>
+          <AudioPlayerCompoundComponent.ProgressBar />
+        </AudioPlayerCompoundComponent.Root>
+      </AudioPlaylistCompoundComponent.Provider>
+    </AudioPlayerCompoundComponent.Provider>
+  ),
+};
