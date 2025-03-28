@@ -1,10 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import {
-  AudioPlayerVolumeSlider,
-  AudioPlayerVolumeSliderPrimitive,
-} from './AudioPlayerVolumeSlider';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
+import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
+import { AudioPlayerVolumeSliderPrimitive } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSliderPrimitive';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 import { trackData } from '@lib/AudioPlayer/data';
 
 describe('AudioPlayerVolumeSliderPrimitive', () => {

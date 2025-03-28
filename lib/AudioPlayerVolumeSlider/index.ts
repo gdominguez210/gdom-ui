@@ -1,6 +1,8 @@
 export {
   AudioPlayerVolumeSlider,
-  AudioPlayerVolumeSliderPrimitive,
-  type AudioPlayerVolumeSliderPrimitiveProps,
   type AudioPlayerVolumeSliderProps,
 } from './AudioPlayerVolumeSlider';
+export {
+  AudioPlayerVolumeSliderPrimitive,
+  type AudioPlayerVolumeSliderPrimitiveProps,
+} from './AudioPlayerVolumeSliderPrimitive';
