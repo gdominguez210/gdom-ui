@@ -1,6 +1,5 @@
+export { AudioPlayerImage, type AudioPlayerImageProps } from './AudioPlayerImage';
 export {
-  AudioPlayerImage,
   AudioPlayerImagePrimitive,
-  type AudioPlayerImageProps,
   type AudioPlayerImagePrimitiveProps,
-} from './AudioPlayerImage';
+} from './AudioPlayerImagePrimitive';

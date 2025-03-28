@@ -1,6 +1,7 @@
 import { screen, render } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerImage, AudioPlayerImagePrimitive } from './AudioPlayerImage';
+import { AudioPlayerImage } from '@lib/AudioPlayerImage/AudioPlayerImage';
+import { AudioPlayerImagePrimitive } from '@lib/AudioPlayerImage/AudioPlayerImagePrimitive';
 import { trackData } from '@lib/AudioPlayer/data';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 
