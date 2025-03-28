@@ -1,5 +1,5 @@
+export { AudioPlayerTitle, type AudioPlayerTitleProps } from './AudioPlayerTitle';
 export {
-  AudioPlayerTitle,
   AudioPlayerTitlePrimitive,
-  type AudioPlayerTitleProps,
-} from './AudioPlayerTitle';
+  type AudioPlayerTitlePrimitiveProps,
+} from './AudioPlayerTitlePrimitive';

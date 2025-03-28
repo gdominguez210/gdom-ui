@@ -1,7 +1,8 @@
-import clsx from 'clsx';
+'use client';
+
 import { type ComponentPropsWithRef, type ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+import { AudioPlayerTitlePrimitive } from './AudioPlayerTitlePrimitive';
 
 /**
  * Props for the track title component
@@ -18,22 +19,6 @@ export type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
    */
   className?: string;
 } & ComponentPropsWithRef<T>;
-
-/**
- * Base component for displaying track title with appropriate styling
- */
-export function AudioPlayerTitlePrimitive<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
-  const { as: Element = 'p', children, className, ...restProps } = props;
-
-  return (
-    <Element
-      className={twMerge(clsx('line-clamp-1 font-bold lg:max-w-64 lg:truncate', className))}
-      {...restProps}
-    >
-      {children}
-    </Element>
-  );
-}
 
 /**
  * Displays the title of the current audio track
