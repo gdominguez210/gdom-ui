@@ -1,46 +1,15 @@
-import { type ComponentPropsWithRef, type MouseEventHandler, type ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
+'use client';
+
+import { type ElementType, type MouseEvent as ReactMouseEvent, type SyntheticEvent } from 'react';
+import { type ComponentPropsWithRef } from 'react';
 import { AudioPlaylistTrackTitle } from '@lib/AudioPlaylistTrackTitle';
 import { AudioPlaylistTrackAuthor } from '@lib/AudioPlaylistTrackAuthor';
 import { AudioPlaylistTrackImage } from '@lib/AudioPlaylistTrackImage';
+import {
+  AudioPlaylistTrackPrimitive,
+  type AudioPlaylistTrackPrimitiveProps,
+} from '@lib/AudioPlaylistTrack/AudioPlaylistTrackPrimitive';
 
-/**
- * Props for the audio playlist track primitive component
- */
-export type AudioPlaylistTrackPrimitiveProps<T extends ElementType = 'li'> = {
-  /** Element to render as @default li */
-  as?: T;
-  /** Whether the track is active */
-  active?: boolean;
-} & ComponentPropsWithRef<T>;
-
-export function AudioPlaylistTrackPrimitive<T extends ElementType = 'li'>(
-  props: AudioPlaylistTrackPrimitiveProps<T>,
-) {
-  const { active, as: Element = 'li', children, className, ...restProps } = props;
-
-  return (
-    <Element
-      tabIndex={0}
-      role="button"
-      aria-pressed={active}
-      className={twMerge(
-        clsx(
-          'flex cursor-pointer items-center gap-3 rounded-md p-2 transition-colors duration-200 focus-within:outline-white',
-          {
-            'bg-black/50': active,
-            'hover:bg-black/30 focus-visible:bg-black/30': !active,
-          },
-          className,
-        ),
-      )}
-      {...restProps}
-    >
-      {children}
-    </Element>
-  );
-}
 /**
  * Props for the audio playlist track component
  */
@@ -58,11 +27,8 @@ export type AudioPlaylistTrackProps<T extends ElementType = 'li'> = {
   /** Whether audio is currently playing */
   isPlaying?: boolean;
   /** Handler for track selection */
-  onSelect?: () => void;
-} & Omit<
-  ComponentPropsWithRef<T>,
-  'title' | 'author' | 'thumbnail' | 'active' | 'isPlaying' | 'onSelect'
->;
+  onSelect?: (e: SyntheticEvent) => void;
+} & ComponentPropsWithRef<T>;
 
 /**
  * Individual playlist track component
@@ -80,17 +46,16 @@ export function AudioPlaylistTrack<T extends ElementType = 'li'>(
     ...restProps
   } = props;
 
-  const handleClick: MouseEventHandler<HTMLElement> = (e) => {
+  const handleClick = (e: ReactMouseEvent) => {
     e.preventDefault();
-    onSelect?.();
+    onSelect?.(e);
   };
 
   return (
     <AudioPlaylistTrackPrimitive
-      active={active}
-      onClick={handleClick}
       aria-label={`Play ${title} by ${author}`}
       {...(restProps as AudioPlaylistTrackPrimitiveProps<T>)}
+      onClick={handleClick}
     >
       <AudioPlaylistTrackImage
         src={thumbnail}
