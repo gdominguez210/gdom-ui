@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlayerVolumePrimitive } from './AudioPlayerVolume';
+import { AudioPlayerVolume } from '@lib/AudioPlayerVolume/AudioPlayerVolume';
 
 describe('AudioPlayerVolumePrimitive', () => {
   test('should render children', () => {
     render(
-      <AudioPlayerVolumePrimitive>
+      <AudioPlayerVolume>
         <div data-testid="child">Child content</div>
-      </AudioPlayerVolumePrimitive>,
+      </AudioPlayerVolume>,
     );
 
     expect(screen.getByTestId('child')).toBeInTheDocument();
@@ -16,12 +16,12 @@ describe('AudioPlayerVolumePrimitive', () => {
 
   test('should render with custom element', () => {
     render(
-      <AudioPlayerVolumePrimitive
+      <AudioPlayerVolume
         as="section"
         data-testid="volume"
       >
         Content
-      </AudioPlayerVolumePrimitive>,
+      </AudioPlayerVolume>,
     );
 
     const element = screen.getByTestId('volume');
@@ -30,26 +30,26 @@ describe('AudioPlayerVolumePrimitive', () => {
 
   test('should merge className prop', () => {
     render(
-      <AudioPlayerVolumePrimitive
+      <AudioPlayerVolume
         className="custom-class"
         data-testid="volume"
       >
         Content
-      </AudioPlayerVolumePrimitive>,
+      </AudioPlayerVolume>,
     );
 
     const element = screen.getByTestId('volume');
-    expect(element).toHaveClass('items-center', 'gap-3', 'custom-class');
+    expect(element).toHaveClass('custom-class');
   });
 
   test('should forward additional props', () => {
     render(
-      <AudioPlayerVolumePrimitive
+      <AudioPlayerVolume
         data-testid="volume"
         aria-label="Volume control"
       >
         Content
-      </AudioPlayerVolumePrimitive>,
+      </AudioPlayerVolume>,
     );
 
     expect(screen.getByTestId('volume')).toHaveAttribute('aria-label', 'Volume control');
