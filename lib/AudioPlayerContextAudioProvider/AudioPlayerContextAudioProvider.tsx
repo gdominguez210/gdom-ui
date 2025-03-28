@@ -21,7 +21,7 @@ export interface AudioPlayerContextAudioProviderProps extends PropsWithChildren 
  */
 export function AudioPlayerContextAudioProvider(props: AudioPlayerContextAudioProviderProps) {
   const {
-    defaultVolume = 1,
+    defaultVolume = 50,
     defaultMute = false,
     defaultShuffle = false,
     defaultLoop = false,
