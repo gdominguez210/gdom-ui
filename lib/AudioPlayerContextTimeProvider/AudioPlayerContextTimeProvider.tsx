@@ -1,3 +1,5 @@
+'use client';
+
 import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
 import { AudioPlayerContextTime } from './AudioPlayerContextTime';
 import { timeReducer, TIME_ACTIONS } from './reducer';
