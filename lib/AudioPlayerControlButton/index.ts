@@ -1,1 +1,4 @@
-export { AudioPlayerControlButton } from './AudioPlayerControlButton';
+export {
+  AudioPlayerControlButton,
+  type AudioPlayerControlButtonProps,
+} from './AudioPlayerControlButton';

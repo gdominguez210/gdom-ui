@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import { type ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-type AudioPlayerControlButtonProps = ComponentPropsWithRef<'button'> & {
+export type AudioPlayerControlButtonProps = ComponentPropsWithRef<'button'> & {
   active?: boolean;
 };
 
