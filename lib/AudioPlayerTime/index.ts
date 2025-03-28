@@ -1,7 +1,6 @@
+export { AudioPlayerTime, type AudioPlayerTimeProps } from './AudioPlayerTime';
 export {
-  AudioPlayerTime,
   AudioPlayerTimePrimitive,
-  type AudioPlayerTimeProps,
   type AudioPlayerTimePrimitiveProps,
-} from './AudioPlayerTime';
-export { useAudioPlayerTime } from './useAudioPlayerTime';
+} from './AudioPlayerTimePrimitive';
+export { formatAudioDurationForDisplay, useAudioPlayerTime } from './useAudioPlayerTime';
