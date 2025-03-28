@@ -1,6 +1,5 @@
+export { AudioPlayerControlLoop, type AudioPlayerControlLoopProps } from './AudioPlayerControlLoop';
 export {
-  AudioPlayerControlLoop,
   AudioPlayerControlLoopPrimitive,
   type AudioPlayerControlLoopPrimitiveProps,
-  type AudioPlayerControlLoopProps,
-} from './AudioPlayerControlLoop';
+} from './AudioPlayerControlLoopPrimitive';
