@@ -1,8 +1,8 @@
-import { AudioPlayerControlPlayPrimitive } from '@lib/AudioPlayerControlPlay/AudioPlayerControlPlay';
+import { AudioPlayerControlPlayPrimitive } from '@lib/AudioPlayerControlPlay/AudioPlayerControlPlayPrimitive';
 import {
   AudioPlayerImagePrimitive,
   type AudioPlayerImagePrimitiveProps,
-} from '@lib/AudioPlayerImage/AudioPlayerImage';
+} from '@lib/AudioPlayerImage/AudioPlayerImagePrimitive';
 import clsx from 'clsx';
 import { type ElementType } from 'react';
 
