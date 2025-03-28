@@ -1,7 +1,8 @@
+'use client';
+
 import { type ComponentPropsWithRef, type ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+import { AudioPlayerAuthorPrimitive } from './AudioPlayerAuthorPrimitive';
 
 /**
  * Props for the track author component
@@ -10,24 +11,6 @@ export type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
   /** Element to render as @default p */
   as?: T;
 } & ComponentPropsWithRef<T>;
-
-/**
- * Base component for displaying author information with appropriate styling
- */
-export function AudioPlayerAuthorPrimitive<T extends ElementType>(
-  props: AudioPlayerAuthorProps<T>,
-) {
-  const { as: Element = 'p', children, className, ...restProps } = props;
-
-  return (
-    <Element
-      className={twMerge(clsx('line-clamp-1 text-sm text-gray-400', className))}
-      {...restProps}
-    >
-      {children}
-    </Element>
-  );
-}
 
 /**
  * Displays the author of the current audio track

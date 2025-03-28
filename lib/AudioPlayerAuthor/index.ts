@@ -1,5 +1,5 @@
+export { AudioPlayerAuthor, type AudioPlayerAuthorProps } from './AudioPlayerAuthor';
 export {
-  AudioPlayerAuthor,
   AudioPlayerAuthorPrimitive,
-  type AudioPlayerAuthorProps,
-} from './AudioPlayerAuthor';
+  type AudioPlayerAuthorPrimitiveProps,
+} from './AudioPlayerAuthorPrimitive';
