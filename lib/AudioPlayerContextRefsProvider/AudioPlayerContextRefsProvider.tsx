@@ -1,3 +1,5 @@
+'use client';
+
 import { useMemo, useRef, type PropsWithChildren } from 'react';
 import { AudioPlayerContextRefs } from './AudioPlayerContextRefs';
 
