@@ -5,7 +5,7 @@ import clsx from 'clsx';
 /**
  * Props for the audio player wrapper component
  */
-export type AudioPlayerPrimitiveProps<T extends ElementType = 'div'> = {
+export type AudioPlayerProps<T extends ElementType = 'div'> = {
   /** Element to render as
    * @default div
    * */
@@ -15,7 +15,7 @@ export type AudioPlayerPrimitiveProps<T extends ElementType = 'div'> = {
 /**
  * Base wrapper component for the audio player UI
  */
-export function AudioPlayerPrimitive<T extends ElementType>(props: AudioPlayerPrimitiveProps<T>) {
+export function AudioPlayer<T extends ElementType>(props: AudioPlayerProps<T>) {
   const { as: Element = 'div', children, className, ...restProps } = props;
 
   return (

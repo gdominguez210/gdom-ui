@@ -36,6 +36,16 @@ The AudioPlayer uses a compound component pattern where the main `AudioPlayer` e
 import { AudioPlayer } from '@lib/AudioPlayer';
 ```
 
+## Component Architecture
+
+The AudioPlayer follows a consistent architecture where each component is split into two parts:
+
+1. **Context-Connected Components**: These components integrate with the AudioPlayer context and handle state management automatically. They're available directly from the `AudioPlayer` namespace. These are client components that use React hooks and context.
+
+2. **Primitive Components**: These base components are completely decoupled from context and are purely prop-driven. They're used by the context-connected components internally but can also be imported directly for custom implementations. Since they don't use React hooks or browser APIs directly, **primitive components can be used as server components** in Next.js or similar frameworks.
+
+This separation creates a flexible system that supports both quick implementation and advanced customization, while also allowing for server-side rendering optimizations.
+
 ## Polymorphic Components
 
 All AudioPlayer components are built as polymorphic components, which means they can render as any HTML element or React component. This provides maximum flexibility for integration into various UI patterns.
@@ -45,105 +55,207 @@ All AudioPlayer components are built as polymorphic components, which means they
   dark
   code={`
 // Render as a div (default)
-<AudioPlayer.Info>
+<AudioPlayer.Root>
   Content goes here
-</AudioPlayer.Info>
+</AudioPlayer.Root>
 
 // Render as a section
 
-<AudioPlayer.Info as="section">Content goes here</AudioPlayer.Info>
+<AudioPlayer.Root as="section">Content goes here</AudioPlayer.Root>
 
 // Render as a custom component
 
-<AudioPlayer.Info as={CustomContainer}>Content goes here</AudioPlayer.Info>
+<AudioPlayer.Root as={CustomContainer}>Content goes here</AudioPlayer.Root>
 `} />
 
 Each component accepts an `as` prop that determines the rendered element, along with all props valid for that element type. This allows you to maintain semantic HTML structure while using AudioPlayer components.
+
+## Basic Usage
+
+The complete AudioPlayer requires wrapping your components with the Provider component and using the Root component as a container:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+<AudioPlayer.Provider tracks={trackData}>
+  <AudioPlayer.Root>
+    {/* Audio player components */}
+    <AudioPlayer.Info>
+      <AudioPlayer.Image />
+      <AudioPlayer.Title />
+      <AudioPlayer.Author />
+    </AudioPlayer.Info>
+    <AudioPlayer.Controls>
+      <AudioPlayer.ControlPlay />
+      <AudioPlayer.ControlPrevious />
+      <AudioPlayer.ControlNext />
+      <AudioPlayer.ControlShuffle />
+      <AudioPlayer.ControlLoop />
+    </AudioPlayer.Controls>
+    <AudioPlayer.ProgressBar />
+    <AudioPlayer.Time />
+    <AudioPlayer.Volume>
+      <AudioPlayer.VolumeButton />
+      <AudioPlayer.VolumeSlider />
+    </AudioPlayer.Volume>
+    <AudioPlayer.ControlAudio />
+  </AudioPlayer.Root>
+</AudioPlayer.Provider>
+`}
+/>
 
 ### Available Subcomponents
 
 All subcomponents are accessible through the main `AudioPlayer`, via `AudioPlayer.ComponentName`.
 
+#### Core Components
+
+```typescript
+// AudioPlayer.Root - The main container component
+// AudioPlayer.Provider - The context provider that manages all state
+```
+
 #### Information Display
 
 ```typescript
-// AudioPlayerInfo - Container for track information
-import { AudioPlayerInfo } from '@lib/AudioPlayerInfo';
-
-// AudioPlayerImage - Album art/thumbnail display
-import { AudioPlayerImage } from '@lib/AudioPlayerImage';
-
-// AudioPlayerTitle - Track title display
-import { AudioPlayerTitle } from '@lib/AudioPlayerTitle';
-
-// AudioPlayerAuthor - Track artist/author display
-import { AudioPlayerAuthor } from '@lib/AudioPlayerAuthor';
-
-// AudioPlayerTime - Current and total duration display
-import { AudioPlayerTime } from '@lib/AudioPlayerTime';
+// AudioPlayer.Info - Container for track information
+// AudioPlayer.Image - Album art/thumbnail display
+// AudioPlayer.Title - Track title display
+// AudioPlayer.Author - Track artist/author display
+// AudioPlayer.Time - Current and total duration display
 ```
 
 #### Controls
 
 ```typescript
-// AudioPlayerControls - Container for playback controls
-import { AudioPlayerControls } from '@lib/AudioPlayerControls';
-
-// AudioPlayerControlPlay - Play/pause toggle
-import { AudioPlayerControlPlay } from '@lib/AudioPlayerControlPlay';
-
-// AudioPlayerControlNext - Skip to next track
-import { AudioPlayerControlNext } from '@lib/AudioPlayerControlNext';
-
-// AudioPlayerControlPrevious - Return to previous track
-import { AudioPlayerControlPrevious } from '@lib/AudioPlayerControlPrevious';
-
-// AudioPlayerControlLoop - Toggle repeat mode
-import { AudioPlayerControlLoop } from '@lib/AudioPlayerControlLoop';
-
-// AudioPlayerControlShuffle - Toggle shuffle mode
-import { AudioPlayerControlShuffle } from '@lib/AudioPlayerControlShuffle';
-
-// AudioPlayerControlAudio - Toggle audio on/off
-import { AudioPlayerControlAudio } from '@lib/AudioPlayerControlAudio';
+// AudioPlayer.Controls - Container for playback controls
+// AudioPlayer.ControlPlay - Play/pause toggle
+// AudioPlayer.ControlNext - Skip to next track
+// AudioPlayer.ControlPrevious - Return to previous track
+// AudioPlayer.ControlLoop - Toggle repeat mode
+// AudioPlayer.ControlShuffle - Toggle shuffle mode
+// AudioPlayer.ControlAudio - Hidden audio element that handles playback
 ```
 
 #### Playback
 
 ```typescript
-// AudioPlayerProgressBar - Track progress display and seek control
+// AudioPlayer.ProgressBar - Track progress display and seek control
+// AudioPlayer.Volume - Volume controls with expand/collapse
+// AudioPlayer.VolumeButton - Mute/unmute toggle
+// AudioPlayer.VolumeSlider - Volume level control
+```
+
+## Primitive Components
+
+Every component in the AudioPlayer has a corresponding primitive version that is decoupled from the context. These primitive components are purely prop-driven and can be imported directly from each component's module:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Import the context-connected component
 import { AudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar';
 
-// AudioPlayerVolume - Volume controls with expand/collapse
-import { AudioPlayerVolume } from '@lib/AudioPlayerVolume';
+// Import the primitive component
+import { AudioPlayerProgressBarPrimitive } from '@lib/AudioPlayerProgressBar';
 
-// AudioPlayerVolumeButton - Mute/unmute toggle
-import { AudioPlayerVolumeButton } from '@lib/AudioPlayerVolumeButton';
+// Or import both from the index file
+import {
+AudioPlayerProgressBar,
+AudioPlayerProgressBarPrimitive
+} from '@lib/AudioPlayerProgressBar';
+`} />
 
-// AudioPlayerVolumeSlider - Volume level control
-import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider';
-```
+Primitive components are ideal for:
 
-#### Context Providers
+- Creating custom implementations with different state management
+- Building specialized audio players for particular use cases
+- Integration with third-party audio libraries
+- Complete control over every aspect of behavior and appearance
+- **Server Components in Next.js** - Use primitives in server components for improved performance
 
-These providers are not exposed as subcomponents on the main `AudioPlayer` component. Instead, they can be imported individually and composed however you see fit for custom implementations.
+### Server Component Usage
 
-```typescript
-// AudioPlayerContextProvider - Main provider that composes all context providers
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
+Since the primitive components don't rely on React hooks, browser APIs, or client-side state, they can be used directly in server components:
 
-// AudioPlayerContextTrackProvider - Manages track list and current track
-import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider';
+<Source
+  language="tsx"
+  dark
+  code={`
+// In a Next.js app directory file (server component)
+import { AudioPlayerProgressBarPrimitive } from '@lib/AudioPlayerProgressBar';
 
-// AudioPlayerContextTimeProvider - Manages playback time and duration
-import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider';
+// This component can be a server component
+export default function MyServerComponent() {
+return (
 
-// AudioPlayerContextAudioProvider - Manages audio state (play, volume, etc.)
-import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider';
+<div>
+  <h2>Static Progress Bar</h2>
+  <AudioPlayerProgressBarPrimitive
+    value={50}
+    max={100}
+    // Event handlers would need to be added in a client component
+  />
+</div>
+); } `} />
 
-// AudioPlayerContextRefsProvider - Manages references to audio elements
-import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider';
-```
+For interactive features, you can use the client components or create your own client components that wrap the primitives:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// client-components/MyProgressBar.tsx
+'use client';
+
+import { useState } from 'react';
+import { AudioPlayerProgressBarPrimitive } from '@lib/AudioPlayerProgressBar';
+
+export function MyProgressBar() {
+  const [value, setValue] = useState(50);
+  
+  return (
+    <AudioPlayerProgressBarPrimitive
+      value={value}
+      max={100}
+      onChange={(e) => setValue(Number(e.target.value))}
+    />
+  );
+}
+`} />
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Example of a custom implementation using primitives
+import { 
+  AudioPlayerPrimitive,
+  AudioPlayerControlPlayPrimitive,
+  AudioPlayerProgressBarPrimitive 
+} from '@lib/AudioPlayer';
+
+function MyCustomPlayer() {
+const [isPlaying, setIsPlaying] = useState(false);
+const [progress, setProgress] = useState(0);
+// Custom audio handling logic...
+
+return (
+
+<AudioPlayerPrimitive>
+  <AudioPlayerControlPlayPrimitive
+    isPlaying={isPlaying}
+    onClick={() => setIsPlaying(!isPlaying)}
+  />
+  <AudioPlayerProgressBarPrimitive
+    value={progress}
+    max={100}
+    onChange={(e) => setProgress(Number(e.target.value))}
+  />
+</AudioPlayerPrimitive>
+); } `} />
 
 ## Props
 
@@ -249,64 +361,3 @@ Each component is tested against WCAG 2.1 guidelines to ensure they work well wi
 // - screen reader announcements for state changes
 `}
 />
-
-## Primitive Components
-
-For advanced customization, the AudioPlayer provides primitive versions of all components that are disconnected from the context. These primitive components are purely prop-driven and allow you to build completely custom implementations:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Import the primitive component
-import { AudioPlayerProgressBarPrimitive } from '@lib/AudioPlayerProgressBar/AudioPlayerProgressBarPrimitive';
-
-// Create a custom implementation
-function MyCustomProgressBar({ value, max, onChange }) {
-return (
-
-<AudioPlayerProgressBarPrimitive
-  value={value}
-  max={max}
-  onChange={onChange}
-  className="my-custom-styles"
-/>
-); } `} />
-
-Primitive components provide just the structure and accessibility features without any built-in state management or event handling. This gives you complete control when:
-
-- Implementing a different state management solution
-- Creating a custom audio player with unique interactions
-- Integrating with third-party audio libraries
-- Building specialized audio players for particular use cases
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Example of a fully custom implementation
-import { 
-  AudioPlayerPrimitive,
-  AudioPlayerControlPlayPrimitive,
-  AudioPlayerProgressBarPrimitive 
-} from '@lib/AudioPlayer/primitives';
-
-function MyCustomPlayer() {
-const [isPlaying, setIsPlaying] = useState(false);
-const [progress, setProgress] = useState(0);
-// Custom audio handling logic...
-
-return (
-
-<AudioPlayerPrimitive>
-  <AudioPlayerControlPlayPrimitive
-    isPlaying={isPlaying}
-    onClick={() => setIsPlaying(!isPlaying)}
-  />
-  <AudioPlayerProgressBarPrimitive
-    value={progress}
-    max={100}
-    onChange={(e) => setProgress(Number(e.target.value))}
-  />
-</AudioPlayerPrimitive>
-); } `} />

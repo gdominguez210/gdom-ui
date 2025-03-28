@@ -15,11 +15,11 @@ import { AudioPlayerControlPrevious } from '@lib/AudioPlayerControlPrevious/Audi
 import { AudioPlayerControlNext } from '@lib/AudioPlayerControlNext/AudioPlayerControlNext';
 import { AudioPlayerControlShuffle } from '@lib/AudioPlayerControlShuffle/AudioPlayerControlShuffle';
 import { AudioPlayerControlLoop } from '@lib/AudioPlayerControlLoop/AudioPlayerControlLoop';
-import { AudioPlayerPrimitive } from './AudioPlayer';
+import { AudioPlayer } from '@lib/AudioPlayer/AudioPlayer';
 
 // Create the namespace with Object.assign inline for each component
 export const AudioPlayerCompoundComponent = {
-  Root: Object.assign(AudioPlayerPrimitive, { displayName: 'AudioPlayer.Root' }),
+  Root: Object.assign(AudioPlayer, { displayName: 'AudioPlayer.Root' }),
   Provider: Object.assign(AudioPlayerContextProvider, { displayName: 'AudioPlayer.Provider' }),
   Author: Object.assign(AudioPlayerAuthor, { displayName: 'AudioPlayer.Author' }),
   Controls: Object.assign(AudioPlayerControls, { displayName: 'AudioPlayer.Controls' }),
