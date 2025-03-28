@@ -1,10 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import {
-  AudioPlayerVolumeButton,
-  AudioPlayerVolumeButtonPrimitive,
-} from './AudioPlayerVolumeButton';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
+import { AudioPlayerVolumeButton } from '@lib/AudioPlayerVolumeButton/AudioPlayerVolumeButton';
+import { AudioPlayerVolumeButtonPrimitive } from '@lib/AudioPlayerVolumeButton/AudioPlayerVolumeButtonPrimitive';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 import { trackData } from '@lib/AudioPlayer/data';
 
 describe('AudioPlayerVolumeButtonPrimitive', () => {

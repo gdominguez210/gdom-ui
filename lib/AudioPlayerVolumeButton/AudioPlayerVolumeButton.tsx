@@ -1,10 +1,9 @@
+'use client';
+
 import { useCallback, type ComponentPropsWithRef, type MouseEventHandler } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
-import { Icon } from '@lib/Icon';
-import { type VolumeIconName } from '@lib/Icon/data';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
+import { AudioPlayerVolumeButtonPrimitive } from './AudioPlayerVolumeButtonPrimitive';
+
 const VOLUME_ICON_PROPERTIES = {
   MUTE: { name: 'volume-mute-fill', label: 'Volume Muted' },
   LOW: { name: 'volume-down-fill', label: 'Volume Low' },
@@ -18,31 +17,6 @@ function getVolumeIconProperties(
   if (isMuted || volume < 5) return VOLUME_ICON_PROPERTIES.MUTE;
   if (volume >= 40) return VOLUME_ICON_PROPERTIES.HIGH;
   return VOLUME_ICON_PROPERTIES.LOW;
-}
-
-/**
- * Props for the volume button primitive component
- */
-export type AudioPlayerVolumeButtonPrimitiveProps = {
-  /** Icon name for the volume button */
-  iconName: VolumeIconName;
-} & ComponentPropsWithRef<'button'>;
-
-/**
- * Base button component for volume controls
- */
-export function AudioPlayerVolumeButtonPrimitive(props: AudioPlayerVolumeButtonPrimitiveProps) {
-  const { iconName, title, className, ...restProps } = props;
-
-  return (
-    <AudioPlayerControlButton
-      className={twMerge(clsx('text-2xl', className))}
-      title={title}
-      {...restProps}
-    >
-      <Icon name={iconName} />
-    </AudioPlayerControlButton>
-  );
 }
 
 /**

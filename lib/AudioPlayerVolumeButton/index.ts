@@ -1,6 +1,8 @@
 export {
   AudioPlayerVolumeButton,
-  AudioPlayerVolumeButtonPrimitive,
   type AudioPlayerVolumeButtonProps,
-  type AudioPlayerVolumeButtonPrimitiveProps,
 } from './AudioPlayerVolumeButton';
+export {
+  AudioPlayerVolumeButtonPrimitive,
+  type AudioPlayerVolumeButtonPrimitiveProps,
+} from './AudioPlayerVolumeButtonPrimitive';
