@@ -1,10 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import {
-  AudioPlayerControlShuffle,
-  AudioPlayerControlShufflePrimitive,
-} from './AudioPlayerControlShuffle';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider';
+import { AudioPlayerControlShuffle } from '@lib/AudioPlayerControlShuffle/AudioPlayerControlShuffle';
+import { AudioPlayerControlShufflePrimitive } from '@lib/AudioPlayerControlShuffle/AudioPlayerControlShufflePrimitive';
+import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 import { AUDIO_PLAYER_CONTEXT_AUDIO_ERROR } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudio';
 import { trackData } from '@lib/AudioPlayer/data';
 

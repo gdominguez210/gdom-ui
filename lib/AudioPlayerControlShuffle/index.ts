@@ -1,6 +1,8 @@
 export {
   AudioPlayerControlShuffle,
-  AudioPlayerControlShufflePrimitive,
   type AudioPlayerControlShuffleProps,
-  type AudioPlayerControlShufflePrimitiveProps,
 } from './AudioPlayerControlShuffle';
+export {
+  AudioPlayerControlShufflePrimitive,
+  type AudioPlayerControlShufflePrimitiveProps,
+} from './AudioPlayerControlShufflePrimitive';
