@@ -1,6 +1,8 @@
 export {
   AudioPlaylistDismiss,
-  AudioPlaylistDismissPrimitive,
   type AudioPlaylistDismissProps,
+} from '@lib/AudioPlaylistDismiss/AudioPlaylistDismiss';
+export {
+  AudioPlaylistDismissPrimitive,
   type AudioPlaylistDismissPrimitiveProps,
-} from './AudioPlaylistDismiss';
+} from '@lib/AudioPlaylistDismiss/AudioPlaylistDismissPrimitive';
