@@ -1,7 +1,7 @@
 import { type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { AudioPlayerTitlePrimitive } from '@lib/AudioPlayerTitle/AudioPlayerTitle';
+import { AudioPlayerTitlePrimitive } from '@lib/AudioPlayerTitle/AudioPlayerTitlePrimitive';
 
 /**
  * Props for the audio playlist track title component
