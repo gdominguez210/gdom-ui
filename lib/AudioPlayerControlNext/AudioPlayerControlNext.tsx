@@ -1,3 +1,5 @@
+'use client';
+
 import {
   type MouseEventHandler,
   type RefObject,
@@ -9,28 +11,8 @@ import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
 import { useAudioPlayerNextTrack } from './useAudioPlayerNextTrack';
-import { Icon } from '@lib/Icon/Icon';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
-/**
- * Base button component for next track navigation
- */
-export function AudioPlayerControlNextPrimitive(props: AudioPlayerControlNextProps) {
-  return (
-    <AudioPlayerControlButton
-      aria-label="Next Track"
-      {...props}
-    >
-      <Icon
-        name="forward-end-fill"
-        className="scale-90"
-      />
-    </AudioPlayerControlButton>
-  );
-}
+import { AudioPlayerControlNextPrimitive } from './AudioPlayerControlNextPrimitive';
 
-/**
- * Props for the next track control button
- */
 export type AudioPlayerControlNextProps = ComponentPropsWithRef<'button'>;
 
 /**

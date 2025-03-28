@@ -1,6 +1,6 @@
+export { AudioPlayerControlNext, type AudioPlayerControlNextProps } from './AudioPlayerControlNext';
 export {
-  AudioPlayerControlNext,
   AudioPlayerControlNextPrimitive,
-  type AudioPlayerControlNextProps,
-} from './AudioPlayerControlNext';
+  type AudioPlayerControlNextPrimitiveProps,
+} from './AudioPlayerControlNextPrimitive';
 export { useAudioPlayerNextTrack } from './useAudioPlayerNextTrack';
