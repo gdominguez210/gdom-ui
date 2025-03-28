@@ -1,3 +1,5 @@
+'use client';
+
 import { type PropsWithChildren } from 'react';
 import { type AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
 import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
