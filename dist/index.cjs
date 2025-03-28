@@ -24,6 +24,17 @@ function _interopNamespaceDefault(e) {
 
 const React__namespace = /*#__PURE__*/_interopNamespaceDefault(React);
 
+const AUDIO_PLAYER_CONTEXT_TRACK_ERROR = "useAudioPlayerContextTrack must be used within an AudioPlayerContextTrackProvider";
+const AudioPlayerContextTrack = React.createContext(null);
+
+function useAudioPlayerContextTrack() {
+  const context = React.useContext(AudioPlayerContextTrack);
+  if (!context) {
+    throw new Error(AUDIO_PLAYER_CONTEXT_TRACK_ERROR);
+  }
+  return context;
+}
+
 const CLASS_PART_SEPARATOR = '-';
 const createClassGroupUtils = config => {
   const classMap = createClassMap(config);
@@ -2518,17 +2529,6 @@ const twMerge = /*#__PURE__*/createTailwindMerge(getDefaultConfig);
 
 function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f);}else for(f in e)e[f]&&(n&&(n+=" "),n+=f);return n}function clsx(){for(var e,t,f=0,n="",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}
 
-const AUDIO_PLAYER_CONTEXT_TRACK_ERROR = "useAudioPlayerContextTrack must be used within an AudioPlayerContextTrackProvider";
-const AudioPlayerContextTrack = React.createContext(null);
-
-function useAudioPlayerContextTrack() {
-  const context = React.useContext(AudioPlayerContextTrack);
-  if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_TRACK_ERROR);
-  }
-  return context;
-}
-
 function AudioPlayerAuthorPrimitive(props) {
   const { as: Element = "p", children, className, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -2540,6 +2540,7 @@ function AudioPlayerAuthorPrimitive(props) {
     }
   );
 }
+
 function AudioPlayerAuthor(props) {
   const { currentTrack: { author } = {} } = useAudioPlayerContextTrack();
   if (!author) return null;
@@ -2687,7 +2688,7 @@ function audioReducer(state, action) {
 
 function AudioPlayerContextAudioProvider(props) {
   const {
-    defaultVolume = 1,
+    defaultVolume = 50,
     defaultMute = false,
     defaultShuffle = false,
     defaultLoop = false,
@@ -2789,79 +2790,95 @@ function AudioPlayerContextProvider({
   ) });
 }
 
+function AudioPlayerControls(props) {
+  const { as: Element = "div", children, className, ...restProps } = props;
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    Element,
+    {
+      className: twMerge(clsx("flex items-center justify-center gap-1 p-4 text-2xl", className)),
+      ...restProps,
+      children
+    }
+  );
+}
+
 const SvgStarLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { viewBox: "0 0 16 16", xmlns: "http://www.w3.org/2000/svg", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8.00044 12.3471L3.10221 15.0889L4.19619 9.58317L0.0749512 5.77199L5.64928 5.11106L8.00044 0.0137939L10.3516 5.11106L15.9259 5.77199L11.8047 9.58317L12.8986 15.0889L8.00044 12.3471ZM8.00044 10.7555L10.9495 12.4062L10.2909 9.09136L12.7722 6.79671L9.416 6.39875L8.00044 3.32978L6.58485 6.39875L3.22865 6.79671L5.70997 9.09136L5.0513 12.4062L8.00044 10.7555Z" }));
-const ForwardRef$h = React.forwardRef(SvgStarLine);
+const ForwardRef$i = React.forwardRef(SvgStarLine);
 
 const SvgForwardEndFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M22 4C21.4477 4 21 4.44772 21 5V10.6665L11.7774 4.51806C11.6952 4.4633 11.5987 4.43408 11.5 4.43408C11.2239 4.43408 11 4.65794 11 4.93408V10.6665L1.77735 4.51806C1.69522 4.4633 1.59871 4.43408 1.5 4.43408C1.22386 4.43408 1 4.65794 1 4.93408V19.0656C1 19.1643 1.02922 19.2608 1.08397 19.3429C1.23715 19.5727 1.54759 19.6348 1.77735 19.4816L11 13.3332V19.0656C11 19.1643 11.0292 19.2608 11.084 19.3429C11.2372 19.5727 11.5476 19.6348 11.7774 19.4816L21 13.3332V19C21 19.5523 21.4477 20 22 20C22.5523 20 23 19.5523 23 19V5C23 4.44772 22.5523 4 22 4Z" }));
-const ForwardRef$g = React.forwardRef(SvgForwardEndFill);
+const ForwardRef$h = React.forwardRef(SvgForwardEndFill);
 
 const SvgPauseLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 3H8V21H6V3ZM16 3H18V21H16V3Z" }));
-const ForwardRef$f = React.forwardRef(SvgPauseLargeFill);
+const ForwardRef$g = React.forwardRef(SvgPauseLargeFill);
 
 const SvgPlayLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 20.1957V3.80421C6 3.01878 6.86395 2.53993 7.53 2.95621L20.6432 11.152C21.2699 11.5436 21.2699 12.4563 20.6432 12.848L7.53 21.0437C6.86395 21.46 6 20.9812 6 20.1957Z" }));
-const ForwardRef$e = React.forwardRef(SvgPlayLargeFill);
+const ForwardRef$f = React.forwardRef(SvgPlayLargeFill);
 
 const SvgRewindFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 10.6667L21.2227 4.51823C21.4524 4.36506 21.7629 4.42714 21.9161 4.65691C21.9708 4.73904 22 4.83554 22 4.93426V19.0657C22 19.3419 21.7762 19.5657 21.5 19.5657C21.4013 19.5657 21.3048 19.5365 21.2227 19.4818L12 13.3333V19.0657C12 19.3419 11.7762 19.5657 11.5 19.5657C11.4013 19.5657 11.3048 19.5365 11.2227 19.4818L0.62407 12.416C0.394306 12.2628 0.332219 11.9524 0.485395 11.7226C0.522013 11.6677 0.569144 11.6206 0.62407 11.584L11.2227 4.51823C11.4524 4.36506 11.7629 4.42714 11.9161 4.65691C11.9708 4.73904 12 4.83554 12 4.93426V10.6667Z" }));
-const ForwardRef$d = React.forwardRef(SvgRewindFill);
+const ForwardRef$e = React.forwardRef(SvgRewindFill);
 
 const SvgRewindStartFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 4C1.44772 4 1 4.44772 1 5V19C1 19.5523 1.44772 20 2 20C2.55228 20 3 19.5523 3 19V13.3332L12.2227 19.4816C12.3048 19.5364 12.4013 19.5656 12.5 19.5656C12.7762 19.5656 13 19.3418 13 19.0656V13.3332L22.2227 19.4816C22.3048 19.5364 22.4013 19.5656 22.5 19.5656C22.7762 19.5656 23 19.3418 23 19.0656V4.93413C23 4.83542 22.9708 4.73892 22.9161 4.65679C22.7629 4.42702 22.4524 4.36493 22.2227 4.51811L13 10.6665V4.93413C13 4.83542 12.9708 4.73892 12.9161 4.65679C12.7629 4.42702 12.4524 4.36493 12.2227 4.51811L3 10.6666V5C3 4.44772 2.55228 4 2 4Z" }));
-const ForwardRef$c = React.forwardRef(SvgRewindStartFill);
+const ForwardRef$d = React.forwardRef(SvgRewindStartFill);
 
 const SvgShuffleFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M18 17.8832V16L23 19L18 22V19.9095C14.9224 19.4698 12.2513 17.4584 11.0029 14.5453L11 14.5386L10.9971 14.5453C9.57893 17.8544 6.32508 20 2.72483 20H2V18H2.72483C5.52503 18 8.05579 16.3312 9.15885 13.7574L9.91203 12L9.15885 10.2426C8.05579 7.66878 5.52503 6 2.72483 6H2V4H2.72483C6.32508 4 9.57893 6.14557 10.9971 9.45473L11 9.46141L11.0029 9.45473C12.2513 6.5416 14.9224 4.53022 18 4.09051V2L23 5L18 8V6.11684C15.7266 6.53763 13.7737 8.0667 12.8412 10.2426L12.088 12L12.8412 13.7574C13.7737 15.9333 15.7266 17.4624 18 17.8832Z" }));
-const ForwardRef$b = React.forwardRef(SvgShuffleFill);
+const ForwardRef$c = React.forwardRef(SvgShuffleFill);
 
 const SvgSpeedFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 13.3334L2.77735 19.4818C2.54759 19.635 2.23715 19.5729 2.08397 19.3432C2.02922 19.261 2 19.1645 2 19.0658V4.93433C2 4.65818 2.22386 4.43433 2.5 4.43433C2.59871 4.43433 2.69522 4.46355 2.77735 4.5183L12 10.6667V4.93433C12 4.65818 12.2239 4.43433 12.5 4.43433C12.5987 4.43433 12.6952 4.46355 12.7774 4.5183L23.376 11.584C23.6057 11.7372 23.6678 12.0477 23.5146 12.2774C23.478 12.3323 23.4309 12.3795 23.376 12.4161L12.7774 19.4818C12.5476 19.635 12.2372 19.5729 12.084 19.3432C12.0292 19.261 12 19.1645 12 19.0658V13.3334Z" }));
-const ForwardRef$a = React.forwardRef(SvgSpeedFill);
+const ForwardRef$b = React.forwardRef(SvgSpeedFill);
 
 const SvgStopLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M3 4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4Z" }));
-const ForwardRef$9 = React.forwardRef(SvgStopLargeFill);
+const ForwardRef$a = React.forwardRef(SvgStopLargeFill);
 
 const SvgVolumeMuteFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M5.88889 16H2C1.44772 16 1 15.5523 1 15V9.00001C1 8.44772 1.44772 8.00001 2 8.00001H5.88889L11.1834 3.66815C11.3971 3.49329 11.7121 3.52479 11.887 3.73851C11.9601 3.82784 12 3.93971 12 4.05513V19.9449C12 20.221 11.7761 20.4449 11.5 20.4449C11.3846 20.4449 11.2727 20.405 11.1834 20.3319L5.88889 16ZM20.4142 12L23.9497 15.5355L22.5355 16.9498L19 13.4142L15.4645 16.9498L14.0503 15.5355L17.5858 12L14.0503 8.46447L15.4645 7.05026L19 10.5858L22.5355 7.05026L23.9497 8.46447L20.4142 12Z" }));
-const ForwardRef$8 = React.forwardRef(SvgVolumeMuteFill);
+const ForwardRef$9 = React.forwardRef(SvgVolumeMuteFill);
 
 const SvgVolumeDownFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8.88889 16H5C4.44772 16 4 15.5523 4 15V9.00001C4 8.44772 4.44772 8.00001 5 8.00001H8.88889L14.1834 3.66815C14.3971 3.49329 14.7121 3.52479 14.887 3.73851C14.9601 3.82784 15 3.93971 15 4.05513V19.9449C15 20.221 14.7761 20.4449 14.5 20.4449C14.3846 20.4449 14.2727 20.405 14.1834 20.3319L8.88889 16ZM18.8631 16.5911L17.4411 15.169C18.3892 14.4376 19 13.2901 19 12C19 10.5697 18.2493 9.31469 17.1203 8.6076L18.5589 7.169C20.0396 8.2616 21 10.0187 21 12C21 13.8422 20.1698 15.4904 18.8631 16.5911Z" }));
-const ForwardRef$7 = React.forwardRef(SvgVolumeDownFill);
+const ForwardRef$8 = React.forwardRef(SvgVolumeDownFill);
 
 const SvgVolumeUpFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 16.0001H5.88889L11.1834 20.3319C11.2727 20.405 11.3846 20.4449 11.5 20.4449C11.7761 20.4449 12 20.2211 12 19.9449V4.05519C12 3.93977 11.9601 3.8279 11.887 3.73857C11.7121 3.52485 11.3971 3.49335 11.1834 3.66821L5.88889 8.00007H2C1.44772 8.00007 1 8.44778 1 9.00007V15.0001C1 15.5524 1.44772 16.0001 2 16.0001ZM23 12C23 15.292 21.5539 18.2463 19.2622 20.2622L17.8445 18.8444C19.7758 17.1937 21 14.7398 21 12C21 9.26016 19.7758 6.80629 17.8445 5.15557L19.2622 3.73779C21.5539 5.75368 23 8.70795 23 12ZM18 12C18 10.0883 17.106 8.38548 15.7133 7.28673L14.2842 8.71584C15.3213 9.43855 16 10.64 16 12C16 13.36 15.3213 14.5614 14.2842 15.2841L15.7133 16.7132C17.106 15.6145 18 13.9116 18 12Z" }));
-const ForwardRef$6 = React.forwardRef(SvgVolumeUpFill);
+const ForwardRef$7 = React.forwardRef(SvgVolumeUpFill);
 
 const SvgRepeatFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 4H21C21.5523 4 22 4.44772 22 5V12H20V6H6V9L1 5L6 1V4ZM18 20H3C2.44772 20 2 19.5523 2 19V12H4V18H18V15L23 19L18 23V20Z" }));
-const ForwardRef$5 = React.forwardRef(SvgRepeatFill);
+const ForwardRef$6 = React.forwardRef(SvgRepeatFill);
 
 const SvgRepeatOneFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8 20V21.9325C8 22.2086 7.77614 22.4325 7.5 22.4325C7.38303 22.4325 7.26977 22.3915 7.17991 22.3166L3.06093 18.8841C2.84879 18.7073 2.82013 18.392 2.99691 18.1799C3.09191 18.0659 3.23264 18 3.38103 18H8L18 18C19.1046 18 20 17.1046 20 16V8H22V16C22 18.2091 20.2091 20 18 20H8ZM16 4V2.0675C16 1.79136 16.2239 1.5675 16.5 1.5675C16.617 1.5675 16.7302 1.60851 16.8201 1.68339L20.9391 5.11587C21.1512 5.29266 21.1799 5.60794 21.0031 5.82008C20.9081 5.93407 20.7674 5.99998 20.619 5.99998H16L6 6C4.89543 6 4 6.89543 4 8V16H2V8C2 5.79086 3.79086 4 6 4H16ZM11 8H13V16H11V10H9V9L11 8Z" }));
-const ForwardRef$4 = React.forwardRef(SvgRepeatOneFill);
+const ForwardRef$5 = React.forwardRef(SvgRepeatOneFill);
 
 const SvgRepeat2Fill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8 20V21.9325C8 22.2086 7.77614 22.4325 7.5 22.4325C7.38303 22.4325 7.26977 22.3915 7.17991 22.3166L3.06093 18.8841C2.84879 18.7073 2.82013 18.392 2.99691 18.1799C3.09191 18.0659 3.23264 18 3.38103 18L18 18C19.1046 18 20 17.1046 20 16V8H22V16C22 18.2091 20.2091 20 18 20H8ZM16 4V2.0675C16 1.79136 16.2239 1.5675 16.5 1.5675C16.617 1.5675 16.7302 1.60851 16.8201 1.68339L20.9391 5.11587C21.1512 5.29266 21.1799 5.60794 21.0031 5.82008C20.9081 5.93407 20.7674 5.99998 20.619 5.99998L6 6C4.89543 6 4 6.89543 4 8V16H2V8C2 5.79086 3.79086 4 6 4H16Z" }));
-const ForwardRef$3 = React.forwardRef(SvgRepeat2Fill);
+const ForwardRef$4 = React.forwardRef(SvgRepeat2Fill);
 
 const SvgDiscFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M13 9.17071C12.6872 9.06015 12.3506 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12V2.4578C19.0571 3.73207 22 7.52236 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C12.3375 2 12.6711 2.01672 13 2.04938V9.17071Z" }));
-const ForwardRef$2 = React.forwardRef(SvgDiscFill);
+const ForwardRef$3 = React.forwardRef(SvgDiscFill);
 
 const SvgPlayList2Fill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M22 18V20H2V18H22ZM2 3.5L10 8.5L2 13.5V3.5ZM22 11V13H12V11H22ZM22 4V6H12V4H22Z" }));
-const ForwardRef$1 = React.forwardRef(SvgPlayList2Fill);
+const ForwardRef$2 = React.forwardRef(SvgPlayList2Fill);
 
 const SvgPlayListAddFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 18H12V20H2V18ZM2 11H22V13H2V11ZM2 4H22V6H2V4ZM18 18V15H20V18H23V20H20V23H18V20H15V18H18Z" }));
-const ForwardRef = React.forwardRef(SvgPlayListAddFill);
+const ForwardRef$1 = React.forwardRef(SvgPlayListAddFill);
+
+const SvgCloseFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z" }));
+const ForwardRef = React.forwardRef(SvgCloseFill);
 
 const icons = {
-  "star-line": ForwardRef$h,
-  "forward-end-fill": ForwardRef$g,
-  "pause-large-fill": ForwardRef$f,
-  "play-large-fill": ForwardRef$e,
-  "repeat-fill": ForwardRef$5,
-  "repeat-one-fill": ForwardRef$4,
-  "repeat-2-fill": ForwardRef$3,
-  "rewind-fill": ForwardRef$d,
-  "rewind-start-fill": ForwardRef$c,
-  "shuffle-fill": ForwardRef$b,
-  "speed-fill": ForwardRef$a,
-  "stop-large-fill": ForwardRef$9,
-  "volume-mute-fill": ForwardRef$8,
-  "volume-down-fill": ForwardRef$7,
-  "volume-up-fill": ForwardRef$6,
-  "disc-fill": ForwardRef$2,
-  "play-list-2-fill": ForwardRef$1,
-  "play-list-add-line": ForwardRef
+  "star-line": ForwardRef$i,
+  "forward-end-fill": ForwardRef$h,
+  "pause-large-fill": ForwardRef$g,
+  "play-large-fill": ForwardRef$f,
+  "repeat-fill": ForwardRef$6,
+  "repeat-one-fill": ForwardRef$5,
+  "repeat-2-fill": ForwardRef$4,
+  "rewind-fill": ForwardRef$e,
+  "rewind-start-fill": ForwardRef$d,
+  "shuffle-fill": ForwardRef$c,
+  "speed-fill": ForwardRef$b,
+  "stop-large-fill": ForwardRef$a,
+  "volume-mute-fill": ForwardRef$9,
+  "volume-down-fill": ForwardRef$8,
+  "volume-up-fill": ForwardRef$7,
+  "disc-fill": ForwardRef$3,
+  "play-list-2-fill": ForwardRef$2,
+  "play-list-add-line": ForwardRef$1,
+  "close-fill": ForwardRef
 };
 
 function Icon(props) {
@@ -2874,473 +2891,6 @@ function Icon(props) {
       ...restProps
     }
   );
-}
-
-function useAudioPlayerContextRefs() {
-  const context = React.useContext(AudioPlayerContextRefs);
-  if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_REFS_ERROR);
-  }
-  return context;
-}
-
-function useAudioPlayerContextAudio() {
-  const context = React.useContext(AudioPlayerContextAudio);
-  if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_AUDIO_ERROR);
-  }
-  return context;
-}
-
-function useAudioPlayerControlPlay(props) {
-  const { isPlaying, audioRef, currentTrackIndex } = props;
-  React.useEffect(() => {
-    isPlaying ? audioRef?.current?.play() : audioRef?.current?.pause();
-  }, [audioRef, isPlaying, currentTrackIndex]);
-}
-
-function AudioPlayerControlButton(props) {
-  const { active = false, className, children, ...restProps } = props;
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "button",
-    {
-      className: twMerge(
-        clsx(
-          "rounded-md p-2 hover:bg-black/30",
-          "focus-within:outline-1 focus-within:outline-white focus:bg-black/30",
-          active && "bg-black/30",
-          className
-        )
-      ),
-      ...restProps,
-      children
-    }
-  );
-}
-
-function AudioPlayerControlPlayPrimitive(props) {
-  const { active = false, ...restProps } = props;
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlButton,
-    {
-      "aria-label": active ? "Pause" : "Play",
-      "aria-pressed": active,
-      ...restProps,
-      children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { name: active ? "pause-large-fill" : "play-large-fill" })
-    }
-  );
-}
-function AudioPlayerControlPlay(props) {
-  const { onClick, ...restProps } = props;
-  const { isPlaying, togglePlay } = useAudioPlayerContextAudio();
-  const { audioRef } = useAudioPlayerContextRefs();
-  const { currentTrackIndex } = useAudioPlayerContextTrack();
-  useAudioPlayerControlPlay({
-    isPlaying,
-    audioRef,
-    currentTrackIndex
-  });
-  const handleClick = React.useCallback(
-    (e) => {
-      togglePlay();
-      onClick?.(e);
-    },
-    [togglePlay, onClick]
-  );
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlPlayPrimitive,
-    {
-      active: isPlaying,
-      onClick: handleClick,
-      ...restProps
-    }
-  );
-}
-
-function AudioPlayerControlLoopPrimitive(props) {
-  const { active = false, className, ...restProps } = props;
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlButton,
-    {
-      className: twMerge(
-        clsx(
-          { "text-neutral-100/50": !active },
-          "hover:text-neutral-100",
-          "focus-within:text-neutral-100",
-          className
-        )
-      ),
-      "aria-label": "Toggle Loop",
-      "aria-pressed": active,
-      ...restProps,
-      children: /* @__PURE__ */ jsxRuntime.jsx(
-        Icon,
-        {
-          name: active ? "repeat-one-fill" : "repeat-2-fill",
-          className: "scale-75"
-        }
-      )
-    }
-  );
-}
-function AudioPlayerControlLoop(props) {
-  const { onClick, ...restProps } = props;
-  const { loop, toggleLoop } = useAudioPlayerContextAudio();
-  const handleClick = React.useCallback(
-    (e) => {
-      toggleLoop();
-      onClick?.(e);
-    },
-    [toggleLoop, onClick]
-  );
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlLoopPrimitive,
-    {
-      active: loop,
-      onClick: handleClick,
-      ...restProps
-    }
-  );
-}
-
-function AudioPlayerControlShufflePrimitive(props) {
-  const { active = false, className, ...restProps } = props;
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlButton,
-    {
-      className: twMerge(
-        clsx(
-          { "text-neutral-100/50": !active },
-          "hover:text-neutral-100",
-          "focus:text-neutral-100",
-          className
-        )
-      ),
-      "aria-label": "Toggle Shuffle",
-      "aria-pressed": active,
-      ...restProps,
-      children: /* @__PURE__ */ jsxRuntime.jsx(
-        Icon,
-        {
-          name: "shuffle-fill",
-          className: "scale-75"
-        }
-      )
-    }
-  );
-}
-function AudioPlayerControlShuffle(props) {
-  const { onClick, ...restProps } = props;
-  const { shuffle, toggleShuffle } = useAudioPlayerContextAudio();
-  const handleClick = React.useCallback(
-    (e) => {
-      toggleShuffle();
-      onClick?.(e);
-    },
-    [toggleShuffle, onClick]
-  );
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlShufflePrimitive,
-    {
-      active: shuffle,
-      onClick: handleClick,
-      ...restProps
-    }
-  );
-}
-
-function useAudioPlayerContextTime() {
-  const context = React.useContext(AudioPlayerContextTime);
-  if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_TIME_ERROR);
-  }
-  return context;
-}
-
-function useAudioPlayerMetadata({
-  audioRef,
-  progressBarRef,
-  onDurationChange
-}) {
-  const handleLoadedMetadata = React.useCallback(() => {
-    const seconds = audioRef.current?.duration;
-    if (typeof seconds !== "undefined") {
-      onDurationChange(seconds);
-      if (progressBarRef.current) {
-        progressBarRef.current.max = seconds.toString();
-      }
-    }
-  }, [audioRef, progressBarRef, onDurationChange]);
-  return { handleLoadedMetadata };
-}
-
-function setRef(ref, instance) {
-  if (!ref) return void 0;
-  if (typeof ref === "function") {
-    const result = ref(instance);
-    if (typeof result === "function") {
-      return result;
-    }
-  } else if ("current" in ref) {
-    ref.current = instance;
-  }
-  return void 0;
-}
-function composeRefs(...refs) {
-  return (instance) => {
-    const evaluatedRefs = refs.map((ref) => setRef(ref, instance));
-    return () => {
-      evaluatedRefs.forEach((value, index) => {
-        if (typeof value === "function") {
-          value();
-        } else {
-          setRef(refs[index], null);
-        }
-      });
-    };
-  };
-}
-function useComposedRefs(...refs) {
-  return React.useCallback(composeRefs(...refs), [refs]);
-}
-
-function AudioPlayerControlAudioPrimitive(props) {
-  const { src, onLoadedMetadata, ref, ...restProps } = props;
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    "audio",
-    {
-      ref,
-      src,
-      onLoadedMetadata,
-      ...restProps
-    }
-  );
-}
-function AudioPlayerControlAudio(props) {
-  const { onLoadedMetadata, ref, ...restProps } = props;
-  const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
-  const { setDuration } = useAudioPlayerContextTime();
-  const { currentTrack } = useAudioPlayerContextTrack();
-  const { mute } = useAudioPlayerContextAudio();
-  const { handleLoadedMetadata } = useAudioPlayerMetadata({
-    audioRef,
-    progressBarRef,
-    onDurationChange: setDuration
-  });
-  const handleMetadata = React.useCallback(
-    (event) => {
-      handleLoadedMetadata();
-      onLoadedMetadata?.(event);
-    },
-    [handleLoadedMetadata, onLoadedMetadata]
-  );
-  const composedRef = useComposedRefs(audioRef, ref);
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlAudioPrimitive,
-    {
-      ...restProps,
-      ref: composedRef,
-      src: currentTrack?.src,
-      onLoadedMetadata: handleMetadata,
-      muted: mute
-    }
-  );
-}
-
-function getNextIndex(currentIndex, tracksLength, direction) {
-  return (currentIndex + direction + tracksLength) % tracksLength;
-}
-function getRandomNumber(min, max, excludeArray = []) {
-  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-  if (excludeArray.includes(randomNumber)) {
-    return getRandomNumber(min, max, excludeArray);
-  }
-  return randomNumber;
-}
-
-function useAudioPlayerPreviousTrack({
-  loop,
-  shuffle,
-  currentTrackIndex,
-  tracksLength,
-  onTimeChange,
-  onTrackIndexChange,
-  audioRef
-}) {
-  const handlePreviousTrack = React.useCallback(() => {
-    if (audioRef?.current?.currentTime >= 1 || loop) {
-      onTimeChange(0);
-      audioRef.current.currentTime = 0;
-      return;
-    }
-    if (shuffle) {
-      const previousIndex2 = getRandomNumber(0, tracksLength - 1, [currentTrackIndex]);
-      return onTrackIndexChange(previousIndex2);
-    }
-    const previousIndex = getNextIndex(currentTrackIndex, tracksLength, -1);
-    onTrackIndexChange(previousIndex);
-  }, [currentTrackIndex, loop, onTimeChange, onTrackIndexChange, tracksLength, audioRef, shuffle]);
-  return {
-    handlePreviousTrack
-  };
-}
-
-function AudioPlayerControlPreviousPrimitive(props) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlButton,
-    {
-      "aria-label": "Previous Track",
-      ...props,
-      children: /* @__PURE__ */ jsxRuntime.jsx(
-        Icon,
-        {
-          name: "rewind-start-fill",
-          className: "scale-90"
-        }
-      )
-    }
-  );
-}
-function AudioPlayerControlPrevious(props) {
-  const { onClick, ...restProps } = props;
-  const { seek } = useAudioPlayerContextTime();
-  const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
-  const { loop, shuffle } = useAudioPlayerContextAudio();
-  const { audioRef } = useAudioPlayerContextRefs();
-  const { handlePreviousTrack } = useAudioPlayerPreviousTrack({
-    loop,
-    shuffle,
-    currentTrackIndex,
-    tracksLength: tracks.length,
-    onTimeChange: seek,
-    onTrackIndexChange: setTrackIndex,
-    audioRef
-  });
-  const handleClick = React.useCallback(
-    (e) => {
-      handlePreviousTrack();
-      onClick?.(e);
-    },
-    [handlePreviousTrack, onClick]
-  );
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlPreviousPrimitive,
-    {
-      onClick: handleClick,
-      ...restProps
-    }
-  );
-}
-
-function useAudioPlayerNextTrack({
-  loop,
-  shuffle,
-  currentTrackIndex,
-  tracksLength,
-  onTimeChange,
-  onTrackIndexChange,
-  audioRef
-}) {
-  const handleNextTrack = React.useCallback(() => {
-    if (loop) {
-      onTimeChange(0);
-      audioRef.current.currentTime = 0;
-      return;
-    }
-    if (shuffle) {
-      const nextIndex2 = getRandomNumber(0, tracksLength - 1, [currentTrackIndex]);
-      return onTrackIndexChange(nextIndex2);
-    }
-    const nextIndex = getNextIndex(currentTrackIndex, tracksLength, 1);
-    onTrackIndexChange(nextIndex);
-  }, [currentTrackIndex, loop, onTimeChange, onTrackIndexChange, tracksLength, audioRef, shuffle]);
-  React.useEffect(() => {
-    const currentAudioRef = audioRef.current;
-    if (!currentAudioRef) return;
-    const handleEnded = () => {
-      if (loop) {
-        currentAudioRef.play();
-        return;
-      }
-      handleNextTrack();
-    };
-    currentAudioRef.addEventListener("ended", handleEnded);
-    return () => {
-      currentAudioRef.removeEventListener("ended", handleEnded);
-    };
-  }, [audioRef, handleNextTrack, loop]);
-  return {
-    handleNextTrack
-  };
-}
-
-function AudioPlayerControlNextPrimitive(props) {
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlButton,
-    {
-      "aria-label": "Next Track",
-      ...props,
-      children: /* @__PURE__ */ jsxRuntime.jsx(
-        Icon,
-        {
-          name: "forward-end-fill",
-          className: "scale-90"
-        }
-      )
-    }
-  );
-}
-function AudioPlayerControlNext(props) {
-  const { onClick, ...restProps } = props;
-  const { audioRef } = useAudioPlayerContextRefs();
-  const { seek } = useAudioPlayerContextTime();
-  const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
-  const { loop, shuffle } = useAudioPlayerContextAudio();
-  const { handleNextTrack } = useAudioPlayerNextTrack({
-    loop,
-    shuffle,
-    currentTrackIndex,
-    tracksLength: tracks.length,
-    onTimeChange: seek,
-    onTrackIndexChange: setTrackIndex,
-    audioRef
-  });
-  const handleClick = React.useCallback(
-    (e) => {
-      handleNextTrack();
-      onClick?.(e);
-    },
-    [handleNextTrack, onClick]
-  );
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerControlNextPrimitive,
-    {
-      onClick: handleClick,
-      ...restProps
-    }
-  );
-}
-
-function AudioPlayerControlsPrimitive(props) {
-  const { as: Element = "div", children, className, ...restProps } = props;
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    Element,
-    {
-      className: twMerge(clsx("flex items-center justify-center gap-1 p-4 text-2xl", className)),
-      ...restProps,
-      children
-    }
-  );
-}
-function AudioPlayerControls(props) {
-  return /* @__PURE__ */ jsxRuntime.jsxs(AudioPlayerControlsPrimitive, { ...props, children: [
-    /* @__PURE__ */ jsxRuntime.jsx(AudioPlayerControlAudio, {}),
-    /* @__PURE__ */ jsxRuntime.jsx(AudioPlayerControlLoop, {}),
-    /* @__PURE__ */ jsxRuntime.jsx(AudioPlayerControlPrevious, {}),
-    /* @__PURE__ */ jsxRuntime.jsx(AudioPlayerControlPlay, {}),
-    /* @__PURE__ */ jsxRuntime.jsx(AudioPlayerControlNext, {}),
-    /* @__PURE__ */ jsxRuntime.jsx(AudioPlayerControlShuffle, {})
-  ] });
 }
 
 function AudioPlayerImagePrimitive(props) {
@@ -3376,6 +2926,7 @@ function AudioPlayerImagePrimitive(props) {
     }
   );
 }
+
 function AudioPlayerImage(props) {
   const { currentTrack: { thumbnail, title } = {} } = useAudioPlayerContextTrack();
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -3398,6 +2949,14 @@ function AudioPlayerInfo(props) {
       children
     }
   );
+}
+
+function useAudioPlayerContextRefs() {
+  const context = React.useContext(AudioPlayerContextRefs);
+  if (!context) {
+    throw new Error(AUDIO_PLAYER_CONTEXT_REFS_ERROR);
+  }
+  return context;
 }
 
 function useAudioPlayerProgressBar({
@@ -3452,6 +3011,52 @@ function useAudioPlayerProgressBar({
   return {
     handleProgressChange
   };
+}
+
+function useAudioPlayerContextTime() {
+  const context = React.useContext(AudioPlayerContextTime);
+  if (!context) {
+    throw new Error(AUDIO_PLAYER_CONTEXT_TIME_ERROR);
+  }
+  return context;
+}
+
+function useAudioPlayerContextAudio() {
+  const context = React.useContext(AudioPlayerContextAudio);
+  if (!context) {
+    throw new Error(AUDIO_PLAYER_CONTEXT_AUDIO_ERROR);
+  }
+  return context;
+}
+
+function setRef(ref, instance) {
+  if (!ref) return void 0;
+  if (typeof ref === "function") {
+    const result = ref(instance);
+    if (typeof result === "function") {
+      return result;
+    }
+  } else if ("current" in ref) {
+    ref.current = instance;
+  }
+  return void 0;
+}
+function composeRefs(...refs) {
+  return (instance) => {
+    const evaluatedRefs = refs.map((ref) => setRef(ref, instance));
+    return () => {
+      evaluatedRefs.forEach((value, index) => {
+        if (typeof value === "function") {
+          value();
+        } else {
+          setRef(refs[index], null);
+        }
+      });
+    };
+  };
+}
+function useComposedRefs(...refs) {
+  return React.useCallback(composeRefs(...refs), [refs]);
 }
 
 function AudioPlayerProgressBarPrimitive(props) {
@@ -3524,6 +3129,7 @@ function AudioPlayerProgressBarPrimitive(props) {
     }
   );
 }
+
 function AudioPlayerProgressBar(props) {
   const { onChange, ref, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
@@ -4626,7 +4232,6 @@ function formatAudioDurationForDisplay(audioDurationInSeconds = 0) {
   const formatWithZero = (num) => String(num).padStart(2, "0");
   return [hours, minutes, seconds].filter(isDefined).map(formatWithZero).join(":");
 }
-
 function useAudioPlayerTime(props) {
   const { currentTime, duration } = props;
   return {
@@ -4655,6 +4260,7 @@ function AudioPlayerTimePrimitive(props) {
     }
   );
 }
+
 function AudioPlayerTime(props) {
   const { currentTime, duration } = useAudioPlayerContextTime();
   const { currentTimeDisplay, durationDisplay } = useAudioPlayerTime({ currentTime, duration });
@@ -4679,6 +4285,7 @@ function AudioPlayerTitlePrimitive(props) {
     }
   );
 }
+
 function AudioPlayerTitle(props) {
   const { currentTrack: { title } = {} } = useAudioPlayerContextTrack();
   if (!title) return null;
@@ -4692,16 +4299,37 @@ function AudioPlayerTitle(props) {
   );
 }
 
-const VOLUME_ICON_PROPERTIES = {
-  MUTE: { name: "volume-mute-fill", label: "Volume Muted" },
-  LOW: { name: "volume-down-fill", label: "Volume Low" },
-  HIGH: { name: "volume-up-fill", label: "Volume High" }
-};
-function getVolumeIconProperties(volume, isMuted) {
-  if (isMuted || volume < 5) return VOLUME_ICON_PROPERTIES.MUTE;
-  if (volume >= 40) return VOLUME_ICON_PROPERTIES.HIGH;
-  return VOLUME_ICON_PROPERTIES.LOW;
+function AudioPlayerVolume(props) {
+  const { as: Element = "div", className, children, ...restProps } = props;
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    Element,
+    {
+      className: twMerge(clsx("flex items-center gap-2", className)),
+      ...restProps,
+      children
+    }
+  );
 }
+
+function AudioPlayerControlButton(props) {
+  const { active = false, className, children, ...restProps } = props;
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    "button",
+    {
+      className: twMerge(
+        clsx(
+          "rounded-md p-2 hover:bg-black/30",
+          "focus-within:outline-1 focus-within:outline-white focus:bg-black/30",
+          active && "bg-black/30",
+          className
+        )
+      ),
+      ...restProps,
+      children
+    }
+  );
+}
+
 function AudioPlayerVolumeButtonPrimitive(props) {
   const { iconName, title, className, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -4713,6 +4341,17 @@ function AudioPlayerVolumeButtonPrimitive(props) {
       children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { name: iconName })
     }
   );
+}
+
+const VOLUME_ICON_PROPERTIES = {
+  MUTE: { name: "volume-mute-fill", label: "Volume Muted" },
+  LOW: { name: "volume-down-fill", label: "Volume Low" },
+  HIGH: { name: "volume-up-fill", label: "Volume High" }
+};
+function getVolumeIconProperties(volume, isMuted) {
+  if (isMuted || volume < 5) return VOLUME_ICON_PROPERTIES.MUTE;
+  if (volume >= 40) return VOLUME_ICON_PROPERTIES.HIGH;
+  return VOLUME_ICON_PROPERTIES.LOW;
 }
 function AudioPlayerVolumeButton(props) {
   const { onClick, ...restProps } = props;
@@ -4738,30 +4377,6 @@ function AudioPlayerVolumeButton(props) {
   );
 }
 
-function AudioPlayerVolumeSlider(props) {
-  const { onChange, ...restProps } = props;
-  const { volume, setVolume } = useAudioPlayerContextAudio();
-  const { audioRef } = useAudioPlayerContextRefs();
-  const handleVolumeChange = React.useCallback(
-    (e) => {
-      const newVolume = Number(e.target.value);
-      setVolume(newVolume);
-      onChange?.(e);
-      if (audioRef.current) {
-        audioRef.current.volume = newVolume / 100;
-      }
-    },
-    [onChange, setVolume, audioRef]
-  );
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerVolumeSliderPrimitive,
-    {
-      ...restProps,
-      value: volume,
-      onChange: handleVolumeChange
-    }
-  );
-}
 function AudioPlayerVolumeSliderPrimitive(props) {
   const { className, min = 0, max = 100, value, orientation = "horizontal", ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -4838,25 +4453,403 @@ function AudioPlayerVolumeSliderPrimitive(props) {
   );
 }
 
-function AudioPlayerVolumePrimitive(props) {
-  const { as: Element = "div", className, children, ...restProps } = props;
+function updateAudioVolume(audio, volume) {
+  if (!audio) return;
+  audio.volume = volume / 100;
+}
+function AudioPlayerVolumeSlider(props) {
+  const { onChange, ...restProps } = props;
+  const { volume, setVolume } = useAudioPlayerContextAudio();
+  const { audioRef } = useAudioPlayerContextRefs();
+  const handleVolumeChange = React.useCallback(
+    (e) => {
+      const newVolume = Number(e.target.value);
+      setVolume(newVolume);
+      onChange?.(e);
+      updateAudioVolume(audioRef.current, newVolume);
+    },
+    [onChange, setVolume, audioRef]
+  );
   return /* @__PURE__ */ jsxRuntime.jsx(
-    Element,
+    AudioPlayerVolumeSliderPrimitive,
     {
-      className: twMerge(clsx("flex items-center gap-2", className)),
       ...restProps,
-      children
+      value: volume,
+      onChange: handleVolumeChange
     }
   );
 }
-function AudioPlayerVolume(props) {
-  return /* @__PURE__ */ jsxRuntime.jsxs(AudioPlayerVolumePrimitive, { ...props, children: [
-    /* @__PURE__ */ jsxRuntime.jsx(AudioPlayerVolumeButton, {}),
-    /* @__PURE__ */ jsxRuntime.jsx(AudioPlayerVolumeSlider, {})
-  ] });
+
+function useAudioPlayerMetadata({
+  audioRef,
+  progressBarRef,
+  onDurationChange
+}) {
+  const handleLoadedMetadata = React.useCallback(() => {
+    const seconds = audioRef.current?.duration;
+    if (typeof seconds !== "undefined") {
+      onDurationChange(seconds);
+      if (progressBarRef.current) {
+        progressBarRef.current.max = seconds.toString();
+      }
+    }
+  }, [audioRef, progressBarRef, onDurationChange]);
+  return { handleLoadedMetadata };
 }
 
-function AudioPlayerPrimitive(props) {
+function AudioPlayerControlAudioPrimitive(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx("audio", { ...props });
+}
+
+function AudioPlayerControlAudio(props) {
+  const { onLoadedMetadata, ref, ...restProps } = props;
+  const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
+  const { setDuration } = useAudioPlayerContextTime();
+  const { currentTrack } = useAudioPlayerContextTrack();
+  const { mute } = useAudioPlayerContextAudio();
+  const { handleLoadedMetadata } = useAudioPlayerMetadata({
+    audioRef,
+    progressBarRef,
+    onDurationChange: setDuration
+  });
+  const handleMetadata = React.useCallback(
+    (event) => {
+      handleLoadedMetadata();
+      onLoadedMetadata?.(event);
+    },
+    [handleLoadedMetadata, onLoadedMetadata]
+  );
+  const composedRef = useComposedRefs(audioRef, ref);
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlAudioPrimitive,
+    {
+      ...restProps,
+      ref: composedRef,
+      src: currentTrack?.src,
+      onLoadedMetadata: handleMetadata,
+      muted: mute
+    }
+  );
+}
+
+function useAudioPlayerControlPlay(props) {
+  const { isPlaying, audioRef, currentTrackIndex } = props;
+  React.useEffect(() => {
+    isPlaying ? audioRef?.current?.play() : audioRef?.current?.pause();
+  }, [audioRef, isPlaying, currentTrackIndex]);
+}
+
+function AudioPlayerControlPlayPrimitive(props) {
+  const { active = false, ...restProps } = props;
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlButton,
+    {
+      "aria-label": active ? "Pause" : "Play",
+      "aria-pressed": active,
+      ...restProps,
+      children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { name: active ? "pause-large-fill" : "play-large-fill" })
+    }
+  );
+}
+
+function AudioPlayerControlPlay(props) {
+  const { onClick, ...restProps } = props;
+  const { isPlaying, togglePlay } = useAudioPlayerContextAudio();
+  const { audioRef } = useAudioPlayerContextRefs();
+  const { currentTrackIndex } = useAudioPlayerContextTrack();
+  useAudioPlayerControlPlay({
+    isPlaying,
+    audioRef,
+    currentTrackIndex
+  });
+  const handleClick = React.useCallback(
+    (e) => {
+      togglePlay();
+      onClick?.(e);
+    },
+    [togglePlay, onClick]
+  );
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlPlayPrimitive,
+    {
+      active: isPlaying,
+      onClick: handleClick,
+      ...restProps
+    }
+  );
+}
+
+function getNextIndex(currentIndex, tracksLength, direction) {
+  return (currentIndex + direction + tracksLength) % tracksLength;
+}
+function getRandomNumber(min, max, excludeArray = []) {
+  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+  if (excludeArray.includes(randomNumber)) {
+    return getRandomNumber(min, max, excludeArray);
+  }
+  return randomNumber;
+}
+
+function useAudioPlayerPreviousTrack({
+  loop,
+  shuffle,
+  currentTrackIndex,
+  tracksLength,
+  onTimeChange,
+  onTrackIndexChange,
+  audioRef
+}) {
+  const handlePreviousTrack = React.useCallback(() => {
+    if (audioRef?.current?.currentTime >= 1 || loop) {
+      onTimeChange(0);
+      audioRef.current.currentTime = 0;
+      return;
+    }
+    if (shuffle) {
+      const previousIndex2 = getRandomNumber(0, tracksLength - 1, [currentTrackIndex]);
+      return onTrackIndexChange(previousIndex2);
+    }
+    const previousIndex = getNextIndex(currentTrackIndex, tracksLength, -1);
+    onTrackIndexChange(previousIndex);
+  }, [currentTrackIndex, loop, onTimeChange, onTrackIndexChange, tracksLength, audioRef, shuffle]);
+  return {
+    handlePreviousTrack
+  };
+}
+
+function AudioPlayerControlPreviousPrimitive(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlButton,
+    {
+      "aria-label": "Previous Track",
+      ...props,
+      children: /* @__PURE__ */ jsxRuntime.jsx(
+        Icon,
+        {
+          name: "rewind-start-fill",
+          className: "scale-90"
+        }
+      )
+    }
+  );
+}
+
+function AudioPlayerControlPrevious(props) {
+  const { onClick, ...restProps } = props;
+  const { seek } = useAudioPlayerContextTime();
+  const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
+  const { loop, shuffle } = useAudioPlayerContextAudio();
+  const { audioRef } = useAudioPlayerContextRefs();
+  const { handlePreviousTrack } = useAudioPlayerPreviousTrack({
+    loop,
+    shuffle,
+    currentTrackIndex,
+    tracksLength: tracks.length,
+    onTimeChange: seek,
+    onTrackIndexChange: setTrackIndex,
+    audioRef
+  });
+  const handleClick = React.useCallback(
+    (e) => {
+      handlePreviousTrack();
+      onClick?.(e);
+    },
+    [handlePreviousTrack, onClick]
+  );
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlPreviousPrimitive,
+    {
+      onClick: handleClick,
+      ...restProps
+    }
+  );
+}
+
+function useAudioPlayerNextTrack({
+  loop,
+  shuffle,
+  currentTrackIndex,
+  tracksLength,
+  onTimeChange,
+  onTrackIndexChange,
+  audioRef
+}) {
+  const handleNextTrack = React.useCallback(() => {
+    if (loop) {
+      onTimeChange(0);
+      audioRef.current.currentTime = 0;
+      return;
+    }
+    if (shuffle) {
+      const nextIndex2 = getRandomNumber(0, tracksLength - 1, [currentTrackIndex]);
+      return onTrackIndexChange(nextIndex2);
+    }
+    const nextIndex = getNextIndex(currentTrackIndex, tracksLength, 1);
+    onTrackIndexChange(nextIndex);
+  }, [currentTrackIndex, loop, onTimeChange, onTrackIndexChange, tracksLength, audioRef, shuffle]);
+  React.useEffect(() => {
+    const currentAudioRef = audioRef.current;
+    if (!currentAudioRef) return;
+    const handleEnded = () => {
+      if (loop) {
+        currentAudioRef.play();
+        return;
+      }
+      handleNextTrack();
+    };
+    currentAudioRef.addEventListener("ended", handleEnded);
+    return () => {
+      currentAudioRef.removeEventListener("ended", handleEnded);
+    };
+  }, [audioRef, handleNextTrack, loop]);
+  return {
+    handleNextTrack
+  };
+}
+
+function AudioPlayerControlNextPrimitive(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlButton,
+    {
+      "aria-label": "Next Track",
+      ...props,
+      children: /* @__PURE__ */ jsxRuntime.jsx(
+        Icon,
+        {
+          name: "forward-end-fill",
+          className: "scale-90"
+        }
+      )
+    }
+  );
+}
+
+function AudioPlayerControlNext(props) {
+  const { onClick, ...restProps } = props;
+  const { audioRef } = useAudioPlayerContextRefs();
+  const { seek } = useAudioPlayerContextTime();
+  const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
+  const { loop, shuffle } = useAudioPlayerContextAudio();
+  const { handleNextTrack } = useAudioPlayerNextTrack({
+    loop,
+    shuffle,
+    currentTrackIndex,
+    tracksLength: tracks.length,
+    onTimeChange: seek,
+    onTrackIndexChange: setTrackIndex,
+    audioRef
+  });
+  const handleClick = React.useCallback(
+    (e) => {
+      handleNextTrack();
+      onClick?.(e);
+    },
+    [handleNextTrack, onClick]
+  );
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlNextPrimitive,
+    {
+      onClick: handleClick,
+      ...restProps
+    }
+  );
+}
+
+function AudioPlayerControlShufflePrimitive(props) {
+  const { active = false, className, ...restProps } = props;
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlButton,
+    {
+      className: twMerge(
+        clsx(
+          { "text-neutral-100/50": !active },
+          "hover:text-neutral-100",
+          "focus:text-neutral-100",
+          className
+        )
+      ),
+      "aria-label": "Toggle Shuffle",
+      "aria-pressed": active,
+      ...restProps,
+      children: /* @__PURE__ */ jsxRuntime.jsx(
+        Icon,
+        {
+          name: "shuffle-fill",
+          className: "scale-75"
+        }
+      )
+    }
+  );
+}
+
+function AudioPlayerControlShuffle(props) {
+  const { onClick, ...restProps } = props;
+  const { shuffle, toggleShuffle } = useAudioPlayerContextAudio();
+  const handleClick = React.useCallback(
+    (e) => {
+      toggleShuffle();
+      onClick?.(e);
+    },
+    [toggleShuffle, onClick]
+  );
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlShufflePrimitive,
+    {
+      active: shuffle,
+      onClick: handleClick,
+      ...restProps
+    }
+  );
+}
+
+function AudioPlayerControlLoopPrimitive(props) {
+  const { active = false, className, ...restProps } = props;
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlButton,
+    {
+      className: twMerge(
+        clsx(
+          { "text-neutral-100/50": !active },
+          "hover:text-neutral-100",
+          "focus-within:text-neutral-100",
+          className
+        )
+      ),
+      "aria-label": "Toggle Loop",
+      "aria-pressed": active,
+      ...restProps,
+      children: /* @__PURE__ */ jsxRuntime.jsx(
+        Icon,
+        {
+          name: active ? "repeat-one-fill" : "repeat-2-fill",
+          className: "scale-75"
+        }
+      )
+    }
+  );
+}
+
+function AudioPlayerControlLoop(props) {
+  const { onClick, ...restProps } = props;
+  const { loop, toggleLoop } = useAudioPlayerContextAudio();
+  const handleClick = React.useCallback(
+    (e) => {
+      toggleLoop();
+      onClick?.(e);
+    },
+    [toggleLoop, onClick]
+  );
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    AudioPlayerControlLoopPrimitive,
+    {
+      active: loop,
+      onClick: handleClick,
+      ...restProps
+    }
+  );
+}
+
+function AudioPlayer(props) {
   const { as: Element = "div", children, className, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
     Element,
@@ -4870,20 +4863,10 @@ function AudioPlayerPrimitive(props) {
     }
   );
 }
-function AudioPlayer(props) {
-  const { tracks, defaultTrackIndex = 0, defaultVolume = 50, ...restProps } = props;
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioPlayerContextProvider,
-    {
-      tracks,
-      defaultTrackIndex,
-      defaultVolume,
-      children: /* @__PURE__ */ jsxRuntime.jsx(AudioPlayerPrimitive, { ...restProps })
-    }
-  );
-}
-AudioPlayer.displayName = "AudioPlayer";
-const AudioPlayerCompoundComponent = Object.assign(AudioPlayer, {
+
+const AudioPlayerCompoundComponent = {
+  Root: Object.assign(AudioPlayer, { displayName: "AudioPlayer.Root" }),
+  Provider: Object.assign(AudioPlayerContextProvider, { displayName: "AudioPlayer.Provider" }),
   Author: Object.assign(AudioPlayerAuthor, { displayName: "AudioPlayer.Author" }),
   Controls: Object.assign(AudioPlayerControls, { displayName: "AudioPlayer.Controls" }),
   Image: Object.assign(AudioPlayerImage, { displayName: "AudioPlayer.Image" }),
@@ -4892,15 +4875,9 @@ const AudioPlayerCompoundComponent = Object.assign(AudioPlayer, {
   Time: Object.assign(AudioPlayerTime, { displayName: "AudioPlayer.Time" }),
   Title: Object.assign(AudioPlayerTitle, { displayName: "AudioPlayer.Title" }),
   Volume: Object.assign(AudioPlayerVolume, { displayName: "AudioPlayer.Volume" }),
-  VolumeButton: Object.assign(AudioPlayerVolumeButton, {
-    displayName: "AudioPlayer.VolumeButton"
-  }),
-  VolumeSlider: Object.assign(AudioPlayerVolumeSlider, {
-    displayName: "AudioPlayer.VolumeSlider"
-  }),
-  ControlAudio: Object.assign(AudioPlayerControlAudio, {
-    displayName: "AudioPlayer.ControlAudio"
-  }),
+  VolumeButton: Object.assign(AudioPlayerVolumeButton, { displayName: "AudioPlayer.VolumeButton" }),
+  VolumeSlider: Object.assign(AudioPlayerVolumeSlider, { displayName: "AudioPlayer.VolumeSlider" }),
+  ControlAudio: Object.assign(AudioPlayerControlAudio, { displayName: "AudioPlayer.ControlAudio" }),
   ControlPlay: Object.assign(AudioPlayerControlPlay, { displayName: "AudioPlayer.ControlPlay" }),
   ControlPrevious: Object.assign(AudioPlayerControlPrevious, {
     displayName: "AudioPlayer.ControlPrevious"
@@ -4910,8 +4887,7 @@ const AudioPlayerCompoundComponent = Object.assign(AudioPlayer, {
     displayName: "AudioPlayer.ControlShuffle"
   }),
   ControlLoop: Object.assign(AudioPlayerControlLoop, { displayName: "AudioPlayer.ControlLoop" })
-});
-AudioPlayerCompoundComponent.displayName = "AudioPlayer";
+};
 
 const falsyToString = (value)=>typeof value === "boolean" ? `${value}` : value === 0 ? "0" : value;
 const cx = clsx;
@@ -5124,11 +5100,10 @@ exports.AudioPlayerContextRefsProvider = AudioPlayerContextRefsProvider;
 exports.AudioPlayerContextTimeProvider = AudioPlayerContextTimeProvider;
 exports.AudioPlayerContextTrackProvider = AudioPlayerContextTrackProvider;
 exports.AudioPlayerControls = AudioPlayerControls;
-exports.AudioPlayerControlsPrimitive = AudioPlayerControlsPrimitive;
 exports.AudioPlayerImage = AudioPlayerImage;
 exports.AudioPlayerImagePrimitive = AudioPlayerImagePrimitive;
 exports.AudioPlayerInfo = AudioPlayerInfo;
-exports.AudioPlayerPrimitive = AudioPlayerPrimitive;
+exports.AudioPlayerPrimitive = AudioPlayer;
 exports.AudioPlayerProgressBar = AudioPlayerProgressBar;
 exports.AudioPlayerProgressBarPrimitive = AudioPlayerProgressBarPrimitive;
 exports.AudioPlayerTime = AudioPlayerTime;
@@ -5136,10 +5111,10 @@ exports.AudioPlayerTimePrimitive = AudioPlayerTimePrimitive;
 exports.AudioPlayerTitle = AudioPlayerTitle;
 exports.AudioPlayerTitlePrimitive = AudioPlayerTitlePrimitive;
 exports.AudioPlayerVolume = AudioPlayerVolume;
-exports.AudioPlayerVolumePrimitive = AudioPlayerVolumePrimitive;
 exports.Badge = Badge;
 exports.Button = Button;
 exports.Icon = Icon;
+exports.formatAudioDurationForDisplay = formatAudioDurationForDisplay;
 exports.useAudioPlayerContextAudio = useAudioPlayerContextAudio;
 exports.useAudioPlayerContextRefs = useAudioPlayerContextRefs;
 exports.useAudioPlayerContextTime = useAudioPlayerContextTime;

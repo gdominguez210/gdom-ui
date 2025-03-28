@@ -1,3 +1,28 @@
+# [1.19.0](https://github.com/gdominguez210/gdom-ui/compare/v1.18.0...v1.19.0) (2025-03-28)
+
+
+### Bug Fixes
+
+* **lib/AudioPlayerContextAudioProvider:** change defaultVolume to 50 ([2092f6e](https://github.com/gdominguez210/gdom-ui/commit/2092f6effb82038409360badab4b8226cbeb0710))
+* **lib/AudioPlayerVolumeSlider:** add updateVolumeAudio function to not directly mutate audioRef value and comply with React compiler rules ([ec6dac2](https://github.com/gdominguez210/gdom-ui/commit/ec6dac284fe2beec3de8fa68977a1bf56ab48756))
+
+
+### Features
+
+* **lib/AudioPlaylist:** add AudioPlaylist component ([c1648fa](https://github.com/gdominguez210/gdom-ui/commit/c1648faeeb774ebef620bdf134dc36543bc8834e))
+* **lib/AudioPlaylist:** add AudioPlaylist component ([3ae72fd](https://github.com/gdominguez210/gdom-ui/commit/3ae72fd1d6c6b16ee10b11f86b5618a2391dd2c3))
+* **lib/AudioPlaylistContextProvider:** add AudioPlaylistContextProvider ([fe0dc16](https://github.com/gdominguez210/gdom-ui/commit/fe0dc163184ad6cae9a76027118264b8e5c5d54b))
+* **lib/AudioPlaylistControlToggle:** add AudioPlaylistControlToggle ([2f05711](https://github.com/gdominguez210/gdom-ui/commit/2f0571141e8e3e18591a30e23cbbf7c84e6ab220))
+* **lib/AudioPlaylistDimiss:** add AudioPlaylistDismiss component ([dcac6fe](https://github.com/gdominguez210/gdom-ui/commit/dcac6fec265123f3ddd60fd1ecc52e19b4205103))
+* **lib/AudioPlaylistExpandableContainer:** add AudioPlaylistExpandableContainer component ([aa246b7](https://github.com/gdominguez210/gdom-ui/commit/aa246b748bfe8429f17bfc844a2e26df20aac87a))
+* **lib/AudioPlaylistHeader:** add AudioPlaylistHeader component ([de83eb6](https://github.com/gdominguez210/gdom-ui/commit/de83eb6ec4e7f02b1b202953f4f506b7d2f29758))
+* **lib/AudioPlaylistTrack:** add AudioPlaylistTrack component ([8c87f1a](https://github.com/gdominguez210/gdom-ui/commit/8c87f1a1f1833b2b1ffbff4b5306b311d4d6b910))
+* **lib/AudioPlaylistTrackAuthor:** add AudioPlaylistTrackAuthor component ([22e33a2](https://github.com/gdominguez210/gdom-ui/commit/22e33a2d386ef7f155e8e2b79f825a6a8873de59))
+* **lib/AudioPlaylistTrackImage:** add AudioPlaylistTrackImage component ([4e603d3](https://github.com/gdominguez210/gdom-ui/commit/4e603d38548375870c8e5063997980c7bfd19641))
+* **lib/AudioPlaylistTracks:** add AudioPlaylistTracks component ([2b7e141](https://github.com/gdominguez210/gdom-ui/commit/2b7e1415d5f8e0ac646e28e2accdb666969a93c8))
+* **lib/AudioPlaylistTrackTitle:** add AudioPlaylistTrackTitle component ([80df51d](https://github.com/gdominguez210/gdom-ui/commit/80df51d6ce0e2ae6690f1751436950a9127dc221))
+* **lib/Icon/data:** add close-fill icon ([fdb04b1](https://github.com/gdominguez210/gdom-ui/commit/fdb04b19f5754e5cdaf18f634842b22048703979))
+
 # [1.18.0](https://github.com/gdominguez210/gdom-ui/compare/v1.17.0...v1.18.0) (2025-03-25)
 
 

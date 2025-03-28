@@ -9,7 +9,13 @@ import { RefAttributes } from 'react';
 import { RefObject } from 'react';
 import { SVGProps } from 'react';
 
-export declare const AudioPlayer: typeof AudioPlayer_2 & {
+export declare const AudioPlayer: {
+    Root: typeof AudioPlayerPrimitive & {
+        displayName: string;
+    };
+    Provider: typeof AudioPlayerContextProvider & {
+        displayName: string;
+    };
     Author: typeof AudioPlayerAuthor & {
         displayName: string;
     };
@@ -61,15 +67,6 @@ export declare const AudioPlayer: typeof AudioPlayer_2 & {
 };
 
 /**
- * Main audio player component with context provider
- */
-declare function AudioPlayer_2<T extends ElementType = 'div'>(props: AudioPlayerProps<T>): JSX.Element;
-
-declare namespace AudioPlayer_2 {
-    var displayName: string;
-}
-
-/**
  * Displays the author of the current audio track
  * Returns null if no author is available
  */
@@ -78,7 +75,12 @@ export declare function AudioPlayerAuthor<T extends ElementType = 'p'>(props: Au
 /**
  * Base component for displaying author information with appropriate styling
  */
-export declare function AudioPlayerAuthorPrimitive<T extends ElementType>(props: AudioPlayerAuthorProps<T>): JSX.Element;
+export declare function AudioPlayerAuthorPrimitive<T extends ElementType = 'p'>(props: AudioPlayerAuthorPrimitiveProps<T>): JSX.Element;
+
+/**
+ * Props for the AudioPlayerAuthorPrimitive component
+ */
+export declare type AudioPlayerAuthorPrimitiveProps<T extends ElementType = 'p'> = AudioPlayerAuthorProps<T>;
 
 /**
  * Props for the track author component
@@ -240,9 +242,6 @@ declare type AudioPlayerControlLoopProps = Omit<AudioPlayerControlLoopPrimitiveP
  */
 declare function AudioPlayerControlNext(props: AudioPlayerControlNextProps): JSX.Element;
 
-/**
- * Props for the next track control button
- */
 declare type AudioPlayerControlNextProps = ComponentPropsWithRef<'button'>;
 
 /**
@@ -268,13 +267,10 @@ declare type AudioPlayerControlPlayProps = Omit<AudioPlayerControlPlayPrimitiveP
  */
 declare function AudioPlayerControlPrevious(props: AudioPlayerControlPreviousProps): JSX.Element;
 
-/**
- * Props for the previous track control button
- */
 declare type AudioPlayerControlPreviousProps = ComponentPropsWithRef<'button'>;
 
 /**
- * Main playback controls component with play/pause, prev/next, loop and shuffle
+ * Base component for laying out audio player controls
  */
 export declare function AudioPlayerControls<T extends ElementType>(props: AudioPlayerControlsProps<T>): JSX.Element;
 
@@ -297,11 +293,6 @@ declare interface AudioPlayerControlShufflePrimitiveProps extends ComponentProps
 declare type AudioPlayerControlShuffleProps = Omit<AudioPlayerControlShufflePrimitiveProps, 'active'>;
 
 /**
- * Base component for laying out audio player controls
- */
-export declare function AudioPlayerControlsPrimitive<T extends ElementType>(props: AudioPlayerControlsProps<T>): JSX.Element;
-
-/**
  * Props for the playback controls container
  */
 export declare type AudioPlayerControlsProps<T extends ElementType = 'div'> = {
@@ -318,10 +309,12 @@ export declare function AudioPlayerImage<T extends ElementType = 'div'>(props: A
 /**
  * Base component for displaying an audio track image or placeholder
  */
-export declare function AudioPlayerImagePrimitive<T extends ElementType>(props: AudioPlayerImageProps<T> & {
+export declare function AudioPlayerImagePrimitive<T extends ElementType>(props: AudioPlayerImagePrimitiveProps<T>): JSX.Element;
+
+export declare type AudioPlayerImagePrimitiveProps<T extends ElementType = 'div'> = AudioPlayerImageProps<T> & {
     src: string;
     altText: string;
-}): JSX.Element;
+};
 
 /**
  * Props for the audio track image component
@@ -371,24 +364,17 @@ export declare function AudioPlayerProgressBar(props: AudioPlayerProgressBarProp
 /**
  * Base component for displaying and styling the audio progress bar
  */
-export declare function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarProps): JSX.Element;
+export declare function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarPrimitiveProps): JSX.Element;
+
+/**
+ * Props for the progress bar component
+ */
+export declare type AudioPlayerProgressBarPrimitiveProps = AudioPlayerProgressBarProps;
 
 /**
  * Props for the progress bar component
  */
 export declare type AudioPlayerProgressBarProps = Omit<ComponentPropsWithRef<'input'>, 'type'>;
-
-/**
- * Props for the main audio player component
- */
-export declare type AudioPlayerProps<T extends ElementType = 'div'> = AudioPlayerPrimitiveProps<T> & {
-    /** Initial track index to play @default 0 */
-    defaultTrackIndex?: number;
-    /** Initial volume level @default 50 */
-    defaultVolume?: number;
-    /** Array of tracks to play */
-    tracks: AudioTrackData[];
-};
 
 /**
  * Displays the current playback time and total duration from context
@@ -430,6 +416,8 @@ export declare function AudioPlayerTitle<T extends ElementType>(props: AudioPlay
  */
 export declare function AudioPlayerTitlePrimitive<T extends ElementType>(props: AudioPlayerTitleProps<T>): JSX.Element;
 
+export declare type AudioPlayerTitlePrimitiveProps<T extends ElementType = 'p'> = AudioPlayerTitleProps<T>;
+
 /**
  * Props for the track title component
  */
@@ -446,7 +434,7 @@ export declare type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
 } & ComponentPropsWithRef<T>;
 
 /**
- * Volume control with button and slider
+ * Base container component for volume controls
  */
 export declare function AudioPlayerVolume<T extends ElementType = 'div'>(props: AudioPlayerVolumeProps<T>): JSX.Element;
 
@@ -459,11 +447,6 @@ declare function AudioPlayerVolumeButton(props: AudioPlayerVolumeButtonProps): J
  * Props for the volume control button
  */
 declare type AudioPlayerVolumeButtonProps = ComponentPropsWithRef<'button'>;
-
-/**
- * Base container component for volume controls
- */
-export declare function AudioPlayerVolumePrimitive<T extends ElementType = 'div'>(props: AudioPlayerVolumeProps<T>): JSX.Element;
 
 /**
  * Props for the volume control component
@@ -529,6 +512,8 @@ declare interface CommonButtonProps extends React.ButtonHTMLAttributes<HTMLButto
     size?: Size;
 }
 
+export declare function formatAudioDurationForDisplay(audioDurationInSeconds?: number): string;
+
 export declare function Icon(props: IconProps): JSX.Element;
 
 declare type iconButtonAccessibleProps = {
@@ -568,6 +553,7 @@ declare const icons: {
     readonly 'disc-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
     readonly 'play-list-2-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
     readonly 'play-list-add-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'close-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
 };
 
 declare type Size = SizesAsTypes[number];
