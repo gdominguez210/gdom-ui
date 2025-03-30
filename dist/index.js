@@ -2937,6 +2937,14 @@ function useAudioPlayerContextRefs() {
   return context;
 }
 
+function updateProgressBar(progressBar, value) {
+  if (!progressBar) return;
+  progressBar.value = value.toString();
+}
+function updateAudioCurrentTime(audio, time) {
+  if (!audio) return;
+  audio.currentTime = time;
+}
 function useAudioPlayerProgressBar({
   audioRef,
   cssVariableName = "--range-progress",
@@ -2949,7 +2957,7 @@ function useAudioPlayerProgressBar({
   const handleProgressChange = useCallback(() => {
     if (!audioRef.current || !progressBarRef.current) return;
     const newTime = Number(progressBarRef.current.value);
-    audioRef.current.currentTime = newTime;
+    updateAudioCurrentTime(audioRef.current, newTime);
     onProgressChange(newTime);
     progressBarRef.current.style.setProperty(cssVariableName, `${newTime / duration * 100}%`);
   }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
@@ -2957,7 +2965,7 @@ function useAudioPlayerProgressBar({
     if (!audioRef.current || !progressBarRef.current || !duration) return;
     const currentTime = audioRef.current.currentTime;
     onProgressChange(currentTime);
-    progressBarRef.current.value = currentTime.toString();
+    updateProgressBar(progressBarRef.current, currentTime);
     progressBarRef.current.style.setProperty(cssVariableName, `${currentTime / duration * 100}%`);
   }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
   const startAnimation = useCallback(() => {

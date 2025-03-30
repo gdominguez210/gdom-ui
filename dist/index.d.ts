@@ -570,6 +570,10 @@ export declare function useAudioPlayerContextTime(): AudioPlayerContextTimeType;
 
 export declare function useAudioPlayerContextTrack(): AudioPlayerContextTrackType;
 
+/**
+ * Custom hook for managing audio player progress bar
+ * Handles progress bar value updates and animation
+ */
 export declare function useAudioPlayerProgressBar({ audioRef, cssVariableName, duration, isPlaying, onProgressChange, progressBarRef, }: UseAudioPlayerProgressBarProps): {
     handleProgressChange: ChangeEventHandler<HTMLInputElement>;
 };

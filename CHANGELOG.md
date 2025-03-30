@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/gdominguez210/gdom-ui/compare/v1.19.0...v1.19.1) (2025-03-30)
+
+
+### Bug Fixes
+
+* **lib/AudioPlayerProgressBar/useAudioPlayerProgressBar:** add utility functions to update audio and progressBar refs ([c5cc127](https://github.com/gdominguez210/gdom-ui/commit/c5cc127ddcd805774b8f2011e263e68c7fad5b64))
+
 # [1.19.0](https://github.com/gdominguez210/gdom-ui/compare/v1.18.0...v1.19.0) (2025-03-28)
 
 
