@@ -9,6 +9,28 @@ interface UseAudioPlayerProgressBarProps {
   progressBarRef: RefObject<HTMLInputElement | null>;
 }
 
+/**
+ * Updates an HTML input range element's value
+ * This helper function avoids direct mutation of refs in component callbacks
+ */
+function updateProgressBar(progressBar: HTMLInputElement | null, value: number): void {
+  if (!progressBar) return;
+  progressBar.value = value.toString();
+}
+
+/**
+ * Updates an HTML audio element's current time
+ * This helper function avoids direct mutation of refs in component callbacks
+ */
+function updateAudioCurrentTime(audio: HTMLAudioElement | null, time: number): void {
+  if (!audio) return;
+  audio.currentTime = time;
+}
+
+/**
+ * Custom hook for managing audio player progress bar
+ * Handles progress bar value updates and animation
+ */
 export function useAudioPlayerProgressBar({
   audioRef,
   cssVariableName = '--range-progress',
@@ -23,7 +45,7 @@ export function useAudioPlayerProgressBar({
     if (!audioRef.current || !progressBarRef.current) return;
 
     const newTime = Number(progressBarRef.current.value);
-    audioRef.current.currentTime = newTime;
+    updateAudioCurrentTime(audioRef.current, newTime);
     onProgressChange(newTime);
 
     progressBarRef.current.style.setProperty(cssVariableName, `${(newTime / duration) * 100}%`);
@@ -35,7 +57,7 @@ export function useAudioPlayerProgressBar({
     const currentTime = audioRef.current.currentTime;
     onProgressChange(currentTime);
 
-    progressBarRef.current.value = currentTime.toString();
+    updateProgressBar(progressBarRef.current, currentTime);
     progressBarRef.current.style.setProperty(cssVariableName, `${(currentTime / duration) * 100}%`);
   }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
 
