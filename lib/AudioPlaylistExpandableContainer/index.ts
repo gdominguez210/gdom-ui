@@ -7,3 +7,8 @@ export {
   AudioPlaylistExpandableContainerPrimitive,
   type AudioPlaylistExpandableContainerPrimitiveProps,
 } from './AudioPlaylistExpandableContainerPrimitive';
+
+export {
+  useAudioPlaylistExpandableContainer,
+  type useAudioPlayerExpandableContainer,
+} from './useAudioPlaylistExpandableContainer';
