@@ -1,6 +1,12 @@
 'use client';
 
-import { type ElementType, type MouseEvent as ReactMouseEvent, type SyntheticEvent } from 'react';
+import {
+  type ElementType,
+  type MouseEvent as ReactMouseEvent,
+  type SyntheticEvent,
+  type KeyboardEvent,
+  useCallback,
+} from 'react';
 import { type ComponentPropsWithRef } from 'react';
 import { AudioPlaylistTrackTitle } from '@lib/AudioPlaylistTrackTitle';
 import { AudioPlaylistTrackAuthor } from '@lib/AudioPlaylistTrackAuthor';
@@ -46,10 +52,23 @@ export function AudioPlaylistTrack<T extends ElementType = 'li'>(
     ...restProps
   } = props;
 
-  const handleClick = (e: ReactMouseEvent) => {
-    e.preventDefault();
-    onSelect?.(e);
-  };
+  const handleClick = useCallback(
+    (e: ReactMouseEvent) => {
+      e.preventDefault();
+      onSelect?.(e);
+    },
+    [onSelect],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLElement>) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onSelect?.(e);
+      }
+    },
+    [onSelect],
+  );
 
   return (
     <AudioPlaylistTrackPrimitive
@@ -57,6 +76,7 @@ export function AudioPlaylistTrack<T extends ElementType = 'li'>(
       aria-label={`Play ${title} by ${author}`}
       {...(restProps as AudioPlaylistTrackPrimitiveProps<T>)}
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
     >
       <AudioPlaylistTrackImage
         src={thumbnail}
