@@ -8,7 +8,7 @@ export interface AudioPlaylistContextType {
   isPlaylistVisible: boolean;
   togglePlaylist: () => void;
   toggleRef: RefObject<HTMLButtonElement | null>;
-  dismissRef: RefObject<HTMLButtonElement | null>;
+  expandableContainerRef: RefObject<HTMLElement | null>;
   tracks: AudioTrackData[];
 }
 
