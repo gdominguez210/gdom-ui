@@ -8,6 +8,7 @@ import { PropsWithChildren } from 'react';
 import { RefAttributes } from 'react';
 import { RefObject } from 'react';
 import { SVGProps } from 'react';
+import { SyntheticEvent } from 'react';
 
 export declare const AudioPlayer: {
     Root: typeof AudioPlayerPrimitive & {
@@ -477,6 +478,270 @@ declare type AudioPlayerVolumeSliderPrimitiveProps = Omit<ComponentPropsWithRef<
 
 declare type AudioPlayerVolumeSliderProps = Omit<AudioPlayerVolumeSliderPrimitiveProps, 'value'>;
 
+export declare const AudioPlaylist: {
+    Root: typeof AudioPlaylistPrimitive & {
+        displayName: string;
+    };
+    Provider: typeof AudioPlaylistContextProvider & {
+        displayName: string;
+    };
+    Header: typeof AudioPlaylistHeader & {
+        displayName: string;
+    };
+    Dismiss: typeof AudioPlaylistDismiss & {
+        displayName: string;
+    };
+    Tracks: typeof AudioPlaylistTracks & {
+        displayName: string;
+    };
+    ControlToggle: typeof AudioPlaylistControlToggle & {
+        displayName: string;
+    };
+    Track: typeof AudioPlaylistTrack & {
+        displayName: string;
+    };
+    TrackTitle: typeof AudioPlaylistTrackTitle & {
+        displayName: string;
+    };
+    TrackAuthor: typeof AudioPlaylistTrackAuthor & {
+        displayName: string;
+    };
+    TrackImage: typeof AudioPlaylistTrackImage & {
+        displayName: string;
+    };
+    ExpandableContainer: typeof AudioPlaylistExpandableContainer & {
+        displayName: string;
+    };
+};
+
+/**
+ * Provider component for managing playlist visibility state and references
+ */
+export declare function AudioPlaylistContextProvider(props: AudioPlaylistContextProviderProps): JSX.Element;
+
+/**
+ * Props for the audio playlist context provider
+ */
+export declare type AudioPlaylistContextProviderProps = PropsWithChildren & {
+    /**
+     * Whether the playlist is initially visible
+     * @default false
+     */
+    defaultVisible?: boolean;
+    /**
+     * The tracks to display in the playlist
+     */
+    tracks: AudioTrackData[];
+};
+
+export declare interface AudioPlaylistContextType {
+    isPlaylistVisible: boolean;
+    togglePlaylist: () => void;
+    toggleRef: RefObject<HTMLButtonElement | null>;
+    expandableContainerRef: RefObject<HTMLElement | null>;
+    tracks: AudioTrackData[];
+}
+
+/**
+ * Toggle button for showing/hiding the audio playlist
+ */
+export declare function AudioPlaylistControlToggle(props: AudioPlaylistControlToggleProps): JSX.Element;
+
+/**
+ * Button component for toggling playlist visibility
+ */
+export declare function AudioPlaylistControlTogglePrimitive(props: AudioPlaylistControlTogglePrimitiveProps): JSX.Element;
+
+/**
+ * Props for the playlist toggle button primitive component
+ */
+export declare type AudioPlaylistControlTogglePrimitiveProps = ComponentPropsWithRef<'button'> & {
+    /** Whether the playlist is currently expanded/visible */
+    active?: boolean;
+};
+
+/**
+ * Props for the playlist toggle component
+ */
+export declare type AudioPlaylistControlToggleProps = Omit<AudioPlaylistControlTogglePrimitiveProps, 'active'>;
+
+/**
+ * Dismiss button that integrates with the playlist toggle context
+ */
+export declare function AudioPlaylistDismiss(props: AudioPlaylistDismissProps): JSX.Element;
+
+/**
+ * Button component for dismissing/closing the playlist
+ */
+export declare function AudioPlaylistDismissPrimitive(props: AudioPlaylistDismissPrimitiveProps): JSX.Element;
+
+/**
+ * Props for the audio playlist dismiss button primitive component
+ */
+export declare type AudioPlaylistDismissPrimitiveProps = ComponentPropsWithRef<'button'>;
+
+/**
+ * Props for the playlist dismiss component
+ */
+export declare type AudioPlaylistDismissProps = AudioPlaylistDismissPrimitiveProps;
+
+/**
+ * Container component that connects to AudioPlaylistContext and expands/collapses based on context state
+ * This component is a client component as it uses React hooks and context
+ */
+export declare function AudioPlaylistExpandableContainer<T extends ElementType = 'div'>(props: AudioPlaylistExpandableContainerProps<T>): JSX.Element;
+
+/**
+ * Primitive container component that can expand/collapse its content
+ * This component is purely presentational and can be server-rendered
+ */
+export declare function AudioPlaylistExpandableContainerPrimitive<T extends ElementType = 'div'>(props: AudioPlaylistExpandableContainerPrimitiveProps<T>): JSX.Element;
+
+/**
+ * Props for the expandable container primitive component
+ */
+export declare type AudioPlaylistExpandableContainerPrimitiveProps<T extends ElementType = 'div'> = AudioPlaylistExpandableContainerProps<T> & {
+    isExpanded?: boolean;
+};
+
+/**
+ * Props for the context-connected expandable container component - same as primitive
+ * but without the isExpanded prop which comes from context
+ */
+export declare type AudioPlaylistExpandableContainerProps<T extends ElementType = 'div'> = {
+    /** Element to render as @default div */
+    as?: T;
+} & ComponentPropsWithRef<T>;
+
+/**
+ * Header component for playlist with consistent styling
+ */
+export declare function AudioPlaylistHeader<T extends ElementType = 'div'>(props: AudioPlaylistHeaderProps<T>): JSX.Element;
+
+/**
+ * Props for the audio playlist header component
+ */
+export declare type AudioPlaylistHeaderProps<T extends ElementType = 'div'> = {
+    /** Element to render as @default div */
+    as?: T;
+} & ComponentPropsWithRef<T>;
+
+/**
+ * Base component for displaying a playlist of audio tracks, providing the essential markup
+ */
+export declare function AudioPlaylistPrimitive<T extends ElementType = 'div'>(props: AudioPlaylistPropsPrimitive<T>): JSX.Element;
+
+/**
+ * Props for the audio playlist primitive component
+ */
+export declare type AudioPlaylistPropsPrimitive<T extends ElementType = 'div'> = {
+    /** Element to render as @default div */
+    as?: T;
+} & ComponentPropsWithRef<T>;
+
+/**
+ * Individual playlist track component
+ */
+export declare function AudioPlaylistTrack<T extends ElementType = 'li'>(props: AudioPlaylistTrackProps<T>): JSX.Element;
+
+/**
+ * Track author component specifically styled for playlist tracks
+ */
+export declare function AudioPlaylistTrackAuthor<T extends ElementType = 'span'>(props: AudioPlaylistTrackAuthorProps<T>): JSX.Element;
+
+/**
+ * Props for the audio playlist track author component
+ */
+export declare type AudioPlaylistTrackAuthorProps<T extends ElementType = 'span'> = {
+    /** Element to render as @default span */
+    as?: T;
+} & ComponentPropsWithRef<T>;
+
+/**
+ * Component for displaying an audio playlist track image
+ */
+export declare function AudioPlaylistTrackImage(props: AudioPlaylistTrackImageProps): JSX.Element;
+
+/**
+ * Props for the audio playlist track image component
+ */
+export declare type AudioPlaylistTrackImageProps<T extends ElementType = 'div'> = AudioPlayerImagePrimitiveProps<T> & {
+    active?: boolean;
+    isPlaying?: boolean;
+};
+
+/**
+ * Primitive component for rendering a single playlist track item
+ */
+export declare function AudioPlaylistTrackPrimitive<T extends ElementType = 'li'>(props: AudioPlaylistTrackPrimitiveProps<T>): JSX.Element;
+
+/**
+ * Props for the audio playlist track primitive component
+ */
+export declare type AudioPlaylistTrackPrimitiveProps<T extends ElementType = 'li'> = {
+    /** Element to render as @default li */
+    as?: T;
+    /** Whether the track is active */
+    active?: boolean;
+} & ComponentPropsWithRef<T>;
+
+/**
+ * Props for the audio playlist track component
+ */
+export declare type AudioPlaylistTrackProps<T extends ElementType = 'li'> = {
+    /** Element to render as @default li */
+    as?: T;
+    /** Title of the track */
+    title: string;
+    /** Author of the track */
+    author: string;
+    /** URL to the track thumbnail image */
+    thumbnail?: string;
+    /** Whether this is the active track */
+    active?: boolean;
+    /** Whether audio is currently playing */
+    isPlaying?: boolean;
+    /** Handler for track selection */
+    onSelect?: (e: SyntheticEvent) => void;
+} & ComponentPropsWithRef<T>;
+
+/**
+ * Component for rendering the scrollable list of playlist tracks,
+ * connected to audio player context
+ */
+export declare function AudioPlaylistTracks<T extends ElementType = 'ul'>(props: AudioPlaylistTracksProps<T>): JSX.Element | null;
+
+/**
+ * Primitive component for rendering the scrollable list of playlist tracks
+ */
+export declare function AudioPlaylistTracksPrimitive<T extends ElementType = 'ul'>(props: AudioPlaylistTracksPrimitiveProps<T>): JSX.Element;
+
+/**
+ * Props for the audio playlist tracks primitive component
+ */
+export declare type AudioPlaylistTracksPrimitiveProps<T extends ElementType = 'ul'> = {
+    /** Element to render as @default ul */
+    as?: T;
+} & ComponentPropsWithRef<T>;
+
+/**
+ * Props for the audio playlist tracks component
+ */
+export declare type AudioPlaylistTracksProps<T extends ElementType = 'ul'> = AudioPlaylistTracksPrimitiveProps<T>;
+
+/**
+ * Track title component specifically styled for playlist tracks
+ */
+export declare function AudioPlaylistTrackTitle<T extends ElementType = 'span'>(props: AudioPlaylistTrackTitleProps<T>): JSX.Element;
+
+/**
+ * Props for the audio playlist track title component
+ */
+export declare type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> = {
+    /** Element to render as @default span */
+    as?: T;
+} & ComponentPropsWithRef<T>;
+
 declare type AudioTrackData = {
     title: string;
     src: string;
@@ -570,6 +835,13 @@ export declare function useAudioPlayerContextTime(): AudioPlayerContextTimeType;
 
 export declare function useAudioPlayerContextTrack(): AudioPlayerContextTrackType;
 
+export declare type useAudioPlayerExpandableContainer = {
+    isPlaylistVisible: boolean;
+    containerRef: RefObject<HTMLElement | null>;
+    toggleRef: RefObject<HTMLElement | null>;
+    onClose?: () => void;
+};
+
 /**
  * Custom hook for managing audio player progress bar
  * Handles progress bar value updates and animation
@@ -594,6 +866,13 @@ export declare function useAudioPlayerTime(props: {
     currentTimeDisplay: string;
     durationDisplay: string;
 };
+
+/**
+ * Hook to access playlist context for managing visibility and references
+ */
+export declare function useAudioPlaylistContext(): AudioPlaylistContextType;
+
+export declare function useAudioPlaylistExpandableContainer(props: useAudioPlayerExpandableContainer): void;
 
 declare type Variant = VariantsAsTypes[number];
 

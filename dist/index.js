@@ -1,6 +1,6 @@
-import { jsx } from 'react/jsx-runtime';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import * as React from 'react';
-import { createContext, useContext, useRef, useMemo, useReducer, useCallback, forwardRef, useEffect } from 'react';
+import { createContext, useContext, useRef, useMemo, useReducer, useCallback, forwardRef, useEffect, useState } from 'react';
 
 const AUDIO_PLAYER_CONTEXT_TRACK_ERROR = "useAudioPlayerContextTrack must be used within an AudioPlayerContextTrackProvider";
 const AudioPlayerContextTrack = createContext(null);
@@ -4841,7 +4841,10 @@ function AudioPlayer(props) {
     Element,
     {
       className: twMerge(
-        clsx("flex flex-col justify-center bg-slate-700 text-neutral-100", className)
+        clsx(
+          "flex flex-col justify-center overflow-hidden rounded-md bg-slate-700 text-neutral-100"
+        ),
+        className
       ),
       tabIndex: -1,
       ...restProps,
@@ -4873,6 +4876,545 @@ const AudioPlayerCompoundComponent = {
     displayName: "AudioPlayer.ControlShuffle"
   }),
   ControlLoop: Object.assign(AudioPlayerControlLoop, { displayName: "AudioPlayer.ControlLoop" })
+};
+
+function AudioPlaylist(props) {
+  const { as: Element = "div", className, children, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    Element,
+    {
+      className: twMerge(clsx("flex flex-col border-slate-600 bg-slate-800", className)),
+      ...restProps,
+      children
+    }
+  );
+}
+
+const AUDIO_PLAYLIST_CONTEXT_ERROR = "useAudioPlaylistContext must be used within an AudioPlaylistContextProvider";
+const AudioPlaylistContext = createContext(null);
+
+function AudioPlaylistContextProvider(props) {
+  const { children, defaultVisible = false, tracks } = props;
+  const [isPlaylistVisible, setIsPlaylistVisible] = useState(defaultVisible);
+  const toggleRef = useRef(null);
+  const expandableContainerRef = useRef(null);
+  const togglePlaylist = useCallback(() => {
+    setIsPlaylistVisible((prev) => !prev);
+  }, []);
+  const contextValue = useMemo(
+    () => ({ isPlaylistVisible, togglePlaylist, toggleRef, expandableContainerRef, tracks }),
+    [isPlaylistVisible, togglePlaylist, tracks]
+  );
+  return /* @__PURE__ */ jsx(AudioPlaylistContext.Provider, { value: contextValue, children });
+}
+
+function useAudioPlaylistContext() {
+  const context = useContext(AudioPlaylistContext);
+  if (!context) {
+    throw new Error(AUDIO_PLAYLIST_CONTEXT_ERROR);
+  }
+  return context;
+}
+
+function AudioPlaylistTrackTitle(props) {
+  const { as, className, children, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    AudioPlayerTitlePrimitive,
+    {
+      as,
+      className: twMerge(clsx("text-sm font-medium leading-tight", className)),
+      ...restProps,
+      children
+    }
+  );
+}
+
+function AudioPlaylistTrackAuthor(props) {
+  const { as, className, children, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    AudioPlayerAuthorPrimitive,
+    {
+      as,
+      className: twMerge(clsx("text-xs", className)),
+      ...restProps,
+      children
+    }
+  );
+}
+
+function AudioPlaylistTrackImage(props) {
+  const {
+    src,
+    altText,
+    active = false,
+    isPlaying = false,
+    width = 48,
+    height = 48,
+    className,
+    ...restProps
+  } = props;
+  return /* @__PURE__ */ jsxs("div", { className: "group relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md", children: [
+    /* @__PURE__ */ jsx(
+      AudioPlayerImagePrimitive,
+      {
+        src,
+        altText,
+        width,
+        height,
+        className: clsx("h-full w-full rounded-md", { "border-2 border-white": active }, className),
+        ...restProps
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: clsx("absolute inset-0 flex items-center justify-center transition-opacity", {
+          "opacity-100": active,
+          "opacity-0 group-hover:opacity-100 group-focus:opacity-100": !active
+        }),
+        children: /* @__PURE__ */ jsx(
+          AudioPlayerControlPlayPrimitive,
+          {
+            tabIndex: -1,
+            active: active && isPlaying,
+            className: "border-none bg-transparent p-0 text-xl shadow-none hover:bg-transparent focus:bg-transparent focus:outline-none"
+          }
+        )
+      }
+    )
+  ] });
+}
+
+function AudioPlaylistTrackPrimitive(props) {
+  const { active, as: Element = "li", children, className, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    Element,
+    {
+      tabIndex: 0,
+      role: "button",
+      "aria-pressed": active,
+      className: twMerge(
+        clsx(
+          "flex cursor-pointer items-center gap-3 rounded-md p-2 transition-colors duration-200 focus-within:outline-white",
+          {
+            "bg-black/50": active,
+            "hover:bg-black/30 focus-visible:bg-black/30": !active
+          },
+          className
+        )
+      ),
+      ...restProps,
+      children
+    }
+  );
+}
+
+function AudioPlaylistTrack(props) {
+  const {
+    title,
+    author,
+    thumbnail = "",
+    active = false,
+    isPlaying = false,
+    onSelect,
+    ...restProps
+  } = props;
+  const handleClick = (e) => {
+    e.preventDefault();
+    onSelect?.(e);
+  };
+  return /* @__PURE__ */ jsxs(
+    AudioPlaylistTrackPrimitive,
+    {
+      active,
+      "aria-label": `Play ${title} by ${author}`,
+      ...restProps,
+      onClick: handleClick,
+      children: [
+        /* @__PURE__ */ jsx(
+          AudioPlaylistTrackImage,
+          {
+            src: thumbnail,
+            altText: title,
+            active,
+            isPlaying
+          }
+        ),
+        /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsx(AudioPlaylistTrackTitle, { children: title }),
+          /* @__PURE__ */ jsx(AudioPlaylistTrackAuthor, { children: author })
+        ] })
+      ]
+    }
+  );
+}
+
+function AudioPlaylistTracksPrimitive(props) {
+  const { as: Element = "ul", className, children, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    Element,
+    {
+      className: twMerge(clsx("flex flex-col gap-2 p-4", className)),
+      ...restProps,
+      children
+    }
+  );
+}
+
+function AudioPlaylistTracks(props) {
+  const { onClick, ...restProps } = props;
+  const { tracks, currentTrackIndex, setTrackIndex } = useAudioPlayerContextTrack();
+  const { isPlaying, play, togglePlay } = useAudioPlayerContextAudio();
+  const handleTrackSelect = (index) => (e) => {
+    setTrackIndex(index);
+    currentTrackIndex === index ? togglePlay() : play();
+    onClick?.(e);
+  };
+  if (!tracks?.length) return null;
+  return /* @__PURE__ */ jsx(AudioPlaylistTracksPrimitive, { ...restProps, children: tracks.map(({ src, title, author, thumbnail }, index) => /* @__PURE__ */ jsx(
+    AudioPlaylistTrack,
+    {
+      title,
+      author,
+      thumbnail,
+      active: index === currentTrackIndex,
+      isPlaying,
+      onSelect: handleTrackSelect(index)
+    },
+    `${src}-${index}`
+  )) });
+}
+
+function AudioPlaylistHeader(props) {
+  const { as: Element = "div", className, children, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    Element,
+    {
+      className: twMerge(
+        clsx(
+          "flex items-center justify-between border-b border-slate-700 p-4 text-lg font-medium",
+          className
+        )
+      ),
+      ...restProps,
+      children
+    }
+  );
+}
+
+function AudioPlaylistDismissPrimitive(props) {
+  const { className, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    AudioPlayerControlButton,
+    {
+      "aria-label": "Close playlist",
+      className: twMerge(clsx("text-2xl", className)),
+      ...restProps,
+      children: /* @__PURE__ */ jsx(Icon, { name: "close-fill" })
+    }
+  );
+}
+
+function AudioPlaylistDismiss(props) {
+  const { className, onClick, ...restProps } = props;
+  const { togglePlaylist } = useAudioPlaylistContext();
+  const handleClick = useCallback(
+    (e) => {
+      togglePlaylist();
+      onClick?.(e);
+    },
+    [togglePlaylist, onClick]
+  );
+  return /* @__PURE__ */ jsx(
+    AudioPlaylistDismissPrimitive,
+    {
+      onClick: handleClick,
+      className,
+      ...restProps
+    }
+  );
+}
+
+function AudioPlaylistControlTogglePrimitive(props) {
+  const { active = false, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    AudioPlayerControlButton,
+    {
+      active,
+      "aria-label": active ? "Hide playlist" : "Show playlist",
+      "aria-expanded": active,
+      ...restProps,
+      children: /* @__PURE__ */ jsx(Icon, { name: "play-list-2-fill" })
+    }
+  );
+}
+
+function AudioPlaylistControlToggle(props) {
+  const { onClick, ref, ...restProps } = props;
+  const { isPlaylistVisible, togglePlaylist, toggleRef } = useAudioPlaylistContext();
+  const handleClick = useCallback(
+    (e) => {
+      togglePlaylist();
+      onClick?.(e);
+    },
+    [togglePlaylist, onClick]
+  );
+  const composedRef = useComposedRefs(toggleRef, ref);
+  return /* @__PURE__ */ jsx(
+    AudioPlaylistControlTogglePrimitive,
+    {
+      ref: composedRef,
+      active: isPlaylistVisible,
+      onClick: handleClick,
+      ...restProps
+    }
+  );
+}
+
+function AudioPlaylistExpandableContainerPrimitive(props) {
+  const { as: Element = "div", isExpanded, children, className, ...restProps } = props;
+  return /* @__PURE__ */ jsx(
+    Element,
+    {
+      className: twMerge(
+        clsx(
+          "relative overflow-hidden shadow-lg transition-all duration-300",
+          {
+            "max-h-[300px] opacity-100": isExpanded,
+            "pointer-events-none max-h-0 opacity-0": !isExpanded
+          },
+          className
+        )
+      ),
+      "aria-hidden": !isExpanded,
+      ...restProps,
+      children
+    }
+  );
+}
+
+function getFirstFocusableElement(element) {
+  const selector = 'a[href]:not([disabled]), button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), details:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  return element.querySelector(selector);
+}
+function useFocusFirstElement({ containerRef, shouldFocus }) {
+  const firstFocusableElementRef = useRef(null);
+  useEffect(() => {
+    if (!containerRef.current || !shouldFocus) return;
+    const container = containerRef.current;
+    firstFocusableElementRef.current = getFirstFocusableElement(container);
+    if (!firstFocusableElementRef.current) return;
+    const styles = window.getComputedStyle(container);
+    const hasTransition = parseFloat(styles.transitionDuration) > 0;
+    const hasAnimation = parseFloat(styles.animationDuration) > 0 && styles.animationName !== "none";
+    const handleVisualEffectEnd = (e) => {
+      if (e.target === containerRef.current && firstFocusableElementRef.current) {
+        firstFocusableElementRef.current.focus();
+      }
+    };
+    if (hasTransition) {
+      container.addEventListener("transitionend", handleVisualEffectEnd);
+    }
+    if (hasAnimation) {
+      container.addEventListener("animationend", handleVisualEffectEnd);
+    }
+    if (!hasTransition && !hasAnimation) {
+      firstFocusableElementRef.current.focus();
+    }
+    return () => {
+      container.removeEventListener("transitionend", handleVisualEffectEnd);
+      container.removeEventListener("animationend", handleVisualEffectEnd);
+    };
+  }, [containerRef, shouldFocus]);
+  return {
+    focus: () => {
+      if (firstFocusableElementRef.current) {
+        firstFocusableElementRef.current.focus();
+      }
+    },
+    hasFocusableElement: () => firstFocusableElementRef.current !== null
+  };
+}
+
+function useFocusElement({
+  containerRef,
+  elementToFocus,
+  shouldFocus
+}) {
+  useEffect(() => {
+    if (!containerRef.current || !elementToFocus.current || !shouldFocus) return;
+    const container = containerRef.current;
+    const element = elementToFocus.current;
+    const styles = window.getComputedStyle(container);
+    const hasTransition = parseFloat(styles.transitionDuration) > 0;
+    const hasAnimation = parseFloat(styles.animationDuration) > 0 && styles.animationName !== "none";
+    const handleVisualEffectEnd = (e) => {
+      if (e.target === containerRef.current && element) {
+        element.focus();
+      }
+    };
+    if (hasTransition) {
+      container.addEventListener("transitionend", handleVisualEffectEnd);
+    }
+    if (hasAnimation) {
+      container.addEventListener("animationend", handleVisualEffectEnd);
+    }
+    if (!hasTransition && !hasAnimation) {
+      element.focus();
+    }
+    return () => {
+      container.removeEventListener("transitionend", handleVisualEffectEnd);
+      container.removeEventListener("animationend", handleVisualEffectEnd);
+    };
+  }, [containerRef, elementToFocus, shouldFocus]);
+  return {
+    focus: () => {
+      if (elementToFocus.current) {
+        elementToFocus.current.focus();
+      }
+    }
+  };
+}
+
+function findFocusableElements(element) {
+  const selector = 'a[href]:not([disabled]):not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([type="hidden"]):not([tabindex="-1"]), textarea:not([disabled]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), details:not([disabled]):not([tabindex="-1"]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+  return Array.from(element.querySelectorAll(selector));
+}
+function useFocusTrap({ containerRef, isActive, onEscape }) {
+  const focusableElementsRef = useRef([]);
+  const firstElementRef = useRef(null);
+  const lastElementRef = useRef(null);
+  const updateFocusableElements = useCallback(() => {
+    if (!containerRef.current) {
+      focusableElementsRef.current = [];
+      firstElementRef.current = null;
+      lastElementRef.current = null;
+      return false;
+    }
+    focusableElementsRef.current = findFocusableElements(containerRef.current);
+    if (focusableElementsRef.current.length > 0) {
+      firstElementRef.current = focusableElementsRef.current[0] || null;
+      const lastIndex = focusableElementsRef.current.length - 1;
+      lastElementRef.current = focusableElementsRef.current[lastIndex] || null;
+      return true;
+    }
+    firstElementRef.current = null;
+    lastElementRef.current = null;
+    return false;
+  }, [containerRef]);
+  useEffect(() => {
+    if (!isActive) {
+      focusableElementsRef.current = [];
+      firstElementRef.current = null;
+      lastElementRef.current = null;
+      return;
+    }
+    updateFocusableElements();
+  }, [containerRef, isActive, updateFocusableElements]);
+  const handleKeyDown = useCallback(
+    (event) => {
+      if (event.key === "Tab") {
+        const firstElement = firstElementRef.current;
+        const lastElement = lastElementRef.current;
+        if (!firstElement || !lastElement) return;
+        if (event.shiftKey) {
+          if (document.activeElement === firstElement) {
+            event.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            event.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+      if (event.key === "Escape") {
+        onEscape?.();
+      }
+    },
+    [onEscape]
+  );
+  useEffect(() => {
+    if (!isActive || !containerRef.current) return;
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isActive, handleKeyDown, containerRef]);
+  const getFocusableElements = useCallback(() => {
+    return [...focusableElementsRef.current];
+  }, []);
+  const getFirstElement = useCallback(() => {
+    return firstElementRef.current;
+  }, []);
+  const getLastElement = useCallback(() => {
+    return lastElementRef.current;
+  }, []);
+  return {
+    isTrapped: isActive && !!containerRef.current,
+    refresh: updateFocusableElements,
+    getFocusableElements,
+    getFirstElement,
+    getLastElement
+  };
+}
+
+function useAudioPlaylistExpandableContainer(props) {
+  const { isPlaylistVisible, containerRef, toggleRef, onClose } = props;
+  useFocusFirstElement({
+    containerRef,
+    shouldFocus: isPlaylistVisible
+  });
+  useFocusElement({
+    containerRef,
+    elementToFocus: toggleRef,
+    shouldFocus: !isPlaylistVisible
+  });
+  useFocusTrap({
+    containerRef,
+    isActive: isPlaylistVisible,
+    onEscape: onClose
+  });
+}
+
+function AudioPlaylistExpandableContainer(props) {
+  const { isPlaylistVisible, expandableContainerRef, toggleRef, togglePlaylist } = useAudioPlaylistContext();
+  const composedRef = useComposedRefs(expandableContainerRef, props.ref);
+  useAudioPlaylistExpandableContainer({
+    isPlaylistVisible,
+    containerRef: expandableContainerRef,
+    toggleRef,
+    onClose: togglePlaylist
+  });
+  return /* @__PURE__ */ jsx(
+    AudioPlaylistExpandableContainerPrimitive,
+    {
+      ref: composedRef,
+      isExpanded: isPlaylistVisible,
+      ...props
+    }
+  );
+}
+
+const AudioPlaylistCompoundComponent = {
+  Root: Object.assign(AudioPlaylist, { displayName: "AudioPlaylist.Root" }),
+  Provider: Object.assign(AudioPlaylistContextProvider, { displayName: "AudioPlaylist.Provider" }),
+  Header: Object.assign(AudioPlaylistHeader, { displayName: "AudioPlaylist.Header" }),
+  Dismiss: Object.assign(AudioPlaylistDismiss, { displayName: "AudioPlaylist.Dismiss" }),
+  Tracks: Object.assign(AudioPlaylistTracks, { displayName: "AudioPlaylist.Tracks" }),
+  ControlToggle: Object.assign(AudioPlaylistControlToggle, {
+    displayName: "AudioPlaylist.ControlToggle"
+  }),
+  Track: Object.assign(AudioPlaylistTrack, { displayName: "AudioPlaylist.Track" }),
+  TrackTitle: Object.assign(AudioPlaylistTrackTitle, { displayName: "AudioPlaylist.TrackTitle" }),
+  TrackAuthor: Object.assign(AudioPlaylistTrackAuthor, {
+    displayName: "AudioPlaylist.TrackAuthor"
+  }),
+  TrackImage: Object.assign(AudioPlaylistTrackImage, { displayName: "AudioPlaylist.TrackImage" }),
+  ExpandableContainer: Object.assign(AudioPlaylistExpandableContainer, {
+    displayName: "AudioPlaylist.ExpandableContainer"
+  })
 };
 
 const falsyToString = (value)=>typeof value === "boolean" ? `${value}` : value === 0 ? "0" : value;
@@ -5077,4 +5619,4 @@ function _Button(props, ref) {
 const Button = forwardRef(_Button);
 Button.displayName = "Button";
 
-export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextAudioProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVolume, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContextAudio, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime };
+export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextAudioProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackImage, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTracks, AudioPlaylistTracksPrimitive, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContextAudio, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer };

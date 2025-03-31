@@ -1,3 +1,20 @@
+# [1.20.0](https://github.com/gdominguez210/gdom-ui/compare/v1.19.1...v1.20.0) (2025-03-31)
+
+
+### Bug Fixes
+
+* **lib/AudioPlaylistTrack:** pass active prop to primitive ([aabf63e](https://github.com/gdominguez210/gdom-ui/commit/aabf63e458b39c25a53b288adb5eb2bc2229d351))
+* **lib/index:** expose AudioPlaylist components in entryfile ([5e091e5](https://github.com/gdominguez210/gdom-ui/commit/5e091e52d834a4b3424f53be94fd0168191ef6d6))
+
+
+### Features
+
+* **lib/AudioPlaylistContextProvider:** add expandableContainerRef to context ([212e513](https://github.com/gdominguez210/gdom-ui/commit/212e513410b2c4a1c382a13d2a7d6f712f44dcc6))
+* **lib/AudioPlaylistExpandableContainer/useAudioPlaylistExpandableContainer:** add useAudioPlaylistExpandableContainer ([b1ca377](https://github.com/gdominguez210/gdom-ui/commit/b1ca377d7c96cfe7024ce597fadfe9801171346e))
+* **lib/useFocusElement:** add useFocusElement hook ([e5982fe](https://github.com/gdominguez210/gdom-ui/commit/e5982fef3d5d500ee1d5ec637159ac254844a1ef))
+* **lib/useFocusFirstElement:** add useFocusFirstElement hook ([dd06c07](https://github.com/gdominguez210/gdom-ui/commit/dd06c079d62a6b41eb8c36ee4ea14dcf4b88a0c2))
+* **lib/useFocusTrap:** add useFocusTrap hook ([42b8162](https://github.com/gdominguez210/gdom-ui/commit/42b81628c335b8da9251c77d73fbeefba0e8f8af))
+
 ## [1.19.1](https://github.com/gdominguez210/gdom-ui/compare/v1.19.0...v1.19.1) (2025-03-30)
 
 
