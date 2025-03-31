@@ -53,6 +53,7 @@ export function AudioPlaylistTrack<T extends ElementType = 'li'>(
 
   return (
     <AudioPlaylistTrackPrimitive
+      active={active}
       aria-label={`Play ${title} by ${author}`}
       {...(restProps as AudioPlaylistTrackPrimitiveProps<T>)}
       onClick={handleClick}
