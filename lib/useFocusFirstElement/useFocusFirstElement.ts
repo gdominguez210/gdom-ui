@@ -39,8 +39,8 @@ export function useFocusFirstElement({ containerRef, shouldFocus }: UseFocusFirs
     const hasAnimation =
       parseFloat(styles.animationDuration) > 0 && styles.animationName !== 'none';
 
-    const handleVisualEffectEnd = () => {
-      if (firstFocusableElementRef.current) {
+    const handleVisualEffectEnd = (e: Event) => {
+      if (e.target === containerRef.current && firstFocusableElementRef.current) {
         firstFocusableElementRef.current.focus();
       }
     };
