@@ -26,14 +26,14 @@ export function AudioPlaylistContextProvider(props: AudioPlaylistContextProvider
   const [isPlaylistVisible, setIsPlaylistVisible] = useState(defaultVisible);
 
   const toggleRef = useRef<HTMLButtonElement>(null);
-  const dismissRef = useRef<HTMLButtonElement>(null);
+  const expandableContainerRef = useRef<HTMLElement>(null);
 
   const togglePlaylist = useCallback(() => {
     setIsPlaylistVisible((prev) => !prev);
   }, []);
 
   const contextValue = useMemo(
-    () => ({ isPlaylistVisible, togglePlaylist, toggleRef, dismissRef, tracks }),
+    () => ({ isPlaylistVisible, togglePlaylist, toggleRef, expandableContainerRef, tracks }),
     [isPlaylistVisible, togglePlaylist, tracks],
   );
 
