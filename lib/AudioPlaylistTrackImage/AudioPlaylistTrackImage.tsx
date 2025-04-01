@@ -31,7 +31,7 @@ export function AudioPlaylistTrackImage(props: AudioPlaylistTrackImageProps) {
   } = props;
 
   return (
-    <div className="group relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md">
+    <div className="group relative h-12 w-12 shrink-0 overflow-hidden rounded-md">
       <AudioPlayerImagePrimitive
         src={src}
         altText={altText}
@@ -49,7 +49,7 @@ export function AudioPlaylistTrackImage(props: AudioPlaylistTrackImageProps) {
         <AudioPlayerControlPlayPrimitive
           tabIndex={-1}
           active={active && isPlaying}
-          className="border-none bg-transparent p-0 text-xl shadow-none hover:bg-transparent focus:bg-transparent focus:outline-none"
+          className="border-none bg-transparent p-0 text-xl shadow-none hover:bg-transparent focus:bg-transparent focus:outline-hidden"
         />
       </div>
     </div>
