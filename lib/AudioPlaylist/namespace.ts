@@ -9,7 +9,7 @@ import { AudioPlaylistHeader } from '@lib/AudioPlaylistHeader/AudioPlaylistHeade
 import { AudioPlaylistDismiss } from '@lib/AudioPlaylistDismiss/AudioPlaylistDismiss';
 import { AudioPlaylistControlToggle } from '@lib/AudioPlaylistControlToggle/AudioPlaylistControlToggle';
 import { AudioPlaylistExpandableContainer } from '@lib/AudioPlaylistExpandableContainer';
-
+import { AudioPlaylistScrollableContainer } from '@lib/AudioPlaylistScrollableContainer';
 export const AudioPlaylistCompoundComponent = {
   Root: Object.assign(AudioPlaylist, { displayName: 'AudioPlaylist.Root' }),
   Provider: Object.assign(AudioPlaylistContextProvider, { displayName: 'AudioPlaylist.Provider' }),
@@ -27,5 +27,8 @@ export const AudioPlaylistCompoundComponent = {
   TrackImage: Object.assign(AudioPlaylistTrackImage, { displayName: 'AudioPlaylist.TrackImage' }),
   ExpandableContainer: Object.assign(AudioPlaylistExpandableContainer, {
     displayName: 'AudioPlaylist.ExpandableContainer',
+  }),
+  ScrollableContainer: Object.assign(AudioPlaylistScrollableContainer, {
+    displayName: 'AudioPlaylist.ScrollableContainer',
   }),
 };
