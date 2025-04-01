@@ -185,7 +185,10 @@ export const WithCollapsiblePlaylist: StoryObj<typeof AudioPlayer> = {
                 <span>Playlist</span>
                 <AudioPlaylistCompoundComponent.Dismiss />
               </AudioPlaylistCompoundComponent.Header>
-              <AudioPlaylistCompoundComponent.Tracks className="max-h-[227px] overflow-y-auto" />
+              <AudioPlaylistCompoundComponent.ScrollableContainer
+                as={AudioPlaylistCompoundComponent.Tracks}
+                maxHeight={'227px'}
+              />
             </AudioPlaylistCompoundComponent.Root>
           </AudioPlaylistCompoundComponent.ExpandableContainer>
           <div className="flex grow justify-between gap-4">
