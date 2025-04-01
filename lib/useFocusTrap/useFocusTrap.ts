@@ -15,6 +15,18 @@ interface UseFocusTrapProps {
    * Optional callback function that gets triggered when the Escape key is pressed
    */
   onEscape?: () => void;
+
+  /**
+   * Optional callback function that gets triggered when clicking outside the container
+   * If not provided, outside clicks will be prevented but no callback will be executed
+   */
+  onOutsideClick?: (event: MouseEvent) => void;
+
+  /**
+   * Whether to prevent clicks outside the container
+   * @default true
+   */
+  preventOutsideClicks?: boolean;
 }
 
 /**
@@ -41,8 +53,9 @@ function findFocusableElements(element: HTMLElement): HTMLElement[] {
  * Hook that traps keyboard focus within a container element when active
  * Prevents users from tabbing outside the container, maintaining keyboard accessibility
  * Also provides escape key handling through the optional onEscape callback
+ * Optionally prevents clicks outside the container when active
  *
- * Note: This hook ONLY handles the tab trapping behavior and escape key. It does NOT handle:
+ * Note: This hook handles tab trapping, escape key and outside clicks. It does NOT handle:
  * - Initial focusing (use useFocusFirstElement for focusing first element)
  * - Focus restoration (use useFocusElement for returning focus to trigger elements)
  * - Waiting for animations/transitions (those hooks handle that)
@@ -50,14 +63,20 @@ function findFocusableElements(element: HTMLElement): HTMLElement[] {
  * @param containerRef - Reference to the element to trap focus within
  * @param isActive - Whether the focus trap should be active
  * @param onEscape - Optional callback function triggered when Escape key is pressed
+ * @param onOutsideClick - Optional callback function triggered when clicking outside the container
+ * @param preventOutsideClicks - Whether to prevent clicks outside the container (default: true)
  */
-export function useFocusTrap({ containerRef, isActive, onEscape }: UseFocusTrapProps) {
-  // Cache focusable elements to avoid re-querying on every keypress
+export function useFocusTrap({
+  containerRef,
+  isActive,
+  onEscape,
+  onOutsideClick,
+  preventOutsideClicks = true,
+}: UseFocusTrapProps) {
   const focusableElementsRef = useRef<HTMLElement[]>([]);
   const firstElementRef = useRef<HTMLElement | null>(null);
   const lastElementRef = useRef<HTMLElement | null>(null);
 
-  // Function to update the focusable elements cache
   const updateFocusableElements = useCallback(() => {
     if (!containerRef.current) {
       focusableElementsRef.current = [];
@@ -66,10 +85,8 @@ export function useFocusTrap({ containerRef, isActive, onEscape }: UseFocusTrapP
       return false;
     }
 
-    // Cache the focusable elements
     focusableElementsRef.current = findFocusableElements(containerRef.current);
 
-    // Cache first and last elements for quick access
     if (focusableElementsRef.current.length > 0) {
       firstElementRef.current = focusableElementsRef.current[0] || null;
       const lastIndex = focusableElementsRef.current.length - 1;
@@ -83,7 +100,6 @@ export function useFocusTrap({ containerRef, isActive, onEscape }: UseFocusTrapP
     return false;
   }, [containerRef]);
 
-  // Update the cached elements whenever the container changes or trap becomes active
   useEffect(() => {
     if (!isActive) {
       focusableElementsRef.current = [];
@@ -95,25 +111,20 @@ export function useFocusTrap({ containerRef, isActive, onEscape }: UseFocusTrapP
     updateFocusableElements();
   }, [containerRef, isActive, updateFocusableElements]);
 
-  // Handle keyboard events (tab for trapping focus and escape for callback)
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      // Handle tab key for focus trapping
       if (event.key === 'Tab') {
         const firstElement = firstElementRef.current;
         const lastElement = lastElementRef.current;
 
         if (!firstElement || !lastElement) return;
 
-        // Check if shift key is being held down for reverse tabbing
         if (event.shiftKey) {
-          // If focus is on first element and user presses Shift+Tab, wrap to last element
           if (document.activeElement === firstElement) {
             event.preventDefault();
             lastElement.focus();
           }
         } else {
-          // If focus is on last element and user presses Tab, wrap to first element
           if (document.activeElement === lastElement) {
             event.preventDefault();
             firstElement.focus();
@@ -128,18 +139,48 @@ export function useFocusTrap({ containerRef, isActive, onEscape }: UseFocusTrapP
     [onEscape],
   );
 
-  // Set up and clean up the focus trap when active state changes
+  const handleOutsideClick = useCallback(
+    (event: MouseEvent) => {
+      if (!containerRef.current || !isActive) return;
+
+      const target = event.target as Node;
+      if (containerRef.current.contains(target)) {
+        return;
+      }
+
+      if (preventOutsideClicks) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      onOutsideClick?.(event);
+    },
+    [containerRef, isActive, preventOutsideClicks, onOutsideClick],
+  );
+
   useEffect(() => {
     if (!isActive || !containerRef.current) return;
 
-    // Attach the keyboard event listener for trapping focus
     document.addEventListener('keydown', handleKeyDown);
 
-    // Clean up on unmount or when trap becomes inactive
+    if (preventOutsideClicks || onOutsideClick) {
+      document.addEventListener('click', handleOutsideClick, { capture: true });
+    }
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      if (preventOutsideClicks || onOutsideClick) {
+        document.removeEventListener('click', handleOutsideClick, { capture: true });
+      }
     };
-  }, [isActive, handleKeyDown, containerRef]);
+  }, [
+    isActive,
+    handleKeyDown,
+    handleOutsideClick,
+    containerRef,
+    preventOutsideClicks,
+    onOutsideClick,
+  ]);
 
   // Create safe functions to access the element refs
   const getFocusableElements = useCallback(() => {
