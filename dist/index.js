@@ -5449,6 +5449,36 @@ function AudioPlaylistExpandableContainer(props) {
   );
 }
 
+function AudioPlaylistScrollableContainer(props) {
+  const {
+    as: Element = "div",
+    children,
+    className,
+    maxHeight = "300px",
+    style,
+    ...restProps
+  } = props;
+  return /* @__PURE__ */ jsx(
+    Element,
+    {
+      className: twMerge(
+        clsx(
+          "overflow-y-auto",
+          "scrollbar-thin scrollbar-thumb-slate-400/30 scrollbar-track-slate-800/20 hover:scrollbar-thumb-slate-400/50",
+          "scrollbar-thumb-rounded-none",
+          className
+        )
+      ),
+      style: {
+        maxHeight,
+        ...style
+      },
+      ...restProps,
+      children
+    }
+  );
+}
+
 const AudioPlaylistCompoundComponent = {
   Root: Object.assign(AudioPlaylist, { displayName: "AudioPlaylist.Root" }),
   Provider: Object.assign(AudioPlaylistContextProvider, { displayName: "AudioPlaylist.Provider" }),
@@ -5466,6 +5496,9 @@ const AudioPlaylistCompoundComponent = {
   TrackImage: Object.assign(AudioPlaylistTrackImage, { displayName: "AudioPlaylist.TrackImage" }),
   ExpandableContainer: Object.assign(AudioPlaylistExpandableContainer, {
     displayName: "AudioPlaylist.ExpandableContainer"
+  }),
+  ScrollableContainer: Object.assign(AudioPlaylistScrollableContainer, {
+    displayName: "AudioPlaylist.ScrollableContainer"
   })
 };
 
@@ -5671,4 +5704,4 @@ function _Button(props, ref) {
 const Button = forwardRef(_Button);
 Button.displayName = "Button";
 
-export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextAudioProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackImage, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTracks, AudioPlaylistTracksPrimitive, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContextAudio, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer };
+export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextAudioProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistScrollableContainer, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackImage, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTracks, AudioPlaylistTracksPrimitive, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContextAudio, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer };

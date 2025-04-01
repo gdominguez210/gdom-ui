@@ -5471,6 +5471,36 @@ function AudioPlaylistExpandableContainer(props) {
   );
 }
 
+function AudioPlaylistScrollableContainer(props) {
+  const {
+    as: Element = "div",
+    children,
+    className,
+    maxHeight = "300px",
+    style,
+    ...restProps
+  } = props;
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    Element,
+    {
+      className: twMerge(
+        clsx(
+          "overflow-y-auto",
+          "scrollbar-thin scrollbar-thumb-slate-400/30 scrollbar-track-slate-800/20 hover:scrollbar-thumb-slate-400/50",
+          "scrollbar-thumb-rounded-none",
+          className
+        )
+      ),
+      style: {
+        maxHeight,
+        ...style
+      },
+      ...restProps,
+      children
+    }
+  );
+}
+
 const AudioPlaylistCompoundComponent = {
   Root: Object.assign(AudioPlaylist, { displayName: "AudioPlaylist.Root" }),
   Provider: Object.assign(AudioPlaylistContextProvider, { displayName: "AudioPlaylist.Provider" }),
@@ -5488,6 +5518,9 @@ const AudioPlaylistCompoundComponent = {
   TrackImage: Object.assign(AudioPlaylistTrackImage, { displayName: "AudioPlaylist.TrackImage" }),
   ExpandableContainer: Object.assign(AudioPlaylistExpandableContainer, {
     displayName: "AudioPlaylist.ExpandableContainer"
+  }),
+  ScrollableContainer: Object.assign(AudioPlaylistScrollableContainer, {
+    displayName: "AudioPlaylist.ScrollableContainer"
   })
 };
 
@@ -5723,6 +5756,7 @@ exports.AudioPlaylistExpandableContainer = AudioPlaylistExpandableContainer;
 exports.AudioPlaylistExpandableContainerPrimitive = AudioPlaylistExpandableContainerPrimitive;
 exports.AudioPlaylistHeader = AudioPlaylistHeader;
 exports.AudioPlaylistPrimitive = AudioPlaylist;
+exports.AudioPlaylistScrollableContainer = AudioPlaylistScrollableContainer;
 exports.AudioPlaylistTrack = AudioPlaylistTrack;
 exports.AudioPlaylistTrackAuthor = AudioPlaylistTrackAuthor;
 exports.AudioPlaylistTrackImage = AudioPlaylistTrackImage;

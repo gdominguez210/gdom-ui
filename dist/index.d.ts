@@ -512,6 +512,9 @@ export declare const AudioPlaylist: {
     ExpandableContainer: typeof AudioPlaylistExpandableContainer & {
         displayName: string;
     };
+    ScrollableContainer: typeof AudioPlaylistScrollableContainer & {
+        displayName: string;
+    };
 };
 
 /**
@@ -643,6 +646,22 @@ export declare function AudioPlaylistPrimitive<T extends ElementType = 'div'>(pr
 export declare type AudioPlaylistPropsPrimitive<T extends ElementType = 'div'> = {
     /** Element to render as @default div */
     as?: T;
+} & ComponentPropsWithRef<T>;
+
+/**
+ * A scrollable container component for audio playlist elements
+ * Provides consistent custom scrollbar styling across browsers
+ */
+export declare function AudioPlaylistScrollableContainer<T extends ElementType = 'div'>(props: AudioPlaylistScrollableContainerProps<T>): JSX.Element;
+
+/**
+ * Props for the audio playlist scrollable container component
+ */
+export declare type AudioPlaylistScrollableContainerProps<T extends ElementType = 'div'> = {
+    /** Element to render as @default div */
+    as?: T;
+    /** Maximum height for the scrollable container */
+    maxHeight?: string;
 } & ComponentPropsWithRef<T>;
 
 /**

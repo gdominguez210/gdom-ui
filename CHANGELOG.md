@@ -1,3 +1,10 @@
+# [1.23.0](https://github.com/gdominguez210/gdom-ui/compare/v1.22.0...v1.23.0) (2025-04-01)
+
+
+### Features
+
+* **lib/AudioPlaylistScrollableContainer:** add AudioPlaylistScrollableContainer ([86e2d48](https://github.com/gdominguez210/gdom-ui/commit/86e2d4869343e3490916a393a78d40919f347406))
+
 # [1.22.0](https://github.com/gdominguez210/gdom-ui/compare/v1.21.0...v1.22.0) (2025-04-01)
 
 
