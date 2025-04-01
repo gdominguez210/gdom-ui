@@ -50,7 +50,7 @@ type iconButtonAccessibleProps =
 export type ButtonProps = CommonButtonProps & iconButtonAccessibleProps;
 
 const buttonStyles = cva(
-  ['inline-flex justify-center items-center rounded font-medium focus-visible:outline-none'],
+  ['inline-flex justify-center items-center rounded-sm font-medium focus-visible:outline-hidden'],
   {
     variants: {
       variant: {
