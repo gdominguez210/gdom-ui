@@ -32,6 +32,9 @@ export default {
   parameters: {
     componentSubtitle: 'A customizable audio player component',
     docs: {
+      canvas: {
+        sourceState: 'shown',
+      },
       source: {
         type: 'dynamic',
         // Custom transformer to hide trackData array contents
@@ -81,7 +84,7 @@ export const Example: StoryObj<typeof AudioPlayer> = {
   render: () => (
     <AudioPlayerCompoundComponent.Provider tracks={trackData}>
       <AudioPlayerCompoundComponent.Root>
-        <div className="justify-space-between flex flex-grow gap-4">
+        <div className="justify-space-between flex grow gap-4">
           <AudioPlayerCompoundComponent.Info className="basis-1/3">
             <AudioPlayerCompoundComponent.Image />
             <div className="py-2">
@@ -123,7 +126,7 @@ export const Compact: StoryObj<typeof AudioPlayer> = {
   render: () => (
     <AudioPlayerCompoundComponent.Provider tracks={trackData}>
       <AudioPlayerCompoundComponent.Root>
-        <div className="flex flex-grow items-center justify-between gap-4">
+        <div className="flex grow items-center justify-between gap-4">
           <AudioPlayerCompoundComponent.Controls className="basis-[275px] py-2">
             <AudioPlayerCompoundComponent.ControlAudio />
             <AudioPlayerCompoundComponent.ControlPrevious />
@@ -185,7 +188,7 @@ export const WithCollapsiblePlaylist: StoryObj<typeof AudioPlayer> = {
               <AudioPlaylistCompoundComponent.Tracks className="max-h-[227px] overflow-y-auto" />
             </AudioPlaylistCompoundComponent.Root>
           </AudioPlaylistCompoundComponent.ExpandableContainer>
-          <div className="flex flex-grow justify-between gap-4">
+          <div className="flex grow justify-between gap-4">
             {/* Main Player UI */}
             <AudioPlayerCompoundComponent.Info className="basis-1/3">
               <AudioPlayerCompoundComponent.Image />
