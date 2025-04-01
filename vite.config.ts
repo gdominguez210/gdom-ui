@@ -6,6 +6,7 @@ import dts from 'vite-plugin-dts';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { peerDependencies } from './package.json';
 import svgr from 'vite-plugin-svgr';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [
@@ -21,6 +22,7 @@ export default defineConfig({
         icon: true,
       },
     }),
+    tailwindcss(),
   ],
   build: {
     target: 'esnext',
