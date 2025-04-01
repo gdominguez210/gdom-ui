@@ -13,9 +13,6 @@ const preview: Preview = {
       story: {
         inline: true,
       },
-      canvas: {
-        sourceState: 'shown',
-      },
     },
     options: {
       storySort: {
