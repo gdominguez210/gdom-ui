@@ -1,3 +1,16 @@
+# [1.21.0](https://github.com/gdominguez210/gdom-ui/compare/v1.20.0...v1.21.0) (2025-04-01)
+
+
+### Bug Fixes
+
+* **lib/AudioPlaylistTrack:** add handleKeydown function to handle select behavior for keyboard interactions ([32f6a03](https://github.com/gdominguez210/gdom-ui/commit/32f6a03cfd07e019e6f997f0fceaef02882ba111))
+
+
+### Features
+
+* **lib/AudioPlaylistContextProvider:** add id to AudioPlaylistContext ([0eb3f4d](https://github.com/gdominguez210/gdom-ui/commit/0eb3f4d1dfd337cbefaca1c444a4a2805409a934))
+* **lib/useFocusTrap:** handle click behavior ([d040ef6](https://github.com/gdominguez210/gdom-ui/commit/d040ef60bb0afd265143a8e1c1dfa8670f951686))
+
 # [1.20.0](https://github.com/gdominguez210/gdom-ui/compare/v1.19.1...v1.20.0) (2025-03-31)
 
 

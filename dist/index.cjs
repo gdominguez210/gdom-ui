@@ -4916,7 +4916,7 @@ const AUDIO_PLAYLIST_CONTEXT_ERROR = "useAudioPlaylistContext must be used withi
 const AudioPlaylistContext = React.createContext(null);
 
 function AudioPlaylistContextProvider(props) {
-  const { children, defaultVisible = false, tracks } = props;
+  const { children, defaultVisible = false, tracks, id = "audio-playlist" } = props;
   const [isPlaylistVisible, setIsPlaylistVisible] = React.useState(defaultVisible);
   const toggleRef = React.useRef(null);
   const expandableContainerRef = React.useRef(null);
@@ -4924,8 +4924,8 @@ function AudioPlaylistContextProvider(props) {
     setIsPlaylistVisible((prev) => !prev);
   }, []);
   const contextValue = React.useMemo(
-    () => ({ isPlaylistVisible, togglePlaylist, toggleRef, expandableContainerRef, tracks }),
-    [isPlaylistVisible, togglePlaylist, tracks]
+    () => ({ isPlaylistVisible, togglePlaylist, toggleRef, expandableContainerRef, tracks, id }),
+    [isPlaylistVisible, togglePlaylist, tracks, id]
   );
   return /* @__PURE__ */ jsxRuntime.jsx(AudioPlaylistContext.Provider, { value: contextValue, children });
 }
@@ -5041,10 +5041,22 @@ function AudioPlaylistTrack(props) {
     onSelect,
     ...restProps
   } = props;
-  const handleClick = (e) => {
-    e.preventDefault();
-    onSelect?.(e);
-  };
+  const handleClick = React.useCallback(
+    (e) => {
+      e.preventDefault();
+      onSelect?.(e);
+    },
+    [onSelect]
+  );
+  const handleKeyDown = React.useCallback(
+    (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onSelect?.(e);
+      }
+    },
+    [onSelect]
+  );
   return /* @__PURE__ */ jsxRuntime.jsxs(
     AudioPlaylistTrackPrimitive,
     {
@@ -5052,6 +5064,7 @@ function AudioPlaylistTrack(props) {
       "aria-label": `Play ${title} by ${author}`,
       ...restProps,
       onClick: handleClick,
+      onKeyDown: handleKeyDown,
       children: [
         /* @__PURE__ */ jsxRuntime.jsx(
           AudioPlaylistTrackImage,
@@ -5173,7 +5186,7 @@ function AudioPlaylistControlTogglePrimitive(props) {
 
 function AudioPlaylistControlToggle(props) {
   const { onClick, ref, ...restProps } = props;
-  const { isPlaylistVisible, togglePlaylist, toggleRef } = useAudioPlaylistContext();
+  const { isPlaylistVisible, togglePlaylist, toggleRef, id } = useAudioPlaylistContext();
   const handleClick = React.useCallback(
     (e) => {
       togglePlaylist();
@@ -5185,6 +5198,8 @@ function AudioPlaylistControlToggle(props) {
   return /* @__PURE__ */ jsxRuntime.jsx(
     AudioPlaylistControlTogglePrimitive,
     {
+      "aria-expanded": isPlaylistVisible,
+      "aria-controls": id,
       ref: composedRef,
       active: isPlaylistVisible,
       onClick: handleClick,
@@ -5302,7 +5317,13 @@ function findFocusableElements(element) {
   const selector = 'a[href]:not([disabled]):not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([type="hidden"]):not([tabindex="-1"]), textarea:not([disabled]):not([tabindex="-1"]), select:not([disabled]):not([tabindex="-1"]), details:not([disabled]):not([tabindex="-1"]), [tabindex]:not([disabled]):not([tabindex="-1"])';
   return Array.from(element.querySelectorAll(selector));
 }
-function useFocusTrap({ containerRef, isActive, onEscape }) {
+function useFocusTrap({
+  containerRef,
+  isActive,
+  onEscape,
+  onOutsideClick,
+  preventOutsideClicks = true
+}) {
   const focusableElementsRef = React.useRef([]);
   const firstElementRef = React.useRef(null);
   const lastElementRef = React.useRef(null);
@@ -5357,13 +5378,41 @@ function useFocusTrap({ containerRef, isActive, onEscape }) {
     },
     [onEscape]
   );
+  const handleOutsideClick = React.useCallback(
+    (event) => {
+      if (!containerRef.current || !isActive) return;
+      const target = event.target;
+      if (containerRef.current.contains(target)) {
+        return;
+      }
+      if (preventOutsideClicks) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      onOutsideClick?.(event);
+    },
+    [containerRef, isActive, preventOutsideClicks, onOutsideClick]
+  );
   React.useEffect(() => {
     if (!isActive || !containerRef.current) return;
     document.addEventListener("keydown", handleKeyDown);
+    if (preventOutsideClicks || onOutsideClick) {
+      document.addEventListener("click", handleOutsideClick, { capture: true });
+    }
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      if (preventOutsideClicks || onOutsideClick) {
+        document.removeEventListener("click", handleOutsideClick, { capture: true });
+      }
     };
-  }, [isActive, handleKeyDown, containerRef]);
+  }, [
+    isActive,
+    handleKeyDown,
+    handleOutsideClick,
+    containerRef,
+    preventOutsideClicks,
+    onOutsideClick
+  ]);
   const getFocusableElements = React.useCallback(() => {
     return [...focusableElementsRef.current];
   }, []);
@@ -5396,12 +5445,14 @@ function useAudioPlaylistExpandableContainer(props) {
   useFocusTrap({
     containerRef,
     isActive: isPlaylistVisible,
-    onEscape: onClose
+    onEscape: onClose,
+    onOutsideClick: onClose,
+    preventOutsideClicks: false
   });
 }
 
 function AudioPlaylistExpandableContainer(props) {
-  const { isPlaylistVisible, expandableContainerRef, toggleRef, togglePlaylist } = useAudioPlaylistContext();
+  const { isPlaylistVisible, expandableContainerRef, toggleRef, togglePlaylist, id } = useAudioPlaylistContext();
   const composedRef = useComposedRefs(expandableContainerRef, props.ref);
   useAudioPlaylistExpandableContainer({
     isPlaylistVisible,
@@ -5412,6 +5463,8 @@ function AudioPlaylistExpandableContainer(props) {
   return /* @__PURE__ */ jsxRuntime.jsx(
     AudioPlaylistExpandableContainerPrimitive,
     {
+      "aria-hidden": !isPlaylistVisible,
+      id,
       ref: composedRef,
       isExpanded: isPlaylistVisible,
       ...props

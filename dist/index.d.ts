@@ -532,6 +532,11 @@ export declare type AudioPlaylistContextProviderProps = PropsWithChildren & {
      * The tracks to display in the playlist
      */
     tracks: AudioTrackData[];
+    /**
+     * The id of the playlist, primarily used for accessibility attributes
+     * @default 'audio-playlist'
+     */
+    id?: string;
 };
 
 export declare interface AudioPlaylistContextType {
@@ -540,6 +545,7 @@ export declare interface AudioPlaylistContextType {
     toggleRef: RefObject<HTMLButtonElement | null>;
     expandableContainerRef: RefObject<HTMLElement | null>;
     tracks: AudioTrackData[];
+    id: string;
 }
 
 /**
