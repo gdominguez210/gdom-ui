@@ -22,3 +22,9 @@
     cursor: pointer;
   }
 }
+
+/*
+  Tailwind Scrollbar Plugin
+  https://github.com/tailwindlabs/tailwindcss-scrollbar
+*/
+@plugin 'tailwind-scrollbar';
