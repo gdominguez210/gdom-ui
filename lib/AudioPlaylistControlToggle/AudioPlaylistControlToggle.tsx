@@ -21,7 +21,7 @@ export type AudioPlaylistControlToggleProps = Omit<
  */
 export function AudioPlaylistControlToggle(props: AudioPlaylistControlToggleProps) {
   const { onClick, ref, ...restProps } = props;
-  const { isPlaylistVisible, togglePlaylist, toggleRef } = useAudioPlaylistContext();
+  const { isPlaylistVisible, togglePlaylist, toggleRef, id } = useAudioPlaylistContext();
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
@@ -35,6 +35,8 @@ export function AudioPlaylistControlToggle(props: AudioPlaylistControlToggleProp
 
   return (
     <AudioPlaylistControlTogglePrimitive
+      aria-expanded={isPlaylistVisible}
+      aria-controls={id}
       ref={composedRef}
       active={isPlaylistVisible}
       onClick={handleClick}
