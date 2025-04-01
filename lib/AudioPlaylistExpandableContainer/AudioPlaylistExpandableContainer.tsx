@@ -22,7 +22,7 @@ export type AudioPlaylistExpandableContainerProps<T extends ElementType = 'div'>
 export function AudioPlaylistExpandableContainer<T extends ElementType = 'div'>(
   props: AudioPlaylistExpandableContainerProps<T>,
 ) {
-  const { isPlaylistVisible, expandableContainerRef, toggleRef, togglePlaylist } =
+  const { isPlaylistVisible, expandableContainerRef, toggleRef, togglePlaylist, id } =
     useAudioPlaylistContext();
 
   const composedRef = useComposedRefs(expandableContainerRef, props.ref);
@@ -36,6 +36,8 @@ export function AudioPlaylistExpandableContainer<T extends ElementType = 'div'>(
 
   return (
     <AudioPlaylistExpandableContainerPrimitive
+      aria-hidden={!isPlaylistVisible}
+      id={id}
       ref={composedRef}
       isExpanded={isPlaylistVisible}
       {...props}
