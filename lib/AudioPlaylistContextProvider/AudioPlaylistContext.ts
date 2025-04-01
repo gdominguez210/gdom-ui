@@ -10,6 +10,7 @@ export interface AudioPlaylistContextType {
   toggleRef: RefObject<HTMLButtonElement | null>;
   expandableContainerRef: RefObject<HTMLElement | null>;
   tracks: AudioTrackData[];
+  id: string;
 }
 
 export const AudioPlaylistContext = createContext<AudioPlaylistContextType | null>(null);

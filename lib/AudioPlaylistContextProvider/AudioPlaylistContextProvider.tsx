@@ -16,13 +16,18 @@ export type AudioPlaylistContextProviderProps = PropsWithChildren & {
    * The tracks to display in the playlist
    */
   tracks: AudioTrackData[];
+  /**
+   * The id of the playlist, primarily used for accessibility attributes
+   * @default 'audio-playlist'
+   */
+  id?: string;
 };
 
 /**
  * Provider component for managing playlist visibility state and references
  */
 export function AudioPlaylistContextProvider(props: AudioPlaylistContextProviderProps) {
-  const { children, defaultVisible = false, tracks } = props;
+  const { children, defaultVisible = false, tracks, id = 'audio-playlist' } = props;
   const [isPlaylistVisible, setIsPlaylistVisible] = useState(defaultVisible);
 
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -33,8 +38,8 @@ export function AudioPlaylistContextProvider(props: AudioPlaylistContextProvider
   }, []);
 
   const contextValue = useMemo(
-    () => ({ isPlaylistVisible, togglePlaylist, toggleRef, expandableContainerRef, tracks }),
-    [isPlaylistVisible, togglePlaylist, tracks],
+    () => ({ isPlaylistVisible, togglePlaylist, toggleRef, expandableContainerRef, tracks, id }),
+    [isPlaylistVisible, togglePlaylist, tracks, id],
   );
 
   return (
