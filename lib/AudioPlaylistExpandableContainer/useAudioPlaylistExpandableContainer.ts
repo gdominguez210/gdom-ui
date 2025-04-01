@@ -28,5 +28,7 @@ export function useAudioPlaylistExpandableContainer(props: useAudioPlayerExpanda
     containerRef: containerRef,
     isActive: isPlaylistVisible,
     onEscape: onClose,
+    onOutsideClick: onClose,
+    preventOutsideClicks: false,
   });
 }
