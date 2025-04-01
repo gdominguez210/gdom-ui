@@ -37,7 +37,7 @@ export function AudioPlayerVolumeSliderPrimitive(props: AudioPlayerVolumeSliderP
             : ['[writing-mode:bt-lr]', '[appearance:slider-vertical]', 'h-32', 'w-2'],
           // Progress bar styles
           'before:block',
-          'before:w-[--volume-value]',
+          'before:w-(--volume-value)',
           'before:bg-neutral-100',
           `before:content-['']`,
           'before:absolute',
