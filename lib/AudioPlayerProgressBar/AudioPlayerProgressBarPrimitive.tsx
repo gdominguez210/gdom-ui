@@ -28,7 +28,7 @@ export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarPri
           'focus-within:outline-white',
           // Progress bar styles
           'before:block',
-          'before:w-[--range-progress]',
+          'before:w-(--range-progress)',
           'before:bg-neutral-100',
           `before:content-['']`,
           'before:absolute',
