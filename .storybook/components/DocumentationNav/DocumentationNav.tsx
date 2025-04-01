@@ -108,7 +108,7 @@ export function DocumentationNav({ items: providedItems }: DocumentationNavProps
   if (items.length === 0) return null;
 
   return (
-    <div className="sb-unstyled fixed right-6 top-6 z-[1000] w-48 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="sb-unstyled fixed right-6 top-6 z-1000 w-48 rounded-lg border border-slate-200 bg-white p-4 shadow-xs">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between text-sm font-bold text-slate-600 hover:text-blue-700"
