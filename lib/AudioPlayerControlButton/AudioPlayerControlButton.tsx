@@ -12,8 +12,7 @@ export function AudioPlayerControlButton(props: AudioPlayerControlButtonProps) {
     <button
       className={twMerge(
         clsx(
-          'rounded-md p-2 hover:bg-black/30',
-          'focus-within:outline-1 focus-within:outline-white focus:bg-black/30',
+          'rounded-md p-2 focus-within:outline-white hover:bg-black/30 focus:bg-black/30',
           active && 'bg-black/30',
           className,
         ),
