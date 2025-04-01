@@ -18,6 +18,7 @@ export * from './AudioPlaylistDismiss';
 export * from './AudioPlaylistHeader';
 export * from './AudioPlaylistContextProvider';
 export * from './AudioPlaylistExpandableContainer';
+export * from './AudioPlaylistScrollableContainer';
 export * from './AudioPlaylistTracks';
 export * from './AudioPlaylistTrack';
 export * from './AudioPlaylistTrackTitle';
