@@ -1,3 +1,11 @@
+# [1.22.0](https://github.com/gdominguez210/gdom-ui/compare/v1.21.0...v1.22.0) (2025-04-01)
+
+
+### Features
+
+* **tailwind-scrollbar:** add tailwind-scrollbar ([a5c1805](https://github.com/gdominguez210/gdom-ui/commit/a5c1805e9d99ce42f3a61ae7e3accc6130a92618))
+* upgrade to Tailwind 4 ([34cd366](https://github.com/gdominguez210/gdom-ui/commit/34cd366ac693a14198fe3dbfe73ce02a56f91b05))
+
 # [1.21.0](https://github.com/gdominguez210/gdom-ui/compare/v1.20.0...v1.21.0) (2025-04-01)
 
 

@@ -3063,7 +3063,7 @@ function AudioPlayerProgressBarPrimitive(props) {
           "focus-within:outline-white",
           // Progress bar styles
           "before:block",
-          "before:w-[--range-progress]",
+          "before:w-(--range-progress)",
           "before:bg-neutral-100",
           `before:content-['']`,
           "before:absolute",
@@ -4304,8 +4304,7 @@ function AudioPlayerControlButton(props) {
     {
       className: twMerge(
         clsx(
-          "rounded-md p-2 hover:bg-black/30",
-          "focus-within:outline-1 focus-within:outline-white focus:bg-black/30",
+          "rounded-md p-2 focus-within:outline-white hover:bg-black/30 focus:bg-black/30",
           active && "bg-black/30",
           className
         )
@@ -4379,7 +4378,7 @@ function AudioPlayerVolumeSliderPrimitive(props) {
           orientation === "horizontal" ? ["w-full", "h-2"] : ["[writing-mode:bt-lr]", "[appearance:slider-vertical]", "h-32", "w-2"],
           // Progress bar styles
           "before:block",
-          "before:w-[--volume-value]",
+          "before:w-(--volume-value)",
           "before:bg-neutral-100",
           `before:content-['']`,
           "before:absolute",
@@ -4953,7 +4952,7 @@ function AudioPlaylistTrackImage(props) {
     className,
     ...restProps
   } = props;
-  return /* @__PURE__ */ jsxs("div", { className: "group relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-md", children: [
+  return /* @__PURE__ */ jsxs("div", { className: "group relative h-12 w-12 shrink-0 overflow-hidden rounded-md", children: [
     /* @__PURE__ */ jsx(
       AudioPlayerImagePrimitive,
       {
@@ -4977,7 +4976,7 @@ function AudioPlaylistTrackImage(props) {
           {
             tabIndex: -1,
             active: active && isPlaying,
-            className: "border-none bg-transparent p-0 text-xl shadow-none hover:bg-transparent focus:bg-transparent focus:outline-none"
+            className: "border-none bg-transparent p-0 text-xl shadow-none hover:bg-transparent focus:bg-transparent focus:outline-hidden"
           }
         )
       }
@@ -5558,7 +5557,7 @@ const Badge = forwardRef(_Badge);
 Badge.displayName = "Badge";
 
 const buttonStyles = cva(
-  ["inline-flex justify-center items-center rounded font-medium focus-visible:outline-none"],
+  ["inline-flex justify-center items-center rounded-sm font-medium focus-visible:outline-hidden"],
   {
     variants: {
       variant: {
