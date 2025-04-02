@@ -23,7 +23,7 @@ export function AudioPlaylistExpandableContainerPrimitive<T extends ElementType 
     <Element
       className={twMerge(
         clsx(
-          'relative overflow-hidden shadow-lg transition-all duration-300',
+          'relative overflow-hidden transition-all duration-300',
           {
             'max-h-[300px] opacity-100': isExpanded,
             'pointer-events-none max-h-0 opacity-0': !isExpanded,
