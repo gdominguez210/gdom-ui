@@ -92,7 +92,7 @@
     "react-dom": "^19.0.0",
     "storybook": "^8.6.4",
     "storybook-addon-pseudo-states": "^4.0.2",
-    "tailwind-merge": "^2.6.0",
+    "tailwind-merge": "^3.1.0",
     "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "^4.0.17",
     "typescript": "^5.8.2",
