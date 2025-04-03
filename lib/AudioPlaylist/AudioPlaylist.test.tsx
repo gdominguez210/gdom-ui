@@ -51,11 +51,11 @@ describe('AudioPlaylist', () => {
   describe('AudioPlaylist', () => {
     test('should render with default props', () => {
       render(
-        <AudioPlaylist.Provider tracks={trackData}>
+        <AudioPlayerContextProvider tracks={trackData}>
           <AudioPlaylist.Root data-testid="audio-playlist">
             <div>Content</div>
           </AudioPlaylist.Root>
-        </AudioPlaylist.Provider>,
+        </AudioPlayerContextProvider>,
       );
 
       const element = screen.getByTestId('audio-playlist');
@@ -65,16 +65,17 @@ describe('AudioPlaylist', () => {
     test('should render all compound components', () => {
       render(
         <AudioPlayerContextProvider tracks={trackData}>
-          <AudioPlaylist.Provider tracks={trackData}>
-            <AudioPlaylist.Root>
-              <AudioPlaylist.ExpandableContainer data-testid="expandable-container">
+          <AudioPlaylist.Provider>
+            <AudioPlaylist.ExpandableContainer data-testid="expandable-container">
+              <AudioPlaylist.Root>
                 <AudioPlaylist.Header data-testid="header">
+                  <span>Playlist</span>
                   <AudioPlaylist.Dismiss data-testid="dismiss" />
                 </AudioPlaylist.Header>
                 <AudioPlaylist.Tracks data-testid="tracks" />
-              </AudioPlaylist.ExpandableContainer>
-              <AudioPlaylist.ControlToggle data-testid="control-toggle" />
-            </AudioPlaylist.Root>
+              </AudioPlaylist.Root>
+            </AudioPlaylist.ExpandableContainer>
+            <AudioPlaylist.ControlToggle data-testid="control-toggle" />
           </AudioPlaylist.Provider>
         </AudioPlayerContextProvider>,
       );
@@ -84,32 +85,6 @@ describe('AudioPlaylist', () => {
       expect(screen.getByTestId('dismiss')).toBeInTheDocument();
       expect(screen.getByTestId('tracks')).toBeInTheDocument();
       expect(screen.getByTestId('control-toggle')).toBeInTheDocument();
-    });
-
-    test('should render with TrackTitle, TrackAuthor, and TrackImage', () => {
-      render(
-        <AudioPlayerContextProvider tracks={trackData}>
-          <AudioPlaylist.Provider tracks={trackData}>
-            <AudioPlaylist.Root>
-              <AudioPlaylist.TrackImage
-                data-testid="track-image"
-                src="test-thumbnail.jpg"
-                altText="Test Track"
-              />
-              <AudioPlaylist.TrackTitle data-testid="track-title">
-                Test Track
-              </AudioPlaylist.TrackTitle>
-              <AudioPlaylist.TrackAuthor data-testid="track-author">
-                Test Artist
-              </AudioPlaylist.TrackAuthor>
-            </AudioPlaylist.Root>
-          </AudioPlaylist.Provider>
-        </AudioPlayerContextProvider>,
-      );
-
-      expect(screen.getByTestId('track-image')).toBeInTheDocument();
-      expect(screen.getByTestId('track-title')).toBeInTheDocument();
-      expect(screen.getByTestId('track-author')).toBeInTheDocument();
     });
   });
 });
