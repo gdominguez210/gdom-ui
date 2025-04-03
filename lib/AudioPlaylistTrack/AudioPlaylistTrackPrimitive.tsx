@@ -24,7 +24,7 @@ export function AudioPlaylistTrackPrimitive<T extends ElementType = 'li'>(
     <Element
       tabIndex={0}
       role="button"
-      aria-pressed={active}
+      aria-current={active ? 'true' : 'false'}
       className={twMerge(
         clsx(
           'flex cursor-pointer items-center gap-3 rounded-md p-2 transition-colors duration-200 focus-within:outline-white',

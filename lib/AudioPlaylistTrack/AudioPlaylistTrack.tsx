@@ -3,18 +3,15 @@
 import {
   type ElementType,
   type MouseEvent as ReactMouseEvent,
-  type SyntheticEvent,
   type KeyboardEvent,
   useCallback,
 } from 'react';
 import { type ComponentPropsWithRef } from 'react';
-import { AudioPlaylistTrackTitle } from '@lib/AudioPlaylistTrackTitle';
-import { AudioPlaylistTrackAuthor } from '@lib/AudioPlaylistTrackAuthor';
-import { AudioPlaylistTrackImage } from '@lib/AudioPlaylistTrackImage';
 import {
   AudioPlaylistTrackPrimitive,
   type AudioPlaylistTrackPrimitiveProps,
 } from '@lib/AudioPlaylistTrack/AudioPlaylistTrackPrimitive';
+import { useAudioPlaylistTrackContext } from '@lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
 
 /**
  * Props for the audio playlist track component
@@ -22,18 +19,6 @@ import {
 export type AudioPlaylistTrackProps<T extends ElementType = 'li'> = {
   /** Element to render as @default li */
   as?: T;
-  /** Title of the track */
-  title: string;
-  /** Author of the track */
-  author: string;
-  /** URL to the track thumbnail image */
-  thumbnail?: string;
-  /** Whether this is the active track */
-  active?: boolean;
-  /** Whether audio is currently playing */
-  isPlaying?: boolean;
-  /** Handler for track selection */
-  onSelect?: (e: SyntheticEvent) => void;
 } & ComponentPropsWithRef<T>;
 
 /**
@@ -42,32 +27,33 @@ export type AudioPlaylistTrackProps<T extends ElementType = 'li'> = {
 export function AudioPlaylistTrack<T extends ElementType = 'li'>(
   props: AudioPlaylistTrackProps<T>,
 ) {
+  const { onClick, onKeyDown, children, ...restProps } = props;
+
   const {
-    title,
-    author,
-    thumbnail = '',
-    active = false,
-    isPlaying = false,
+    active,
     onSelect,
-    ...restProps
-  } = props;
+    track: { title, author },
+  } = useAudioPlaylistTrackContext();
 
   const handleClick = useCallback(
     (e: ReactMouseEvent) => {
       e.preventDefault();
-      onSelect?.(e);
+      onSelect();
+      onClick?.(e);
     },
-    [onSelect],
+    [onSelect, onClick],
   );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLElement>) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        onSelect?.(e);
+        onSelect();
       }
+
+      onKeyDown?.(e);
     },
-    [onSelect],
+    [onSelect, onKeyDown],
   );
 
   return (
@@ -78,16 +64,7 @@ export function AudioPlaylistTrack<T extends ElementType = 'li'>(
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
-      <AudioPlaylistTrackImage
-        src={thumbnail}
-        altText={title}
-        active={active}
-        isPlaying={isPlaying}
-      />
-      <div>
-        <AudioPlaylistTrackTitle>{title}</AudioPlaylistTrackTitle>
-        <AudioPlaylistTrackAuthor>{author}</AudioPlaylistTrackAuthor>
-      </div>
+      {children}
     </AudioPlaylistTrackPrimitive>
   );
 }
