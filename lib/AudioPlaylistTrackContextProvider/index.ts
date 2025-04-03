@@ -1,7 +1,7 @@
 export {
   AudioPlaylistTrackContextProvider,
   type AudioPlaylistTrackContextProviderProps,
-} from './AudioPlaylistTrackContextProvider';
+} from '@lib/AudioPlaylistTrackContextProvider/AudioPlaylistTrackContextProvider';
 
-export { useAudioPlaylistTrackContext } from './useAudioPlaylistTrackContext';
-export { type AudioPlaylistTrackContextType } from './AudioPlaylistTrackContext';
+export { useAudioPlaylistTrackContext } from '@lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
+export { type AudioPlaylistTrackContextType } from '@lib/AudioPlaylistTrackContextProvider/AudioPlaylistTrackContext';

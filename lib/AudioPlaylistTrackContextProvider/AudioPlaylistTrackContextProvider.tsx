@@ -1,6 +1,6 @@
 'use client';
 
-import { type PropsWithChildren, useMemo } from 'react';
+import { type PropsWithChildren, useMemo, useCallback } from 'react';
 import { AudioPlaylistTrackContext } from './AudioPlaylistTrackContext';
 import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
@@ -26,17 +26,26 @@ export interface AudioPlaylistTrackContextProviderProps extends PropsWithChildre
 export function AudioPlaylistTrackContextProvider(props: AudioPlaylistTrackContextProviderProps) {
   const { children, index, track } = props;
 
-  const { currentTrackIndex } = useAudioPlayerContextTrack();
-  const { isPlaying, togglePlay } = useAudioPlayerContextAudio();
+  const { currentTrackIndex, setTrackIndex } = useAudioPlayerContextTrack();
+  const { isPlaying, togglePlay, play } = useAudioPlayerContextAudio();
+
+  const onSelect = useCallback(() => {
+    if (currentTrackIndex !== index) {
+      setTrackIndex(index);
+      play();
+    } else {
+      togglePlay();
+    }
+  }, [currentTrackIndex, index, togglePlay, setTrackIndex, play]);
 
   const contextValue = useMemo(
     () => ({
       active: currentTrackIndex === index,
       isPlaying,
       track,
-      togglePlay,
+      onSelect,
     }),
-    [currentTrackIndex, index, isPlaying, togglePlay, track],
+    [currentTrackIndex, index, isPlaying, track, onSelect],
   );
 
   return (
