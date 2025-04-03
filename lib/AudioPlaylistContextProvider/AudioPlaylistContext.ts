@@ -1,4 +1,3 @@
-import type { AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
 import { createContext, type RefObject } from 'react';
 
 export const AUDIO_PLAYLIST_CONTEXT_ERROR =
@@ -9,7 +8,6 @@ export interface AudioPlaylistContextType {
   togglePlaylist: () => void;
   toggleRef: RefObject<HTMLButtonElement | null>;
   expandableContainerRef: RefObject<HTMLElement | null>;
-  tracks: AudioTrackData[];
   id: string;
 }
 

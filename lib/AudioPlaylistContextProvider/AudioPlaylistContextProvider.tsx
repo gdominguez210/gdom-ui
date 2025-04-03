@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback, useRef, type PropsWithChildren } from 'react';
 import { AudioPlaylistContext } from './AudioPlaylistContext';
-import { type AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
+
 /**
  * Props for the audio playlist context provider
  */
@@ -12,10 +12,6 @@ export type AudioPlaylistContextProviderProps = PropsWithChildren & {
    * @default false
    */
   defaultVisible?: boolean;
-  /**
-   * The tracks to display in the playlist
-   */
-  tracks: AudioTrackData[];
   /**
    * The id of the playlist, primarily used for accessibility attributes
    * @default 'audio-playlist'
@@ -27,7 +23,7 @@ export type AudioPlaylistContextProviderProps = PropsWithChildren & {
  * Provider component for managing playlist visibility state and references
  */
 export function AudioPlaylistContextProvider(props: AudioPlaylistContextProviderProps) {
-  const { children, defaultVisible = false, tracks, id = 'audio-playlist' } = props;
+  const { children, defaultVisible = false, id = 'audio-playlist' } = props;
   const [isPlaylistVisible, setIsPlaylistVisible] = useState(defaultVisible);
 
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -38,8 +34,8 @@ export function AudioPlaylistContextProvider(props: AudioPlaylistContextProvider
   }, []);
 
   const contextValue = useMemo(
-    () => ({ isPlaylistVisible, togglePlaylist, toggleRef, expandableContainerRef, tracks, id }),
-    [isPlaylistVisible, togglePlaylist, tracks, id],
+    () => ({ isPlaylistVisible, togglePlaylist, toggleRef, expandableContainerRef, id }),
+    [isPlaylistVisible, togglePlaylist, id],
   );
 
   return (
