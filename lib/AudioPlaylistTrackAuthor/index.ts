@@ -1,4 +1,8 @@
 export {
   AudioPlaylistTrackAuthor,
   type AudioPlaylistTrackAuthorProps,
-} from './AudioPlaylistTrackAuthor';
+} from '@lib/AudioPlaylistTrackAuthor/AudioPlaylistTrackAuthor';
+export {
+  AudioPlaylistTrackAuthorPrimitive,
+  type AudioPlaylistTrackAuthorPrimitiveProps,
+} from '@lib/AudioPlaylistTrackAuthor/AudioPlaylistTrackAuthorPrimitive';
