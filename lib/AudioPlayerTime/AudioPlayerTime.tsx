@@ -21,10 +21,8 @@ export function AudioPlayerTime(props: AudioPlayerTimeProps) {
   const { currentTimeDisplay, durationDisplay } = useAudioPlayerTime({ currentTime, duration });
 
   return (
-    <AudioPlayerTimePrimitive
-      {...props}
-      currentTime={currentTimeDisplay}
-      duration={durationDisplay}
-    />
+    <AudioPlayerTimePrimitive {...props}>
+      {currentTimeDisplay} / {durationDisplay}
+    </AudioPlayerTimePrimitive>
   );
 }

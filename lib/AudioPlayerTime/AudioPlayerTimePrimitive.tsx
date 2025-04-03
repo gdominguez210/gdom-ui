@@ -8,12 +8,6 @@ import clsx from 'clsx';
 export type AudioPlayerTimePrimitiveProps<T extends ElementType = 'span'> = {
   /** Element to render as @default span */
   as?: T;
-  /** Current playback time formatted as a string */
-  currentTime?: string;
-  /** Total duration formatted as a string */
-  duration?: string;
-  /** Separator between current time and duration @default /  */
-  separator?: string;
 } & ComponentPropsWithRef<T>;
 
 /**
@@ -22,14 +16,7 @@ export type AudioPlayerTimePrimitiveProps<T extends ElementType = 'span'> = {
 export function AudioPlayerTimePrimitive<T extends ElementType>(
   props: AudioPlayerTimePrimitiveProps<T>,
 ) {
-  const {
-    as: Element = 'span',
-    className,
-    currentTime,
-    duration,
-    separator = ' / ',
-    ...restProps
-  } = props;
+  const { as: Element = 'span', className, children, ...restProps } = props;
 
   return (
     <Element
@@ -38,7 +25,7 @@ export function AudioPlayerTimePrimitive<T extends ElementType>(
       )}
       {...restProps}
     >
-      {`${currentTime}${separator}${duration}`}
+      {children}
     </Element>
   );
 }
