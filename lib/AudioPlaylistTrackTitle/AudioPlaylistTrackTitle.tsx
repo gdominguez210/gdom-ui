@@ -1,31 +1,19 @@
-import { type ComponentPropsWithRef, type ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
-import { AudioPlayerTitlePrimitive } from '@lib/AudioPlayerTitle/AudioPlayerTitlePrimitive';
+import { useAudioPlaylistTrackContext } from '@lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
+import {
+  AudioPlaylistTrackTitlePrimitive,
+  type AudioPlaylistTrackTitlePrimitiveProps,
+} from '@lib/AudioPlaylistTrackTitle/AudioPlaylistTrackTitlePrimitive';
+import type { ElementType } from 'react';
 
-/**
- * Props for the audio playlist track title component
- */
-export type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> = {
-  /** Element to render as @default span */
-  as?: T;
-} & ComponentPropsWithRef<T>;
+export type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> =
+  AudioPlaylistTrackTitlePrimitiveProps<T>;
 
-/**
- * Track title component specifically styled for playlist tracks
- */
 export function AudioPlaylistTrackTitle<T extends ElementType = 'span'>(
   props: AudioPlaylistTrackTitleProps<T>,
 ) {
-  const { as, className, children, ...restProps } = props;
+  const {
+    track: { title },
+  } = useAudioPlaylistTrackContext();
 
-  return (
-    <AudioPlayerTitlePrimitive
-      as={as}
-      className={twMerge(clsx('text-sm font-medium leading-tight', className))}
-      {...restProps}
-    >
-      {children}
-    </AudioPlayerTitlePrimitive>
-  );
+  return <AudioPlaylistTrackTitlePrimitive {...props}>{title}</AudioPlaylistTrackTitlePrimitive>;
 }
