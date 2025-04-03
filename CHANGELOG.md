@@ -1,3 +1,17 @@
+# [1.24.0](https://github.com/gdominguez210/gdom-ui/compare/v1.23.0...v1.24.0) (2025-04-03)
+
+
+### Bug Fixes
+
+* **lib/AudioPlaylistExpandableContainer/useAudioPlaylistExpandableContainer:** remove onOutsideClick ([c87ef3d](https://github.com/gdominguez210/gdom-ui/commit/c87ef3d83ec9db296a9c191482c43330b51c790e))
+
+
+### Features
+
+* **lib/AudioPlaylistTrack:** add AudioPlaylistTrack compound component ([7725fff](https://github.com/gdominguez210/gdom-ui/commit/7725fff67431fb67e48e05a9f105988481e06903))
+* **lib/AudioPlaylistTrackContextProvider:** add AudioPlaylistTrackContextProvider ([4a5d036](https://github.com/gdominguez210/gdom-ui/commit/4a5d0363623772b30083b78aedc16ebb40e8cdbd))
+* **lib/AudioPlaylistTrackContextProvider:** add AudioPlaylistTrackContextProvider ([460a870](https://github.com/gdominguez210/gdom-ui/commit/460a870118acb57abaadc10dbe9985c6af4661ad))
+
 # [1.23.0](https://github.com/gdominguez210/gdom-ui/compare/v1.22.0...v1.23.0) (2025-04-01)
 
 

@@ -1,3 +1,8 @@
+import { AudioPlaylistTrack as AudioPlaylistTrack_2 } from '..';
+import { AudioPlaylistTrackAuthor as AudioPlaylistTrackAuthor_2 } from '..';
+import { AudioPlaylistTrackContextProvider } from '../AudioPlaylistTrackContextProvider';
+import { AudioPlaylistTrackImage as AudioPlaylistTrackImage_2 } from '..';
+import { AudioPlaylistTrackTitle as AudioPlaylistTrackTitle_2 } from '..';
 import { ChangeEventHandler } from 'react';
 import { ComponentPropsWithRef } from 'react';
 import { ElementType } from 'react';
@@ -8,7 +13,6 @@ import { PropsWithChildren } from 'react';
 import { RefAttributes } from 'react';
 import { RefObject } from 'react';
 import { SVGProps } from 'react';
-import { SyntheticEvent } from 'react';
 
 export declare const AudioPlayer: {
     Root: typeof AudioPlayerPrimitive & {
@@ -393,12 +397,6 @@ export declare function AudioPlayerTimePrimitive<T extends ElementType>(props: A
 export declare type AudioPlayerTimePrimitiveProps<T extends ElementType = 'span'> = {
     /** Element to render as @default span */
     as?: T;
-    /** Current playback time formatted as a string */
-    currentTime?: string;
-    /** Total duration formatted as a string */
-    duration?: string;
-    /** Separator between current time and duration @default /  */
-    separator?: string;
 } & ComponentPropsWithRef<T>;
 
 /**
@@ -497,16 +495,23 @@ export declare const AudioPlaylist: {
     ControlToggle: typeof AudioPlaylistControlToggle & {
         displayName: string;
     };
-    Track: typeof AudioPlaylistTrack & {
-        displayName: string;
-    };
-    TrackTitle: typeof AudioPlaylistTrackTitle & {
-        displayName: string;
-    };
-    TrackAuthor: typeof AudioPlaylistTrackAuthor & {
-        displayName: string;
-    };
-    TrackImage: typeof AudioPlaylistTrackImage & {
+    Track: {
+        Provider: AudioPlaylistTrackContextProvider & {
+            displayName: string;
+        };
+        Root: AudioPlaylistTrack_2 & {
+            displayName: string;
+        };
+        Image: AudioPlaylistTrackImage_2 & {
+            displayName: string;
+        };
+        Title: AudioPlaylistTrackTitle_2 & {
+            displayName: string;
+        };
+        Author: AudioPlaylistTrackAuthor_2 & {
+            displayName: string;
+        };
+    } & {
         displayName: string;
     };
     ExpandableContainer: typeof AudioPlaylistExpandableContainer & {
@@ -532,10 +537,6 @@ export declare type AudioPlaylistContextProviderProps = PropsWithChildren & {
      */
     defaultVisible?: boolean;
     /**
-     * The tracks to display in the playlist
-     */
-    tracks: AudioTrackData[];
-    /**
      * The id of the playlist, primarily used for accessibility attributes
      * @default 'audio-playlist'
      */
@@ -547,7 +548,6 @@ export declare interface AudioPlaylistContextType {
     togglePlaylist: () => void;
     toggleRef: RefObject<HTMLButtonElement | null>;
     expandableContainerRef: RefObject<HTMLElement | null>;
-    tracks: AudioTrackData[];
     id: string;
 }
 
@@ -670,30 +670,44 @@ export declare type AudioPlaylistScrollableContainerProps<T extends ElementType 
 export declare function AudioPlaylistTrack<T extends ElementType = 'li'>(props: AudioPlaylistTrackProps<T>): JSX.Element;
 
 /**
- * Track author component specifically styled for playlist tracks
+ * Audio playlist track author component
  */
 export declare function AudioPlaylistTrackAuthor<T extends ElementType = 'span'>(props: AudioPlaylistTrackAuthorProps<T>): JSX.Element;
 
 /**
+ * Track author component specifically styled for playlist tracks
+ */
+export declare function AudioPlaylistTrackAuthorPrimitive<T extends ElementType = 'span'>(props: AudioPlaylistTrackAuthorPrimitiveProps<T>): JSX.Element;
+
+/**
  * Props for the audio playlist track author component
  */
-export declare type AudioPlaylistTrackAuthorProps<T extends ElementType = 'span'> = {
+export declare type AudioPlaylistTrackAuthorPrimitiveProps<T extends ElementType = 'span'> = {
     /** Element to render as @default span */
     as?: T;
 } & ComponentPropsWithRef<T>;
 
 /**
+ * Props for the audio playlist track author component
+ */
+export declare type AudioPlaylistTrackAuthorProps<T extends ElementType = 'span'> = AudioPlaylistTrackAuthorPrimitiveProps<T>;
+
+export declare function AudioPlaylistTrackImage(props: AudioPlaylistTrackImageProps): JSX.Element;
+
+/**
  * Component for displaying an audio playlist track image
  */
-export declare function AudioPlaylistTrackImage(props: AudioPlaylistTrackImageProps): JSX.Element;
+export declare function AudioPlaylistTrackImagePrimitive(props: AudioPlaylistTrackImagePrimitiveProps): JSX.Element;
 
 /**
  * Props for the audio playlist track image component
  */
-export declare type AudioPlaylistTrackImageProps<T extends ElementType = 'div'> = AudioPlayerImagePrimitiveProps<T> & {
+export declare type AudioPlaylistTrackImagePrimitiveProps<T extends ElementType = 'div'> = AudioPlayerImagePrimitiveProps<T> & {
     active?: boolean;
     isPlaying?: boolean;
 };
+
+export declare type AudioPlaylistTrackImageProps<T extends ElementType = 'div'> = AudioPlayerImageProps<T>;
 
 /**
  * Primitive component for rendering a single playlist track item
@@ -716,56 +730,37 @@ export declare type AudioPlaylistTrackPrimitiveProps<T extends ElementType = 'li
 export declare type AudioPlaylistTrackProps<T extends ElementType = 'li'> = {
     /** Element to render as @default li */
     as?: T;
-    /** Title of the track */
-    title: string;
-    /** Author of the track */
-    author: string;
-    /** URL to the track thumbnail image */
-    thumbnail?: string;
-    /** Whether this is the active track */
-    active?: boolean;
-    /** Whether audio is currently playing */
-    isPlaying?: boolean;
-    /** Handler for track selection */
-    onSelect?: (e: SyntheticEvent) => void;
 } & ComponentPropsWithRef<T>;
 
 /**
- * Component for rendering the scrollable list of playlist tracks,
- * connected to audio player context
+ * Audio playlist tracks component for rendering the scrollable list of playlist tracks
  */
-export declare function AudioPlaylistTracks<T extends ElementType = 'ul'>(props: AudioPlaylistTracksProps<T>): JSX.Element | null;
+export declare function AudioPlaylistTracks<T extends ElementType = 'ul'>(props: AudioPlaylistTracksProps<T>): JSX.Element;
 
 /**
- * Primitive component for rendering the scrollable list of playlist tracks
+ * Props for the audio playlist tracks container component
  */
-export declare function AudioPlaylistTracksPrimitive<T extends ElementType = 'ul'>(props: AudioPlaylistTracksPrimitiveProps<T>): JSX.Element;
-
-/**
- * Props for the audio playlist tracks primitive component
- */
-export declare type AudioPlaylistTracksPrimitiveProps<T extends ElementType = 'ul'> = {
+export declare type AudioPlaylistTracksProps<T extends ElementType = 'ul'> = {
     /** Element to render as @default ul */
     as?: T;
 } & ComponentPropsWithRef<T>;
 
-/**
- * Props for the audio playlist tracks component
- */
-export declare type AudioPlaylistTracksProps<T extends ElementType = 'ul'> = AudioPlaylistTracksPrimitiveProps<T>;
+export declare function AudioPlaylistTrackTitle<T extends ElementType = 'span'>(props: AudioPlaylistTrackTitleProps<T>): JSX.Element;
 
 /**
  * Track title component specifically styled for playlist tracks
  */
-export declare function AudioPlaylistTrackTitle<T extends ElementType = 'span'>(props: AudioPlaylistTrackTitleProps<T>): JSX.Element;
+export declare function AudioPlaylistTrackTitlePrimitive<T extends ElementType = 'span'>(props: AudioPlaylistTrackTitlePrimitiveProps<T>): JSX.Element;
 
 /**
  * Props for the audio playlist track title component
  */
-export declare type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> = {
+export declare type AudioPlaylistTrackTitlePrimitiveProps<T extends ElementType = 'span'> = {
     /** Element to render as @default span */
     as?: T;
 } & ComponentPropsWithRef<T>;
+
+export declare type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> = AudioPlaylistTrackTitlePrimitiveProps<T>;
 
 declare type AudioTrackData = {
     title: string;
