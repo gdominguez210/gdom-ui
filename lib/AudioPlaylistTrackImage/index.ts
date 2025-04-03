@@ -1,4 +1,9 @@
 export {
   AudioPlaylistTrackImage,
   type AudioPlaylistTrackImageProps,
-} from './AudioPlaylistTrackImage';
+} from '@lib/AudioPlaylistTrackImage/AudioPlaylistTrackImage';
+
+export {
+  AudioPlaylistTrackImagePrimitive,
+  type AudioPlaylistTrackImagePrimitiveProps,
+} from '@lib/AudioPlaylistTrackImage/AudioPlaylistTrackImagePrimitive';
