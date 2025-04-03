@@ -32,15 +32,13 @@ export default {
   parameters: {
     componentSubtitle: 'A customizable audio player component',
     docs: {
-      canvas: {
-        sourceState: 'shown',
-      },
       source: {
         type: 'dynamic',
         // Custom transformer to hide trackData array contents
         transform: (code: string) => {
           // Replace any array literal in the tracks prop with 'trackData'
-          return code.replace(/tracks=\{\[[\s\S]*?\]\}/g, 'tracks={trackData}');
+          code = code.replace(/tracks=\{\[[\s\S]*?\]\}/g, 'tracks={trackData}');
+          return code;
         },
       },
     },
@@ -75,6 +73,9 @@ export const Example: StoryObj<typeof AudioPlayer> = {
     docs: {
       description: {
         story: 'An example layout with all available components',
+      },
+      canvas: {
+        sourceState: 'shown',
       },
       source: {
         type: 'dynamic',
@@ -176,7 +177,7 @@ export const WithCollapsiblePlaylist: StoryObj<typeof AudioPlayer> = {
   },
   render: () => (
     <AudioPlayerCompoundComponent.Provider tracks={trackData}>
-      <AudioPlaylistCompoundComponent.Provider tracks={trackData}>
+      <AudioPlaylistCompoundComponent.Provider>
         <AudioPlayerCompoundComponent.Root className="flex flex-col">
           {/* Collapsible Playlist that appears above */}
           <AudioPlaylistCompoundComponent.ExpandableContainer>
@@ -186,7 +187,23 @@ export const WithCollapsiblePlaylist: StoryObj<typeof AudioPlayer> = {
                 <AudioPlaylistCompoundComponent.Dismiss />
               </AudioPlaylistCompoundComponent.Header>
               <AudioPlaylistCompoundComponent.ScrollableContainer maxHeight="227px">
-                <AudioPlaylistCompoundComponent.Tracks />
+                <AudioPlaylistCompoundComponent.Tracks>
+                  {trackData.map((track, index) => (
+                    <AudioPlaylistCompoundComponent.Track.Provider
+                      key={`${index}-${track.src}`}
+                      index={index}
+                      track={track}
+                    >
+                      <AudioPlaylistCompoundComponent.Track.Root>
+                        <AudioPlaylistCompoundComponent.Track.Image />
+                        <div>
+                          <AudioPlaylistCompoundComponent.Track.Title />
+                          <AudioPlaylistCompoundComponent.Track.Author />
+                        </div>
+                      </AudioPlaylistCompoundComponent.Track.Root>
+                    </AudioPlaylistCompoundComponent.Track.Provider>
+                  ))}
+                </AudioPlaylistCompoundComponent.Tracks>
               </AudioPlaylistCompoundComponent.ScrollableContainer>
             </AudioPlaylistCompoundComponent.Root>
           </AudioPlaylistCompoundComponent.ExpandableContainer>
