@@ -1,3 +1,4 @@
+'use client';
 import type { ElementType } from 'react';
 import { useAudioPlaylistTrackContext } from '@lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
 import { AudioPlaylistTrackImagePrimitive } from '@lib/AudioPlaylistTrackImage/AudioPlaylistTrackImagePrimitive';
