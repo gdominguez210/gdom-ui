@@ -69,6 +69,6 @@ describe('AudioPlaylistScrollableContainer', () => {
     );
 
     const container = screen.getByTestId('scrollable-container');
-    expect(container.tagName).toBe('SECTION');
+    expect(container.tagName.toLowerCase()).toBe('section');
   });
 });
