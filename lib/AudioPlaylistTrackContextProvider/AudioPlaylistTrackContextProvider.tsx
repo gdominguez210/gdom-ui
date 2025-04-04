@@ -30,12 +30,13 @@ export function AudioPlaylistTrackContextProvider(props: AudioPlaylistTrackConte
   const { isPlaying, togglePlay, play } = useAudioPlayerContextAudio();
 
   const onSelect = useCallback(() => {
-    if (currentTrackIndex !== index) {
-      setTrackIndex(index);
-      play();
-    } else {
+    if (currentTrackIndex === index) {
       togglePlay();
+      return;
     }
+
+    setTrackIndex(index);
+    play();
   }, [currentTrackIndex, index, togglePlay, setTrackIndex, play]);
 
   const contextValue = useMemo(
