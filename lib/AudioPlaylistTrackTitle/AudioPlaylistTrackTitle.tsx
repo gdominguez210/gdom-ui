@@ -5,8 +5,10 @@ import {
 } from '@lib/AudioPlaylistTrackTitle/AudioPlaylistTrackTitlePrimitive';
 import type { ElementType } from 'react';
 
-export type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> =
-  AudioPlaylistTrackTitlePrimitiveProps<T>;
+export type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> = Omit<
+  AudioPlaylistTrackTitlePrimitiveProps<T>,
+  'children'
+>;
 
 export function AudioPlaylistTrackTitle<T extends ElementType = 'span'>(
   props: AudioPlaylistTrackTitleProps<T>,
@@ -15,5 +17,9 @@ export function AudioPlaylistTrackTitle<T extends ElementType = 'span'>(
     track: { title },
   } = useAudioPlaylistTrackContext();
 
-  return <AudioPlaylistTrackTitlePrimitive {...props}>{title}</AudioPlaylistTrackTitlePrimitive>;
+  return (
+    <AudioPlaylistTrackTitlePrimitive {...(props as AudioPlaylistTrackTitlePrimitiveProps<T>)}>
+      {title}
+    </AudioPlaylistTrackTitlePrimitive>
+  );
 }
