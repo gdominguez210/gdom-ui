@@ -1,0 +1,529 @@
+import { Meta, Controls, Story, Source, Canvas, Stories } from '@storybook/blocks';
+import * as AudioPlaylistStories from './AudioPlaylist.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+
+<Meta of={AudioPlaylistStories} />
+
+# AudioPlaylist
+
+The AudioPlaylist is a flexible, composable interface for displaying audio track lists that integrates seamlessly with the AudioPlayer component. Built using a compound component pattern, it allows for maximum customization and flexibility in implementation.
+
+<DocumentationNav />
+<Stories />
+
+## Component Architecture
+
+The AudioPlaylist uses a compound component pattern with a two-tier architecture similar to the AudioPlayer:
+
+### Context-Connected Components
+
+The main `AudioPlaylist` namespace exports all subcomponents that integrate with the audio playlist context:
+
+- These components handle state management and playlist interactions automatically
+- They're accessible through the `AudioPlaylist.ComponentName` pattern
+- These are client components that use React hooks and context
+
+Components that handle events (like AudioPlaylist.ControlToggle, AudioPlaylist.Dismiss, etc.) follow a consistent pattern:
+
+- They accept standard event handlers as props (onClick, onChange, etc.)
+- Internal handlers run first to maintain core functionality
+- Your custom handlers are called afterward with the event object
+
+<Source
+  language="tsx"
+  dark
+  code={`
+<AudioPlaylist.ControlToggle
+  onClick={(e) => {
+    console.log('Playlist toggle clicked');
+  }}
+/>
+
+<AudioPlaylist.Dismiss
+  onClick={(e) => {
+    console.log('Dismiss button clicked');
+  }}
+/>
+`} />
+
+This approach allows you to add custom behavior while the components automatically maintain their connection to the playlist context.
+
+### Primitive Components
+
+Each context-connected component is built on top of a primitive component:
+
+- Primitive components are purely prop-driven with no dependency on context
+- They handle presentation, and some default assignments for accessibility
+- They can be imported directly for custom implementations
+- Since they don't use React hooks or browser APIs, **primitive components can be used as server components** in Next.js
+
+This separation creates a flexible system that enables both quick implementation through the context components and advanced customization through primitives, while also allowing for server-side rendering optimizations.
+
+### Polymorphic Components
+
+All AudioPlaylist components are built as polymorphic components, which means they can render as any HTML element or React component. This provides maximum flexibility for integration into various UI patterns.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Render as a div (default)
+<AudioPlaylist.Root>
+  Content goes here
+</AudioPlaylist.Root>
+
+// Render as a section
+
+<AudioPlaylist.Root as="section">Content goes here</AudioPlaylist.Root>
+
+// Render as a custom component
+
+<AudioPlaylist.Root as={CustomContainer}>Content goes here</AudioPlaylist.Root>
+`} />
+
+Each component accepts an `as` prop that determines the rendered element, along with all props valid for that element type. This allows you to maintain semantic HTML structure while using AudioPlaylist components.
+
+### Styling Approach
+
+All AudioPlaylist components are designed for flexible styling:
+
+- Use **className props** with Tailwind CSS classes
+- Apply **custom CSS classes**
+- Use **inline style objects**
+- Work with **CSS-in-JS solutions** like styled-components
+
+Components use `twMerge` internally to intelligently merge Tailwind CSS classes, so your classes override defaults rather than conflicting with them:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Override the background color and padding
+<AudioPlaylist.Root className="bg-blue-800 p-6 rounded-xl">
+  <AudioPlaylist.Header className="text-2xl font-bold text-white">
+    Playlist
+  </AudioPlaylist.Header>
+</AudioPlaylist.Root>
+
+// Using inline styles
+
+<AudioPlaylist.Tracks style={{ marginTop: '2rem', opacity: 0.9 }} />
+
+// Combining approaches (Tailwind, style object, custom class)
+
+<AudioPlaylist.Track.Root
+  className="my-custom-class rounded-md p-2 hover:bg-gray-700"
+  style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}
+/>
+`} />
+
+### Accessibility Features
+
+The AudioPlaylist components are built with accessibility as a core principle:
+
+- All controls use semantic HTML elements
+- Proper ARIA attributes for controls and content
+- Keyboard navigation support
+- Focus management for interactive elements
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Example of accessibility attributes automatically applied
+<AudioPlaylist.ControlToggle />
+// Renders with:
+// - aria-label for playlist visibility state
+// - role="button" 
+// - keyboard focus handling
+// - screen reader announcements for state changes
+`}
+/>
+
+## Available Subcomponents
+
+Each component is available through the main `AudioPlaylist` namespace or can be imported directly. Primitive components are also available for advanced customization.
+
+### Core Components
+
+#### Root Container
+
+The main wrapper component that provides layout and styling for the playlist.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.Root>...</AudioPlaylist.Root>
+
+<AudioPlaylist>...</AudioPlaylist>
+
+// Primitive component
+import { AudioPlaylistPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylist';
+
+<AudioPlaylistPrimitive>...</AudioPlaylistPrimitive>
+`} />
+
+#### Provider
+
+Provides playlist state and context to all child components. Required at the root level.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.Provider>...</AudioPlaylist.Provider>
+
+// Direct import
+import { AudioPlaylistContextProvider } from '@gdominguez210/gdom-ui/AudioPlaylistContextProvider';
+
+<AudioPlaylistContextProvider>...</AudioPlaylistContextProvider>
+`} />
+
+### Playlist Structure Components
+
+#### Header
+
+Container for the playlist header title and dismiss button.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.Header>Playlist</AudioPlaylist.Header>
+
+// Direct import
+import { AudioPlaylistHeader } from '@gdominguez210/gdom-ui/AudioPlaylistHeader';
+
+<AudioPlaylistHeader>Playlist</AudioPlaylistHeader>
+
+// Primitive component
+import { AudioPlaylistHeaderPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistHeader';
+
+<AudioPlaylistHeaderPrimitive>Playlist</AudioPlaylistHeaderPrimitive>
+`} />
+
+#### Dismiss
+
+Button to close/hide the playlist.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.Dismiss />
+
+// Direct import
+import { AudioPlaylistDismiss } from '@gdominguez210/gdom-ui/AudioPlaylistDismiss';
+
+<AudioPlaylistDismiss />
+
+// Primitive component
+import { AudioPlaylistDismissPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistDismiss';
+
+<AudioPlaylistDismissPrimitive onClick={() => {}} />
+`} />
+
+#### Tracks
+
+Container for the list of track components.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.Tracks>...</AudioPlaylist.Tracks>
+
+// Direct import
+import { AudioPlaylistTracks } from '@gdominguez210/gdom-ui/AudioPlaylistTracks';
+
+<AudioPlaylistTracks>...</AudioPlaylistTracks>
+
+// Primitive component
+import { AudioPlaylistTracksPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTracks';
+
+<AudioPlaylistTracksPrimitive>...</AudioPlaylistTracksPrimitive>
+`} />
+
+### Track Components
+
+AudioPlaylist includes a nested Track namespace with components for displaying individual track information.
+
+#### Track Provider
+
+Provides individual track data and context to track components.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.Track.Provider track={track} index={index}>
+  ...
+</AudioPlaylist.Track.Provider>
+
+// Direct import
+import { AudioPlaylistTrackContextProvider } from '@gdominguez210/gdom-ui/AudioPlaylistTrackContextProvider';
+
+<AudioPlaylistTrackContextProvider
+  track={track}
+  index={index}
+>
+  ...
+</AudioPlaylistTrackContextProvider>
+`} />
+
+#### Track Root
+
+Container for individual track display components.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.Track.Root>...</AudioPlaylist.Track.Root>
+
+// Direct import
+import { AudioPlaylistTrack } from '@gdominguez210/gdom-ui/AudioPlaylistTrack';
+
+<AudioPlaylistTrack>...</AudioPlaylistTrack>
+
+// Primitive component
+import { AudioPlaylistTrackPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTrack';
+
+<AudioPlaylistTrackPrimitive>...</AudioPlaylistTrackPrimitive>
+`} />
+
+#### Track Image
+
+Displays the track artwork or thumbnail image.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.Track.Image />
+
+// Direct import
+import { AudioPlaylistTrackImage } from '@gdominguez210/gdom-ui/AudioPlaylistTrackImage';
+
+<AudioPlaylistTrackImage />
+
+// Primitive component
+import { AudioPlaylistTrackImagePrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTrackImage';
+
+<AudioPlaylistTrackImagePrimitive
+  src="path/to/image.jpg"
+  alt="Album cover"
+/>
+`} />
+
+#### Track Title
+
+Displays the title of the track.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.Track.Title />
+
+// Direct import
+import { AudioPlaylistTrackTitle } from '@gdominguez210/gdom-ui/AudioPlaylistTrackTitle';
+
+<AudioPlaylistTrackTitle />
+
+// Primitive component
+import { AudioPlaylistTrackTitlePrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTrackTitle';
+
+<AudioPlaylistTrackTitlePrimitive>Song Title</AudioPlaylistTrackTitlePrimitive>
+`} />
+
+#### Track Author
+
+Displays the artist/author of the track.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.Track.Author />
+
+// Direct import
+import { AudioPlaylistTrackAuthor } from '@gdominguez210/gdom-ui/AudioPlaylistTrackAuthor';
+
+<AudioPlaylistTrackAuthor />
+
+// Primitive component
+import { AudioPlaylistTrackAuthorPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTrackAuthor';
+
+<AudioPlaylistTrackAuthorPrimitive>Artist Name</AudioPlaylistTrackAuthorPrimitive>
+`} />
+
+### Container Components
+
+#### ExpandableContainer
+
+Creates an expandable/collapsible container for the playlist that can be toggled.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.ExpandableContainer>
+  <AudioPlaylist.Root>...</AudioPlaylist.Root>
+</AudioPlaylist.ExpandableContainer>
+
+// Direct import
+import { AudioPlaylistExpandableContainer } from '@gdominguez210/gdom-ui/AudioPlaylistExpandableContainer';
+
+<AudioPlaylistExpandableContainer>
+  <AudioPlaylist>...</AudioPlaylist>
+</AudioPlaylistExpandableContainer>
+
+// Primitive component
+import { AudioPlaylistExpandableContainerPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistExpandableContainer';
+
+<AudioPlaylistExpandableContainerPrimitive isVisible={true}>
+  <AudioPlaylist>...</AudioPlaylist>
+</AudioPlaylistExpandableContainerPrimitive>
+`} />
+
+#### ScrollableContainer
+
+Creates a container with customizable height and scrolling behavior.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.ScrollableContainer maxHeight="300px">
+  <AudioPlaylist.Tracks>...</AudioPlaylist.Tracks>
+</AudioPlaylist.ScrollableContainer>
+
+// Direct import
+import { AudioPlaylistScrollableContainer } from '@gdominguez210/gdom-ui/AudioPlaylistScrollableContainer';
+
+<AudioPlaylistScrollableContainer maxHeight="300px">
+  <AudioPlaylistTracks>...</AudioPlaylistTracks>
+</AudioPlaylistScrollableContainer>
+
+// Primitive component
+import { AudioPlaylistScrollableContainerPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistScrollableContainer';
+
+<AudioPlaylistScrollableContainerPrimitive maxHeight="300px">
+  <AudioPlaylistTracks>...</AudioPlaylistTracks>
+</AudioPlaylistScrollableContainerPrimitive>
+`} />
+
+### Control Components
+
+#### ControlToggle
+
+Button to toggle the visibility of the playlist when using ExpandableContainer.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+<AudioPlaylist.ControlToggle />
+
+// Direct import
+import { AudioPlaylistControlToggle } from '@gdominguez210/gdom-ui/AudioPlaylistControlToggle';
+
+<AudioPlaylistControlToggle />
+
+// Primitive component
+import { AudioPlaylistControlTogglePrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistControlToggle';
+
+<AudioPlaylistControlTogglePrimitive
+  isVisible={false}
+  onClick={() => {}}
+/>
+`} />
+
+## Integration with AudioPlayer
+
+The AudioPlaylist component is designed to integrate seamlessly with the AudioPlayer component. When both components share the same AudioPlayerContext, the playlist can interact with and control the audio playback.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Example of integrated usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
+
+<AudioPlayer.Provider tracks={tracks}>
+  <AudioPlaylist.Provider>
+    {/* Playlist UI */}
+    <AudioPlaylist.ExpandableContainer>
+      <AudioPlaylist.Root>
+        <AudioPlaylist.Header>
+          Playlist
+          <AudioPlaylist.Dismiss />
+        </AudioPlaylist.Header>
+        <AudioPlaylist.ScrollableContainer maxHeight="300px">
+          <AudioPlaylist.Tracks>
+            {tracks.map((track, index) => (
+              <AudioPlaylist.Track.Provider
+                key={index}
+                track={track}
+                index={index}
+              >
+                <AudioPlaylist.Track.Root>
+                  <AudioPlaylist.Track.Image />
+                  <div>
+                    <AudioPlaylist.Track.Title />
+                    <AudioPlaylist.Track.Author />
+                  </div>
+                </AudioPlaylist.Track.Root>
+              </AudioPlaylist.Track.Provider>
+            ))}
+          </AudioPlaylist.Tracks>
+        </AudioPlaylist.ScrollableContainer>
+      </AudioPlaylist.Root>
+    </AudioPlaylist.ExpandableContainer>
+
+    {/* AudioPlayer UI */}
+    <AudioPlayer.Root>
+      <AudioPlayer.Controls>
+        {/* ... player controls ... */}
+      </AudioPlayer.Controls>
+      <div className="flex justify-end">
+        <AudioPlaylist.ControlToggle />
+      </div>
+    </AudioPlayer.Root>
+
+  </AudioPlaylist.Provider>
+</AudioPlayer.Provider>
+`} />
+
+## Props
+
+<Controls />
