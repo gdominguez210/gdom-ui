@@ -17,6 +17,7 @@ export function AudioPlayerControlButton(props: AudioPlayerControlButtonProps) {
           className,
         ),
       )}
+      type="button"
       {...restProps}
     >
       {children}
