@@ -18,7 +18,9 @@ export function AudioPlaylist<T extends ElementType = 'div'>(props: AudioPlaylis
 
   return (
     <Element
-      className={twMerge(clsx('flex flex-col border-slate-600 bg-slate-800', className))}
+      className={twMerge(
+        clsx('flex flex-col border-slate-600 bg-slate-800 text-neutral-100', className),
+      )}
       {...restProps}
     >
       {children}
