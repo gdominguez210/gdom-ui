@@ -1,3 +1,5 @@
+'use client';
+
 import type { ElementType } from 'react';
 import {
   AudioPlaylistTrackAuthorPrimitive,
@@ -8,8 +10,10 @@ import { useAudioPlaylistTrackContext } from '@lib/AudioPlaylistTrackContextProv
 /**
  * Props for the audio playlist track author component
  */
-export type AudioPlaylistTrackAuthorProps<T extends ElementType = 'span'> =
-  AudioPlaylistTrackAuthorPrimitiveProps<T>;
+export type AudioPlaylistTrackAuthorProps<T extends ElementType = 'span'> = Omit<
+  AudioPlaylistTrackAuthorPrimitiveProps<T>,
+  'children'
+>;
 
 /**
  * Audio playlist track author component
@@ -21,5 +25,9 @@ export function AudioPlaylistTrackAuthor<T extends ElementType = 'span'>(
     track: { author },
   } = useAudioPlaylistTrackContext();
 
-  return <AudioPlaylistTrackAuthorPrimitive {...props}>{author}</AudioPlaylistTrackAuthorPrimitive>;
+  return (
+    <AudioPlaylistTrackAuthorPrimitive {...(props as AudioPlaylistTrackAuthorPrimitiveProps<T>)}>
+      {author}
+    </AudioPlaylistTrackAuthorPrimitive>
+  );
 }
