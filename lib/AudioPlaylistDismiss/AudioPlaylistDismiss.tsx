@@ -29,6 +29,7 @@ export function AudioPlaylistDismiss(props: AudioPlaylistDismissProps) {
 
   return (
     <AudioPlaylistDismissPrimitive
+      aria-label="Close playlist"
       onClick={handleClick}
       className={className}
       {...restProps}
