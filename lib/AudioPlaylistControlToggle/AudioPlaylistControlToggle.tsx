@@ -35,6 +35,7 @@ export function AudioPlaylistControlToggle(props: AudioPlaylistControlToggleProp
 
   return (
     <AudioPlaylistControlTogglePrimitive
+      aria-label={isPlaylistVisible ? 'Hide playlist' : 'Show playlist'}
       aria-expanded={isPlaylistVisible}
       aria-controls={id}
       ref={composedRef}
