@@ -50,6 +50,17 @@ export default {
   title: 'components/AudioPlaylist',
   component: AudioPlaylist,
   tags: ['autodocs'],
+  docs: {
+    source: {
+      type: 'dynamic',
+      // Custom transformer to hide trackData array contents
+      transform: (code: string) => {
+        // Replace any array literal in the tracks prop with 'trackData'
+        code = code.replace(/tracks=\{\[[\s\S]*?\]\}/g, 'tracks={trackData}');
+        return code;
+      },
+    },
+  },
   parameters: {
     componentSubtitle: 'A customizable audio playlist component',
   },
