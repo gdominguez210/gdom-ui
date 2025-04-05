@@ -18,18 +18,25 @@ const config: StorybookConfig = {
 
   docs: {},
 
-  viteFinal: async (config) => ({
-    ...config,
-    base: '/gdom-ui/',
-    plugins: await withoutVitePlugins(config.plugins, ['vite:dts']), // skip dts plugin
-    resolve: {
-      ...config.resolve,
-      alias: {
-        ...config.resolve?.alias,
-        '@storybook-components': join(__dirname, './components'),
+  viteFinal: async (config, { configType }) => {
+    const _config = {
+      ...config,
+      plugins: await withoutVitePlugins(config.plugins, ['vite:dts']), // skip dts plugin
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve?.alias,
+          '@storybook-components': join(__dirname, './components'),
+        },
       },
-    },
-  }),
+    };
+
+    if (configType === 'PRODUCTION') {
+      _config.base = '/gdom-ui/';
+    }
+
+    return _config;
+  },
 
   typescript: {
     reactDocgen: 'react-docgen-typescript',
