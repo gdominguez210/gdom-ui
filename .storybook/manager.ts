@@ -8,7 +8,7 @@ const gdomTheme = create({
   brandTitle: 'GDOM UI',
   brandUrl: 'https://github.com/gdominguez210/gdom-ui',
   // Use the basePath to generate the correct URL in both dev and production
-  brandImage: `logo.svg`,
+  brandImage: `https://garydominguez.com/gdom-ui/logo.svg`,
   brandTarget: '_blank',
 
   // UI
