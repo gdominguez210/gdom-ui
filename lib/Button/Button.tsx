@@ -1,4 +1,3 @@
-import { type Ref, forwardRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { cva } from 'class-variance-authority';
 
@@ -144,7 +143,7 @@ const buttonStyles = cva(
   },
 );
 
-function _Button(props: ButtonProps, ref: Ref<HTMLButtonElement>) {
+export function Button(props: ButtonProps) {
   const {
     children,
     disabled,
@@ -159,7 +158,6 @@ function _Button(props: ButtonProps, ref: Ref<HTMLButtonElement>) {
 
   return (
     <button
-      ref={ref}
       className={twMerge(
         buttonStyles({ variant, size, disabled, iconOnly, isDestructive, className }),
       )}
@@ -170,7 +168,3 @@ function _Button(props: ButtonProps, ref: Ref<HTMLButtonElement>) {
     </button>
   );
 }
-
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(_Button);
-
-Button.displayName = 'Button';
