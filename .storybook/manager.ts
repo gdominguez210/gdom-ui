@@ -1,6 +1,11 @@
 import { addons } from '@storybook/manager-api';
 import { create } from '@storybook/theming/create';
 
+// Determine if we're in production (when building for deployment)
+// In development, use a relative path; in production, use an absolute path with the base URL
+const isProduction = process.env['NODE_ENV'] === 'production';
+const basePath = isProduction ? '/gdom-ui/' : './';
+
 // Create a theme with custom branding
 const gdomTheme = create({
   base: 'light',
@@ -8,7 +13,8 @@ const gdomTheme = create({
   // Brand
   brandTitle: 'GDOM UI',
   brandUrl: 'https://github.com/your-username/gdom-ui',
-  brandImage: './logo.svg',
+  // Use the basePath to generate the correct URL in both dev and production
+  brandImage: `${basePath}logo.svg`,
   brandTarget: '_self',
 
   // UI
