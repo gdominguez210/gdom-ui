@@ -1,15 +1,20 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "checkJs": false,
+    "skipLibCheck": true,
     "baseUrl": ".",
+    "noEmit": true,
+    "types": ["node"],
     "paths": {
-      "@storybook-components/*": ["components/*"]
+      "@storybook/manager-api": ["./node_modules/@storybook/manager-api"],
+      "@storybook/theming/*": ["./node_modules/@storybook/theming/*"]
     }
   },
   "include": [
     "./**/*.ts",
     "./**/*.tsx",
-    "./**/*.mdx"
+    "./**/*.mdx",
+    "*.ts",
   ]
 } 
