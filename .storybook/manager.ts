@@ -8,7 +8,7 @@ const gdomTheme = create({
   // Brand
   brandTitle: 'GDOM UI',
   brandUrl: 'https://github.com/your-username/gdom-ui',
-  brandImage: './logo.svg',
+  brandImage: 'logo.svg',
   brandTarget: '_self',
 
   // UI

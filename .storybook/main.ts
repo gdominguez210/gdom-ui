@@ -20,6 +20,7 @@ const config: StorybookConfig = {
 
   viteFinal: async (config) => ({
     ...config,
+    base: '/gdom-ui/',
     plugins: await withoutVitePlugins(config.plugins, ['vite:dts']), // skip dts plugin
     resolve: {
       ...config.resolve,
