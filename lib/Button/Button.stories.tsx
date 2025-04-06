@@ -165,6 +165,14 @@ export const PrimaryButtons: StoryObj<typeof ButtonComponent> = {
   argTypes: {
     ...buttonVariantArgTypes,
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The default, high-visibility button for primary actions. Use for main call-to-action buttons and the most important actions in your UI.',
+      },
+    },
+  },
   render: () => {
     return (
       <Grid>
@@ -199,6 +207,14 @@ export const SecondaryButtons: StoryObj<typeof ButtonComponent> = {
   args: {},
   argTypes: {
     ...buttonVariantArgTypes,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Used for secondary or alternative actions. These buttons have lower visual prominence than primary buttons but are still clearly interactive.',
+      },
+    },
   },
   render: () => {
     return (
@@ -235,6 +251,14 @@ export const TertiaryButtons: StoryObj<typeof ButtonComponent> = {
   argTypes: {
     ...buttonVariantArgTypes,
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Lower-emphasis button that maintains interactivity. Useful for less important actions that should still be readily available.',
+      },
+    },
+  },
   render: () => {
     return (
       <Grid>
@@ -269,6 +293,14 @@ export const DestructiveButtons: StoryObj<typeof ButtonComponent> = {
   args: {},
   argTypes: {
     ...buttonVariantArgTypes,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'For actions with permanent or potentially negative consequences. Use for delete, remove, or other destructive operations that users should consider carefully.',
+      },
+    },
   },
   render: () => {
     return (
@@ -305,6 +337,14 @@ export const ColoredLinkButtons: StoryObj<typeof ButtonComponent> = {
   argTypes: {
     ...buttonVariantArgTypes,
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Link-styled buttons with color highlight for navigation or subtle actions. Use when you want an action to appear as a link but maintain button behavior.',
+      },
+    },
+  },
   render: () => {
     return (
       <Grid>
@@ -339,6 +379,14 @@ export const GrayLinkButtons: StoryObj<typeof ButtonComponent> = {
   args: {},
   argTypes: {
     ...buttonVariantArgTypes,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Neutral gray link-styled buttons for less prominent navigation or actions. These provide the lowest visual prominence while still being recognizable as interactive elements.',
+      },
+    },
   },
   render: () => {
     return (

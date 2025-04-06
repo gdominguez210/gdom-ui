@@ -1,7 +1,8 @@
+import { type ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { cva } from 'class-variance-authority';
 
-export const variants = [
+const variants = [
   'primary',
   'secondary',
   'tertiary',
@@ -16,9 +17,9 @@ type VariantsAsTypes = typeof variants;
 type Variant = VariantsAsTypes[number];
 
 type SizesAsTypes = typeof sizes;
-export type Size = SizesAsTypes[number];
+type Size = SizesAsTypes[number];
 
-interface CommonButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface CommonButtonProps extends ComponentPropsWithRef<'button'> {
   /**
    * The type of the button.
    * @default primary

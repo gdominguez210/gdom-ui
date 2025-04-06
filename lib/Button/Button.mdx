@@ -1,0 +1,130 @@
+import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/blocks';
+import * as ButtonStories from './Button.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+
+<Meta of={ButtonStories} />
+
+# Button
+
+The Button component is a versatile, customizable element for user interactions. It provides various styles, sizes, and states to accommodate different UI requirements while maintaining accessibility and consistent design.
+
+<DocumentationNav />
+<Primary />
+<Controls />
+<Stories includePrimary={false} />
+
+## Component Features
+
+The Button component offers a comprehensive set of features:
+
+- **Multiple variants** for different UI contexts (primary, secondary, tertiary, destructive, link styles)
+- **Consistent sizing options** for visual hierarchy
+- **Icon support** for enhanced visual communication
+- **Accessibility-first design** with proper aria attributes
+- **State management** for hover, focus, and disabled states
+- **Full TypeScript support** with strict typing
+
+## Usage Guidelines
+
+Button components should be used for actions that:
+
+- Submit forms
+- Trigger modals or UI changes
+- Navigate between views
+- Perform actions within the application
+
+Choose different variants based on the importance and impact of the action:
+
+- **Primary**: Main call-to-action, high-visibility actions
+- **Secondary**: Alternative or supporting actions
+- **Tertiary**: Less prominent actions
+- **Destructive**: Actions with permanent consequences (delete, remove)
+- **Link variants**: For navigation or light-weight actions that look like links
+
+## Component Architecture
+
+The Button uses a utility-first approach with Tailwind CSS, leveraging Class Variance Authority (CVA) for style variants:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Button component basic usage
+import { Button } from '@gdominguez210/gdom-ui/Button';
+
+// Primary button (default)
+
+<Button>Click Me</Button>
+
+// Secondary button
+
+<Button variant="secondary">Secondary Action</Button>
+
+// With icon
+
+<Button>
+  <Icon name="star-line" />
+  With Icon
+</Button>
+
+// Icon-only button (requires aria-label)
+
+<Button
+  iconOnly
+  aria-label="Star item"
+>
+  <Icon name="star-line" />
+</Button>
+`} />
+
+### Styling Approach
+
+The Button component uses:
+
+- **CVA (Class Variance Authority)** for managing variant combinations
+- **Tailwind CSS** for utility-based styling
+- **twMerge** to intelligently merge Tailwind classes
+
+This approach provides consistent styling across variants while allowing for customization:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Adding custom classes
+<Button className="my-custom-class">
+  Custom Button
+</Button>
+
+// The component handles class merging intelligently
+
+<Button
+  variant="primary"
+  className="rounded-full"
+>
+  Rounded Button
+</Button>
+`} />
+
+### Accessibility Features
+
+The Button component is built with accessibility as a priority:
+
+- Standard buttons use semantic `<button>` elements
+- Focus states are visually distinct
+- Disabled states prevent interaction
+- Icon-only buttons require `aria-label` attributes for screen readers
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Icon-only buttons require aria-label
+<Button 
+  iconOnly 
+  aria-label="Add to favorites"
+>
+  <Icon name="heart" />
+</Button>
+`}
+/>
