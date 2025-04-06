@@ -144,6 +144,13 @@ function GridItem(props: GridItemProps) {
 export default {
   title: 'components/Button',
   component: ButtonComponent,
+  parameters: {
+    docs: {
+      source: {
+        type: 'dynamic',
+      },
+    },
+  },
 } as Meta<typeof ButtonComponent>;
 
 /** Configurable Button Sandbox */
