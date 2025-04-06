@@ -5,10 +5,10 @@ const gdomTheme = create({
   base: 'light',
 
   // Brand
-  brandTitle: 'GDOM UI',
+  brandTitle: 'gdom-ui',
   brandUrl: 'https://github.com/gdominguez210/gdom-ui',
   // Use the basePath to generate the correct URL in both dev and production
-  brandImage: `https://garydominguez.com/gdom-ui/logo.svg`,
+  brandImage: `logo.svg`,
   brandTarget: '_blank',
 
   // UI

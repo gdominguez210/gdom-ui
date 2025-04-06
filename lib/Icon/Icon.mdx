@@ -1,0 +1,96 @@
+import { Meta, Primary, Controls, Stories, Story, Canvas } from '@storybook/blocks';
+import * as IconStories from './Icon.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+
+<Meta of={IconStories} />
+
+# Icon
+
+The Icon component is a versatile, customizable SVG icon system that provides a consistent way to include icons in your UI.
+
+<DocumentationNav />
+<Primary />
+<Controls />
+<Stories includePrimary={false} />
+
+## Component Features
+
+The Icon component offers the following features:
+
+- **Consistent sizing** relative to text using `em` units
+- **Customizable colors** via Tailwind text color utilities
+- **Accessibility support** with proper ARIA attributes
+- **TypeScript support** with type safety for icon names
+- **Scalable vector graphics** that maintain quality at any size
+- **Simplified integration** with a uniform API
+
+## Usage Guidelines
+
+Icons enhance the user experience by:
+
+- Providing visual cues that reinforce meaning
+- Saving space compared to text labels
+- Improving recognition for common actions
+- Supporting internationalization efforts
+
+Choose appropriate icons that have clear meaning and avoid ambiguous symbolism that could confuse users.
+
+## Component Architecture
+
+The Icon component uses a simple wrapper around SVG components:
+
+```tsx
+import { Icon } from '@gdominguez210/gdom-ui/Icon';
+
+// Basic usage
+<Icon name="star-line" />
+
+// With custom size
+<Icon name="play-large-fill" className="w-6 h-6" />
+
+// With custom color
+<Icon name="volume-up-fill" className="text-blue-500" />
+```
+
+### Styling Approach
+
+The Icon component:
+
+- Uses the `fill-current` utility to inherit color from text color
+- Sets height to `1em` by default, making it scale with text size
+- Supports all SVG attributes like `className`, `aria-label`, etc.
+
+```tsx
+// Icons inherit text color
+<div className="text-red-500">
+  <Icon name="star-line" />
+</div>
+
+// Icons inherit text size
+<div className="text-2xl">
+  <Icon name="star-line" />
+</div>
+
+// Custom classes can override defaults
+<Icon name="star-line" className="h-8 w-8 text-blue-500" />
+```
+
+### Accessibility Considerations
+
+When using icons:
+
+- Provide text alternatives for icons that convey meaning
+- Use `aria-hidden="true"` for decorative icons
+- Ensure sufficient color contrast
+- Consider users with color blindness
+
+## TypeScript Usage
+
+The component provides types for all available icons:
+
+```tsx
+import { Icon, type IconName } from '@gdominguez210/gdom-ui/Icon';
+
+// Type safe icon names
+const iconName: IconName = 'star-line';
+```
