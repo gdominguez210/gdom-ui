@@ -57,7 +57,7 @@ const buttonStyles = cva(
         primary:
           'bg-indigo-700 hover:bg-indigo-800 focus:bg-indigo-800 active:bg-indigo-800 text-white',
         secondary:
-          'bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border-[0.5px] hover:border focus:border active:border border-solid border-neutral-200',
+          'bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border active:border border-solid border-neutral-200',
         tertiary: 'text-indigo-700 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50',
         destructive:
           'text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 focus:shadow-red-700/12',
