@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, type ComponentPropsWithRef, type MouseEventHandler } from 'react';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
+import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
 import { AudioPlayerVolumeButtonPrimitive } from './AudioPlayerVolumeButtonPrimitive';
 
 const VOLUME_ICON_PROPERTIES = {
@@ -29,7 +29,7 @@ export type AudioPlayerVolumeButtonProps = ComponentPropsWithRef<'button'>;
  */
 export function AudioPlayerVolumeButton(props: AudioPlayerVolumeButtonProps) {
   const { onClick, ...restProps } = props;
-  const { mute, volume, toggleMute } = useAudioPlayerContextAudio();
+  const { mute, volume, toggleMute } = useAudioPlayerContextPlayback();
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
