@@ -2,7 +2,7 @@
 
 import { type PropsWithChildren, useMemo, useCallback } from 'react';
 import { AudioPlaylistTrackContext } from './AudioPlaylistTrackContext';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
+import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 import type { AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
 /**
@@ -27,7 +27,7 @@ export function AudioPlaylistTrackContextProvider(props: AudioPlaylistTrackConte
   const { children, index, track } = props;
 
   const { currentTrackIndex, setTrackIndex } = useAudioPlayerContextTrack();
-  const { isPlaying, togglePlay, play } = useAudioPlayerContextAudio();
+  const { isPlaying, togglePlay, play } = useAudioPlayerContextPlayback();
 
   const onSelect = useCallback(() => {
     if (currentTrackIndex === index) {
