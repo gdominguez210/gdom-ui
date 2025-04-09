@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
+import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider';
 import { useAudioPlayerPreviousTrack } from './useAudioPlayerPreviousTrack';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 import { AudioPlayerControlPreviousPrimitive } from './AudioPlayerControlPreviousPrimitive';
@@ -22,7 +22,7 @@ export function AudioPlayerControlPrevious(props: AudioPlayerControlPreviousProp
   const { onClick, ...restProps } = props;
   const { seek } = useAudioPlayerContextTime();
   const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
-  const { loop, shuffle } = useAudioPlayerContextAudio();
+  const { loop, shuffle } = useAudioPlayerContextPlayback();
   const { audioRef } = useAudioPlayerContextRefs();
 
   const { handlePreviousTrack } = useAudioPlayerPreviousTrack({
