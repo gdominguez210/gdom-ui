@@ -4,7 +4,7 @@ import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/Audi
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
+import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
 import { trackData } from '@lib/AudioPlayer/data';
 
 function RefsConsumer() {
@@ -31,7 +31,7 @@ function TimeConsumer() {
 }
 
 function AudioConsumer() {
-  const { isPlaying, volume, mute, shuffle, loop } = useAudioPlayerContextAudio();
+  const { isPlaying, volume, mute, shuffle, loop } = useAudioPlayerContextPlayback();
   return (
     <div data-testid="audio-consumer">
       {`Playing: ${isPlaying}, Volume: ${volume}, Mute: ${mute}, Shuffle: ${shuffle}, Loop: ${loop}`}
