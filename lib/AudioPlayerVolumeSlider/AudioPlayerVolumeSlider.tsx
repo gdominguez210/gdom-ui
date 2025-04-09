@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, type ChangeEventHandler } from 'react';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
+import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 import {
   AudioPlayerVolumeSliderPrimitive,
@@ -24,7 +24,7 @@ function updateAudioVolume(audio: HTMLAudioElement | null, volume: number): void
  */
 export function AudioPlayerVolumeSlider(props: AudioPlayerVolumeSliderProps) {
   const { onChange, ...restProps } = props;
-  const { volume, setVolume } = useAudioPlayerContextAudio();
+  const { volume, setVolume } = useAudioPlayerContextPlayback();
   const { audioRef } = useAudioPlayerContextRefs();
 
   const handleVolumeChange: ChangeEventHandler<HTMLInputElement> = useCallback(
