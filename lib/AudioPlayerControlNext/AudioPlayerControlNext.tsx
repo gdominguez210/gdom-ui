@@ -9,7 +9,7 @@ import {
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
+import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider';
 import { useAudioPlayerNextTrack } from './useAudioPlayerNextTrack';
 import { AudioPlayerControlNextPrimitive } from './AudioPlayerControlNextPrimitive';
 
@@ -23,7 +23,7 @@ export function AudioPlayerControlNext(props: AudioPlayerControlNextProps) {
   const { audioRef } = useAudioPlayerContextRefs();
   const { seek } = useAudioPlayerContextTime();
   const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
-  const { loop, shuffle } = useAudioPlayerContextAudio();
+  const { loop, shuffle } = useAudioPlayerContextPlayback();
 
   const { handleNextTrack } = useAudioPlayerNextTrack({
     loop,
