@@ -5,7 +5,7 @@ import { type AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reduce
 import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
 import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
 import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
-import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
+import { AudioPlayerContextPlaybackProvider } from '@lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlaybackProvider';
 
 /**
  * Props for the main audio player context provider
@@ -44,14 +44,14 @@ export function AudioPlayerContextProvider({
         tracks={tracks}
       >
         <AudioPlayerContextTimeProvider>
-          <AudioPlayerContextAudioProvider
+          <AudioPlayerContextPlaybackProvider
             defaultVolume={defaultVolume}
             defaultMute={defaultMute}
             defaultShuffle={defaultShuffle}
             defaultLoop={defaultLoop}
           >
             {children}
-          </AudioPlayerContextAudioProvider>
+          </AudioPlayerContextPlaybackProvider>
         </AudioPlayerContextTimeProvider>
       </AudioPlayerContextTrackProvider>
     </AudioPlayerContextRefsProvider>
