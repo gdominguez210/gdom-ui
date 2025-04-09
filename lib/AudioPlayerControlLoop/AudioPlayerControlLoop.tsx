@@ -1,7 +1,7 @@
 'use client';
 
 import { type MouseEventHandler, useCallback } from 'react';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
+import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider';
 import {
   AudioPlayerControlLoopPrimitive,
   type AudioPlayerControlLoopPrimitiveProps,
@@ -17,7 +17,7 @@ export type AudioPlayerControlLoopProps = Omit<AudioPlayerControlLoopPrimitivePr
  */
 export function AudioPlayerControlLoop(props: AudioPlayerControlLoopProps) {
   const { onClick, ...restProps } = props;
-  const { loop, toggleLoop } = useAudioPlayerContextAudio();
+  const { loop, toggleLoop } = useAudioPlayerContextPlayback();
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
