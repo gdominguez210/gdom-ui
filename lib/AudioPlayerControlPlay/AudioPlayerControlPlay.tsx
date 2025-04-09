@@ -3,7 +3,7 @@
 import { type MouseEventHandler, type RefObject, useCallback } from 'react';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
 import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider';
+import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider';
 import { useAudioPlayerControlPlay } from './useAudioPlayerControlPlay';
 import {
   AudioPlayerControlPlayPrimitive,
@@ -20,7 +20,7 @@ export type AudioPlayerControlPlayProps = Omit<AudioPlayerControlPlayPrimitivePr
  */
 export function AudioPlayerControlPlay(props: AudioPlayerControlPlayProps) {
   const { onClick, ...restProps } = props;
-  const { isPlaying, togglePlay } = useAudioPlayerContextAudio();
+  const { isPlaying, togglePlay } = useAudioPlayerContextPlayback();
   const { audioRef } = useAudioPlayerContextRefs();
   const { currentTrackIndex } = useAudioPlayerContextTrack();
 
