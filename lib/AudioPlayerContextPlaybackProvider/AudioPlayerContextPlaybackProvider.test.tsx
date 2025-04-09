@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlayerContextAudioProvider } from './AudioPlayerContextAudioProvider';
-import { useAudioPlayerContextAudio } from './useAudioPlayerContextAudio';
+import { AudioPlayerContextPlaybackProvider } from './AudioPlayerContextPlaybackProvider';
+import { useAudioPlayerContextPlayback } from './useAudioPlayerContextPlayback';
 
-describe('AudioPlayerContextAudioProvider', () => {
+describe('AudioPlayerContextPlaybackProvider', () => {
   test('should initialize with default values when no props provided', () => {
-    const { result } = renderHook(() => useAudioPlayerContextAudio(), {
-      wrapper: AudioPlayerContextAudioProvider,
+    const { result } = renderHook(() => useAudioPlayerContextPlayback(), {
+      wrapper: AudioPlayerContextPlaybackProvider,
     });
 
     expect(result.current).toEqual({
@@ -36,11 +36,11 @@ describe('AudioPlayerContextAudioProvider', () => {
       defaultLoop: true,
     };
 
-    const { result } = renderHook(() => useAudioPlayerContextAudio(), {
+    const { result } = renderHook(() => useAudioPlayerContextPlayback(), {
       wrapper: ({ children }) => (
-        <AudioPlayerContextAudioProvider {...defaultProps}>
+        <AudioPlayerContextPlaybackProvider {...defaultProps}>
           {children}
-        </AudioPlayerContextAudioProvider>
+        </AudioPlayerContextPlaybackProvider>
       ),
     });
 
@@ -53,8 +53,8 @@ describe('AudioPlayerContextAudioProvider', () => {
   });
 
   test('should maintain stable function references between renders', () => {
-    const { result, rerender } = renderHook(() => useAudioPlayerContextAudio(), {
-      wrapper: AudioPlayerContextAudioProvider,
+    const { result, rerender } = renderHook(() => useAudioPlayerContextPlayback(), {
+      wrapper: AudioPlayerContextPlaybackProvider,
     });
 
     const initialFunctions = {

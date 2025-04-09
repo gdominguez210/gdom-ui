@@ -1,13 +1,13 @@
 'use client';
 
 import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
-import { AudioPlayerContextAudio } from './AudioPlayerContextAudio';
-import { audioReducer, AUDIO_ACTIONS } from './reducer';
+import { AudioPlayerContextPlayback } from './AudioPlayerContextPlayback';
+import { playbackReducer, PLAYBACK_ACTIONS } from './reducer';
 
 /**
  * Props for the audio playback context provider
  */
-export interface AudioPlayerContextAudioProviderProps extends PropsWithChildren {
+export interface AudioPlayerContextPlaybackProviderProps extends PropsWithChildren {
   /** Initial volume level @default 50 */
   defaultVolume?: number;
   /** Whether audio is initially muted @default false */
@@ -21,7 +21,7 @@ export interface AudioPlayerContextAudioProviderProps extends PropsWithChildren 
 /**
  * Provides context for controlling audio playback state
  */
-export function AudioPlayerContextAudioProvider(props: AudioPlayerContextAudioProviderProps) {
+export function AudioPlayerContextPlaybackProvider(props: AudioPlayerContextPlaybackProviderProps) {
   const {
     defaultVolume = 50,
     defaultMute = false,
@@ -30,7 +30,7 @@ export function AudioPlayerContextAudioProvider(props: AudioPlayerContextAudioPr
     children,
   } = props;
 
-  const [state, dispatch] = useReducer(audioReducer, {
+  const [state, dispatch] = useReducer(playbackReducer, {
     isPlaying: false,
     volume: defaultVolume,
     mute: defaultMute,
@@ -39,43 +39,43 @@ export function AudioPlayerContextAudioProvider(props: AudioPlayerContextAudioPr
   });
 
   const play = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: true } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: true } });
   }, []);
 
   const pause = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: false } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: false } });
   }, []);
 
   const togglePlay = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: 'toggle' } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: 'toggle' } });
   }, []);
 
   const setVolume = useCallback((volume: number) => {
-    dispatch({ type: AUDIO_ACTIONS.SET_VOLUME, payload: { volume } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_VOLUME, payload: { volume } });
   }, []);
 
   const setMute = useCallback((mute: boolean) => {
-    dispatch({ type: AUDIO_ACTIONS.SET_MUTE, payload: { mute } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_MUTE, payload: { mute } });
   }, []);
 
   const toggleMute = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_MUTE, payload: { mute: 'toggle' } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_MUTE, payload: { mute: 'toggle' } });
   }, []);
 
   const setShuffle = useCallback((shuffle: boolean) => {
-    dispatch({ type: AUDIO_ACTIONS.SET_SHUFFLE, payload: { shuffle } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_SHUFFLE, payload: { shuffle } });
   }, []);
 
   const toggleShuffle = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_SHUFFLE, payload: { shuffle: 'toggle' } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_SHUFFLE, payload: { shuffle: 'toggle' } });
   }, []);
 
   const setLoop = useCallback((loop: boolean) => {
-    dispatch({ type: AUDIO_ACTIONS.SET_LOOP, payload: { loop } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_LOOP, payload: { loop } });
   }, []);
 
   const toggleLoop = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_LOOP, payload: { loop: 'toggle' } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_LOOP, payload: { loop: 'toggle' } });
   }, []);
 
   const contextValue = useMemo(
@@ -108,8 +108,8 @@ export function AudioPlayerContextAudioProvider(props: AudioPlayerContextAudioPr
   );
 
   return (
-    <AudioPlayerContextAudio.Provider value={contextValue}>
+    <AudioPlayerContextPlayback.Provider value={contextValue}>
       {children}
-    </AudioPlayerContextAudio.Provider>
+    </AudioPlayerContextPlayback.Provider>
   );
 }

@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { audioReducer, type AudioState, AUDIO_ACTIONS } from './reducer';
+import { playbackReducer, type PlaybackState, PLAYBACK_ACTIONS } from './reducer';
 
-describe('audioReducer', () => {
-  const initialState: AudioState = {
+describe('playbackReducer', () => {
+  const initialState: PlaybackState = {
     isPlaying: false,
     volume: 50,
     mute: false,
@@ -13,8 +13,8 @@ describe('audioReducer', () => {
   describe('Play/Pause Actions', () => {
     test('should handle SET_IS_PLAYING with boolean value', () => {
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_IS_PLAYING,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_IS_PLAYING,
           payload: { isPlaying: true },
         }),
       ).toEqual({
@@ -23,8 +23,8 @@ describe('audioReducer', () => {
       });
 
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_IS_PLAYING,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_IS_PLAYING,
           payload: { isPlaying: false },
         }),
       ).toEqual({
@@ -37,8 +37,8 @@ describe('audioReducer', () => {
       const playingState = { ...initialState, isPlaying: true };
 
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_IS_PLAYING,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_IS_PLAYING,
           payload: { isPlaying: 'toggle' },
         }),
       ).toEqual({
@@ -47,8 +47,8 @@ describe('audioReducer', () => {
       });
 
       expect(
-        audioReducer(playingState, {
-          type: AUDIO_ACTIONS.SET_IS_PLAYING,
+        playbackReducer(playingState, {
+          type: PLAYBACK_ACTIONS.SET_IS_PLAYING,
           payload: { isPlaying: 'toggle' },
         }),
       ).toEqual({
@@ -61,8 +61,8 @@ describe('audioReducer', () => {
   describe('Volume Actions', () => {
     test('should handle SET_VOLUME', () => {
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_VOLUME,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_VOLUME,
           payload: { volume: 75 },
         }),
       ).toEqual({
@@ -73,8 +73,8 @@ describe('audioReducer', () => {
 
     test('should handle SET_MUTE with boolean value', () => {
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_MUTE,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_MUTE,
           payload: { mute: true },
         }),
       ).toEqual({
@@ -83,8 +83,8 @@ describe('audioReducer', () => {
       });
 
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_MUTE,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_MUTE,
           payload: { mute: false },
         }),
       ).toEqual({
@@ -97,8 +97,8 @@ describe('audioReducer', () => {
       const mutedState = { ...initialState, mute: true };
 
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_MUTE,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_MUTE,
           payload: { mute: 'toggle' },
         }),
       ).toEqual({
@@ -107,8 +107,8 @@ describe('audioReducer', () => {
       });
 
       expect(
-        audioReducer(mutedState, {
-          type: AUDIO_ACTIONS.SET_MUTE,
+        playbackReducer(mutedState, {
+          type: PLAYBACK_ACTIONS.SET_MUTE,
           payload: { mute: 'toggle' },
         }),
       ).toEqual({
@@ -121,8 +121,8 @@ describe('audioReducer', () => {
   describe('Playback Mode Actions', () => {
     test('should handle SET_SHUFFLE with boolean value', () => {
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_SHUFFLE,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_SHUFFLE,
           payload: { shuffle: true },
         }),
       ).toEqual({
@@ -131,8 +131,8 @@ describe('audioReducer', () => {
       });
 
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_SHUFFLE,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_SHUFFLE,
           payload: { shuffle: false },
         }),
       ).toEqual({
@@ -145,8 +145,8 @@ describe('audioReducer', () => {
       const shuffledState = { ...initialState, shuffle: true };
 
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_SHUFFLE,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_SHUFFLE,
           payload: { shuffle: 'toggle' },
         }),
       ).toEqual({
@@ -155,8 +155,8 @@ describe('audioReducer', () => {
       });
 
       expect(
-        audioReducer(shuffledState, {
-          type: AUDIO_ACTIONS.SET_SHUFFLE,
+        playbackReducer(shuffledState, {
+          type: PLAYBACK_ACTIONS.SET_SHUFFLE,
           payload: { shuffle: 'toggle' },
         }),
       ).toEqual({
@@ -167,8 +167,8 @@ describe('audioReducer', () => {
 
     test('should handle SET_LOOP with boolean value', () => {
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_LOOP,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_LOOP,
           payload: { loop: true },
         }),
       ).toEqual({
@@ -177,8 +177,8 @@ describe('audioReducer', () => {
       });
 
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_LOOP,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_LOOP,
           payload: { loop: false },
         }),
       ).toEqual({
@@ -191,8 +191,8 @@ describe('audioReducer', () => {
       const loopedState = { ...initialState, loop: true };
 
       expect(
-        audioReducer(initialState, {
-          type: AUDIO_ACTIONS.SET_LOOP,
+        playbackReducer(initialState, {
+          type: PLAYBACK_ACTIONS.SET_LOOP,
           payload: { loop: 'toggle' },
         }),
       ).toEqual({
@@ -201,8 +201,8 @@ describe('audioReducer', () => {
       });
 
       expect(
-        audioReducer(loopedState, {
-          type: AUDIO_ACTIONS.SET_LOOP,
+        playbackReducer(loopedState, {
+          type: PLAYBACK_ACTIONS.SET_LOOP,
           payload: { loop: 'toggle' },
         }),
       ).toEqual({
@@ -214,7 +214,7 @@ describe('audioReducer', () => {
 
   describe('State Independence', () => {
     test('should maintain other state values when updating individual properties', () => {
-      const complexState: AudioState = {
+      const complexState: PlaybackState = {
         isPlaying: true,
         volume: 75,
         mute: true,
@@ -224,8 +224,8 @@ describe('audioReducer', () => {
 
       // Update playing state
       expect(
-        audioReducer(complexState, {
-          type: AUDIO_ACTIONS.SET_IS_PLAYING,
+        playbackReducer(complexState, {
+          type: PLAYBACK_ACTIONS.SET_IS_PLAYING,
           payload: { isPlaying: false },
         }),
       ).toEqual({
@@ -235,8 +235,8 @@ describe('audioReducer', () => {
 
       // Update volume
       expect(
-        audioReducer(complexState, {
-          type: AUDIO_ACTIONS.SET_VOLUME,
+        playbackReducer(complexState, {
+          type: PLAYBACK_ACTIONS.SET_VOLUME,
           payload: { volume: 25 },
         }),
       ).toEqual({
@@ -246,8 +246,8 @@ describe('audioReducer', () => {
 
       // Update mute
       expect(
-        audioReducer(complexState, {
-          type: AUDIO_ACTIONS.SET_MUTE,
+        playbackReducer(complexState, {
+          type: PLAYBACK_ACTIONS.SET_MUTE,
           payload: { mute: false },
         }),
       ).toEqual({
@@ -257,8 +257,8 @@ describe('audioReducer', () => {
 
       // Update shuffle
       expect(
-        audioReducer(complexState, {
-          type: AUDIO_ACTIONS.SET_SHUFFLE,
+        playbackReducer(complexState, {
+          type: PLAYBACK_ACTIONS.SET_SHUFFLE,
           payload: { shuffle: false },
         }),
       ).toEqual({
@@ -268,8 +268,8 @@ describe('audioReducer', () => {
 
       // Update loop
       expect(
-        audioReducer(complexState, {
-          type: AUDIO_ACTIONS.SET_LOOP,
+        playbackReducer(complexState, {
+          type: PLAYBACK_ACTIONS.SET_LOOP,
           payload: { loop: false },
         }),
       ).toEqual({

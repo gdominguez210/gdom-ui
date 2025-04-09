@@ -1,9 +1,9 @@
 import { createContext } from 'react';
 
-export const AUDIO_PLAYER_CONTEXT_AUDIO_ERROR =
-  'useAudioPlayerContextAudio must be used within an AudioPlayerContextAudioProvider';
+export const AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR =
+  'useAudioPlayerContextPlayback must be used within an AudioPlayerContextPlaybackProvider';
 
-export interface AudioPlayerContextAudioType {
+export interface AudioPlayerContextPlaybackType {
   // State
   isPlaying: boolean;
   volume: number;
@@ -24,4 +24,6 @@ export interface AudioPlayerContextAudioType {
   toggleLoop: () => void;
 }
 
-export const AudioPlayerContextAudio = createContext<AudioPlayerContextAudioType | null>(null);
+export const AudioPlayerContextPlayback = createContext<AudioPlayerContextPlaybackType | null>(
+  null,
+);
