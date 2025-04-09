@@ -3,14 +3,16 @@ import { describe, expect, test, vi } from 'vitest';
 import { AudioPlayerControlShuffle } from '@lib/AudioPlayerControlShuffle/AudioPlayerControlShuffle';
 import { AudioPlayerControlShufflePrimitive } from '@lib/AudioPlayerControlShuffle/AudioPlayerControlShufflePrimitive';
 import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { AUDIO_PLAYER_CONTEXT_AUDIO_ERROR } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudio';
+import { AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR } from '@lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlayback';
 import { trackData } from '@lib/AudioPlayer/data';
 
 describe('AudioPlayerControlShuffle', () => {
   describe('without context', () => {
     test('should throw error when used without context', () => {
       vi.spyOn(console, 'error').mockImplementation(() => vi.fn());
-      expect(() => render(<AudioPlayerControlShuffle />)).toThrow(AUDIO_PLAYER_CONTEXT_AUDIO_ERROR);
+      expect(() => render(<AudioPlayerControlShuffle />)).toThrow(
+        AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR,
+      );
       vi.restoreAllMocks();
     });
   });

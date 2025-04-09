@@ -1,7 +1,7 @@
 'use client';
 
 import { type MouseEventHandler, useCallback } from 'react';
-import { useAudioPlayerContextAudio } from '@lib/AudioPlayerContextAudioProvider/useAudioPlayerContextAudio';
+import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider';
 import {
   AudioPlayerControlShufflePrimitive,
   type AudioPlayerControlShufflePrimitiveProps,
@@ -20,7 +20,7 @@ export type AudioPlayerControlShuffleProps = Omit<
  */
 export function AudioPlayerControlShuffle(props: AudioPlayerControlShuffleProps) {
   const { onClick, ...restProps } = props;
-  const { shuffle, toggleShuffle } = useAudioPlayerContextAudio();
+  const { shuffle, toggleShuffle } = useAudioPlayerContextPlayback();
 
   const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
