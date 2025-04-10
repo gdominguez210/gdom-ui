@@ -1,4 +1,5 @@
-import { useRef, useCallback, useEffect, type ChangeEventHandler, type RefObject } from 'react';
+import { useCallback, useEffect, type ChangeEventHandler, type RefObject } from 'react';
+import { useAnimationFrame } from '@lib/useAnimationFrame/useAnimationFrame';
 
 interface UseAudioPlayerProgressBarProps {
   audioRef: RefObject<HTMLAudioElement | null>;
@@ -39,8 +40,6 @@ export function useAudioPlayerProgressBar({
   onProgressChange,
   progressBarRef,
 }: UseAudioPlayerProgressBarProps) {
-  const animationRef = useRef<number | null>(null);
-
   const handleProgressChange: ChangeEventHandler<HTMLInputElement> = useCallback(() => {
     if (!audioRef.current || !progressBarRef.current) return;
 
@@ -61,37 +60,17 @@ export function useAudioPlayerProgressBar({
     progressBarRef.current.style.setProperty(cssVariableName, `${(currentTime / duration) * 100}%`);
   }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
 
-  const startAnimation = useCallback(() => {
-    if (audioRef?.current && progressBarRef?.current && duration) {
-      const animate = () => {
-        updateProgress();
-        animationRef.current = requestAnimationFrame(animate);
-      };
-
-      animationRef.current = requestAnimationFrame(animate);
-    }
-  }, [audioRef, progressBarRef, duration, updateProgress]);
+  useAnimationFrame({
+    isActive: isPlaying,
+    callback: updateProgress,
+    dependencies: [duration],
+  });
 
   useEffect(() => {
-    if (animationRef.current !== null) {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = null;
+    if (!isPlaying) {
+      updateProgress();
     }
-
-    if (isPlaying) {
-      startAnimation();
-      return;
-    }
-
-    updateProgress();
-
-    return () => {
-      if (animationRef.current !== null) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
-      }
-    };
-  }, [isPlaying, duration, startAnimation, updateProgress]);
+  }, [isPlaying, updateProgress]);
 
   return {
     handleProgressChange,
