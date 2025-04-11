@@ -1,3 +1,24 @@
+# [1.25.0](https://github.com/gdominguez210/gdom-ui/compare/v1.24.0...v1.25.0) (2025-04-11)
+
+
+### Features
+
+* **lib/AudioContextProvider:** add AudioContextProvider ([d3dd8de](https://github.com/gdominguez210/gdom-ui/commit/d3dd8de2f64f6767c29dcae15da8a36cc9f3841a))
+* **lib/AudioPlayer:** add visualizer subcomponents ([85122cd](https://github.com/gdominguez210/gdom-ui/commit/85122cd840cdc41825213825628448034958b0da))
+* **lib/AudioPlayerContextAudioProvider:** add wrapped AudioContextProvider that hooks into AudioPlayerContextPlayback ([5d4f3b2](https://github.com/gdominguez210/gdom-ui/commit/5d4f3b2f866e382c253919ecd82912dca7b8ae6b))
+* **lib/AudioPlayerFrequencyBars:** add AudioPlayerFrequencyBars that hooks into various context slices ([c7d2f8c](https://github.com/gdominguez210/gdom-ui/commit/c7d2f8ce74e4ea59d6eabc5dbe5c8fe623c0c155))
+* **lib/AudioPlayerVisualizerWaveform:** add AudioPlayerVisualizerWaveform that hooks into various context slices ([27a2b9f](https://github.com/gdominguez210/gdom-ui/commit/27a2b9fa5454ff4ac4e7d2a0bcfec7c9dc111893))
+* **lib/AudioVisualizerFrequencyBars/useAudioVisualizerFrequencyBars:** add useAudioVisualizerFrequencyBars ([c60e2df](https://github.com/gdominguez210/gdom-ui/commit/c60e2dfd9cfab1ecdf806f052f6078df57b2f2ad))
+* **lib/AudioVisualizerFrequencyBars:** add AudioVisualizerFrequencyBars ([a95de52](https://github.com/gdominguez210/gdom-ui/commit/a95de5224c661543e3a95abd929b9f630ed9b3c3))
+* **lib/AudioVisualizerWaveform/useAudioVisualizerWaveform:** add useAudioVisualizerWaveform ([a9ba321](https://github.com/gdominguez210/gdom-ui/commit/a9ba321d0bed1f4c389573f43b6eda714e857825))
+* **lib/AudioVisualizerWaveform:** add AudioVisualizerWaveform ([4f8c1c3](https://github.com/gdominguez210/gdom-ui/commit/4f8c1c33d53b02af089abc1cfb1177b1f8a231fd))
+* **lib/useAnalyzerNode:** add useAnalyzerNode hook ([8652179](https://github.com/gdominguez210/gdom-ui/commit/8652179fbdd4960cdfb1767f0147228f86a9f93e))
+* **lib/useAnimationFrame:** add useAnimationFrame hook ([ca9395d](https://github.com/gdominguez210/gdom-ui/commit/ca9395dbe3461d3edd5e6d553c5878ab7f868b8b))
+* **lib/useAudioAnalyzer:** add useAudioAnalyzer ([f1c8bac](https://github.com/gdominguez210/gdom-ui/commit/f1c8bac99fec7b8a52d9db3b12c86a53daa65c3d))
+* **lib/useAudioConnection:** add useAudioConnection ([e335195](https://github.com/gdominguez210/gdom-ui/commit/e335195944106684a3c5ffb182a76610c04d1c21))
+* **lib/useAudioContextWebAPI:** add useAudioContextWebAPI hook ([2bde3d0](https://github.com/gdominguez210/gdom-ui/commit/2bde3d0ea1bbd065a900b360f33a599d53759464))
+* **lib/useRefReady:** add useRefReady hook ([0a449af](https://github.com/gdominguez210/gdom-ui/commit/0a449af6838fa3de04fdd684edeeaf0eab8a19b2))
+
 # [1.24.0](https://github.com/gdominguez210/gdom-ui/compare/v1.23.0...v1.24.0) (2025-04-03)
 
 

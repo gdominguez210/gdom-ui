@@ -432,8 +432,8 @@ const colorFunctionRegex = /^(rgba?|hsla?|hwb|(ok)?(lab|lch))\(.+\)$/;
 const shadowRegex = /^(inset_)?-?((\d+)?\.?(\d+)[a-z]+|0)_-?((\d+)?\.?(\d+)[a-z]+|0)/;
 const imageRegex = /^(url|image|image-set|cross-fade|element|(repeating-)?(linear|radial|conic)-gradient)\(.+\)$/;
 const isFraction = value => fractionRegex.test(value);
-const isNumber = value => Boolean(value) && !Number.isNaN(Number(value));
-const isInteger = value => Boolean(value) && Number.isInteger(Number(value));
+const isNumber = value => !!value && !Number.isNaN(Number(value));
+const isInteger = value => !!value && Number.isInteger(Number(value));
 const isPercent = value => value.endsWith('%') && isNumber(value.slice(0, -1));
 const isTshirtSize = value => tshirtUnitRegex.test(value);
 const isAny = () => true;
@@ -452,7 +452,7 @@ const isArbitraryLength = value => getIsArbitraryValue(value, isLabelLength, isL
 const isArbitraryNumber = value => getIsArbitraryValue(value, isLabelNumber, isNumber);
 const isArbitraryPosition = value => getIsArbitraryValue(value, isLabelPosition, isNever);
 const isArbitraryImage = value => getIsArbitraryValue(value, isLabelImage, isImage);
-const isArbitraryShadow = value => getIsArbitraryValue(value, isNever, isShadow);
+const isArbitraryShadow = value => getIsArbitraryValue(value, isLabelShadow, isShadow);
 const isArbitraryVariable = value => arbitraryVariableRegex.test(value);
 const isArbitraryVariableLength = value => getIsArbitraryVariable(value, isLabelLength);
 const isArbitraryVariableFamilyName = value => getIsArbitraryVariable(value, isLabelFamilyName);
@@ -482,11 +482,9 @@ const getIsArbitraryVariable = (value, testLabel, shouldMatchNoLabel = false) =>
   return false;
 };
 // Labels
-const isLabelPosition = label => label === 'position';
-const imageLabels = /*#__PURE__*/new Set(['image', 'url']);
-const isLabelImage = label => imageLabels.has(label);
-const sizeLabels = /*#__PURE__*/new Set(['length', 'size', 'percentage']);
-const isLabelSize = label => sizeLabels.has(label);
+const isLabelPosition = label => label === 'position' || label === 'percentage';
+const isLabelImage = label => label === 'image' || label === 'url';
+const isLabelSize = label => label === 'length' || label === 'size' || label === 'bg-size';
 const isLabelLength = label => label === 'length';
 const isLabelNumber = label => label === 'number';
 const isLabelFamilyName = label => label === 'family-name';
@@ -509,6 +507,7 @@ const getDefaultConfig = () => {
   const themeRadius = fromTheme('radius');
   const themeShadow = fromTheme('shadow');
   const themeInsetShadow = fromTheme('inset-shadow');
+  const themeTextShadow = fromTheme('text-shadow');
   const themeDropShadow = fromTheme('drop-shadow');
   const themeBlur = fromTheme('blur');
   const themePerspective = fromTheme('perspective');
@@ -523,7 +522,16 @@ const getDefaultConfig = () => {
    */
   /***/
   const scaleBreak = () => ['auto', 'avoid', 'all', 'avoid-page', 'page', 'left', 'right', 'column'];
-  const scalePosition = () => ['bottom', 'center', 'left', 'left-bottom', 'left-top', 'right', 'right-bottom', 'right-top', 'top'];
+  const scalePosition = () => ['center', 'top', 'bottom', 'left', 'right', 'top-left',
+  // Deprecated since Tailwind CSS v4.1.0, see https://github.com/tailwindlabs/tailwindcss/pull/17378
+  'left-top', 'top-right',
+  // Deprecated since Tailwind CSS v4.1.0, see https://github.com/tailwindlabs/tailwindcss/pull/17378
+  'right-top', 'bottom-right',
+  // Deprecated since Tailwind CSS v4.1.0, see https://github.com/tailwindlabs/tailwindcss/pull/17378
+  'right-bottom', 'bottom-left',
+  // Deprecated since Tailwind CSS v4.1.0, see https://github.com/tailwindlabs/tailwindcss/pull/17378
+  'left-bottom'];
+  const scalePositionWithArbitrary = () => [...scalePosition(), isArbitraryVariable, isArbitraryValue];
   const scaleOverflow = () => ['auto', 'hidden', 'clip', 'visible', 'scroll'];
   const scaleOverscroll = () => ['auto', 'contain', 'none'];
   const scaleUnambiguousSpacing = () => [isArbitraryVariable, isArbitraryValue, themeSpacing];
@@ -534,11 +542,20 @@ const getDefaultConfig = () => {
   }, isInteger, isArbitraryVariable, isArbitraryValue];
   const scaleGridColRowStartOrEnd = () => [isInteger, 'auto', isArbitraryVariable, isArbitraryValue];
   const scaleGridAutoColsRows = () => ['auto', 'min', 'max', 'fr', isArbitraryVariable, isArbitraryValue];
-  const scaleAlignPrimaryAxis = () => ['start', 'end', 'center', 'between', 'around', 'evenly', 'stretch', 'baseline'];
-  const scaleAlignSecondaryAxis = () => ['start', 'end', 'center', 'stretch'];
+  const scaleAlignPrimaryAxis = () => ['start', 'end', 'center', 'between', 'around', 'evenly', 'stretch', 'baseline', 'center-safe', 'end-safe'];
+  const scaleAlignSecondaryAxis = () => ['start', 'end', 'center', 'stretch', 'center-safe', 'end-safe'];
   const scaleMargin = () => ['auto', ...scaleUnambiguousSpacing()];
   const scaleSizing = () => [isFraction, 'auto', 'full', 'dvw', 'dvh', 'lvw', 'lvh', 'svw', 'svh', 'min', 'max', 'fit', ...scaleUnambiguousSpacing()];
   const scaleColor = () => [themeColor, isArbitraryVariable, isArbitraryValue];
+  const scaleBgPosition = () => [...scalePosition(), isArbitraryVariablePosition, isArbitraryPosition, {
+    position: [isArbitraryVariable, isArbitraryValue]
+  }];
+  const scaleBgRepeat = () => ['no-repeat', {
+    repeat: ['', 'x', 'y', 'space', 'round']
+  }];
+  const scaleBgSize = () => ['auto', 'cover', 'contain', isArbitraryVariableSize, isArbitrarySize, {
+    size: [isArbitraryVariable, isArbitraryValue]
+  }];
   const scaleGradientStopPosition = () => [isPercent, isArbitraryVariableLength, isArbitraryLength];
   const scaleRadius = () => [
   // Deprecated since Tailwind CSS v4.0.0
@@ -546,10 +563,10 @@ const getDefaultConfig = () => {
   const scaleBorderWidth = () => ['', isNumber, isArbitraryVariableLength, isArbitraryLength];
   const scaleLineStyle = () => ['solid', 'dashed', 'dotted', 'double'];
   const scaleBlendMode = () => ['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity'];
+  const scaleMaskImagePosition = () => [isNumber, isPercent, isArbitraryVariablePosition, isArbitraryPosition];
   const scaleBlur = () => [
   // Deprecated since Tailwind CSS v4.0.0
   '', 'none', themeBlur, isArbitraryVariable, isArbitraryValue];
-  const scaleOrigin = () => ['center', 'top', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left', 'top-left', isArbitraryVariable, isArbitraryValue];
   const scaleRotate = () => ['none', isNumber, isArbitraryVariable, isArbitraryValue];
   const scaleScale = () => ['none', isNumber, isArbitraryVariable, isArbitraryValue];
   const scaleSkew = () => [isNumber, isArbitraryVariable, isArbitraryValue];
@@ -574,6 +591,7 @@ const getDefaultConfig = () => {
       shadow: [isTshirtSize],
       spacing: ['px', isNumber],
       text: [isTshirtSize],
+      'text-shadow': [isTshirtSize],
       tracking: ['tighter', 'tight', 'normal', 'wide', 'wider', 'widest']
     },
     classGroups: {
@@ -676,7 +694,7 @@ const getDefaultConfig = () => {
        * @see https://tailwindcss.com/docs/object-position
        */
       'object-position': [{
-        object: [...scalePosition(), isArbitraryValue, isArbitraryVariable]
+        object: scalePositionWithArbitrary()
       }],
       /**
        * Overflow
@@ -983,14 +1001,18 @@ const getDefaultConfig = () => {
        * @see https://tailwindcss.com/docs/align-items
        */
       'align-items': [{
-        items: [...scaleAlignSecondaryAxis(), 'baseline']
+        items: [...scaleAlignSecondaryAxis(), {
+          baseline: ['', 'last']
+        }]
       }],
       /**
        * Align Self
        * @see https://tailwindcss.com/docs/align-self
        */
       'align-self': [{
-        self: ['auto', ...scaleAlignSecondaryAxis(), 'baseline']
+        self: ['auto', ...scaleAlignSecondaryAxis(), {
+          baseline: ['', 'last']
+        }]
       }],
       /**
        * Place Content
@@ -1436,6 +1458,13 @@ const getDefaultConfig = () => {
         break: ['normal', 'words', 'all', 'keep']
       }],
       /**
+       * Overflow Wrap
+       * @see https://tailwindcss.com/docs/overflow-wrap
+       */
+      wrap: [{
+        wrap: ['break-word', 'anywhere', 'normal']
+      }],
+      /**
        * Hyphens
        * @see https://tailwindcss.com/docs/hyphens
        */
@@ -1478,23 +1507,21 @@ const getDefaultConfig = () => {
        * @see https://tailwindcss.com/docs/background-position
        */
       'bg-position': [{
-        bg: [...scalePosition(), isArbitraryVariablePosition, isArbitraryPosition]
+        bg: scaleBgPosition()
       }],
       /**
        * Background Repeat
        * @see https://tailwindcss.com/docs/background-repeat
        */
       'bg-repeat': [{
-        bg: ['no-repeat', {
-          repeat: ['', 'x', 'y', 'space', 'round']
-        }]
+        bg: scaleBgRepeat()
       }],
       /**
        * Background Size
        * @see https://tailwindcss.com/docs/background-size
        */
       'bg-size': [{
-        bg: ['auto', 'cover', 'contain', isArbitraryVariableSize, isArbitrarySize]
+        bg: scaleBgSize()
       }],
       /**
        * Background Image
@@ -1863,7 +1890,7 @@ const getDefaultConfig = () => {
        * @see https://tailwindcss.com/docs/outline-color
        */
       'outline-color': [{
-        outline: [themeColor]
+        outline: scaleColor()
       }],
       // ---------------
       // --- Effects ---
@@ -1889,7 +1916,7 @@ const getDefaultConfig = () => {
        * @see https://tailwindcss.com/docs/box-shadow#adding-an-inset-shadow
        */
       'inset-shadow': [{
-        'inset-shadow': ['none', isArbitraryVariable, isArbitraryValue, themeInsetShadow]
+        'inset-shadow': ['none', themeInsetShadow, isArbitraryVariableShadow, isArbitraryShadow]
       }],
       /**
        * Inset Box Shadow Color
@@ -1952,6 +1979,20 @@ const getDefaultConfig = () => {
         'inset-ring': scaleColor()
       }],
       /**
+       * Text Shadow
+       * @see https://tailwindcss.com/docs/text-shadow
+       */
+      'text-shadow': [{
+        'text-shadow': ['none', themeTextShadow, isArbitraryVariableShadow, isArbitraryShadow]
+      }],
+      /**
+       * Text Shadow Color
+       * @see https://tailwindcss.com/docs/text-shadow#setting-the-shadow-color
+       */
+      'text-shadow-color': [{
+        'text-shadow': scaleColor()
+      }],
+      /**
        * Opacity
        * @see https://tailwindcss.com/docs/opacity
        */
@@ -1971,6 +2012,202 @@ const getDefaultConfig = () => {
        */
       'bg-blend': [{
         'bg-blend': scaleBlendMode()
+      }],
+      /**
+       * Mask Clip
+       * @see https://tailwindcss.com/docs/mask-clip
+       */
+      'mask-clip': [{
+        'mask-clip': ['border', 'padding', 'content', 'fill', 'stroke', 'view']
+      }, 'mask-no-clip'],
+      /**
+       * Mask Composite
+       * @see https://tailwindcss.com/docs/mask-composite
+       */
+      'mask-composite': [{
+        mask: ['add', 'subtract', 'intersect', 'exclude']
+      }],
+      /**
+       * Mask Image
+       * @see https://tailwindcss.com/docs/mask-image
+       */
+      'mask-image-linear-pos': [{
+        'mask-linear': [isNumber]
+      }],
+      'mask-image-linear-from-pos': [{
+        'mask-linear-from': scaleMaskImagePosition()
+      }],
+      'mask-image-linear-to-pos': [{
+        'mask-linear-to': scaleMaskImagePosition()
+      }],
+      'mask-image-linear-from-color': [{
+        'mask-linear-from': scaleColor()
+      }],
+      'mask-image-linear-to-color': [{
+        'mask-linear-to': scaleColor()
+      }],
+      'mask-image-t-from-pos': [{
+        'mask-t-from': scaleMaskImagePosition()
+      }],
+      'mask-image-t-to-pos': [{
+        'mask-t-to': scaleMaskImagePosition()
+      }],
+      'mask-image-t-from-color': [{
+        'mask-t-from': scaleColor()
+      }],
+      'mask-image-t-to-color': [{
+        'mask-t-to': scaleColor()
+      }],
+      'mask-image-r-from-pos': [{
+        'mask-r-from': scaleMaskImagePosition()
+      }],
+      'mask-image-r-to-pos': [{
+        'mask-r-to': scaleMaskImagePosition()
+      }],
+      'mask-image-r-from-color': [{
+        'mask-r-from': scaleColor()
+      }],
+      'mask-image-r-to-color': [{
+        'mask-r-to': scaleColor()
+      }],
+      'mask-image-b-from-pos': [{
+        'mask-b-from': scaleMaskImagePosition()
+      }],
+      'mask-image-b-to-pos': [{
+        'mask-b-to': scaleMaskImagePosition()
+      }],
+      'mask-image-b-from-color': [{
+        'mask-b-from': scaleColor()
+      }],
+      'mask-image-b-to-color': [{
+        'mask-b-to': scaleColor()
+      }],
+      'mask-image-l-from-pos': [{
+        'mask-l-from': scaleMaskImagePosition()
+      }],
+      'mask-image-l-to-pos': [{
+        'mask-l-to': scaleMaskImagePosition()
+      }],
+      'mask-image-l-from-color': [{
+        'mask-l-from': scaleColor()
+      }],
+      'mask-image-l-to-color': [{
+        'mask-l-to': scaleColor()
+      }],
+      'mask-image-x-from-pos': [{
+        'mask-x-from': scaleMaskImagePosition()
+      }],
+      'mask-image-x-to-pos': [{
+        'mask-x-to': scaleMaskImagePosition()
+      }],
+      'mask-image-x-from-color': [{
+        'mask-x-from': scaleColor()
+      }],
+      'mask-image-x-to-color': [{
+        'mask-x-to': scaleColor()
+      }],
+      'mask-image-y-from-pos': [{
+        'mask-y-from': scaleMaskImagePosition()
+      }],
+      'mask-image-y-to-pos': [{
+        'mask-y-to': scaleMaskImagePosition()
+      }],
+      'mask-image-y-from-color': [{
+        'mask-y-from': scaleColor()
+      }],
+      'mask-image-y-to-color': [{
+        'mask-y-to': scaleColor()
+      }],
+      'mask-image-radial': [{
+        'mask-radial': [isArbitraryVariable, isArbitraryValue]
+      }],
+      'mask-image-radial-from-pos': [{
+        'mask-radial-from': scaleMaskImagePosition()
+      }],
+      'mask-image-radial-to-pos': [{
+        'mask-radial-to': scaleMaskImagePosition()
+      }],
+      'mask-image-radial-from-color': [{
+        'mask-radial-from': scaleColor()
+      }],
+      'mask-image-radial-to-color': [{
+        'mask-radial-to': scaleColor()
+      }],
+      'mask-image-radial-shape': [{
+        'mask-radial': ['circle', 'ellipse']
+      }],
+      'mask-image-radial-size': [{
+        'mask-radial': [{
+          closest: ['side', 'corner'],
+          farthest: ['side', 'corner']
+        }]
+      }],
+      'mask-image-radial-pos': [{
+        'mask-radial-at': scalePosition()
+      }],
+      'mask-image-conic-pos': [{
+        'mask-conic': [isNumber]
+      }],
+      'mask-image-conic-from-pos': [{
+        'mask-conic-from': scaleMaskImagePosition()
+      }],
+      'mask-image-conic-to-pos': [{
+        'mask-conic-to': scaleMaskImagePosition()
+      }],
+      'mask-image-conic-from-color': [{
+        'mask-conic-from': scaleColor()
+      }],
+      'mask-image-conic-to-color': [{
+        'mask-conic-to': scaleColor()
+      }],
+      /**
+       * Mask Mode
+       * @see https://tailwindcss.com/docs/mask-mode
+       */
+      'mask-mode': [{
+        mask: ['alpha', 'luminance', 'match']
+      }],
+      /**
+       * Mask Origin
+       * @see https://tailwindcss.com/docs/mask-origin
+       */
+      'mask-origin': [{
+        'mask-origin': ['border', 'padding', 'content', 'fill', 'stroke', 'view']
+      }],
+      /**
+       * Mask Position
+       * @see https://tailwindcss.com/docs/mask-position
+       */
+      'mask-position': [{
+        mask: scaleBgPosition()
+      }],
+      /**
+       * Mask Repeat
+       * @see https://tailwindcss.com/docs/mask-repeat
+       */
+      'mask-repeat': [{
+        mask: scaleBgRepeat()
+      }],
+      /**
+       * Mask Size
+       * @see https://tailwindcss.com/docs/mask-size
+       */
+      'mask-size': [{
+        mask: scaleBgSize()
+      }],
+      /**
+       * Mask Type
+       * @see https://tailwindcss.com/docs/mask-type
+       */
+      'mask-type': [{
+        'mask-type': ['alpha', 'luminance']
+      }],
+      /**
+       * Mask Image
+       * @see https://tailwindcss.com/docs/mask-image
+       */
+      'mask-image': [{
+        mask: ['none', isArbitraryVariable, isArbitraryValue]
       }],
       // ---------------
       // --- Filters ---
@@ -2012,7 +2249,14 @@ const getDefaultConfig = () => {
       'drop-shadow': [{
         'drop-shadow': [
         // Deprecated since Tailwind CSS v4.0.0
-        '', 'none', themeDropShadow, isArbitraryVariable, isArbitraryValue]
+        '', 'none', themeDropShadow, isArbitraryVariableShadow, isArbitraryShadow]
+      }],
+      /**
+       * Drop Shadow Color
+       * @see https://tailwindcss.com/docs/filter-drop-shadow#setting-the-shadow-color
+       */
+      'drop-shadow-color': [{
+        'drop-shadow': scaleColor()
       }],
       /**
        * Grayscale
@@ -2233,7 +2477,7 @@ const getDefaultConfig = () => {
        * @see https://tailwindcss.com/docs/perspective-origin
        */
       'perspective-origin': [{
-        'perspective-origin': scaleOrigin()
+        'perspective-origin': scalePositionWithArbitrary()
       }],
       /**
        * Rotate
@@ -2329,7 +2573,7 @@ const getDefaultConfig = () => {
        * @see https://tailwindcss.com/docs/transform-origin
        */
       'transform-origin': [{
-        origin: scaleOrigin()
+        origin: scalePositionWithArbitrary()
       }],
       /**
        * Transform Style
@@ -2697,10 +2941,10 @@ const getDefaultConfig = () => {
       'rounded-b': ['rounded-br', 'rounded-bl'],
       'rounded-l': ['rounded-tl', 'rounded-bl'],
       'border-spacing': ['border-spacing-x', 'border-spacing-y'],
-      'border-w': ['border-w-s', 'border-w-e', 'border-w-t', 'border-w-r', 'border-w-b', 'border-w-l'],
+      'border-w': ['border-w-x', 'border-w-y', 'border-w-s', 'border-w-e', 'border-w-t', 'border-w-r', 'border-w-b', 'border-w-l'],
       'border-w-x': ['border-w-r', 'border-w-l'],
       'border-w-y': ['border-w-t', 'border-w-b'],
-      'border-color': ['border-color-s', 'border-color-e', 'border-color-t', 'border-color-r', 'border-color-b', 'border-color-l'],
+      'border-color': ['border-color-x', 'border-color-y', 'border-color-s', 'border-color-e', 'border-color-t', 'border-color-r', 'border-color-b', 'border-color-l'],
       'border-color-x': ['border-color-r', 'border-color-l'],
       'border-color-y': ['border-color-t', 'border-color-b'],
       translate: ['translate-x', 'translate-y', 'translate-none'],
@@ -2719,7 +2963,7 @@ const getDefaultConfig = () => {
     conflictingClassGroupModifiers: {
       'font-size': ['leading']
     },
-    orderSensitiveModifiers: ['before', 'after', 'placeholder', 'file', 'marker', 'selection', 'first-line', 'first-letter', 'backdrop', '*', '**']
+    orderSensitiveModifiers: ['*', '**', 'after', 'backdrop', 'before', 'details-content', 'file', 'first-letter', 'first-line', 'marker', 'placeholder', 'selection']
   };
 };
 const twMerge = /*#__PURE__*/createTailwindMerge(getDefaultConfig);
@@ -2844,36 +3088,38 @@ function AudioPlayerContextTimeProvider(props) {
   return /* @__PURE__ */ jsx(AudioPlayerContextTime.Provider, { value: contextValue, children });
 }
 
-const AUDIO_PLAYER_CONTEXT_AUDIO_ERROR = "useAudioPlayerContextAudio must be used within an AudioPlayerContextAudioProvider";
-const AudioPlayerContextAudio = createContext(null);
+const AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR = "useAudioPlayerContextPlayback must be used within an AudioPlayerContextPlaybackProvider";
+const AudioPlayerContextPlayback = createContext(
+  null
+);
 
-const AUDIO_ACTIONS = {
+const PLAYBACK_ACTIONS = {
   SET_IS_PLAYING: "SET_IS_PLAYING",
   SET_VOLUME: "SET_VOLUME",
   SET_MUTE: "SET_MUTE",
   SET_SHUFFLE: "SET_SHUFFLE",
   SET_LOOP: "SET_LOOP"
 };
-function audioReducer(state, action) {
+function playbackReducer(state, action) {
   switch (action.type) {
-    case AUDIO_ACTIONS.SET_IS_PLAYING:
+    case PLAYBACK_ACTIONS.SET_IS_PLAYING:
       return {
         ...state,
         isPlaying: action.payload.isPlaying === "toggle" ? !state.isPlaying : action.payload.isPlaying
       };
-    case AUDIO_ACTIONS.SET_VOLUME:
+    case PLAYBACK_ACTIONS.SET_VOLUME:
       return { ...state, volume: action.payload.volume };
-    case AUDIO_ACTIONS.SET_MUTE:
+    case PLAYBACK_ACTIONS.SET_MUTE:
       return {
         ...state,
         mute: action.payload.mute === "toggle" ? !state.mute : action.payload.mute
       };
-    case AUDIO_ACTIONS.SET_SHUFFLE:
+    case PLAYBACK_ACTIONS.SET_SHUFFLE:
       return {
         ...state,
         shuffle: action.payload.shuffle === "toggle" ? !state.shuffle : action.payload.shuffle
       };
-    case AUDIO_ACTIONS.SET_LOOP:
+    case PLAYBACK_ACTIONS.SET_LOOP:
       return {
         ...state,
         loop: action.payload.loop === "toggle" ? !state.loop : action.payload.loop
@@ -2883,7 +3129,7 @@ function audioReducer(state, action) {
   }
 }
 
-function AudioPlayerContextAudioProvider(props) {
+function AudioPlayerContextPlaybackProvider(props) {
   const {
     defaultVolume = 50,
     defaultMute = false,
@@ -2891,7 +3137,7 @@ function AudioPlayerContextAudioProvider(props) {
     defaultLoop = false,
     children
   } = props;
-  const [state, dispatch] = useReducer(audioReducer, {
+  const [state, dispatch] = useReducer(playbackReducer, {
     isPlaying: false,
     volume: defaultVolume,
     mute: defaultMute,
@@ -2899,34 +3145,34 @@ function AudioPlayerContextAudioProvider(props) {
     loop: defaultLoop
   });
   const play = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: true } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: true } });
   }, []);
   const pause = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: false } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: false } });
   }, []);
   const togglePlay = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: "toggle" } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_IS_PLAYING, payload: { isPlaying: "toggle" } });
   }, []);
   const setVolume = useCallback((volume) => {
-    dispatch({ type: AUDIO_ACTIONS.SET_VOLUME, payload: { volume } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_VOLUME, payload: { volume } });
   }, []);
   const setMute = useCallback((mute) => {
-    dispatch({ type: AUDIO_ACTIONS.SET_MUTE, payload: { mute } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_MUTE, payload: { mute } });
   }, []);
   const toggleMute = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_MUTE, payload: { mute: "toggle" } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_MUTE, payload: { mute: "toggle" } });
   }, []);
   const setShuffle = useCallback((shuffle) => {
-    dispatch({ type: AUDIO_ACTIONS.SET_SHUFFLE, payload: { shuffle } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_SHUFFLE, payload: { shuffle } });
   }, []);
   const toggleShuffle = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_SHUFFLE, payload: { shuffle: "toggle" } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_SHUFFLE, payload: { shuffle: "toggle" } });
   }, []);
   const setLoop = useCallback((loop) => {
-    dispatch({ type: AUDIO_ACTIONS.SET_LOOP, payload: { loop } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_LOOP, payload: { loop } });
   }, []);
   const toggleLoop = useCallback(() => {
-    dispatch({ type: AUDIO_ACTIONS.SET_LOOP, payload: { loop: "toggle" } });
+    dispatch({ type: PLAYBACK_ACTIONS.SET_LOOP, payload: { loop: "toggle" } });
   }, []);
   const contextValue = useMemo(
     () => ({
@@ -2956,7 +3202,7 @@ function AudioPlayerContextAudioProvider(props) {
       toggleLoop
     ]
   );
-  return /* @__PURE__ */ jsx(AudioPlayerContextAudio.Provider, { value: contextValue, children });
+  return /* @__PURE__ */ jsx(AudioPlayerContextPlayback.Provider, { value: contextValue, children });
 }
 
 function AudioPlayerContextProvider({
@@ -2974,7 +3220,7 @@ function AudioPlayerContextProvider({
       defaultTrackIndex,
       tracks,
       children: /* @__PURE__ */ jsx(AudioPlayerContextTimeProvider, { children: /* @__PURE__ */ jsx(
-        AudioPlayerContextAudioProvider,
+        AudioPlayerContextPlaybackProvider,
         {
           defaultVolume,
           defaultMute,
@@ -3156,6 +3402,69 @@ function useAudioPlayerContextRefs() {
   return context;
 }
 
+function useAnimationFrame(options) {
+  const { isActive, callback, frameRate, dependencies = [], autoStart = true } = options;
+  const animationRef = useRef(null);
+  const lastFrameTimeRef = useRef(0);
+  const frameIntervalMs = useRef(frameRate ? 1e3 / frameRate : 0);
+  const callbackRef = useRef(callback);
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    frameIntervalMs.current = frameRate ? 1e3 / frameRate : 0;
+  }, [frameRate]);
+  const stopAnimation = useCallback(() => {
+    if (animationRef.current === null) return;
+    cancelAnimationFrame(animationRef.current);
+    animationRef.current = null;
+  }, []);
+  const animate = useCallback(
+    (timeStamp) => {
+      if (frameIntervalMs.current > 0) {
+        const elapsed = timeStamp - lastFrameTimeRef.current;
+        if (elapsed < frameIntervalMs.current) {
+          animationRef.current = requestAnimationFrame(animate);
+          return;
+        }
+        lastFrameTimeRef.current = timeStamp - elapsed % frameIntervalMs.current;
+      }
+      try {
+        callbackRef.current(timeStamp);
+      } catch (error) {
+        console.error("Error in animation frame callback:", error);
+        stopAnimation();
+        return;
+      }
+      animationRef.current = requestAnimationFrame(animate);
+    },
+    [stopAnimation]
+  );
+  const startAnimation = useCallback(() => {
+    if (animationRef.current !== null) {
+      return;
+    }
+    lastFrameTimeRef.current = performance.now();
+    animationRef.current = requestAnimationFrame(animate);
+  }, [animate]);
+  const restartAnimation = useCallback(() => {
+    stopAnimation();
+    startAnimation();
+  }, [startAnimation, stopAnimation]);
+  useEffect(() => {
+    if (!autoStart) return;
+    isActive ? startAnimation() : stopAnimation();
+    return () => {
+      stopAnimation();
+    };
+  }, [isActive, animate, autoStart, startAnimation, stopAnimation, ...dependencies]);
+  return {
+    start: startAnimation,
+    stop: stopAnimation,
+    restart: restartAnimation
+  };
+}
+
 function updateProgressBar(progressBar, value) {
   if (!progressBar) return;
   progressBar.value = value.toString();
@@ -3172,7 +3481,6 @@ function useAudioPlayerProgressBar({
   onProgressChange,
   progressBarRef
 }) {
-  const animationRef = useRef(null);
   const handleProgressChange = useCallback(() => {
     if (!audioRef.current || !progressBarRef.current) return;
     const newTime = Number(progressBarRef.current.value);
@@ -3187,32 +3495,16 @@ function useAudioPlayerProgressBar({
     updateProgressBar(progressBarRef.current, currentTime);
     progressBarRef.current.style.setProperty(cssVariableName, `${currentTime / duration * 100}%`);
   }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
-  const startAnimation = useCallback(() => {
-    if (audioRef?.current && progressBarRef?.current && duration) {
-      const animate = () => {
-        updateProgress();
-        animationRef.current = requestAnimationFrame(animate);
-      };
-      animationRef.current = requestAnimationFrame(animate);
-    }
-  }, [audioRef, progressBarRef, duration, updateProgress]);
+  useAnimationFrame({
+    isActive: isPlaying,
+    callback: updateProgress,
+    dependencies: [duration]
+  });
   useEffect(() => {
-    if (animationRef.current !== null) {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = null;
+    if (!isPlaying) {
+      updateProgress();
     }
-    if (isPlaying) {
-      startAnimation();
-      return;
-    }
-    updateProgress();
-    return () => {
-      if (animationRef.current !== null) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
-      }
-    };
-  }, [isPlaying, duration, startAnimation, updateProgress]);
+  }, [isPlaying, updateProgress]);
   return {
     handleProgressChange
   };
@@ -3226,10 +3518,10 @@ function useAudioPlayerContextTime() {
   return context;
 }
 
-function useAudioPlayerContextAudio() {
-  const context = useContext(AudioPlayerContextAudio);
+function useAudioPlayerContextPlayback() {
+  const context = useContext(AudioPlayerContextPlayback);
   if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_AUDIO_ERROR);
+    throw new Error(AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR);
   }
   return context;
 }
@@ -3338,7 +3630,7 @@ function AudioPlayerProgressBarPrimitive(props) {
 function AudioPlayerProgressBar(props) {
   const { onChange, ref, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
-  const { isPlaying } = useAudioPlayerContextAudio();
+  const { isPlaying } = useAudioPlayerContextPlayback();
   const { duration, seek } = useAudioPlayerContextTime();
   const { handleProgressChange } = useAudioPlayerProgressBar({
     audioRef,
@@ -4518,6 +4810,7 @@ function AudioPlayerControlButton(props) {
           className
         )
       ),
+      type: "button",
       ...restProps,
       children
     }
@@ -4549,7 +4842,7 @@ function getVolumeIconProperties(volume, isMuted) {
 }
 function AudioPlayerVolumeButton(props) {
   const { onClick, ...restProps } = props;
-  const { mute, volume, toggleMute } = useAudioPlayerContextAudio();
+  const { mute, volume, toggleMute } = useAudioPlayerContextPlayback();
   const handleClick = useCallback(
     (e) => {
       onClick?.(e);
@@ -4653,7 +4946,7 @@ function updateAudioVolume(audio, volume) {
 }
 function AudioPlayerVolumeSlider(props) {
   const { onChange, ...restProps } = props;
-  const { volume, setVolume } = useAudioPlayerContextAudio();
+  const { volume, setVolume } = useAudioPlayerContextPlayback();
   const { audioRef } = useAudioPlayerContextRefs();
   const handleVolumeChange = useCallback(
     (e) => {
@@ -4692,7 +4985,13 @@ function useAudioPlayerMetadata({
 }
 
 function AudioPlayerControlAudioPrimitive(props) {
-  return /* @__PURE__ */ jsx("audio", { ...props });
+  return /* @__PURE__ */ jsx(
+    "audio",
+    {
+      crossOrigin: "anonymous",
+      ...props
+    }
+  );
 }
 
 function AudioPlayerControlAudio(props) {
@@ -4700,7 +4999,7 @@ function AudioPlayerControlAudio(props) {
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
   const { setDuration } = useAudioPlayerContextTime();
   const { currentTrack } = useAudioPlayerContextTrack();
-  const { mute } = useAudioPlayerContextAudio();
+  const { mute } = useAudioPlayerContextPlayback();
   const { handleLoadedMetadata } = useAudioPlayerMetadata({
     audioRef,
     progressBarRef,
@@ -4748,7 +5047,7 @@ function AudioPlayerControlPlayPrimitive(props) {
 
 function AudioPlayerControlPlay(props) {
   const { onClick, ...restProps } = props;
-  const { isPlaying, togglePlay } = useAudioPlayerContextAudio();
+  const { isPlaying, togglePlay } = useAudioPlayerContextPlayback();
   const { audioRef } = useAudioPlayerContextRefs();
   const { currentTrackIndex } = useAudioPlayerContextTrack();
   useAudioPlayerControlPlay({
@@ -4832,7 +5131,7 @@ function AudioPlayerControlPrevious(props) {
   const { onClick, ...restProps } = props;
   const { seek } = useAudioPlayerContextTime();
   const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
-  const { loop, shuffle } = useAudioPlayerContextAudio();
+  const { loop, shuffle } = useAudioPlayerContextPlayback();
   const { audioRef } = useAudioPlayerContextRefs();
   const { handlePreviousTrack } = useAudioPlayerPreviousTrack({
     loop,
@@ -4923,7 +5222,7 @@ function AudioPlayerControlNext(props) {
   const { audioRef } = useAudioPlayerContextRefs();
   const { seek } = useAudioPlayerContextTime();
   const { currentTrackIndex, tracks, setTrackIndex } = useAudioPlayerContextTrack();
-  const { loop, shuffle } = useAudioPlayerContextAudio();
+  const { loop, shuffle } = useAudioPlayerContextPlayback();
   const { handleNextTrack } = useAudioPlayerNextTrack({
     loop,
     shuffle,
@@ -4978,7 +5277,7 @@ function AudioPlayerControlShufflePrimitive(props) {
 
 function AudioPlayerControlShuffle(props) {
   const { onClick, ...restProps } = props;
-  const { shuffle, toggleShuffle } = useAudioPlayerContextAudio();
+  const { shuffle, toggleShuffle } = useAudioPlayerContextPlayback();
   const handleClick = useCallback(
     (e) => {
       toggleShuffle();
@@ -5025,7 +5324,7 @@ function AudioPlayerControlLoopPrimitive(props) {
 
 function AudioPlayerControlLoop(props) {
   const { onClick, ...restProps } = props;
-  const { loop, toggleLoop } = useAudioPlayerContextAudio();
+  const { loop, toggleLoop } = useAudioPlayerContextPlayback();
   const handleClick = useCallback(
     (e) => {
       toggleLoop();
@@ -5061,9 +5360,610 @@ function AudioPlayer(props) {
   );
 }
 
+function useRefReady(initialValue) {
+  const ref = useRef(initialValue ?? null);
+  const [isReady, setIsReady] = useState(initialValue !== null);
+  const setRef = useCallback((node) => {
+    ref.current = node;
+    setIsReady(node !== null);
+  }, []);
+  return [setRef, isReady, ref];
+}
+
+async function resumeAudioContext(audioContext) {
+  try {
+    await audioContext.resume();
+    return true;
+  } catch (error) {
+    console.error("Failed to resume AudioContext", error);
+    return false;
+  }
+}
+async function suspendAudioContext(audioContext) {
+  try {
+    await audioContext.suspend();
+    return true;
+  } catch (error) {
+    console.error("Failed to suspend AudioContext", error);
+    return false;
+  }
+}
+async function closeAudioContext(audioContext) {
+  try {
+    await audioContext.close();
+    return true;
+  } catch (error) {
+    console.error("Failed to close AudioContext", error);
+    return false;
+  }
+}
+function createAudioContext() {
+  try {
+    return new AudioContext();
+  } catch (error) {
+    console.error("Failed to create AudioContext", error);
+  }
+}
+function useAudioContextWebAPI(options) {
+  const { isPlaying } = options;
+  const [setAudioContextRef, isAudioContextRefReady, audioContextRef] = useRefReady(null);
+  const sourceNodesRef = useRef(/* @__PURE__ */ new Map());
+  const createAudioSource = useCallback(
+    (audioElement) => {
+      const audioContext = audioContextRef.current;
+      const sourceNodes = sourceNodesRef.current;
+      if (!audioContext || !isAudioContextRefReady || !audioElement) return;
+      if (sourceNodes.has(audioElement)) {
+        return sourceNodes.get(audioElement);
+      }
+      try {
+        const sourceNode = audioContext.createMediaElementSource(audioElement);
+        sourceNodes.set(audioElement, sourceNode);
+        return sourceNode;
+      } catch (error) {
+        console.error("Failed to create audio source node:", error);
+        if (error instanceof DOMException && error.message.includes("already connected")) {
+          console.warn("This audio element may already be connected to another AudioContext");
+        }
+      }
+    },
+    [audioContextRef, isAudioContextRefReady]
+  );
+  const deleteAudioSource = useCallback((audioElement) => {
+    const sourceNodes = sourceNodesRef.current;
+    if (!audioElement) {
+      console.warn("No audio element provided to disconnectAudioSource");
+      return false;
+    }
+    if (!sourceNodes.has(audioElement)) {
+      return false;
+    }
+    try {
+      const sourceNode = sourceNodes.get(audioElement);
+      sourceNode.disconnect();
+      sourceNodes.delete(audioElement);
+      return true;
+    } catch (error) {
+      console.error("Failed to disconnect audio source node:", error);
+      return false;
+    }
+  }, []);
+  useEffect(() => {
+    if (isPlaying && !audioContextRef.current) {
+      const audioContext = createAudioContext();
+      if (audioContext) {
+        setAudioContextRef(audioContext);
+      }
+    }
+    if (isPlaying && audioContextRef.current?.state === "suspended") {
+      resumeAudioContext(audioContextRef.current);
+    }
+    if (!isPlaying && audioContextRef.current?.state === "running") {
+      suspendAudioContext(audioContextRef.current);
+    }
+  }, [isPlaying, setAudioContextRef, audioContextRef]);
+  useEffect(() => {
+    const audioContext = audioContextRef.current;
+    const sourceNodes = sourceNodesRef.current;
+    return () => {
+      if (sourceNodes.size > 0) {
+        sourceNodes.forEach((sourceNode) => {
+          try {
+            sourceNode.disconnect();
+          } catch (error) {
+            console.error("Error disconnecting source node:", error);
+          }
+        });
+        sourceNodes.clear();
+      }
+      if (audioContext) {
+        closeAudioContext(audioContext);
+      }
+    };
+  }, [audioContextRef, sourceNodesRef]);
+  const result = useMemo(
+    () => ({
+      audioContextRef,
+      createAudioSource,
+      deleteAudioSource,
+      sourceNodesRef,
+      isReady: isAudioContextRefReady
+    }),
+    [audioContextRef, createAudioSource, deleteAudioSource, isAudioContextRefReady]
+  );
+  return result;
+}
+
+const AudioContext$1 = createContext(null);
+
+function AudioContextProvider(props) {
+  const { children, isPlaying = false } = props;
+  const contextValue = useAudioContextWebAPI({ isPlaying });
+  return /* @__PURE__ */ jsx(AudioContext$1.Provider, { value: contextValue, children });
+}
+
+function AudioPlayerContextAudioProvider(props) {
+  const { isPlaying } = useAudioPlayerContextPlayback();
+  return /* @__PURE__ */ jsx(
+    AudioContextProvider,
+    {
+      isPlaying,
+      ...props
+    }
+  );
+}
+
+function useAudioContext() {
+  const context = useContext(AudioContext$1);
+  if (context === null) {
+    throw new Error("useAudioContext must be used within an AudioContextProvider");
+  }
+  return context;
+}
+
+function useAudioVisualizerWaveform(options) {
+  const { lineColor = "#ffffff", lineWidth = 2 } = options || {};
+  const canvasRef = useRef(null);
+  const drawWaveform = useCallback(
+    (dataArray) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.lineWidth = lineWidth;
+      ctx.strokeStyle = lineColor;
+      ctx.beginPath();
+      const sliceWidth = canvas.width / dataArray.length;
+      let x = 0;
+      dataArray.forEach((value, index) => {
+        const normalized = value / 128;
+        const y = normalized * canvas.height / 2;
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+        x += sliceWidth;
+      });
+      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.stroke();
+    },
+    [lineColor, lineWidth]
+  );
+  return { canvasRef, drawWaveform };
+}
+
+function useAnalyzerNode(options) {
+  const {
+    audioContextRef,
+    isAudioContextReady,
+    fftSize = 2048,
+    smoothingTimeConstant = 0.8,
+    maxDecibels = -30,
+    minDecibels = -100
+  } = options;
+  const [setAnalyzerRef, isAnalyzerReady, analyzerRef] = useRefReady(null);
+  const dataArrayRef = useRef(null);
+  const previousDataRef = useRef(null);
+  useEffect(() => {
+    const audioContext = audioContextRef.current;
+    if (!audioContext || !isAudioContextReady || audioContext.state === "closed") return;
+    if (!analyzerRef.current) {
+      const analyzer = new AnalyserNode(audioContext, {
+        fftSize,
+        smoothingTimeConstant,
+        maxDecibels,
+        minDecibels
+      });
+      setAnalyzerRef(analyzer);
+      const dataArray = new Uint8Array(analyzer.frequencyBinCount);
+      dataArrayRef.current = dataArray;
+      const previousData = new Uint8Array(analyzer.frequencyBinCount);
+      previousDataRef.current = previousData;
+    } else {
+      const analyzer = analyzerRef.current;
+      analyzer.fftSize = fftSize;
+      analyzer.smoothingTimeConstant = smoothingTimeConstant;
+      analyzer.maxDecibels = maxDecibels;
+      analyzer.minDecibels = minDecibels;
+      if (dataArrayRef.current?.length !== analyzer.frequencyBinCount) {
+        dataArrayRef.current = new Uint8Array(analyzer.frequencyBinCount);
+        previousDataRef.current = new Uint8Array(analyzer.frequencyBinCount);
+      }
+    }
+    return () => {
+      if (analyzerRef.current) {
+        analyzerRef.current.disconnect();
+        analyzerRef.current = null;
+      }
+    };
+  }, [
+    audioContextRef,
+    isAudioContextReady,
+    fftSize,
+    smoothingTimeConstant,
+    maxDecibels,
+    minDecibels,
+    setAnalyzerRef,
+    analyzerRef
+  ]);
+  return {
+    analyzerRef,
+    dataArrayRef,
+    previousDataRef,
+    isAnalyzerReady
+  };
+}
+
+function useAudioConnection(options) {
+  const {
+    audioRef,
+    destinationRef,
+    audioContextRef,
+    createAudioSource,
+    deleteAudioSource,
+    isAudioContextReady,
+    connectToDestination = true,
+    deleteOnCleanup = true,
+    autoConnect = true
+  } = options;
+  const [setIsConnectedRef, isConnected, isConnectedRef] = useRefReady(false);
+  const sourceNodeRef = useRef(null);
+  const connect = useCallback(() => {
+    if (isConnectedRef.current) return true;
+    const audioContext = audioContextRef.current;
+    const destinationNode = destinationRef.current;
+    const audioElement = audioRef.current;
+    if (!isAudioContextReady || !audioContext || !destinationNode || !audioElement) return false;
+    try {
+      const sourceNode = createAudioSource(audioElement);
+      if (!sourceNode) return false;
+      sourceNodeRef.current = sourceNode;
+      sourceNode.connect(destinationNode);
+      if (connectToDestination) {
+        destinationNode.connect(audioContext.destination);
+      }
+      setIsConnectedRef(true);
+      return true;
+    } catch (error) {
+      console.error("Failed to connect audio source to destination", error);
+      return false;
+    }
+  }, [
+    audioRef,
+    destinationRef,
+    audioContextRef,
+    createAudioSource,
+    isAudioContextReady,
+    connectToDestination,
+    setIsConnectedRef,
+    isConnectedRef
+  ]);
+  const disconnect = useCallback(() => {
+    if (!isConnectedRef.current) return true;
+    const audioElement = audioRef.current;
+    const audioContext = audioContextRef.current;
+    const destinationNode = destinationRef.current;
+    if (!audioContext || !destinationNode || !audioElement) return false;
+    try {
+      if (connectToDestination && destinationNode && audioContext) {
+        destinationNode.disconnect(audioContext.destination);
+      }
+      sourceNodeRef.current?.disconnect(destinationNode);
+      if (deleteOnCleanup) {
+        deleteAudioSource(audioElement);
+      } else if (sourceNodeRef.current && destinationNode) {
+        sourceNodeRef.current.disconnect(destinationNode);
+      }
+      setIsConnectedRef(false);
+      sourceNodeRef.current = null;
+      return true;
+    } catch (error) {
+      console.error("Failed to disconnect audio source from destination", error);
+      return false;
+    }
+  }, [
+    audioRef,
+    destinationRef,
+    audioContextRef,
+    deleteAudioSource,
+    connectToDestination,
+    deleteOnCleanup,
+    isConnectedRef,
+    setIsConnectedRef
+  ]);
+  const reconnect = useCallback(() => {
+    disconnect();
+    return connect();
+  }, [connect, disconnect]);
+  useEffect(() => {
+    if (autoConnect) {
+      connect();
+    }
+    return () => {
+      disconnect();
+    };
+  }, [autoConnect, connect, disconnect]);
+  return {
+    isConnected,
+    connect,
+    disconnect,
+    reconnect
+  };
+}
+
+function smoothData(current, previous, factor = 0.3) {
+  const result = new Uint8Array(current.length);
+  current.forEach((value, index) => {
+    const currentValue = value !== void 0 ? value : 128;
+    const previousValue = previous[index] !== void 0 ? previous[index] : 128;
+    result[index] = Math.round(
+      previousValue * factor + currentValue * (1 - factor)
+    );
+  });
+  return result;
+}
+function useAudioAnalyzer(options) {
+  const {
+    audioRef,
+    audioContextRef,
+    createAudioSource,
+    deleteAudioSource,
+    isAudioContextReady,
+    isPlaying,
+    duration,
+    smoothingTimeConstant,
+    fftSize,
+    frameRate = 30,
+    onAnalyze,
+    dataType = "timeDomain",
+    frameTransitionSmoothing = 0.3
+  } = options;
+  const { analyzerRef, dataArrayRef, previousDataRef} = useAnalyzerNode({
+    audioContextRef,
+    isAudioContextReady,
+    fftSize,
+    smoothingTimeConstant
+  });
+  const analyzeAudio = useCallback(() => {
+    if (!analyzerRef.current || !dataArrayRef.current || !previousDataRef.current) {
+      return;
+    }
+    const analyzer = analyzerRef.current;
+    const dataArray = dataArrayRef.current;
+    const previousData = previousDataRef.current;
+    dataArray.forEach((value, index) => {
+      previousData[index] = value !== void 0 ? Number(value) : 128;
+    });
+    dataType === "timeDomain" ? analyzer.getByteTimeDomainData(dataArray) : analyzer.getByteFrequencyData(dataArray);
+    const smoothedData = smoothData(dataArray, previousData, frameTransitionSmoothing);
+    onAnalyze?.(smoothedData, analyzer);
+  }, [dataType, onAnalyze, frameTransitionSmoothing, analyzerRef, dataArrayRef, previousDataRef]);
+  useAnimationFrame({
+    isActive: isPlaying,
+    callback: analyzeAudio,
+    frameRate,
+    dependencies: [duration]
+  });
+  useAudioConnection({
+    audioRef,
+    destinationRef: analyzerRef,
+    audioContextRef,
+    createAudioSource,
+    deleteAudioSource,
+    isAudioContextReady});
+  return {
+    analyzerNode: analyzerRef.current,
+    dataArray: dataArrayRef.current,
+    previousDataArray: previousDataRef.current
+  };
+}
+
+function AudioVisualizerWaveform(props) {
+  const {
+    className,
+    ref,
+    isPlaying,
+    audioRef,
+    duration,
+    audioContextRef,
+    isAudioContextReady,
+    createAudioSource,
+    deleteAudioSource,
+    fftSize,
+    smoothingTimeConstant,
+    frameRate,
+    ...restProps
+  } = props;
+  const { canvasRef, drawWaveform } = useAudioVisualizerWaveform();
+  const mergedRef = useComposedRefs(ref, canvasRef);
+  useAudioAnalyzer({
+    audioRef,
+    audioContextRef,
+    isAudioContextReady,
+    isPlaying,
+    duration,
+    onAnalyze: drawWaveform,
+    fftSize,
+    smoothingTimeConstant,
+    frameRate,
+    createAudioSource,
+    deleteAudioSource
+  });
+  return /* @__PURE__ */ jsx(
+    "canvas",
+    {
+      className: twMerge(clsx("w-full max-w-full", className)),
+      ref: mergedRef,
+      ...restProps
+    }
+  );
+}
+
+function AudioPlayerVisualizerWaveform(props) {
+  const { isPlaying } = useAudioPlayerContextPlayback();
+  const { audioRef } = useAudioPlayerContextRefs();
+  const { duration } = useAudioPlayerContextTime();
+  const { audioContextRef, isReady, createAudioSource, deleteAudioSource } = useAudioContext();
+  return /* @__PURE__ */ jsx(
+    AudioVisualizerWaveform,
+    {
+      ...props,
+      isPlaying,
+      audioRef,
+      duration,
+      audioContextRef,
+      isAudioContextReady: isReady,
+      createAudioSource,
+      deleteAudioSource
+    }
+  );
+}
+
+function useAudioVisualizerFrequencyBars(options) {
+  const {
+    barColor = "#ffffff",
+    barGap = 4,
+    barCount = 128,
+    heightMultiplier = 1.2,
+    minHeight = 0
+  } = {};
+  const canvasRef = useRef(null);
+  const drawFrequencyBars = useCallback(
+    (dataArray) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const totalGapWidth = (barCount - 1) * barGap;
+      const barWidth = Math.max(1, (canvas.width - totalGapWidth) / barCount);
+      ctx.fillStyle = barColor;
+      for (let i = 0; i < barCount; i++) {
+        const ratio = i / barCount;
+        const logIndex = Math.round(
+          (Math.pow(1.1, 19 * ratio) - 1) / (Math.pow(1.1, 19) - 1) * (dataArray.length - 1)
+        );
+        const nextRatio = (i + 1) / barCount;
+        const nextLogIndex = Math.min(
+          Math.round(
+            (Math.pow(1.1, 19 * nextRatio) - 1) / (Math.pow(1.1, 19) - 1) * (dataArray.length - 1)
+          ),
+          dataArray.length - 1
+        );
+        let sum = 0;
+        let sampleCount = 0;
+        for (let j = logIndex; j <= nextLogIndex; j++) {
+          if (j < dataArray.length) {
+            sum += dataArray[j] ?? 0;
+            sampleCount++;
+          }
+        }
+        const value = sampleCount > 0 ? sum / sampleCount : 0;
+        const normalizedValue = value / 255;
+        const amplifiedValue = minHeight + normalizedValue * (1 - minHeight);
+        const barHeight = Math.min(
+          canvas.height,
+          amplifiedValue * canvas.height * heightMultiplier
+        );
+        const x = i * (barWidth + barGap);
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+      }
+    },
+    [barColor, barCount, barGap, heightMultiplier, minHeight]
+  );
+  return { canvasRef, drawFrequencyBars };
+}
+
+function AudioVisualizerFrequencyBars(props) {
+  const {
+    className,
+    ref,
+    isPlaying,
+    audioRef,
+    duration,
+    audioContextRef,
+    isAudioContextReady,
+    fftSize,
+    smoothingTimeConstant,
+    frameRate,
+    createAudioSource,
+    deleteAudioSource,
+    ...restProps
+  } = props;
+  const { canvasRef, drawFrequencyBars } = useAudioVisualizerFrequencyBars();
+  const mergedRef = useComposedRefs(ref, canvasRef);
+  useAudioAnalyzer({
+    audioRef,
+    audioContextRef,
+    isAudioContextReady,
+    isPlaying,
+    duration,
+    onAnalyze: drawFrequencyBars,
+    dataType: "frequency",
+    fftSize,
+    smoothingTimeConstant,
+    frameRate,
+    createAudioSource,
+    deleteAudioSource
+  });
+  return /* @__PURE__ */ jsx(
+    "canvas",
+    {
+      className: twMerge(clsx("w-full max-w-full", className)),
+      ref: mergedRef,
+      ...restProps
+    }
+  );
+}
+
+function AudioPlayerVisualizerFrequencyBars(props) {
+  const { isPlaying } = useAudioPlayerContextPlayback();
+  const { audioRef } = useAudioPlayerContextRefs();
+  const { duration } = useAudioPlayerContextTime();
+  const { audioContextRef, isReady, createAudioSource, deleteAudioSource } = useAudioContext();
+  return /* @__PURE__ */ jsx(
+    AudioVisualizerFrequencyBars,
+    {
+      ...props,
+      isPlaying,
+      audioRef,
+      duration,
+      audioContextRef,
+      isAudioContextReady: isReady,
+      createAudioSource,
+      deleteAudioSource
+    }
+  );
+}
+
 const AudioPlayerCompoundComponent = {
   Root: Object.assign(AudioPlayer, { displayName: "AudioPlayer.Root" }),
   Provider: Object.assign(AudioPlayerContextProvider, { displayName: "AudioPlayer.Provider" }),
+  AudioContextProvider: Object.assign(AudioPlayerContextAudioProvider, {
+    displayName: "AudioPlayer.AudioContextProvider"
+  }),
   Author: Object.assign(AudioPlayerAuthor, { displayName: "AudioPlayer.Author" }),
   Controls: Object.assign(AudioPlayerControls, { displayName: "AudioPlayer.Controls" }),
   Image: Object.assign(AudioPlayerImage, { displayName: "AudioPlayer.Image" }),
@@ -5083,7 +5983,13 @@ const AudioPlayerCompoundComponent = {
   ControlShuffle: Object.assign(AudioPlayerControlShuffle, {
     displayName: "AudioPlayer.ControlShuffle"
   }),
-  ControlLoop: Object.assign(AudioPlayerControlLoop, { displayName: "AudioPlayer.ControlLoop" })
+  ControlLoop: Object.assign(AudioPlayerControlLoop, { displayName: "AudioPlayer.ControlLoop" }),
+  VisualizerWaveform: Object.assign(AudioPlayerVisualizerWaveform, {
+    displayName: "AudioPlayer.VisualizerWaveform"
+  }),
+  VisualizerFrequencyBars: Object.assign(AudioPlayerVisualizerFrequencyBars, {
+    displayName: "AudioPlayer.VisualizerFrequencyBars"
+  })
 };
 
 function AudioPlaylist(props) {
@@ -5091,7 +5997,9 @@ function AudioPlaylist(props) {
   return /* @__PURE__ */ jsx(
     Element,
     {
-      className: twMerge(clsx("flex flex-col border-slate-600 bg-slate-800", className)),
+      className: twMerge(
+        clsx("flex flex-col border-slate-600 bg-slate-800 text-neutral-100", className)
+      ),
       ...restProps,
       children
     }
@@ -5179,6 +6087,7 @@ function AudioPlaylistDismiss(props) {
   return /* @__PURE__ */ jsx(
     AudioPlaylistDismissPrimitive,
     {
+      "aria-label": "Close playlist",
       onClick: handleClick,
       className,
       ...restProps
@@ -5214,6 +6123,7 @@ function AudioPlaylistControlToggle(props) {
   return /* @__PURE__ */ jsx(
     AudioPlaylistControlTogglePrimitive,
     {
+      "aria-label": isPlaylistVisible ? "Hide playlist" : "Show playlist",
       "aria-expanded": isPlaylistVisible,
       "aria-controls": id,
       ref: composedRef,
@@ -5593,14 +6503,14 @@ function AudioPlaylistTrack(props) {
 function AudioPlaylistTrackContextProvider(props) {
   const { children, index, track } = props;
   const { currentTrackIndex, setTrackIndex } = useAudioPlayerContextTrack();
-  const { isPlaying, togglePlay, play } = useAudioPlayerContextAudio();
+  const { isPlaying, togglePlay, play } = useAudioPlayerContextPlayback();
   const onSelect = useCallback(() => {
-    if (currentTrackIndex !== index) {
-      setTrackIndex(index);
-      play();
-    } else {
+    if (currentTrackIndex === index) {
       togglePlay();
+      return;
     }
+    setTrackIndex(index);
+    play();
   }, [currentTrackIndex, index, togglePlay, setTrackIndex, play]);
   const contextValue = useMemo(
     () => ({
@@ -5844,7 +6754,7 @@ const buttonStyles = cva(
     variants: {
       variant: {
         primary: "bg-indigo-700 hover:bg-indigo-800 focus:bg-indigo-800 active:bg-indigo-800 text-white",
-        secondary: "bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border-[0.5px] hover:border focus:border active:border border-solid border-neutral-200",
+        secondary: "bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border active:border border-solid border-neutral-200",
         tertiary: "text-indigo-700 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50",
         destructive: "text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 focus:shadow-red-700/12",
         linkColor: "text-indigo-700 hover:text-indigo-800 focus:text-indigo-800 active:text-indigo-800",
@@ -5926,7 +6836,7 @@ const buttonStyles = cva(
     }
   }
 );
-function _Button(props, ref) {
+function Button(props) {
   const {
     children,
     disabled,
@@ -5940,7 +6850,6 @@ function _Button(props, ref) {
   return /* @__PURE__ */ jsx(
     "button",
     {
-      ref,
       className: twMerge(
         buttonStyles({ variant, size, disabled, iconOnly, isDestructive, className })
       ),
@@ -5950,7 +6859,5 @@ function _Button(props, ref) {
     }
   );
 }
-const Button = forwardRef(_Button);
-Button.displayName = "Button";
 
-export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextAudioProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistScrollableContainer, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackAuthorPrimitive, AudioPlaylistTrackImage, AudioPlaylistTrackImagePrimitive, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTrackTitlePrimitive, AudioPlaylistTracks, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContextAudio, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer };
+export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextPlaybackProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVisualizerFrequencyBars, AudioPlayerVisualizerWaveform, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistScrollableContainer, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackAuthorPrimitive, AudioPlaylistTrackImage, AudioPlaylistTrackImagePrimitive, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTrackTitlePrimitive, AudioPlaylistTracks, AudioVisualizerFrequencyBars, AudioVisualizerWaveform, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContextPlayback, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer, useAudioVisualizerWaveform };

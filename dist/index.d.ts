@@ -14,11 +14,18 @@ import { RefAttributes } from 'react';
 import { RefObject } from 'react';
 import { SVGProps } from 'react';
 
+declare type AudioContextProviderProps = PropsWithChildren & {
+    isPlaying?: boolean;
+};
+
 export declare const AudioPlayer: {
     Root: typeof AudioPlayerPrimitive & {
         displayName: string;
     };
     Provider: typeof AudioPlayerContextProvider & {
+        displayName: string;
+    };
+    AudioContextProvider: typeof AudioPlayerContextAudioProvider & {
         displayName: string;
     };
     Author: typeof AudioPlayerAuthor & {
@@ -69,6 +76,12 @@ export declare const AudioPlayer: {
     ControlLoop: typeof AudioPlayerControlLoop & {
         displayName: string;
     };
+    VisualizerWaveform: typeof AudioPlayerVisualizerWaveform & {
+        displayName: string;
+    };
+    VisualizerFrequencyBars: typeof AudioPlayerVisualizerFrequencyBars & {
+        displayName: string;
+    };
 };
 
 /**
@@ -95,15 +108,19 @@ export declare type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
     as?: T;
 } & ComponentPropsWithRef<T>;
 
+declare function AudioPlayerContextAudioProvider(props: AudioPlayerContextAudioProviderProps): JSX.Element;
+
+declare type AudioPlayerContextAudioProviderProps = Omit<AudioContextProviderProps, 'isPlaying'>;
+
 /**
  * Provides context for controlling audio playback state
  */
-export declare function AudioPlayerContextAudioProvider(props: AudioPlayerContextAudioProviderProps): JSX.Element;
+export declare function AudioPlayerContextPlaybackProvider(props: AudioPlayerContextPlaybackProviderProps): JSX.Element;
 
 /**
  * Props for the audio playback context provider
  */
-export declare interface AudioPlayerContextAudioProviderProps extends PropsWithChildren {
+export declare interface AudioPlayerContextPlaybackProviderProps extends PropsWithChildren {
     /** Initial volume level @default 50 */
     defaultVolume?: number;
     /** Whether audio is initially muted @default false */
@@ -114,7 +131,7 @@ export declare interface AudioPlayerContextAudioProviderProps extends PropsWithC
     defaultLoop?: boolean;
 }
 
-declare interface AudioPlayerContextAudioType {
+declare interface AudioPlayerContextPlaybackType {
     isPlaying: boolean;
     volume: number;
     mute: boolean;
@@ -432,6 +449,14 @@ export declare type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
     className?: string;
 } & ComponentPropsWithRef<T>;
 
+export declare function AudioPlayerVisualizerFrequencyBars(props: AudioPlayerVisualizerFrequencyBarsProps): JSX.Element;
+
+export declare type AudioPlayerVisualizerFrequencyBarsProps = Omit<AudioVisualizerFrequencyBarsProps, 'isPlaying' | 'audioRef' | 'duration' | 'audioContextRef' | 'isAudioContextReady' | 'createAudioSource' | 'deleteAudioSource'>;
+
+export declare function AudioPlayerVisualizerWaveform(props: AudioPlayerVisualizerWaveformProps): JSX.Element;
+
+export declare type AudioPlayerVisualizerWaveformProps = Omit<AudioVisualizerWaveformProps, 'isPlaying' | 'audioRef' | 'duration' | 'audioContextRef' | 'isAudioContextReady' | 'createAudioSource' | 'deleteAudioSource'>;
+
 /**
  * Base container component for volume controls
  */
@@ -690,7 +715,7 @@ export declare type AudioPlaylistTrackAuthorPrimitiveProps<T extends ElementType
 /**
  * Props for the audio playlist track author component
  */
-export declare type AudioPlaylistTrackAuthorProps<T extends ElementType = 'span'> = AudioPlaylistTrackAuthorPrimitiveProps<T>;
+export declare type AudioPlaylistTrackAuthorProps<T extends ElementType = 'span'> = Omit<AudioPlaylistTrackAuthorPrimitiveProps<T>, 'children'>;
 
 export declare function AudioPlaylistTrackImage(props: AudioPlaylistTrackImageProps): JSX.Element;
 
@@ -760,7 +785,7 @@ export declare type AudioPlaylistTrackTitlePrimitiveProps<T extends ElementType 
     as?: T;
 } & ComponentPropsWithRef<T>;
 
-export declare type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> = AudioPlaylistTrackTitlePrimitiveProps<T>;
+export declare type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> = Omit<AudioPlaylistTrackTitlePrimitiveProps<T>, 'children'>;
 
 declare type AudioTrackData = {
     title: string;
@@ -768,6 +793,14 @@ declare type AudioTrackData = {
     author: string;
     thumbnail?: string;
 };
+
+export declare function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBarsProps): JSX.Element;
+
+export declare type AudioVisualizerFrequencyBarsProps = ComponentPropsWithRef<'canvas'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'>;
+
+export declare function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps): JSX.Element;
+
+export declare type AudioVisualizerWaveformProps = ComponentPropsWithRef<'canvas'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'>;
 
 export declare const Badge: ForwardRefExoticComponent<BadgeProps & RefAttributes<HTMLElement>>;
 
@@ -780,11 +813,11 @@ export declare interface BadgeProps extends HTMLAttributes<HTMLElement> {
     size?: 'sm' | 'md' | 'lg';
 }
 
-export declare const Button: ForwardRefExoticComponent<ButtonProps & RefAttributes<HTMLButtonElement>>;
+export declare function Button(props: ButtonProps): JSX.Element;
 
 export declare type ButtonProps = CommonButtonProps & iconButtonAccessibleProps;
 
-declare interface CommonButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+declare interface CommonButtonProps extends ComponentPropsWithRef<'button'> {
     /**
      * The type of the button.
      * @default primary
@@ -841,13 +874,68 @@ declare const icons: {
     readonly 'close-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
 };
 
-declare type Size = SizesAsTypes[number];
+declare type Size = (typeof sizes)[number];
 
 declare const sizes: readonly ["md", "lg", "xl", "xxl"];
 
-declare type SizesAsTypes = typeof sizes;
+declare type UseAudioAnalyzerOptions = Partial<AnalyserOptions> & {
+    /**
+     * Reference to the audio element
+     */
+    audioRef: React.RefObject<HTMLAudioElement | null>;
+    /**
+     * Reference to the shared AudioContext
+     */
+    audioContextRef: UseAudioContextWebAPIReturn['audioContextRef'];
+    /**
+     * Function to create an audio source node
+     */
+    createAudioSource: UseAudioContextWebAPIReturn['createAudioSource'];
+    /**
+     * Function to delete an audio source node
+     */
+    deleteAudioSource: UseAudioContextWebAPIReturn['deleteAudioSource'];
+    /**
+     * Whether the audio context has been initialized
+     */
+    isAudioContextReady: UseAudioContextWebAPIReturn['isReady'];
+    /**
+     * Whether the audio is currently playing
+     */
+    isPlaying: boolean;
+    /**
+     * Audio duration in seconds
+     */
+    duration?: number;
+    /**
+     * Frame rate for the analysis in frames per second
+     */
+    frameRate?: number;
+    /**
+     * Callback that runs on each frame with the latest audio data
+     */
+    onAnalyze?: (dataArray: Uint8Array, analyzerNode: AnalyserNode) => void;
+    /**
+     * Type of data to retrieve
+     */
+    dataType?: 'timeDomain' | 'frequency';
+    /**
+     * Smoothing factor for transitions between frames (0-1)
+     * Higher values create more gradual visual transitions
+     * 0 = no smoothing, 1 = maximum smoothing
+     */
+    frameTransitionSmoothing?: number;
+};
 
-export declare function useAudioPlayerContextAudio(): AudioPlayerContextAudioType;
+declare type UseAudioContextWebAPIReturn = {
+    audioContextRef: RefObject<AudioContext | null>;
+    createAudioSource: (audioElement: HTMLAudioElement) => MediaElementAudioSourceNode | void;
+    deleteAudioSource: (audioElement: HTMLAudioElement) => boolean;
+    isReady: boolean;
+    sourceNodesRef: RefObject<Map<HTMLAudioElement, MediaElementAudioSourceNode>>;
+};
+
+export declare function useAudioPlayerContextPlayback(): AudioPlayerContextPlaybackType;
 
 export declare function useAudioPlayerContextRefs(): AudioPlayerContextRefsType;
 
@@ -894,10 +982,26 @@ export declare function useAudioPlaylistContext(): AudioPlaylistContextType;
 
 export declare function useAudioPlaylistExpandableContainer(props: useAudioPlayerExpandableContainer): void;
 
-declare type Variant = VariantsAsTypes[number];
+export declare function useAudioVisualizerWaveform(options?: useAudioVisualizerWaveformProps): useAudioVisualizerWaveformReturn;
+
+declare type useAudioVisualizerWaveformProps = {
+    /**
+     * Color of the waveform line
+     */
+    lineColor?: string;
+    /**
+     * Thickness of the waveform line
+     */
+    lineWidth?: number;
+};
+
+declare type useAudioVisualizerWaveformReturn = {
+    canvasRef: React.RefObject<HTMLCanvasElement | null>;
+    drawWaveform: (dataArray: Uint8Array) => void;
+};
+
+declare type Variant = (typeof variants)[number];
 
 declare const variants: readonly ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"];
-
-declare type VariantsAsTypes = typeof variants;
 
 export { }
