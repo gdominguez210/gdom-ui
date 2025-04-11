@@ -1,6 +1,6 @@
 import { useMemo, useRef, useCallback, type RefObject } from 'react';
-import { useState } from 'react';
 import { useEffect } from 'react';
+import { useRefReady } from '@lib/useRefReady/useRefReady';
 
 async function resumeAudioContext(audioContext: AudioContext): Promise<boolean> {
   try {
@@ -40,32 +40,31 @@ function createAudioContext(): AudioContext | void {
   }
 }
 
-export type AudioContextWebAPIOptions = {
+export type UseAudioContextWebAPIOptions = {
   isPlaying: boolean;
 };
 
-export type AudioContextWebAPIReturn = {
+export type UseAudioContextWebAPIReturn = {
   audioContextRef: RefObject<AudioContext | null>;
   createAudioSource: (audioElement: HTMLAudioElement) => MediaElementAudioSourceNode | void;
   deleteAudioSource: (audioElement: HTMLAudioElement) => boolean;
-  isInitialized: boolean;
+  isReady: boolean;
   sourceNodesRef: RefObject<Map<HTMLAudioElement, MediaElementAudioSourceNode>>;
 };
 
-export function useAudioContextWebAPI(options: AudioContextWebAPIOptions) {
+export function useAudioContextWebAPI(options: UseAudioContextWebAPIOptions) {
   const { isPlaying } = options;
 
-  const audioContextRef = useRef<AudioContext | null>(null);
+  const [setAudioContextRef, isAudioContextRefReady, audioContextRef] =
+    useRefReady<AudioContext | null>(null);
   const sourceNodesRef = useRef<Map<HTMLAudioElement, MediaElementAudioSourceNode>>(new Map());
-
-  const [isInitialized, setIsInitialized] = useState(false);
 
   const createAudioSource = useCallback(
     (audioElement: HTMLAudioElement): MediaElementAudioSourceNode | void => {
       const audioContext = audioContextRef.current;
       const sourceNodes = sourceNodesRef.current;
 
-      if (!audioContext || !isInitialized || !audioElement) return;
+      if (!audioContext || !isAudioContextRefReady || !audioElement) return;
 
       if (sourceNodes.has(audioElement)) {
         return sourceNodes.get(audioElement);
@@ -84,7 +83,7 @@ export function useAudioContextWebAPI(options: AudioContextWebAPIOptions) {
         }
       }
     },
-    [audioContextRef, isInitialized],
+    [audioContextRef, isAudioContextRefReady],
   );
 
   const deleteAudioSource = useCallback((audioElement: HTMLAudioElement): boolean => {
@@ -118,8 +117,7 @@ export function useAudioContextWebAPI(options: AudioContextWebAPIOptions) {
       const audioContext = createAudioContext();
 
       if (audioContext) {
-        audioContextRef.current = audioContext;
-        setIsInitialized(true);
+        setAudioContextRef(audioContext);
       }
     }
 
@@ -130,7 +128,7 @@ export function useAudioContextWebAPI(options: AudioContextWebAPIOptions) {
     if (!isPlaying && audioContextRef.current?.state === 'running') {
       suspendAudioContext(audioContextRef.current);
     }
-  }, [isPlaying]);
+  }, [isPlaying, setAudioContextRef, audioContextRef]);
 
   useEffect(() => {
     const audioContext = audioContextRef.current;
@@ -152,7 +150,7 @@ export function useAudioContextWebAPI(options: AudioContextWebAPIOptions) {
         closeAudioContext(audioContext);
       }
     };
-  }, []);
+  }, [audioContextRef, sourceNodesRef]);
 
   const result = useMemo(
     () => ({
@@ -160,9 +158,9 @@ export function useAudioContextWebAPI(options: AudioContextWebAPIOptions) {
       createAudioSource,
       deleteAudioSource,
       sourceNodesRef,
-      isInitialized,
+      isReady: isAudioContextRefReady,
     }),
-    [audioContextRef, createAudioSource, deleteAudioSource, isInitialized],
+    [audioContextRef, createAudioSource, deleteAudioSource, isAudioContextRefReady],
   );
 
   return result;

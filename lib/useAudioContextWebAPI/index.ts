@@ -1,5 +1,5 @@
 export {
   useAudioContextWebAPI,
-  type AudioContextWebAPIOptions,
-  type AudioContextWebAPIReturn,
+  type UseAudioContextWebAPIOptions,
+  type UseAudioContextWebAPIReturn,
 } from './useAudioContextWebAPI';
