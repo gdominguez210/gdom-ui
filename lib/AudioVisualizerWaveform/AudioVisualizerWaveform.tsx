@@ -5,11 +5,11 @@ import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import {
   useAudioAnalyzer,
-  type AudioAnalyzerOptions,
+  type UseAudioAnalyzerOptions,
 } from '@lib/useAudioAnalyzer/useAudioAnalyzer';
 
 export type AudioVisualizerWaveformProps = ComponentPropsWithRef<'canvas'> &
-  Omit<AudioAnalyzerOptions, 'dataType' | 'onAnalyze'>;
+  Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'>;
 
 export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
   const {
