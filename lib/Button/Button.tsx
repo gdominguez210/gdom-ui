@@ -13,11 +13,9 @@ const variants = [
 
 export const sizes = ['md', 'lg', 'xl', 'xxl'] as const;
 
-type VariantsAsTypes = typeof variants;
-type Variant = VariantsAsTypes[number];
+type Variant = (typeof variants)[number];
 
-type SizesAsTypes = typeof sizes;
-type Size = SizesAsTypes[number];
+type Size = (typeof sizes)[number];
 
 interface CommonButtonProps extends ComponentPropsWithRef<'button'> {
   /**
