@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, type DependencyList } from 'react';
 
 export type useAnimationFrameOptions = {
   /**
@@ -21,8 +21,7 @@ export type useAnimationFrameOptions = {
    * Optional dependencies that should trigger a reset of the animation
    * when changed (similar to useEffect dependencies)
    */
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  dependencies?: any[];
+  dependencies?: DependencyList;
 
   /**
    * Whether to automatically start/stop the animation based on isActive
