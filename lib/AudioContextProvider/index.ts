@@ -1,3 +1,5 @@
-export { AudioContextProvider, type AudioContextProviderProps } from './AudioContextProvider';
-export { useAudioContext } from './useAudioContext';
-export { useAudioContextWebAPI } from './useAudioContextWebAPI';
+export {
+  AudioContextProvider,
+  type AudioContextProviderProps,
+} from '@lib/AudioContextProvider/AudioContextProvider';
+export { useAudioContext } from '@lib/AudioContextProvider/useAudioContext';
