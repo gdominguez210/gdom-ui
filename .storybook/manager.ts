@@ -1,7 +1,8 @@
 import { addons } from '@storybook/manager-api';
+import { themes } from '@storybook/theming';
 import { create } from '@storybook/theming/create';
 
-const gdomTheme = create({
+const defaultTheme = create({
   base: 'light',
 
   // Brand
@@ -10,7 +11,7 @@ const gdomTheme = create({
   // Use the basePath to generate the correct URL in both dev and production
   brandImage: `logo.svg`,
   brandTarget: '_blank',
-
+  /*
   // UI
   appBg: '#F8F8F8',
   appContentBg: '#FFFFFF',
@@ -35,11 +36,12 @@ const gdomTheme = create({
   // Color schemes
   colorPrimary: '#3093fa',
   colorSecondary: '#3093fa',
+  */
 });
 
 // Apply the theme to Storybook
 addons.setConfig({
-  theme: gdomTheme,
+  theme: defaultTheme,
   sidebar: {
     showRoots: true,
   },
