@@ -9,7 +9,13 @@ import {
 
 export type AudioPlayerVisualizerWaveformProps = Omit<
   AudioVisualizerWaveformProps,
-  'isPlaying' | 'audioRef' | 'duration' | 'audioContextRef' | 'isAudioContextReady'
+  | 'isPlaying'
+  | 'audioRef'
+  | 'duration'
+  | 'audioContextRef'
+  | 'isAudioContextReady'
+  | 'createAudioSource'
+  | 'deleteAudioSource'
 >;
 
 export function AudioPlayerVisualizerWaveform(props: AudioPlayerVisualizerWaveformProps) {

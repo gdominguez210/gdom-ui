@@ -9,7 +9,13 @@ import {
 
 export type AudioPlayerVisualizerFrequencyBarsProps = Omit<
   AudioVisualizerFrequencyBarsProps,
-  'isPlaying' | 'audioRef' | 'duration' | 'audioContextRef' | 'isAudioContextReady'
+  | 'isPlaying'
+  | 'audioRef'
+  | 'duration'
+  | 'audioContextRef'
+  | 'isAudioContextReady'
+  | 'createAudioSource'
+  | 'deleteAudioSource'
 >;
 
 export function AudioPlayerVisualizerFrequencyBars(props: AudioPlayerVisualizerFrequencyBarsProps) {
