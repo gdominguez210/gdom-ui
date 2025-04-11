@@ -1,27 +1,28 @@
 import { useEffect, useRef, type RefObject } from 'react';
-
+import { useRefReady } from '@lib/useRefReady/useRefReady';
 export type UseAnalyzerNodeOptions = Partial<AnalyserOptions> & {
   audioContextRef: RefObject<AudioContext | null>;
-  isAudioContextInitialized: boolean;
+  isAudioContextReady: boolean;
 };
 
 export type UseAnalyzerNodeResult = {
   analyzerRef: RefObject<AnalyserNode | null>;
   dataArrayRef: RefObject<Uint8Array | null>;
   previousDataRef: RefObject<Uint8Array | null>;
+  isAnalyzerReady: boolean;
 };
 
 export function useAnalyzerNode(options: UseAnalyzerNodeOptions): UseAnalyzerNodeResult {
   const {
     audioContextRef,
-    isAudioContextInitialized,
+    isAudioContextReady,
     fftSize = 2048,
     smoothingTimeConstant = 0.8,
     maxDecibels = -30,
     minDecibels = -100,
   } = options;
 
-  const analyzerRef = useRef<AnalyserNode | null>(null);
+  const [setAnalyzerRef, isAnalyzerReady, analyzerRef] = useRefReady<AnalyserNode | null>(null);
 
   const dataArrayRef = useRef<Uint8Array | null>(null);
   const previousDataRef = useRef<Uint8Array | null>(null);
@@ -29,7 +30,7 @@ export function useAnalyzerNode(options: UseAnalyzerNodeOptions): UseAnalyzerNod
   useEffect(() => {
     const audioContext = audioContextRef.current;
 
-    if (!audioContext || !isAudioContextInitialized || audioContext.state === 'closed') return;
+    if (!audioContext || !isAudioContextReady || audioContext.state === 'closed') return;
 
     if (!analyzerRef.current) {
       const analyzer = new AnalyserNode(audioContext, {
@@ -39,7 +40,7 @@ export function useAnalyzerNode(options: UseAnalyzerNodeOptions): UseAnalyzerNod
         minDecibels,
       });
 
-      analyzerRef.current = analyzer;
+      setAnalyzerRef(analyzer);
 
       const dataArray = new Uint8Array(analyzer.frequencyBinCount);
       dataArrayRef.current = dataArray;
@@ -68,16 +69,19 @@ export function useAnalyzerNode(options: UseAnalyzerNodeOptions): UseAnalyzerNod
     };
   }, [
     audioContextRef,
-    isAudioContextInitialized,
+    isAudioContextReady,
     fftSize,
     smoothingTimeConstant,
     maxDecibels,
     minDecibels,
+    setAnalyzerRef,
+    analyzerRef,
   ]);
 
   return {
     analyzerRef,
     dataArrayRef,
     previousDataRef,
+    isAnalyzerReady,
   };
 }
