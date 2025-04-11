@@ -19,11 +19,13 @@ import { AudioPlayerImage } from '@lib/AudioPlayerImage/AudioPlayerImage';
 import { AudioPlayerInfo } from '@lib/AudioPlayerInfo/AudioPlayerInfo';
 import { AudioPlayerControls } from '@lib/AudioPlayerControls/AudioPlayerControls';
 import { AudioPlayerVolume } from '@lib/AudioPlayerVolume/AudioPlayerVolume';
-import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
+import { AudioPlayerContextPlaybackProvider } from '@lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlaybackProvider';
 import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
 import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
 import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
 import { AudioPlaylistCompoundComponent } from '@lib/AudioPlaylist/namespace';
+import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
+import { AudioPlayerVisualizerWaveform } from '@lib/AudioPlayerVisualizerWaveform/AudioPlayerVisualizerWaveform';
 
 export default {
   title: 'components/AudioPlayer',
@@ -61,10 +63,12 @@ export default {
     AudioPlayerControlLoop,
     AudioPlayerControlAudio,
     AudioPlayerContextProvider,
-    AudioPlayerContextAudioProvider,
+    AudioPlayerContextPlaybackProvider,
     AudioPlayerContextTimeProvider,
     AudioPlayerContextTrackProvider,
     AudioPlayerContextRefsProvider,
+    AudioPlayerContextAudioProvider,
+    AudioPlayerVisualizerWaveform,
   },
 } as Meta<typeof AudioPlayer>;
 
@@ -236,6 +240,104 @@ export const WithCollapsiblePlaylist: StoryObj<typeof AudioPlayer> = {
           <AudioPlayerCompoundComponent.ProgressBar />
         </AudioPlayerCompoundComponent.Root>
       </AudioPlaylistCompoundComponent.Provider>
+    </AudioPlayerCompoundComponent.Provider>
+  ),
+};
+
+export const WithFrequencyBarsVisualizer: StoryObj<typeof AudioPlayer> = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'A player with a frequency bars visualizer',
+      },
+      source: {
+        type: 'dynamic',
+      },
+    },
+  },
+  render: () => (
+    <AudioPlayerCompoundComponent.Provider tracks={trackData}>
+      <AudioPlayerCompoundComponent.AudioContextProvider>
+        <AudioPlayerCompoundComponent.Root className="@container/audio-player">
+          <AudioPlayerCompoundComponent.VisualizerFrequencyBars
+            className="h-[150px] bg-slate-900"
+            height={150}
+            width={938}
+          />
+          <div className="justify-space-between grow gap-4 @min-lg/audio-player:flex">
+            <AudioPlayerCompoundComponent.Info className="basis-1/3">
+              <AudioPlayerCompoundComponent.Image />
+              <div className="p-2 @min-lg/audio-player:py-2">
+                <AudioPlayerCompoundComponent.Title />
+                <AudioPlayerCompoundComponent.Author />
+                <AudioPlayerCompoundComponent.Time />
+              </div>
+            </AudioPlayerCompoundComponent.Info>
+            <AudioPlayerCompoundComponent.Controls className="basis-2/3 @min-lg/audio-player:gap-1 @min-lg/audio-player:text-2xl">
+              <AudioPlayerCompoundComponent.ControlAudio />
+              <AudioPlayerCompoundComponent.ControlLoop className="hidden @min-lg/audio-player:block" />
+              <AudioPlayerCompoundComponent.ControlPrevious />
+              <AudioPlayerCompoundComponent.ControlPlay />
+              <AudioPlayerCompoundComponent.ControlNext />
+              <AudioPlayerCompoundComponent.ControlShuffle className="hidden @min-lg/audio-player:block" />
+              <AudioPlayerCompoundComponent.Volume className="ml-auto pr-4">
+                <AudioPlayerCompoundComponent.VolumeButton />
+                <AudioPlayerCompoundComponent.VolumeSlider />
+              </AudioPlayerCompoundComponent.Volume>
+            </AudioPlayerCompoundComponent.Controls>
+          </div>
+          <AudioPlayerCompoundComponent.ProgressBar />
+        </AudioPlayerCompoundComponent.Root>
+      </AudioPlayerCompoundComponent.AudioContextProvider>
+    </AudioPlayerCompoundComponent.Provider>
+  ),
+};
+
+export const WithWaveformVisualizer: StoryObj<typeof AudioPlayer> = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'A player with a waveform visualizer',
+      },
+      source: {
+        type: 'dynamic',
+      },
+    },
+  },
+  render: () => (
+    <AudioPlayerCompoundComponent.Provider tracks={trackData}>
+      <AudioPlayerCompoundComponent.AudioContextProvider>
+        <AudioPlayerCompoundComponent.Root className="@container/audio-player">
+          <AudioPlayerCompoundComponent.VisualizerWaveform
+            className="h-[150px] bg-slate-900"
+            height={150}
+            width={938}
+          />
+          <div className="justify-space-between grow gap-4 @min-lg/audio-player:flex">
+            <AudioPlayerCompoundComponent.Info className="basis-1/3">
+              <AudioPlayerCompoundComponent.Image />
+              <div className="p-2 @min-lg/audio-player:py-2">
+                <AudioPlayerCompoundComponent.Title />
+                <AudioPlayerCompoundComponent.Author />
+                <AudioPlayerCompoundComponent.Time />
+              </div>
+            </AudioPlayerCompoundComponent.Info>
+            <AudioPlayerCompoundComponent.Controls className="basis-2/3 @min-lg/audio-player:gap-1 @min-lg/audio-player:text-2xl">
+              <AudioPlayerCompoundComponent.ControlAudio />
+              <AudioPlayerCompoundComponent.ControlLoop className="hidden @min-lg/audio-player:block" />
+              <AudioPlayerCompoundComponent.ControlPrevious />
+              <AudioPlayerCompoundComponent.ControlPlay />
+              <AudioPlayerCompoundComponent.ControlNext />
+              <AudioPlayerCompoundComponent.ControlShuffle className="hidden @min-lg/audio-player:block" />
+              <AudioPlayerCompoundComponent.Volume className="ml-auto pr-4">
+                <AudioPlayerCompoundComponent.VolumeButton />
+                <AudioPlayerCompoundComponent.VolumeSlider />
+              </AudioPlayerCompoundComponent.Volume>
+            </AudioPlayerCompoundComponent.Controls>
+          </div>
+          <AudioPlayerCompoundComponent.ProgressBar />
+        </AudioPlayerCompoundComponent.Root>
+      </AudioPlayerCompoundComponent.AudioContextProvider>
     </AudioPlayerCompoundComponent.Provider>
   ),
 };
