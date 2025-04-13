@@ -1,8 +1,10 @@
 import { useEffect, useRef, type RefObject } from 'react';
 import { useRefReady } from '@lib/useRefReady/useRefReady';
+
 export type UseAnalyzerNodeOptions = Partial<AnalyserOptions> & {
   audioContextRef: RefObject<AudioContext | null>;
   isAudioContextReady: boolean;
+  connectToAudioContext?: boolean;
 };
 
 export type UseAnalyzerNodeResult = {
@@ -16,6 +18,7 @@ export function useAnalyzerNode(options: UseAnalyzerNodeOptions): UseAnalyzerNod
   const {
     audioContextRef,
     isAudioContextReady,
+    connectToAudioContext = false,
     fftSize = 2048,
     smoothingTimeConstant = 0.8,
     maxDecibels = -30,
@@ -60,13 +63,6 @@ export function useAnalyzerNode(options: UseAnalyzerNodeOptions): UseAnalyzerNod
         previousDataRef.current = new Uint8Array(analyzer.frequencyBinCount);
       }
     }
-
-    return () => {
-      if (analyzerRef.current) {
-        analyzerRef.current.disconnect();
-        analyzerRef.current = null;
-      }
-    };
   }, [
     audioContextRef,
     isAudioContextReady,
@@ -77,6 +73,41 @@ export function useAnalyzerNode(options: UseAnalyzerNodeOptions): UseAnalyzerNod
     setAnalyzerRef,
     analyzerRef,
   ]);
+
+  useEffect(() => {
+    if (!connectToAudioContext) return;
+
+    const audioContext = audioContextRef.current;
+    const analyzer = analyzerRef.current;
+
+    if (
+      !audioContext ||
+      !isAudioContextReady ||
+      audioContext.state === 'closed' ||
+      !isAnalyzerReady ||
+      !analyzer
+    ) {
+      return;
+    }
+
+    analyzer.connect(audioContext.destination);
+
+    return () => {
+      if (analyzer) {
+        analyzer.disconnect(audioContext.destination);
+      }
+    };
+  }, [connectToAudioContext, audioContextRef, isAudioContextReady, isAnalyzerReady, analyzerRef]);
+
+  useEffect(() => {
+    return () => {
+      if (analyzerRef.current) {
+        analyzerRef.current.disconnect();
+        analyzerRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     analyzerRef,
