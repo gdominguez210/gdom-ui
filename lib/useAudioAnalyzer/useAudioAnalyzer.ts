@@ -1,7 +1,7 @@
 import { useAnimationFrame } from '@lib/useAnimationFrame/useAnimationFrame';
 import { useCallback } from 'react';
 import { useAnalyzerNode } from '@lib/useAnalyzerNode/useAnalyzerNode';
-import { useAudioConnection } from '@lib/useAudioConnection/useAudioConnection';
+import { useAudioSourceConnection } from '@lib/useAudioSourceConnection/useAudioSourceConnection';
 import { type UseAudioContextWebAPIReturn } from '@lib/useAudioContextWebAPI/useAudioContextWebAPI';
 /**
  * Smooths the data between frames
@@ -124,6 +124,7 @@ export function useAudioAnalyzer(options: UseAudioAnalyzerOptions): UseAudioAnal
     isAudioContextReady,
     fftSize,
     smoothingTimeConstant,
+    connectToAudioContext: true,
   });
 
   const analyzeAudio = useCallback(() => {
@@ -155,7 +156,7 @@ export function useAudioAnalyzer(options: UseAudioAnalyzerOptions): UseAudioAnal
     dependencies: [duration],
   });
 
-  useAudioConnection({
+  useAudioSourceConnection({
     audioRef,
     destinationRef: analyzerRef,
     audioContextRef,
