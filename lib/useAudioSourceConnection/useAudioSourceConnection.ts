@@ -2,35 +2,30 @@ import { useRefReady } from '@lib/useRefReady/useRefReady';
 import { type UseAudioContextWebAPIReturn } from '@lib/useAudioContextWebAPI/useAudioContextWebAPI';
 import { useCallback, useEffect, useRef } from 'react';
 
-export type UseAudioConnectionOptions = {
+export type UseAudioSourceConnectionOptions = {
   audioRef: React.RefObject<HTMLAudioElement | null>;
   destinationRef: React.RefObject<AudioNode | null>;
-  audioContextRef: UseAudioContextWebAPIReturn['audioContextRef'];
   createAudioSource: UseAudioContextWebAPIReturn['createAudioSource'];
   deleteAudioSource: UseAudioContextWebAPIReturn['deleteAudioSource'];
-  isAudioContextReady: UseAudioContextWebAPIReturn['isReady'];
   isDestinationReady: boolean;
-  connectToDestination?: boolean;
   deleteOnCleanup?: boolean;
   autoConnect?: boolean;
 };
 
-export type UseAudioConnectionReturn = {
+export type UseAudioSourceConnectionReturn = {
   isConnected: boolean;
   connect: () => boolean;
   disconnect: () => boolean;
   reconnect: () => boolean;
 };
 
-export function useAudioConnection(options: UseAudioConnectionOptions) {
+export function useAudioSourceConnection(options: UseAudioSourceConnectionOptions) {
   const {
     audioRef,
     destinationRef,
-    audioContextRef,
     createAudioSource,
     deleteAudioSource,
-    isAudioContextReady,
-    connectToDestination = true,
+    isDestinationReady,
     deleteOnCleanup = true,
     autoConnect = true,
   } = options;
@@ -41,11 +36,10 @@ export function useAudioConnection(options: UseAudioConnectionOptions) {
   const connect = useCallback(() => {
     if (isConnectedRef.current) return true;
 
-    const audioContext = audioContextRef.current;
     const destinationNode = destinationRef.current;
     const audioElement = audioRef.current;
 
-    if (!isAudioContextReady || !audioContext || !destinationNode || !audioElement) return false;
+    if (!destinationNode || !isDestinationReady || !audioElement) return false;
 
     try {
       const sourceNode = createAudioSource(audioElement);
@@ -54,10 +48,6 @@ export function useAudioConnection(options: UseAudioConnectionOptions) {
       sourceNodeRef.current = sourceNode;
 
       sourceNode.connect(destinationNode);
-
-      if (connectToDestination) {
-        destinationNode.connect(audioContext.destination);
-      }
 
       setIsConnectedRef(true);
       return true;
@@ -68,34 +58,25 @@ export function useAudioConnection(options: UseAudioConnectionOptions) {
   }, [
     audioRef,
     destinationRef,
-    audioContextRef,
     createAudioSource,
-    isAudioContextReady,
-    connectToDestination,
     setIsConnectedRef,
     isConnectedRef,
+    isDestinationReady,
   ]);
 
   const disconnect = useCallback(() => {
     if (!isConnectedRef.current) return true;
 
     const audioElement = audioRef.current;
-    const audioContext = audioContextRef.current;
     const destinationNode = destinationRef.current;
 
-    if (!audioContext || !destinationNode || !audioElement) return false;
+    if (!destinationNode || !audioElement) return false;
 
     try {
-      if (connectToDestination && destinationNode && audioContext) {
-        destinationNode.disconnect(audioContext.destination);
-      }
-
       sourceNodeRef.current?.disconnect(destinationNode);
 
       if (deleteOnCleanup) {
         deleteAudioSource(audioElement);
-      } else if (sourceNodeRef.current && destinationNode) {
-        sourceNodeRef.current.disconnect(destinationNode);
       }
 
       setIsConnectedRef(false);
@@ -108,9 +89,7 @@ export function useAudioConnection(options: UseAudioConnectionOptions) {
   }, [
     audioRef,
     destinationRef,
-    audioContextRef,
     deleteAudioSource,
-    connectToDestination,
     deleteOnCleanup,
     isConnectedRef,
     setIsConnectedRef,
