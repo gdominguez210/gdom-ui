@@ -159,10 +159,8 @@ export function useAudioAnalyzer(options: UseAudioAnalyzerOptions): UseAudioAnal
   useAudioSourceConnection({
     audioRef,
     destinationRef: analyzerRef,
-    audioContextRef,
     createAudioSource,
     deleteAudioSource,
-    isAudioContextReady,
     isDestinationReady: isAnalyzerReady,
   });
 
