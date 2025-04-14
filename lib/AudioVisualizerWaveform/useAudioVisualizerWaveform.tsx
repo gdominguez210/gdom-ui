@@ -32,6 +32,9 @@ export function useAudioVisualizerWaveform(
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
+      const displayWidth = canvas.clientWidth;
+      const displayHeight = canvas.clientHeight;
+
       // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -41,13 +44,17 @@ export function useAudioVisualizerWaveform(
       ctx.beginPath();
 
       // Calculate how much horizontal space each data point gets
-      const sliceWidth = canvas.width / dataArray.length;
+      const sliceWidth = displayWidth / dataArray.length;
       let x = 0;
+
+      const centerY = displayHeight / 2;
 
       dataArray.forEach((value, index) => {
         // Convert data range (0-255) to y-coordinate
-        const normalized = value / 128.0; // Convert to range ~0-2
-        const y = (normalized * canvas.height) / 2; // Scale to canvas height
+        const normalizedOffset = (value - 128) / 128;
+        // Center around the middle of the canvas
+        // This makes values of 128 align with the center line
+        const y = centerY + normalizedOffset * centerY;
 
         if (index === 0) {
           ctx.moveTo(x, y);
@@ -59,7 +66,7 @@ export function useAudioVisualizerWaveform(
       });
 
       // Complete the path and render
-      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.lineTo(canvas.width, centerY);
       ctx.stroke();
     },
     [lineColor, lineWidth],
