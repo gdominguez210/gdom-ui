@@ -1,19 +1,16 @@
 import { useAudioVisualizerWaveform } from '@lib/AudioVisualizerWaveform/useAudioVisualizerWaveform';
 import { type ComponentPropsWithRef, type RefObject } from 'react';
 import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
 import {
   useAudioAnalyzer,
   type UseAudioAnalyzerOptions,
 } from '@lib/useAudioAnalyzer/useAudioAnalyzer';
-
+import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
 export type AudioVisualizerWaveformProps = ComponentPropsWithRef<'canvas'> &
   Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'>;
 
 export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
   const {
-    className,
     ref,
     isPlaying,
     audioRef,
@@ -47,8 +44,7 @@ export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
   });
 
   return (
-    <canvas
-      className={twMerge(clsx('w-full max-w-full', className))}
+    <CanvasResponsive
       ref={mergedRef}
       {...restProps}
     />
