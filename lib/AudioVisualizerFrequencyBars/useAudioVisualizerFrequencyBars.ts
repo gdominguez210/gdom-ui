@@ -178,6 +178,9 @@ export function useAudioVisualizerFrequencyBars(
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
+      const displayWidth = canvas.clientWidth;
+      const displayHeight = canvas.clientHeight;
+
       // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -185,7 +188,7 @@ export function useAudioVisualizerFrequencyBars(
       const totalGapWidth = (barCount - 1) * barGap;
       const barWidth = Math.max(
         VISUALIZATION_PARAMS.MIN_BAR_WIDTH,
-        (canvas.width - totalGapWidth) / barCount,
+        (displayWidth - totalGapWidth) / barCount,
       );
 
       ctx.fillStyle = barColor;
@@ -227,15 +230,15 @@ export function useAudioVisualizerFrequencyBars(
 
         const amplifiedValue = calculateAmplifiedValue(normalizedValue, minHeight);
         const barHeight = Math.min(
-          canvas.height,
-          amplifiedValue * canvas.height * heightMultiplier,
+          displayHeight,
+          amplifiedValue * displayHeight * heightMultiplier,
         );
 
         // Calculate x position
         const x = i * (barWidth + barGap);
 
         // Draw bar from bottom up
-        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        ctx.fillRect(x, displayHeight - barHeight, barWidth, barHeight);
       }
     },
     [barColor, barCount, barGap, heightMultiplier, minHeight],
