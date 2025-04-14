@@ -1,19 +1,16 @@
 import { useAudioVisualizerFrequencyBars } from '@lib/AudioVisualizerFrequencyBars/useAudioVisualizerFrequencyBars';
 import { type ComponentPropsWithRef, type RefObject } from 'react';
 import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
 import {
   useAudioAnalyzer,
   type UseAudioAnalyzerOptions,
 } from '@lib/useAudioAnalyzer/useAudioAnalyzer';
-
+import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
 export type AudioVisualizerFrequencyBarsProps = ComponentPropsWithRef<'canvas'> &
   Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'>;
 
 export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBarsProps) {
   const {
-    className,
     ref,
     isPlaying,
     audioRef,
@@ -48,8 +45,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
   });
 
   return (
-    <canvas
-      className={twMerge(clsx('w-full max-w-full', className))}
+    <CanvasResponsive
       ref={mergedRef}
       {...restProps}
     />
