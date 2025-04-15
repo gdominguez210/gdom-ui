@@ -1,4 +1,7 @@
-import { useAudioVisualizerFrequencyBars } from '@lib/AudioVisualizerFrequencyBars/useAudioVisualizerFrequencyBars';
+import {
+  useAudioVisualizerFrequencyBars,
+  type useAudioVisualizerFrequencyBarOptions,
+} from '@lib/AudioVisualizerFrequencyBars/useAudioVisualizerFrequencyBars';
 import { type ComponentPropsWithRef, type RefObject } from 'react';
 import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
 import {
@@ -7,7 +10,8 @@ import {
 } from '@lib/useAudioAnalyzer/useAudioAnalyzer';
 import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
 export type AudioVisualizerFrequencyBarsProps = ComponentPropsWithRef<'canvas'> &
-  Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'>;
+  Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> &
+  useAudioVisualizerFrequencyBarOptions;
 
 export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBarsProps) {
   const {
@@ -22,10 +26,23 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     frameRate,
     createAudioSource,
     deleteAudioSource,
+    barColor,
+    barGapRatio,
+    barCount,
+    heightMultiplier,
+    minHeight,
+    colorMode,
     ...restProps
   } = props;
 
-  const { canvasRef, drawFrequencyBars } = useAudioVisualizerFrequencyBars();
+  const { canvasRef, drawFrequencyBars } = useAudioVisualizerFrequencyBars({
+    barColor,
+    barGapRatio,
+    barCount,
+    heightMultiplier,
+    minHeight,
+    colorMode,
+  });
 
   const mergedRef = useComposedRefs(ref, canvasRef);
 
