@@ -33,9 +33,9 @@ export const trackData: AudioTrackData[] = [
   },
   {
     title: 'K-Block',
-    src: 'https://cdn1.suno.ai/a9ef09b8-fbc1-4bd4-ac0c-4a9e82c561ca.mp3',
+    src: 'https://cdn1.suno.ai/4dbdff9c-94b5-4dbc-b3bd-591691207f0b.mp3',
     author: 'Gary Dominguez',
-    thumbnail: 'https://cdn2.suno.ai/image_a9ef09b8-fbc1-4bd4-ac0c-4a9e82c561ca.jpeg',
+    thumbnail: 'https://cdn2.suno.ai/image_4dbdff9c-94b5-4dbc-b3bd-591691207f0b.jpeg',
   },
   // {
   //   title: 'Doomcore',
