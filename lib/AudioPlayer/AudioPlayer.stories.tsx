@@ -260,9 +260,9 @@ export const WithFrequencyBarsVisualizer: StoryObj<typeof AudioPlayer> = {
       <AudioPlayerCompoundComponent.AudioContextProvider>
         <AudioPlayerCompoundComponent.Root className="@container/audio-player">
           <AudioPlayerCompoundComponent.VisualizerFrequencyBars
-            className="h-[150px] bg-slate-900"
-            height={150}
-            width={938}
+            className="max-h-[150px] bg-slate-900"
+            barColor="rgb(2, 156, 253)"
+            colorMode="intensity"
           />
           <div className="justify-space-between grow gap-4 @min-lg/audio-player:flex">
             <AudioPlayerCompoundComponent.Info className="basis-1/3">
@@ -308,11 +308,7 @@ export const WithWaveformVisualizer: StoryObj<typeof AudioPlayer> = {
     <AudioPlayerCompoundComponent.Provider tracks={trackData}>
       <AudioPlayerCompoundComponent.AudioContextProvider>
         <AudioPlayerCompoundComponent.Root className="@container/audio-player">
-          <AudioPlayerCompoundComponent.VisualizerWaveform
-            className="h-[150px] bg-slate-900"
-            height={150}
-            width={938}
-          />
+          <AudioPlayerCompoundComponent.VisualizerWaveform className="max-h-[150px] bg-slate-900" />
           <div className="justify-space-between grow gap-4 @min-lg/audio-player:flex">
             <AudioPlayerCompoundComponent.Info className="basis-1/3">
               <AudioPlayerCompoundComponent.Image />
@@ -337,6 +333,86 @@ export const WithWaveformVisualizer: StoryObj<typeof AudioPlayer> = {
           </div>
           <AudioPlayerCompoundComponent.ProgressBar />
         </AudioPlayerCompoundComponent.Root>
+      </AudioPlayerCompoundComponent.AudioContextProvider>
+    </AudioPlayerCompoundComponent.Provider>
+  ),
+};
+
+export const WithCollapsiblePlaylistAndVisualizer: StoryObj<typeof AudioPlayer> = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A player with a collapsible playlist that can be toggled with a button or dismissed with the close button in the header',
+      },
+      source: {
+        type: 'dynamic',
+      },
+    },
+  },
+  render: () => (
+    <AudioPlayerCompoundComponent.Provider tracks={trackData}>
+      <AudioPlayerCompoundComponent.AudioContextProvider>
+        <AudioPlaylistCompoundComponent.Provider>
+          <AudioPlayerCompoundComponent.Root className="flex flex-col">
+            {/* Collapsible Playlist that appears above */}
+            <AudioPlaylistCompoundComponent.ExpandableContainer>
+              <AudioPlaylistCompoundComponent.Root>
+                <AudioPlaylistCompoundComponent.Header>
+                  <span>Playlist</span>
+                  <AudioPlaylistCompoundComponent.Dismiss />
+                </AudioPlaylistCompoundComponent.Header>
+                <AudioPlaylistCompoundComponent.ScrollableContainer maxHeight="227px">
+                  <AudioPlaylistCompoundComponent.Tracks>
+                    {trackData.map((track, index) => (
+                      <AudioPlaylistCompoundComponent.Track.Provider
+                        key={`${index}-${track.src}`}
+                        index={index}
+                        track={track}
+                      >
+                        <AudioPlaylistCompoundComponent.Track.Root>
+                          <AudioPlaylistCompoundComponent.Track.Image />
+                          <div>
+                            <AudioPlaylistCompoundComponent.Track.Title />
+                            <AudioPlaylistCompoundComponent.Track.Author />
+                          </div>
+                        </AudioPlaylistCompoundComponent.Track.Root>
+                      </AudioPlaylistCompoundComponent.Track.Provider>
+                    ))}
+                  </AudioPlaylistCompoundComponent.Tracks>
+                </AudioPlaylistCompoundComponent.ScrollableContainer>
+              </AudioPlaylistCompoundComponent.Root>
+            </AudioPlaylistCompoundComponent.ExpandableContainer>
+            <AudioPlayerCompoundComponent.VisualizerFrequencyBars className="max-h-[150px] bg-slate-900" />
+            <div className="flex grow justify-between gap-4">
+              {/* Main Player UI */}
+              <AudioPlayerCompoundComponent.Info className="basis-1/3">
+                <AudioPlayerCompoundComponent.Image />
+                <div className="py-2">
+                  <AudioPlayerCompoundComponent.Title />
+                  <AudioPlayerCompoundComponent.Author />
+                  <AudioPlayerCompoundComponent.Time />
+                </div>
+              </AudioPlayerCompoundComponent.Info>
+              <AudioPlayerCompoundComponent.Controls>
+                <AudioPlayerCompoundComponent.ControlAudio />
+                <AudioPlayerCompoundComponent.ControlLoop />
+                <AudioPlayerCompoundComponent.ControlPrevious />
+                <AudioPlayerCompoundComponent.ControlPlay />
+                <AudioPlayerCompoundComponent.ControlNext />
+                <AudioPlayerCompoundComponent.ControlShuffle />
+              </AudioPlayerCompoundComponent.Controls>
+              <div className="flex basis-1/3 items-center justify-end gap-2 px-2">
+                <AudioPlayerCompoundComponent.Volume>
+                  <AudioPlayerCompoundComponent.VolumeButton />
+                  <AudioPlayerCompoundComponent.VolumeSlider />
+                </AudioPlayerCompoundComponent.Volume>
+                <AudioPlaylistCompoundComponent.ControlToggle className="text-2xl" />
+              </div>
+            </div>
+            <AudioPlayerCompoundComponent.ProgressBar />
+          </AudioPlayerCompoundComponent.Root>
+        </AudioPlaylistCompoundComponent.Provider>
       </AudioPlayerCompoundComponent.AudioContextProvider>
     </AudioPlayerCompoundComponent.Provider>
   ),
