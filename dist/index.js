@@ -5922,6 +5922,152 @@ function AudioPlayerVisualizerWaveform(props) {
   );
 }
 
+const RGB_TO_LMS_MATRIX = {
+  /** LMS matrix coefficient for L from R component */
+  L_FROM_R: 0.4122214708,
+  /** LMS matrix coefficient for L from G component */
+  L_FROM_G: 0.5363325363,
+  /** LMS matrix coefficient for L from B component */
+  L_FROM_B: 0.0514459929,
+  /** LMS matrix coefficient for M from R component */
+  M_FROM_R: 0.2119034982,
+  /** LMS matrix coefficient for M from G component */
+  M_FROM_G: 0.6806995451,
+  /** LMS matrix coefficient for M from B component */
+  M_FROM_B: 0.1073969566,
+  /** LMS matrix coefficient for S from R component */
+  S_FROM_R: 0.0883024619,
+  /** LMS matrix coefficient for S from G component */
+  S_FROM_G: 0.2817188376,
+  /** LMS matrix coefficient for S from B component */
+  S_FROM_B: 0.6299787005
+};
+const LMS_TO_OKLAB_MATRIX = {
+  /** Oklab matrix coefficient for L from L' component */
+  L_FROM_L_PRIME: 0.2104542553,
+  /** Oklab matrix coefficient for L from M' component */
+  L_FROM_M_PRIME: 0.793617785,
+  /** Oklab matrix coefficient for L from S' component */
+  L_FROM_S_PRIME: -0.0040720468,
+  /** Oklab matrix coefficient for a from L' component */
+  A_FROM_L_PRIME: 1.9779984951,
+  /** Oklab matrix coefficient for a from M' component */
+  A_FROM_M_PRIME: -2.428592205,
+  /** Oklab matrix coefficient for a from S' component */
+  A_FROM_S_PRIME: 0.4505937099,
+  /** Oklab matrix coefficient for b from L' component */
+  B_FROM_L_PRIME: 0.0259040371,
+  /** Oklab matrix coefficient for b from M' component */
+  B_FROM_M_PRIME: 0.7827717662,
+  /** Oklab matrix coefficient for b from S' component */
+  B_FROM_S_PRIME: -0.808675766
+};
+const SRGB_CONSTANTS = {
+  /** Threshold for linear segment in sRGB conversion */
+  LINEAR_THRESHOLD: 0.04045,
+  /** Divisor for linear segment in sRGB conversion */
+  LINEAR_DIVISOR: 12.92,
+  /** Exponent for power function in sRGB conversion */
+  GAMMA_EXPONENT: 2.4,
+  /** Offset for power function in sRGB conversion */
+  GAMMA_OFFSET: 0.055,
+  /** Scale factor for power function in sRGB conversion */
+  GAMMA_SCALE: 1.055
+};
+function convertChannelToLinearRGB(colorChannelValue) {
+  if (colorChannelValue <= SRGB_CONSTANTS.LINEAR_THRESHOLD) {
+    return colorChannelValue / SRGB_CONSTANTS.LINEAR_DIVISOR;
+  }
+  return Math.pow(
+    (colorChannelValue + SRGB_CONSTANTS.GAMMA_OFFSET) / SRGB_CONSTANTS.GAMMA_SCALE,
+    SRGB_CONSTANTS.GAMMA_EXPONENT
+  );
+}
+function parseColorToNormalizedRGB(color) {
+  const tempEl = document.createElement("div");
+  tempEl.style.color = color;
+  document.body.appendChild(tempEl);
+  const computedColor = getComputedStyle(tempEl).color;
+  document.body.removeChild(tempEl);
+  const rgbMatch = computedColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
+  if (!rgbMatch) {
+    return { r: 0, g: 0, b: 0 };
+  }
+  const r = parseInt(rgbMatch[1], 10) / 255;
+  const g = parseInt(rgbMatch[2], 10) / 255;
+  const b = parseInt(rgbMatch[3], 10) / 255;
+  return { r, g, b };
+}
+function convertToLinearRGB(rgb) {
+  return {
+    r: convertChannelToLinearRGB(rgb.r),
+    g: convertChannelToLinearRGB(rgb.g),
+    b: convertChannelToLinearRGB(rgb.b)
+  };
+}
+function convertLinearRGBToLMS(linearRGB) {
+  return {
+    l: RGB_TO_LMS_MATRIX.L_FROM_R * linearRGB.r + RGB_TO_LMS_MATRIX.L_FROM_G * linearRGB.g + RGB_TO_LMS_MATRIX.L_FROM_B * linearRGB.b,
+    m: RGB_TO_LMS_MATRIX.M_FROM_R * linearRGB.r + RGB_TO_LMS_MATRIX.M_FROM_G * linearRGB.g + RGB_TO_LMS_MATRIX.M_FROM_B * linearRGB.b,
+    s: RGB_TO_LMS_MATRIX.S_FROM_R * linearRGB.r + RGB_TO_LMS_MATRIX.S_FROM_G * linearRGB.g + RGB_TO_LMS_MATRIX.S_FROM_B * linearRGB.b
+  };
+}
+function applyLMSNonLinearity(lms) {
+  return {
+    l: Math.cbrt(lms.l),
+    m: Math.cbrt(lms.m),
+    s: Math.cbrt(lms.s)
+  };
+}
+function convertLMSToOklab(lmsPrime) {
+  return {
+    L: LMS_TO_OKLAB_MATRIX.L_FROM_L_PRIME * lmsPrime.l + LMS_TO_OKLAB_MATRIX.L_FROM_M_PRIME * lmsPrime.m + LMS_TO_OKLAB_MATRIX.L_FROM_S_PRIME * lmsPrime.s,
+    a: LMS_TO_OKLAB_MATRIX.A_FROM_L_PRIME * lmsPrime.l + LMS_TO_OKLAB_MATRIX.A_FROM_M_PRIME * lmsPrime.m + LMS_TO_OKLAB_MATRIX.A_FROM_S_PRIME * lmsPrime.s,
+    b: LMS_TO_OKLAB_MATRIX.B_FROM_L_PRIME * lmsPrime.l + LMS_TO_OKLAB_MATRIX.B_FROM_M_PRIME * lmsPrime.m + LMS_TO_OKLAB_MATRIX.B_FROM_S_PRIME * lmsPrime.s
+  };
+}
+function convertOklabToOKLCH(oklab) {
+  const C = Math.sqrt(oklab.a * oklab.a + oklab.b * oklab.b);
+  let h = Math.atan2(oklab.b, oklab.a) * 180 / Math.PI;
+  if (h < 0) h += 360;
+  return {
+    L: oklab.L,
+    C,
+    h
+  };
+}
+function formatOKLCH(oklch, precision = 2) {
+  return [
+    Number(oklch.L.toFixed(precision)),
+    Number(oklch.C.toFixed(precision)),
+    Number(oklch.h.toFixed(precision))
+  ];
+}
+function convertColorToOKLCH(color) {
+  const normalizedRGB = parseColorToNormalizedRGB(color);
+  const linearRGB = convertToLinearRGB(normalizedRGB);
+  const lms = convertLinearRGBToLMS(linearRGB);
+  const lmsPrime = applyLMSNonLinearity(lms);
+  const oklab = convertLMSToOklab(lmsPrime);
+  const oklch = convertOklabToOKLCH(oklab);
+  return formatOKLCH(oklch);
+}
+
+const VISUALIZATION_PARAMS = {
+  /**
+   * Minimum value for bar width in pixels
+   */
+  MIN_BAR_WIDTH: 1,
+  /**
+   * Maximum value for audio data (8-bit)
+   */
+  MAX_AUDIO_VALUE: 255,
+  /**
+   * Maximum normalized value (represents 100% in the 0-1 scale)
+   */
+  MAX_NORMALIZED_VALUE: 1
+};
+
 const FREQUENCY_DISTRIBUTION = {
   /**
    * Base value for logarithmic scale (higher = steeper curve)
@@ -5937,20 +6083,6 @@ const FREQUENCY_DISTRIBUTION = {
    * Since Math.pow(base, 0) = 1, we subtract 1 to make the curve start at 0.
    */
   ZERO_POINT_OFFSET: 1
-};
-const VISUALIZATION_PARAMS = {
-  /**
-   * Minimum value for bar width in pixels
-   */
-  MIN_BAR_WIDTH: 1,
-  /**
-   * Maximum value for audio data (8-bit)
-   */
-  MAX_AUDIO_VALUE: 255,
-  /**
-   * Maximum normalized value (represents 100% in the 0-1 scale)
-   */
-  MAX_NORMALIZED_VALUE: 1
 };
 function calculateLogarithmicDistributionDenominator() {
   return Math.pow(FREQUENCY_DISTRIBUTION.LOG_BASE, FREQUENCY_DISTRIBUTION.EXPONENT_MULTIPLIER) - FREQUENCY_DISTRIBUTION.ZERO_POINT_OFFSET;
@@ -5969,14 +6101,71 @@ function calculateLogarithmicIndex(ratio, dataArrayLength, denominator) {
 function calculateAmplifiedValue(normalizedValue, minHeight) {
   return minHeight + normalizedValue * (VISUALIZATION_PARAMS.MAX_NORMALIZED_VALUE - minHeight);
 }
+
+const OKLCHProperty = {
+  LIGHTNESS: "lightness",
+  CHROMA: "chroma",
+  HUE: "hue"
+};
+function getReactiveColor(baseOklch, intensity, propertyConfigs) {
+  const safeIntensity = Math.max(0, Math.min(1, intensity));
+  const [lightness, chroma, hue] = baseOklch;
+  let modifiedL = lightness;
+  let modifiedC = chroma;
+  let modifiedH = hue;
+  propertyConfigs.forEach((config) => {
+    const { property, min, max, easing = (t) => t } = config;
+    const easedIntensity = easing(safeIntensity);
+    const newValue = min + (max - min) * easedIntensity;
+    switch (property) {
+      case OKLCHProperty.LIGHTNESS:
+        modifiedL = newValue;
+        break;
+      case OKLCHProperty.CHROMA:
+        modifiedC = newValue;
+        break;
+      case OKLCHProperty.HUE:
+        modifiedH = newValue;
+        break;
+    }
+  });
+  return `oklch(${modifiedL} ${modifiedC} ${modifiedH})`;
+}
+
+function getFrequencyBasedColor(baseOklchColor, positionRatio) {
+  return getReactiveColor(baseOklchColor, positionRatio, [
+    { property: OKLCHProperty.HUE, min: 240, max: 0 }
+  ]);
+}
+function getIntensityBasedColor(baseOklchColor, intensityRatio) {
+  return getReactiveColor(baseOklchColor, intensityRatio, [
+    { property: OKLCHProperty.LIGHTNESS, min: 0.3, max: 0.7 }
+  ]);
+}
+function getSpectrumColor(baseOklchColor, positionRatio) {
+  return getReactiveColor(baseOklchColor, positionRatio, [
+    { property: OKLCHProperty.HUE, min: 0, max: 360 }
+  ]);
+}
+function getDynamicColor(baseOklchColor, intensityRatio) {
+  return getReactiveColor(baseOklchColor, intensityRatio, [
+    { property: OKLCHProperty.LIGHTNESS, min: 0.4, max: 0.6 },
+    { property: OKLCHProperty.CHROMA, min: 0.2, max: 0.3 }
+  ]);
+}
+
 function useAudioVisualizerFrequencyBars(options) {
   const {
-    barColor = "#ffffff",
-    barGap = 4,
+    barColor = "#FFFFFF",
+    barGapRatio = 4e-3,
     barCount = 128,
     heightMultiplier = 1.2,
-    minHeight = 0
-  } = {};
+    minHeight = 0,
+    colorMode = "static"
+  } = options || {};
+  const baseOklchColor = useMemo(() => {
+    return convertColorToOKLCH(barColor);
+  }, [barColor]);
   const canvasRef = useRef(null);
   const drawFrequencyBars = useCallback(
     (dataArray) => {
@@ -5987,12 +6176,15 @@ function useAudioVisualizerFrequencyBars(options) {
       const displayWidth = canvas.clientWidth;
       const displayHeight = canvas.clientHeight;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const totalGapWidth = (barCount - 1) * barGap;
+      if (colorMode === "static") {
+        ctx.fillStyle = barColor;
+      }
+      const gapWidth = displayWidth * barGapRatio;
+      const totalGapWidth = (barCount - 1) * gapWidth;
       const barWidth = Math.max(
         VISUALIZATION_PARAMS.MIN_BAR_WIDTH,
         (displayWidth - totalGapWidth) / barCount
       );
-      ctx.fillStyle = barColor;
       const logDistributionDenominator = calculateLogarithmicDistributionDenominator();
       for (let i = 0; i < barCount; i++) {
         const ratio = calculateLogarithmicIndexRatio(i, barCount);
@@ -6015,18 +6207,34 @@ function useAudioVisualizerFrequencyBars(options) {
             sampleCount++;
           }
         }
-        const value = sampleCount > 0 ? sum / sampleCount : 0;
-        const normalizedValue = value / VISUALIZATION_PARAMS.MAX_AUDIO_VALUE;
+        const averageValue = sampleCount > 0 ? sum / sampleCount : 0;
+        const normalizedValue = averageValue / VISUALIZATION_PARAMS.MAX_AUDIO_VALUE;
         const amplifiedValue = calculateAmplifiedValue(normalizedValue, minHeight);
         const barHeight = Math.min(
           displayHeight,
           amplifiedValue * displayHeight * heightMultiplier
         );
-        const x = i * (barWidth + barGap);
+        const x = i * (barWidth + gapWidth);
+        const positionRatio = i / barCount;
+        const intensityRatio = normalizedValue;
+        switch (colorMode) {
+          case "frequency":
+            ctx.fillStyle = getFrequencyBasedColor(baseOklchColor, positionRatio);
+            break;
+          case "intensity":
+            ctx.fillStyle = getIntensityBasedColor(baseOklchColor, intensityRatio);
+            break;
+          case "spectrum":
+            ctx.fillStyle = getSpectrumColor(baseOklchColor, positionRatio);
+            break;
+          case "dynamic":
+            ctx.fillStyle = getDynamicColor(baseOklchColor, intensityRatio);
+            break;
+        }
         ctx.fillRect(x, displayHeight - barHeight, barWidth, barHeight);
       }
     },
-    [barColor, barCount, barGap, heightMultiplier, minHeight]
+    [barColor, barCount, heightMultiplier, minHeight, colorMode, baseOklchColor, barGapRatio]
   );
   return { canvasRef, drawFrequencyBars };
 }
@@ -6044,9 +6252,22 @@ function AudioVisualizerFrequencyBars(props) {
     frameRate,
     createAudioSource,
     deleteAudioSource,
+    barColor,
+    barGapRatio,
+    barCount,
+    heightMultiplier,
+    minHeight,
+    colorMode,
     ...restProps
   } = props;
-  const { canvasRef, drawFrequencyBars } = useAudioVisualizerFrequencyBars();
+  const { canvasRef, drawFrequencyBars } = useAudioVisualizerFrequencyBars({
+    barColor,
+    barGapRatio,
+    barCount,
+    heightMultiplier,
+    minHeight,
+    colorMode
+  });
   const mergedRef = useComposedRefs(ref, canvasRef);
   useAudioAnalyzer({
     audioRef,
@@ -6993,4 +7214,4 @@ function Button(props) {
   );
 }
 
-export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextPlaybackProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVisualizerFrequencyBars, AudioPlayerVisualizerWaveform, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistScrollableContainer, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackAuthorPrimitive, AudioPlaylistTrackImage, AudioPlaylistTrackImagePrimitive, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTrackTitlePrimitive, AudioPlaylistTracks, AudioVisualizerFrequencyBars, AudioVisualizerWaveform, Badge, Button, Icon, formatAudioDurationForDisplay, useAudioPlayerContextPlayback, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer, useAudioVisualizerWaveform };
+export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextPlaybackProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVisualizerFrequencyBars, AudioPlayerVisualizerWaveform, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistScrollableContainer, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackAuthorPrimitive, AudioPlaylistTrackImage, AudioPlaylistTrackImagePrimitive, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTrackTitlePrimitive, AudioPlaylistTracks, AudioVisualizerFrequencyBars, AudioVisualizerWaveform, Badge, Button, CanvasResponsive, Icon, formatAudioDurationForDisplay, useAudioPlayerContextPlayback, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer, useAudioVisualizerWaveform, useCanvasResponsive };

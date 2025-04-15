@@ -1,3 +1,14 @@
+# [1.27.0](https://github.com/gdominguez210/gdom-ui/compare/v1.26.0...v1.27.0) (2025-04-15)
+
+
+### Features
+
+* **lib/AudioVisualizerFrequencyBars:** add support for dynamic colors based on different audio settings ([92b7038](https://github.com/gdominguez210/gdom-ui/commit/92b70385b5cfe33adba7eec4639b041f772a3e72))
+* **lib/utils/convertColorToOKLCH:** add convertColorToOKLCH ([2a67b88](https://github.com/gdominguez210/gdom-ui/commit/2a67b8807fb7f540450f6aae000f7351ffe8ead0))
+* **lib/utils/getReactiveColor:** add getReactiveColor utility ([a387014](https://github.com/gdominguez210/gdom-ui/commit/a3870149db25c05216c63fc7f71f44c03db7d3c7))
+* **lib/utils/OKLCHToCSS:** add OKLCHToRGB utility ([bdb0da9](https://github.com/gdominguez210/gdom-ui/commit/bdb0da9e389c44e3d828e0b5dfcb852aa441633e))
+* **lib/utils/OKLCHToRGB:** add OKLCHToRGB utility ([d194100](https://github.com/gdominguez210/gdom-ui/commit/d194100fc3032e32d124aca5317189ddbac78ef9))
+
 # [1.26.0](https://github.com/gdominguez210/gdom-ui/compare/v1.25.0...v1.26.0) (2025-04-15)
 
 

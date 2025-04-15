@@ -796,7 +796,7 @@ declare type AudioTrackData = {
 
 export declare function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBarsProps): JSX.Element;
 
-export declare type AudioVisualizerFrequencyBarsProps = ComponentPropsWithRef<'canvas'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'>;
+export declare type AudioVisualizerFrequencyBarsProps = ComponentPropsWithRef<'canvas'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> & useAudioVisualizerFrequencyBarOptions;
 
 export declare function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps): JSX.Element;
 
@@ -816,6 +816,12 @@ export declare interface BadgeProps extends HTMLAttributes<HTMLElement> {
 export declare function Button(props: ButtonProps): JSX.Element;
 
 export declare type ButtonProps = CommonButtonProps & iconButtonAccessibleProps;
+
+export declare function CanvasResponsive(props: CanvasResponsiveProps): JSX.Element;
+
+declare type CanvasResponsiveProps = ComponentPropsWithRef<'canvas'> & {
+    frameRate?: number;
+};
 
 declare interface CommonButtonProps extends ComponentPropsWithRef<'button'> {
     /**
@@ -982,6 +988,38 @@ export declare function useAudioPlaylistContext(): AudioPlaylistContextType;
 
 export declare function useAudioPlaylistExpandableContainer(props: useAudioPlayerExpandableContainer): void;
 
+declare type useAudioVisualizerFrequencyBarOptions = {
+    /**
+     * Color of the frequency bars
+     */
+    barColor?: string;
+    /**
+     * Number of frequency bars to display
+     * Lower values will group frequencies together for broader analysis
+     */
+    barCount?: number;
+    /**
+     * Gap between bars as a proportion of canvas width (0-1)
+     * For example, 0.01 would make gaps 1% of the total width
+     * Default is auto-calculated based on bar count
+     */
+    barGapRatio?: number;
+    /**
+     * Height multiplier to enhance visualization
+     * Higher values make bars taller
+     */
+    heightMultiplier?: number;
+    /**
+     * Minimum height for bars as percentage of canvas height (0-1)
+     * Ensures even quiet frequencies have visible presence
+     */
+    minHeight?: number;
+    /**
+     * Whether to use reactive color
+     */
+    colorMode?: 'static' | 'frequency' | 'intensity' | 'spectrum' | 'dynamic';
+};
+
 export declare function useAudioVisualizerWaveform(options?: useAudioVisualizerWaveformProps): useAudioVisualizerWaveformReturn;
 
 declare type useAudioVisualizerWaveformProps = {
@@ -998,6 +1036,21 @@ declare type useAudioVisualizerWaveformProps = {
 declare type useAudioVisualizerWaveformReturn = {
     canvasRef: React.RefObject<HTMLCanvasElement | null>;
     drawWaveform: (dataArray: Uint8Array) => void;
+};
+
+/**
+ * Hook to create a canvas that automatically scales to its size and device pixel ratio
+ */
+export declare function useCanvasResponsive(options?: UseCanvasResponsiveOptions): RefObject<HTMLCanvasElement | null>;
+
+/**
+ * Options for the useCanvasResponsive hook
+ */
+declare type UseCanvasResponsiveOptions = {
+    /**
+     * Optional frame rate limit for resize handling (fps)
+     */
+    frameRate?: number;
 };
 
 declare type Variant = (typeof variants)[number];
