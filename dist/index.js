@@ -5530,15 +5530,18 @@ function useAudioVisualizerWaveform(options) {
       if (!canvas) return;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
+      const displayWidth = canvas.clientWidth;
+      const displayHeight = canvas.clientHeight;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.lineWidth = lineWidth;
       ctx.strokeStyle = lineColor;
       ctx.beginPath();
-      const sliceWidth = canvas.width / dataArray.length;
+      const sliceWidth = displayWidth / dataArray.length;
       let x = 0;
+      const centerY = displayHeight / 2;
       dataArray.forEach((value, index) => {
-        const normalized = value / 128;
-        const y = normalized * canvas.height / 2;
+        const normalizedOffset = (value - 128) / 128;
+        const y = centerY + normalizedOffset * centerY;
         if (index === 0) {
           ctx.moveTo(x, y);
         } else {
@@ -5546,7 +5549,7 @@ function useAudioVisualizerWaveform(options) {
         }
         x += sliceWidth;
       });
-      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.lineTo(canvas.width, centerY);
       ctx.stroke();
     },
     [lineColor, lineWidth]
@@ -5558,6 +5561,7 @@ function useAnalyzerNode(options) {
   const {
     audioContextRef,
     isAudioContextReady,
+    connectToAudioContext = false,
     fftSize = 2048,
     smoothingTimeConstant = 0.8,
     maxDecibels = -30,
@@ -5592,12 +5596,6 @@ function useAnalyzerNode(options) {
         previousDataRef.current = new Uint8Array(analyzer.frequencyBinCount);
       }
     }
-    return () => {
-      if (analyzerRef.current) {
-        analyzerRef.current.disconnect();
-        analyzerRef.current = null;
-      }
-    };
   }, [
     audioContextRef,
     isAudioContextReady,
@@ -5608,6 +5606,28 @@ function useAnalyzerNode(options) {
     setAnalyzerRef,
     analyzerRef
   ]);
+  useEffect(() => {
+    if (!connectToAudioContext) return;
+    const audioContext = audioContextRef.current;
+    const analyzer = analyzerRef.current;
+    if (!audioContext || !isAudioContextReady || audioContext.state === "closed" || !isAnalyzerReady || !analyzer) {
+      return;
+    }
+    analyzer.connect(audioContext.destination);
+    return () => {
+      if (analyzer) {
+        analyzer.disconnect(audioContext.destination);
+      }
+    };
+  }, [connectToAudioContext, audioContextRef, isAudioContextReady, isAnalyzerReady, analyzerRef]);
+  useEffect(() => {
+    return () => {
+      if (analyzerRef.current) {
+        analyzerRef.current.disconnect();
+        analyzerRef.current = null;
+      }
+    };
+  }, []);
   return {
     analyzerRef,
     dataArrayRef,
@@ -5616,15 +5636,13 @@ function useAnalyzerNode(options) {
   };
 }
 
-function useAudioConnection(options) {
+function useAudioSourceConnection(options) {
   const {
     audioRef,
     destinationRef,
-    audioContextRef,
     createAudioSource,
     deleteAudioSource,
-    isAudioContextReady,
-    connectToDestination = true,
+    isDestinationReady,
     deleteOnCleanup = true,
     autoConnect = true
   } = options;
@@ -5632,18 +5650,14 @@ function useAudioConnection(options) {
   const sourceNodeRef = useRef(null);
   const connect = useCallback(() => {
     if (isConnectedRef.current) return true;
-    const audioContext = audioContextRef.current;
     const destinationNode = destinationRef.current;
     const audioElement = audioRef.current;
-    if (!isAudioContextReady || !audioContext || !destinationNode || !audioElement) return false;
+    if (!destinationNode || !isDestinationReady || !audioElement) return false;
     try {
       const sourceNode = createAudioSource(audioElement);
       if (!sourceNode) return false;
       sourceNodeRef.current = sourceNode;
       sourceNode.connect(destinationNode);
-      if (connectToDestination) {
-        destinationNode.connect(audioContext.destination);
-      }
       setIsConnectedRef(true);
       return true;
     } catch (error) {
@@ -5653,28 +5667,20 @@ function useAudioConnection(options) {
   }, [
     audioRef,
     destinationRef,
-    audioContextRef,
     createAudioSource,
-    isAudioContextReady,
-    connectToDestination,
     setIsConnectedRef,
-    isConnectedRef
+    isConnectedRef,
+    isDestinationReady
   ]);
   const disconnect = useCallback(() => {
     if (!isConnectedRef.current) return true;
     const audioElement = audioRef.current;
-    const audioContext = audioContextRef.current;
     const destinationNode = destinationRef.current;
-    if (!audioContext || !destinationNode || !audioElement) return false;
+    if (!destinationNode || !audioElement) return false;
     try {
-      if (connectToDestination && destinationNode && audioContext) {
-        destinationNode.disconnect(audioContext.destination);
-      }
       sourceNodeRef.current?.disconnect(destinationNode);
       if (deleteOnCleanup) {
         deleteAudioSource(audioElement);
-      } else if (sourceNodeRef.current && destinationNode) {
-        sourceNodeRef.current.disconnect(destinationNode);
       }
       setIsConnectedRef(false);
       sourceNodeRef.current = null;
@@ -5686,9 +5692,7 @@ function useAudioConnection(options) {
   }, [
     audioRef,
     destinationRef,
-    audioContextRef,
     deleteAudioSource,
-    connectToDestination,
     deleteOnCleanup,
     isConnectedRef,
     setIsConnectedRef
@@ -5740,11 +5744,12 @@ function useAudioAnalyzer(options) {
     dataType = "timeDomain",
     frameTransitionSmoothing = 0.3
   } = options;
-  const { analyzerRef, dataArrayRef, previousDataRef} = useAnalyzerNode({
+  const { analyzerRef, dataArrayRef, previousDataRef, isAnalyzerReady } = useAnalyzerNode({
     audioContextRef,
     isAudioContextReady,
     fftSize,
-    smoothingTimeConstant
+    smoothingTimeConstant,
+    connectToAudioContext: true
   });
   const analyzeAudio = useCallback(() => {
     if (!analyzerRef.current || !dataArrayRef.current || !previousDataRef.current) {
@@ -5766,13 +5771,13 @@ function useAudioAnalyzer(options) {
     frameRate,
     dependencies: [duration]
   });
-  useAudioConnection({
+  useAudioSourceConnection({
     audioRef,
     destinationRef: analyzerRef,
-    audioContextRef,
     createAudioSource,
     deleteAudioSource,
-    isAudioContextReady});
+    isDestinationReady: isAnalyzerReady
+  });
   return {
     analyzerNode: analyzerRef.current,
     dataArray: dataArrayRef.current,
@@ -5780,9 +5785,86 @@ function useAudioAnalyzer(options) {
   };
 }
 
+function rafThrottle(callback, frameRate) {
+  let scheduled = false;
+  let lastArgs = null;
+  let lastExecutionTime = 0;
+  const frameIntervalMs = frameRate ? 1e3 / frameRate : 0;
+  const throttledFn = (...args) => {
+    lastArgs = args;
+    if (!scheduled) {
+      scheduled = true;
+      requestAnimationFrame((timestamp) => {
+        scheduled = false;
+        if (frameIntervalMs > 0) {
+          const elapsed = timestamp - lastExecutionTime;
+          if (elapsed < frameIntervalMs) {
+            scheduled = true;
+            requestAnimationFrame((nextTimestamp) => {
+              scheduled = false;
+              lastExecutionTime = nextTimestamp;
+              callback(...lastArgs);
+            });
+            return;
+          }
+          lastExecutionTime = timestamp - elapsed % frameIntervalMs;
+        } else {
+          lastExecutionTime = timestamp;
+        }
+        callback(...lastArgs);
+      });
+    }
+  };
+  return throttledFn;
+}
+
+function useCanvasResponsive(options) {
+  const { frameRate } = options ?? {};
+  const canvasRef = useRef(null);
+  const handleResize = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const scale = window.devicePixelRatio;
+    if (canvas.width !== width * scale || canvas.height !== height * scale) {
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      context.setTransform(scale, 0, 0, scale, 0, 0);
+    }
+  }, []);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const throttledResize = rafThrottle(handleResize, frameRate);
+    handleResize();
+    const observer = new ResizeObserver(throttledResize);
+    observer.observe(canvas);
+    return () => {
+      observer.disconnect();
+    };
+  }, [handleResize, frameRate]);
+  return canvasRef;
+}
+
+function CanvasResponsive(props) {
+  const { frameRate, ref, className, ...rest } = props;
+  const canvasRef = useCanvasResponsive({ frameRate });
+  const mergedRef = useComposedRefs(ref, canvasRef);
+  return /* @__PURE__ */ jsx(
+    "canvas",
+    {
+      className: twMerge(clsx("w-full max-w-full object-contain", className)),
+      ref: mergedRef,
+      ...rest
+    }
+  );
+}
+
 function AudioVisualizerWaveform(props) {
   const {
-    className,
     ref,
     isPlaying,
     audioRef,
@@ -5812,9 +5894,8 @@ function AudioVisualizerWaveform(props) {
     deleteAudioSource
   });
   return /* @__PURE__ */ jsx(
-    "canvas",
+    CanvasResponsive,
     {
-      className: twMerge(clsx("w-full max-w-full", className)),
       ref: mergedRef,
       ...restProps
     }
@@ -5841,6 +5922,53 @@ function AudioPlayerVisualizerWaveform(props) {
   );
 }
 
+const FREQUENCY_DISTRIBUTION = {
+  /**
+   * Base value for logarithmic scale (higher = steeper curve)
+   */
+  LOG_BASE: 1.1,
+  /**
+   * Exponent multiplier controlling distribution shape
+   * Higher values give more emphasis to lower frequencies
+   */
+  EXPONENT_MULTIPLIER: 19,
+  /**
+   * Offset value to shift the logarithmic curve to start at zero.
+   * Since Math.pow(base, 0) = 1, we subtract 1 to make the curve start at 0.
+   */
+  ZERO_POINT_OFFSET: 1
+};
+const VISUALIZATION_PARAMS = {
+  /**
+   * Minimum value for bar width in pixels
+   */
+  MIN_BAR_WIDTH: 1,
+  /**
+   * Maximum value for audio data (8-bit)
+   */
+  MAX_AUDIO_VALUE: 255,
+  /**
+   * Maximum normalized value (represents 100% in the 0-1 scale)
+   */
+  MAX_NORMALIZED_VALUE: 1
+};
+function calculateLogarithmicDistributionDenominator() {
+  return Math.pow(FREQUENCY_DISTRIBUTION.LOG_BASE, FREQUENCY_DISTRIBUTION.EXPONENT_MULTIPLIER) - FREQUENCY_DISTRIBUTION.ZERO_POINT_OFFSET;
+}
+function calculateLogarithmicIndexRatio(index, barCount) {
+  return index / barCount;
+}
+function calculateLogarithmicIndex(ratio, dataArrayLength, denominator) {
+  return Math.round(
+    (Math.pow(
+      FREQUENCY_DISTRIBUTION.LOG_BASE,
+      FREQUENCY_DISTRIBUTION.EXPONENT_MULTIPLIER * ratio
+    ) - FREQUENCY_DISTRIBUTION.ZERO_POINT_OFFSET) / denominator * (dataArrayLength - 1)
+  );
+}
+function calculateAmplifiedValue(normalizedValue, minHeight) {
+  return minHeight + normalizedValue * (VISUALIZATION_PARAMS.MAX_NORMALIZED_VALUE - minHeight);
+}
 function useAudioVisualizerFrequencyBars(options) {
   const {
     barColor = "#ffffff",
@@ -5856,21 +5984,28 @@ function useAudioVisualizerFrequencyBars(options) {
       if (!canvas) return;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
+      const displayWidth = canvas.clientWidth;
+      const displayHeight = canvas.clientHeight;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const totalGapWidth = (barCount - 1) * barGap;
-      const barWidth = Math.max(1, (canvas.width - totalGapWidth) / barCount);
+      const barWidth = Math.max(
+        VISUALIZATION_PARAMS.MIN_BAR_WIDTH,
+        (displayWidth - totalGapWidth) / barCount
+      );
       ctx.fillStyle = barColor;
+      const logDistributionDenominator = calculateLogarithmicDistributionDenominator();
       for (let i = 0; i < barCount; i++) {
-        const ratio = i / barCount;
-        const logIndex = Math.round(
-          (Math.pow(1.1, 19 * ratio) - 1) / (Math.pow(1.1, 19) - 1) * (dataArray.length - 1)
+        const ratio = calculateLogarithmicIndexRatio(i, barCount);
+        const logIndex = calculateLogarithmicIndex(
+          ratio,
+          dataArray.length,
+          logDistributionDenominator
         );
-        const nextRatio = (i + 1) / barCount;
-        const nextLogIndex = Math.min(
-          Math.round(
-            (Math.pow(1.1, 19 * nextRatio) - 1) / (Math.pow(1.1, 19) - 1) * (dataArray.length - 1)
-          ),
-          dataArray.length - 1
+        const nextRatio = calculateLogarithmicIndexRatio(i + 1, barCount);
+        const nextLogIndex = calculateLogarithmicIndex(
+          nextRatio,
+          dataArray.length,
+          logDistributionDenominator
         );
         let sum = 0;
         let sampleCount = 0;
@@ -5881,14 +6016,14 @@ function useAudioVisualizerFrequencyBars(options) {
           }
         }
         const value = sampleCount > 0 ? sum / sampleCount : 0;
-        const normalizedValue = value / 255;
-        const amplifiedValue = minHeight + normalizedValue * (1 - minHeight);
+        const normalizedValue = value / VISUALIZATION_PARAMS.MAX_AUDIO_VALUE;
+        const amplifiedValue = calculateAmplifiedValue(normalizedValue, minHeight);
         const barHeight = Math.min(
-          canvas.height,
-          amplifiedValue * canvas.height * heightMultiplier
+          displayHeight,
+          amplifiedValue * displayHeight * heightMultiplier
         );
         const x = i * (barWidth + barGap);
-        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        ctx.fillRect(x, displayHeight - barHeight, barWidth, barHeight);
       }
     },
     [barColor, barCount, barGap, heightMultiplier, minHeight]
@@ -5898,7 +6033,6 @@ function useAudioVisualizerFrequencyBars(options) {
 
 function AudioVisualizerFrequencyBars(props) {
   const {
-    className,
     ref,
     isPlaying,
     audioRef,
@@ -5929,9 +6063,8 @@ function AudioVisualizerFrequencyBars(props) {
     deleteAudioSource
   });
   return /* @__PURE__ */ jsx(
-    "canvas",
+    CanvasResponsive,
     {
-      className: twMerge(clsx("w-full max-w-full", className)),
       ref: mergedRef,
       ...restProps
     }

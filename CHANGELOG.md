@@ -1,3 +1,12 @@
+# [1.26.0](https://github.com/gdominguez210/gdom-ui/compare/v1.25.0...v1.26.0) (2025-04-15)
+
+
+### Features
+
+* **lib/CanvasResponsive/useCanvasResponsive:** add useCanvasResponsive hook ([71acbc0](https://github.com/gdominguez210/gdom-ui/commit/71acbc04c1b0aa5dd274ed2ff9fd36170d03a84d))
+* **lib/CanvasResponsive:** add CanvasResponsive component ([3cdc5fb](https://github.com/gdominguez210/gdom-ui/commit/3cdc5fb77244054d76f0b253f3ec62523a672d50))
+* **lib/utils/rafToggle:** add requestAnimationFrame throttle function ([71e1d8a](https://github.com/gdominguez210/gdom-ui/commit/71e1d8ad35de8a976222af1a2df5f2a9c3a97cb2))
+
 # [1.25.0](https://github.com/gdominguez210/gdom-ui/compare/v1.24.0...v1.25.0) (2025-04-11)
 
 
