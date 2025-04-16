@@ -8,7 +8,8 @@ import {
   useAudioAnalyzer,
   type UseAudioAnalyzerOptions,
 } from '@lib/useAudioAnalyzer/useAudioAnalyzer';
-import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
+import { AudioVisualizerCanvas } from '@lib/AudioVisualizerCanvas/AudioVisualizerCanvas';
+
 export type AudioVisualizerFrequencyBarsProps = ComponentPropsWithRef<'canvas'> &
   Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> &
   useAudioVisualizerFrequencyBarOptions;
@@ -62,7 +63,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
   });
 
   return (
-    <CanvasResponsive
+    <AudioVisualizerCanvas
       ref={mergedRef}
       {...restProps}
     />
