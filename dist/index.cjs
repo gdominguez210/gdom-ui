@@ -5543,8 +5543,289 @@ function useAudioContext() {
   return context;
 }
 
+const RGB_TO_LMS_MATRIX = {
+  /** LMS matrix coefficient for L from R component */
+  L_FROM_R: 0.4122214708,
+  /** LMS matrix coefficient for L from G component */
+  L_FROM_G: 0.5363325363,
+  /** LMS matrix coefficient for L from B component */
+  L_FROM_B: 0.0514459929,
+  /** LMS matrix coefficient for M from R component */
+  M_FROM_R: 0.2119034982,
+  /** LMS matrix coefficient for M from G component */
+  M_FROM_G: 0.6806995451,
+  /** LMS matrix coefficient for M from B component */
+  M_FROM_B: 0.1073969566,
+  /** LMS matrix coefficient for S from R component */
+  S_FROM_R: 0.0883024619,
+  /** LMS matrix coefficient for S from G component */
+  S_FROM_G: 0.2817188376,
+  /** LMS matrix coefficient for S from B component */
+  S_FROM_B: 0.6299787005
+};
+const LMS_TO_OKLAB_MATRIX = {
+  /** Oklab matrix coefficient for L from L' component */
+  L_FROM_L_PRIME: 0.2104542553,
+  /** Oklab matrix coefficient for L from M' component */
+  L_FROM_M_PRIME: 0.793617785,
+  /** Oklab matrix coefficient for L from S' component */
+  L_FROM_S_PRIME: -0.0040720468,
+  /** Oklab matrix coefficient for a from L' component */
+  A_FROM_L_PRIME: 1.9779984951,
+  /** Oklab matrix coefficient for a from M' component */
+  A_FROM_M_PRIME: -2.428592205,
+  /** Oklab matrix coefficient for a from S' component */
+  A_FROM_S_PRIME: 0.4505937099,
+  /** Oklab matrix coefficient for b from L' component */
+  B_FROM_L_PRIME: 0.0259040371,
+  /** Oklab matrix coefficient for b from M' component */
+  B_FROM_M_PRIME: 0.7827717662,
+  /** Oklab matrix coefficient for b from S' component */
+  B_FROM_S_PRIME: -0.808675766
+};
+const SRGB_CONSTANTS = {
+  /** Threshold for linear segment in sRGB conversion */
+  LINEAR_THRESHOLD: 0.04045,
+  /** Divisor for linear segment in sRGB conversion */
+  LINEAR_DIVISOR: 12.92,
+  /** Exponent for power function in sRGB conversion */
+  GAMMA_EXPONENT: 2.4,
+  /** Offset for power function in sRGB conversion */
+  GAMMA_OFFSET: 0.055,
+  /** Scale factor for power function in sRGB conversion */
+  GAMMA_SCALE: 1.055
+};
+function convertChannelToLinearRGB(colorChannelValue) {
+  if (colorChannelValue <= SRGB_CONSTANTS.LINEAR_THRESHOLD) {
+    return colorChannelValue / SRGB_CONSTANTS.LINEAR_DIVISOR;
+  }
+  return Math.pow(
+    (colorChannelValue + SRGB_CONSTANTS.GAMMA_OFFSET) / SRGB_CONSTANTS.GAMMA_SCALE,
+    SRGB_CONSTANTS.GAMMA_EXPONENT
+  );
+}
+function parseColorToNormalizedRGB(color) {
+  const tempEl = document.createElement("div");
+  tempEl.style.color = color;
+  document.body.appendChild(tempEl);
+  const computedColor = getComputedStyle(tempEl).color;
+  document.body.removeChild(tempEl);
+  const rgbMatch = computedColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
+  if (!rgbMatch) {
+    return { r: 0, g: 0, b: 0 };
+  }
+  const r = parseInt(rgbMatch[1], 10) / 255;
+  const g = parseInt(rgbMatch[2], 10) / 255;
+  const b = parseInt(rgbMatch[3], 10) / 255;
+  return { r, g, b };
+}
+function convertToLinearRGB(rgb) {
+  return {
+    r: convertChannelToLinearRGB(rgb.r),
+    g: convertChannelToLinearRGB(rgb.g),
+    b: convertChannelToLinearRGB(rgb.b)
+  };
+}
+function convertLinearRGBToLMS(linearRGB) {
+  return {
+    l: RGB_TO_LMS_MATRIX.L_FROM_R * linearRGB.r + RGB_TO_LMS_MATRIX.L_FROM_G * linearRGB.g + RGB_TO_LMS_MATRIX.L_FROM_B * linearRGB.b,
+    m: RGB_TO_LMS_MATRIX.M_FROM_R * linearRGB.r + RGB_TO_LMS_MATRIX.M_FROM_G * linearRGB.g + RGB_TO_LMS_MATRIX.M_FROM_B * linearRGB.b,
+    s: RGB_TO_LMS_MATRIX.S_FROM_R * linearRGB.r + RGB_TO_LMS_MATRIX.S_FROM_G * linearRGB.g + RGB_TO_LMS_MATRIX.S_FROM_B * linearRGB.b
+  };
+}
+function applyLMSNonLinearity(lms) {
+  return {
+    l: Math.cbrt(lms.l),
+    m: Math.cbrt(lms.m),
+    s: Math.cbrt(lms.s)
+  };
+}
+function convertLMSToOklab(lmsPrime) {
+  return {
+    L: LMS_TO_OKLAB_MATRIX.L_FROM_L_PRIME * lmsPrime.l + LMS_TO_OKLAB_MATRIX.L_FROM_M_PRIME * lmsPrime.m + LMS_TO_OKLAB_MATRIX.L_FROM_S_PRIME * lmsPrime.s,
+    a: LMS_TO_OKLAB_MATRIX.A_FROM_L_PRIME * lmsPrime.l + LMS_TO_OKLAB_MATRIX.A_FROM_M_PRIME * lmsPrime.m + LMS_TO_OKLAB_MATRIX.A_FROM_S_PRIME * lmsPrime.s,
+    b: LMS_TO_OKLAB_MATRIX.B_FROM_L_PRIME * lmsPrime.l + LMS_TO_OKLAB_MATRIX.B_FROM_M_PRIME * lmsPrime.m + LMS_TO_OKLAB_MATRIX.B_FROM_S_PRIME * lmsPrime.s
+  };
+}
+function convertOklabToOKLCH(oklab) {
+  const C = Math.sqrt(oklab.a * oklab.a + oklab.b * oklab.b);
+  let h = Math.atan2(oklab.b, oklab.a) * 180 / Math.PI;
+  if (h < 0) h += 360;
+  return {
+    L: oklab.L,
+    C,
+    h
+  };
+}
+function formatOKLCH(oklch, precision = 2) {
+  return [
+    Number(oklch.L.toFixed(precision)),
+    Number(oklch.C.toFixed(precision)),
+    Number(oklch.h.toFixed(precision))
+  ];
+}
+function convertColorToOKLCH(color) {
+  const normalizedRGB = parseColorToNormalizedRGB(color);
+  const linearRGB = convertToLinearRGB(normalizedRGB);
+  const lms = convertLinearRGBToLMS(linearRGB);
+  const lmsPrime = applyLMSNonLinearity(lms);
+  const oklab = convertLMSToOklab(lmsPrime);
+  const oklch = convertOklabToOKLCH(oklab);
+  return formatOKLCH(oklch);
+}
+
+function normalizeAudioValue(value) {
+  return (value - 128) / 128;
+}
+function calculateWaveformY(normalizedValue, centerY) {
+  return centerY + normalizedValue * centerY;
+}
+function calculateAmplitudeRatio(normalizedValue) {
+  return Math.abs(normalizedValue);
+}
+function calculatePositionRatio(segmentIndex, totalLength) {
+  return segmentIndex / totalLength;
+}
+
+const OKLCHProperty = {
+  LIGHTNESS: "lightness",
+  CHROMA: "chroma",
+  HUE: "hue"
+};
+function getReactiveColor(baseOklch, intensity, propertyConfigs) {
+  const safeIntensity = Math.max(0, Math.min(1, intensity));
+  const [lightness, chroma, hue] = baseOklch;
+  let modifiedL = lightness;
+  let modifiedC = chroma;
+  let modifiedH = hue;
+  propertyConfigs.forEach((config) => {
+    const { property, min, max, easing = (t) => t } = config;
+    const easedIntensity = easing(safeIntensity);
+    const newValue = min + (max - min) * easedIntensity;
+    switch (property) {
+      case OKLCHProperty.LIGHTNESS:
+        modifiedL = newValue;
+        break;
+      case OKLCHProperty.CHROMA:
+        modifiedC = newValue;
+        break;
+      case OKLCHProperty.HUE:
+        modifiedH = newValue;
+        break;
+    }
+  });
+  return `oklch(${modifiedL} ${modifiedC} ${modifiedH})`;
+}
+
+function getColorByAudioIntensity(baseOklchColor, intensityRatio) {
+  return getReactiveColor(baseOklchColor, intensityRatio, [
+    { property: OKLCHProperty.LIGHTNESS, min: 0.3, max: 0.7 }
+  ]);
+}
+
+function getColorByFrequencyPosition(baseOklchColor, positionRatio) {
+  return getReactiveColor(baseOklchColor, positionRatio, [
+    { property: OKLCHProperty.HUE, min: 240, max: 0 }
+  ]);
+}
+
+function getColorBySpectrum(baseOklchColor, positionRatio) {
+  return getReactiveColor(baseOklchColor, positionRatio, [
+    { property: OKLCHProperty.HUE, min: 0, max: 360 }
+  ]);
+}
+
+function getColorByDynamicIntensity(baseOklchColor, intensityRatio) {
+  return getReactiveColor(baseOklchColor, intensityRatio, [
+    { property: OKLCHProperty.LIGHTNESS, min: 0.4, max: 0.6 },
+    { property: OKLCHProperty.CHROMA, min: 0.2, max: 0.3 }
+  ]);
+}
+
+const WAVEFORM_COLOR_MODES = {
+  STATIC: "static",
+  AMPLITUDE: "amplitude",
+  FREQUENCY: "frequency",
+  SPECTRUM: "spectrum",
+  DYNAMIC: "dynamic"
+};
+function drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, lineColor) {
+  const sliceWidth = displayWidth / dataArray.length;
+  const centerY = displayHeight / 2;
+  ctx.strokeStyle = lineColor;
+  ctx.beginPath();
+  dataArray.forEach((value, index) => {
+    const x = index * sliceWidth;
+    const normalizedValue = normalizeAudioValue(value);
+    const y = calculateWaveformY(normalizedValue, centerY);
+    if (index === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+  ctx.stroke();
+}
+function applySegmentColor(ctx, segmentStartIndex, dataArray, baseOklchColor, colorMode) {
+  const positionRatio = calculatePositionRatio(segmentStartIndex, dataArray.length);
+  const normalizedValue = normalizeAudioValue(dataArray[segmentStartIndex]);
+  const amplitudeRatio = calculateAmplitudeRatio(normalizedValue);
+  switch (colorMode) {
+    case WAVEFORM_COLOR_MODES.AMPLITUDE:
+      ctx.strokeStyle = getColorByAudioIntensity(baseOklchColor, amplitudeRatio);
+      break;
+    case WAVEFORM_COLOR_MODES.FREQUENCY:
+      ctx.strokeStyle = getColorByFrequencyPosition(baseOklchColor, positionRatio);
+      break;
+    case WAVEFORM_COLOR_MODES.SPECTRUM:
+      ctx.strokeStyle = getColorBySpectrum(baseOklchColor, positionRatio);
+      break;
+    case WAVEFORM_COLOR_MODES.DYNAMIC:
+      ctx.strokeStyle = getColorByDynamicIntensity(baseOklchColor, amplitudeRatio);
+      break;
+  }
+}
+function drawSegmentedWaveform(ctx, dataArray, displayWidth, displayHeight, baseOklchColor, colorMode, segmentCount) {
+  const sliceWidth = displayWidth / dataArray.length;
+  const centerY = displayHeight / 2;
+  const segmentSize = Math.max(1, Math.floor(dataArray.length / segmentCount));
+  let lastX = 0;
+  let lastY = 0;
+  for (let i = 0; i < dataArray.length; i += segmentSize) {
+    const segmentEnd = Math.min(i + segmentSize, dataArray.length);
+    ctx.beginPath();
+    if (i > 0) {
+      ctx.moveTo(lastX, lastY);
+    }
+    for (let j = i; j < segmentEnd; j++) {
+      const x = j * sliceWidth;
+      const normalizedValue = normalizeAudioValue(dataArray[j]);
+      const y = calculateWaveformY(normalizedValue, centerY);
+      if (i === 0 && j === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+        if (j === segmentEnd - 1) {
+          lastX = x;
+          lastY = y;
+        }
+      }
+    }
+    applySegmentColor(ctx, i, dataArray, baseOklchColor, colorMode);
+    ctx.stroke();
+  }
+}
+
 function useAudioVisualizerWaveform(options) {
-  const { lineColor = "#ffffff", lineWidth = 2 } = options || {};
+  const {
+    lineColor = "#ffffff",
+    lineWidth = 2,
+    colorMode = WAVEFORM_COLOR_MODES.STATIC,
+    segmentCount = 40
+  } = options || {};
+  const baseOklchColor = React.useMemo(() => {
+    return convertColorToOKLCH(lineColor);
+  }, [lineColor]);
   const canvasRef = React.useRef(null);
   const drawWaveform = React.useCallback(
     (dataArray) => {
@@ -5556,25 +5837,21 @@ function useAudioVisualizerWaveform(options) {
       const displayHeight = canvas.clientHeight;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.lineWidth = lineWidth;
-      ctx.strokeStyle = lineColor;
-      ctx.beginPath();
-      const sliceWidth = displayWidth / dataArray.length;
-      let x = 0;
-      const centerY = displayHeight / 2;
-      dataArray.forEach((value, index) => {
-        const normalizedOffset = (value - 128) / 128;
-        const y = centerY + normalizedOffset * centerY;
-        if (index === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-        x += sliceWidth;
-      });
-      ctx.lineTo(canvas.width, centerY);
-      ctx.stroke();
+      if (colorMode === WAVEFORM_COLOR_MODES.STATIC) {
+        drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, lineColor);
+      } else {
+        drawSegmentedWaveform(
+          ctx,
+          dataArray,
+          displayWidth,
+          displayHeight,
+          baseOklchColor,
+          colorMode,
+          segmentCount
+        );
+      }
     },
-    [lineColor, lineWidth]
+    [lineColor, lineWidth, colorMode, baseOklchColor, segmentCount]
   );
   return { canvasRef, drawWaveform };
 }
@@ -5885,6 +6162,22 @@ function CanvasResponsive(props) {
   );
 }
 
+const AudioVisualizerCanvas = (props) => {
+  const { className, ...restProps } = props;
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    CanvasResponsive,
+    {
+      className: twMerge(
+        clsx(
+          'relative bg-radial from-slate-800 from-0% to-slate-950 to-90% before:absolute before:inset-0 before:bg-radial before:from-white before:to-transparent before:bg-[size:1px_1px] before:content-[""]',
+          className
+        )
+      ),
+      ...restProps
+    }
+  );
+};
+
 function AudioVisualizerWaveform(props) {
   const {
     ref,
@@ -5898,9 +6191,18 @@ function AudioVisualizerWaveform(props) {
     fftSize,
     smoothingTimeConstant,
     frameRate,
+    colorMode,
+    lineColor,
+    lineWidth,
+    segmentCount,
     ...restProps
   } = props;
-  const { canvasRef, drawWaveform } = useAudioVisualizerWaveform();
+  const { canvasRef, drawWaveform } = useAudioVisualizerWaveform({
+    colorMode,
+    lineColor,
+    lineWidth,
+    segmentCount
+  });
   const mergedRef = useComposedRefs(ref, canvasRef);
   useAudioAnalyzer({
     audioRef,
@@ -5916,9 +6218,10 @@ function AudioVisualizerWaveform(props) {
     deleteAudioSource
   });
   return /* @__PURE__ */ jsxRuntime.jsx(
-    CanvasResponsive,
+    AudioVisualizerCanvas,
     {
       ref: mergedRef,
+      frameRate,
       ...restProps
     }
   );
@@ -5942,137 +6245,6 @@ function AudioPlayerVisualizerWaveform(props) {
       deleteAudioSource
     }
   );
-}
-
-const RGB_TO_LMS_MATRIX = {
-  /** LMS matrix coefficient for L from R component */
-  L_FROM_R: 0.4122214708,
-  /** LMS matrix coefficient for L from G component */
-  L_FROM_G: 0.5363325363,
-  /** LMS matrix coefficient for L from B component */
-  L_FROM_B: 0.0514459929,
-  /** LMS matrix coefficient for M from R component */
-  M_FROM_R: 0.2119034982,
-  /** LMS matrix coefficient for M from G component */
-  M_FROM_G: 0.6806995451,
-  /** LMS matrix coefficient for M from B component */
-  M_FROM_B: 0.1073969566,
-  /** LMS matrix coefficient for S from R component */
-  S_FROM_R: 0.0883024619,
-  /** LMS matrix coefficient for S from G component */
-  S_FROM_G: 0.2817188376,
-  /** LMS matrix coefficient for S from B component */
-  S_FROM_B: 0.6299787005
-};
-const LMS_TO_OKLAB_MATRIX = {
-  /** Oklab matrix coefficient for L from L' component */
-  L_FROM_L_PRIME: 0.2104542553,
-  /** Oklab matrix coefficient for L from M' component */
-  L_FROM_M_PRIME: 0.793617785,
-  /** Oklab matrix coefficient for L from S' component */
-  L_FROM_S_PRIME: -0.0040720468,
-  /** Oklab matrix coefficient for a from L' component */
-  A_FROM_L_PRIME: 1.9779984951,
-  /** Oklab matrix coefficient for a from M' component */
-  A_FROM_M_PRIME: -2.428592205,
-  /** Oklab matrix coefficient for a from S' component */
-  A_FROM_S_PRIME: 0.4505937099,
-  /** Oklab matrix coefficient for b from L' component */
-  B_FROM_L_PRIME: 0.0259040371,
-  /** Oklab matrix coefficient for b from M' component */
-  B_FROM_M_PRIME: 0.7827717662,
-  /** Oklab matrix coefficient for b from S' component */
-  B_FROM_S_PRIME: -0.808675766
-};
-const SRGB_CONSTANTS = {
-  /** Threshold for linear segment in sRGB conversion */
-  LINEAR_THRESHOLD: 0.04045,
-  /** Divisor for linear segment in sRGB conversion */
-  LINEAR_DIVISOR: 12.92,
-  /** Exponent for power function in sRGB conversion */
-  GAMMA_EXPONENT: 2.4,
-  /** Offset for power function in sRGB conversion */
-  GAMMA_OFFSET: 0.055,
-  /** Scale factor for power function in sRGB conversion */
-  GAMMA_SCALE: 1.055
-};
-function convertChannelToLinearRGB(colorChannelValue) {
-  if (colorChannelValue <= SRGB_CONSTANTS.LINEAR_THRESHOLD) {
-    return colorChannelValue / SRGB_CONSTANTS.LINEAR_DIVISOR;
-  }
-  return Math.pow(
-    (colorChannelValue + SRGB_CONSTANTS.GAMMA_OFFSET) / SRGB_CONSTANTS.GAMMA_SCALE,
-    SRGB_CONSTANTS.GAMMA_EXPONENT
-  );
-}
-function parseColorToNormalizedRGB(color) {
-  const tempEl = document.createElement("div");
-  tempEl.style.color = color;
-  document.body.appendChild(tempEl);
-  const computedColor = getComputedStyle(tempEl).color;
-  document.body.removeChild(tempEl);
-  const rgbMatch = computedColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
-  if (!rgbMatch) {
-    return { r: 0, g: 0, b: 0 };
-  }
-  const r = parseInt(rgbMatch[1], 10) / 255;
-  const g = parseInt(rgbMatch[2], 10) / 255;
-  const b = parseInt(rgbMatch[3], 10) / 255;
-  return { r, g, b };
-}
-function convertToLinearRGB(rgb) {
-  return {
-    r: convertChannelToLinearRGB(rgb.r),
-    g: convertChannelToLinearRGB(rgb.g),
-    b: convertChannelToLinearRGB(rgb.b)
-  };
-}
-function convertLinearRGBToLMS(linearRGB) {
-  return {
-    l: RGB_TO_LMS_MATRIX.L_FROM_R * linearRGB.r + RGB_TO_LMS_MATRIX.L_FROM_G * linearRGB.g + RGB_TO_LMS_MATRIX.L_FROM_B * linearRGB.b,
-    m: RGB_TO_LMS_MATRIX.M_FROM_R * linearRGB.r + RGB_TO_LMS_MATRIX.M_FROM_G * linearRGB.g + RGB_TO_LMS_MATRIX.M_FROM_B * linearRGB.b,
-    s: RGB_TO_LMS_MATRIX.S_FROM_R * linearRGB.r + RGB_TO_LMS_MATRIX.S_FROM_G * linearRGB.g + RGB_TO_LMS_MATRIX.S_FROM_B * linearRGB.b
-  };
-}
-function applyLMSNonLinearity(lms) {
-  return {
-    l: Math.cbrt(lms.l),
-    m: Math.cbrt(lms.m),
-    s: Math.cbrt(lms.s)
-  };
-}
-function convertLMSToOklab(lmsPrime) {
-  return {
-    L: LMS_TO_OKLAB_MATRIX.L_FROM_L_PRIME * lmsPrime.l + LMS_TO_OKLAB_MATRIX.L_FROM_M_PRIME * lmsPrime.m + LMS_TO_OKLAB_MATRIX.L_FROM_S_PRIME * lmsPrime.s,
-    a: LMS_TO_OKLAB_MATRIX.A_FROM_L_PRIME * lmsPrime.l + LMS_TO_OKLAB_MATRIX.A_FROM_M_PRIME * lmsPrime.m + LMS_TO_OKLAB_MATRIX.A_FROM_S_PRIME * lmsPrime.s,
-    b: LMS_TO_OKLAB_MATRIX.B_FROM_L_PRIME * lmsPrime.l + LMS_TO_OKLAB_MATRIX.B_FROM_M_PRIME * lmsPrime.m + LMS_TO_OKLAB_MATRIX.B_FROM_S_PRIME * lmsPrime.s
-  };
-}
-function convertOklabToOKLCH(oklab) {
-  const C = Math.sqrt(oklab.a * oklab.a + oklab.b * oklab.b);
-  let h = Math.atan2(oklab.b, oklab.a) * 180 / Math.PI;
-  if (h < 0) h += 360;
-  return {
-    L: oklab.L,
-    C,
-    h
-  };
-}
-function formatOKLCH(oklch, precision = 2) {
-  return [
-    Number(oklch.L.toFixed(precision)),
-    Number(oklch.C.toFixed(precision)),
-    Number(oklch.h.toFixed(precision))
-  ];
-}
-function convertColorToOKLCH(color) {
-  const normalizedRGB = parseColorToNormalizedRGB(color);
-  const linearRGB = convertToLinearRGB(normalizedRGB);
-  const lms = convertLinearRGBToLMS(linearRGB);
-  const lmsPrime = applyLMSNonLinearity(lms);
-  const oklab = convertLMSToOklab(lmsPrime);
-  const oklch = convertOklabToOKLCH(oklab);
-  return formatOKLCH(oklch);
 }
 
 const VISUALIZATION_PARAMS = {
@@ -6122,58 +6294,6 @@ function calculateLogarithmicIndex(ratio, dataArrayLength, denominator) {
 }
 function calculateAmplifiedValue(normalizedValue, minHeight) {
   return minHeight + normalizedValue * (VISUALIZATION_PARAMS.MAX_NORMALIZED_VALUE - minHeight);
-}
-
-const OKLCHProperty = {
-  LIGHTNESS: "lightness",
-  CHROMA: "chroma",
-  HUE: "hue"
-};
-function getReactiveColor(baseOklch, intensity, propertyConfigs) {
-  const safeIntensity = Math.max(0, Math.min(1, intensity));
-  const [lightness, chroma, hue] = baseOklch;
-  let modifiedL = lightness;
-  let modifiedC = chroma;
-  let modifiedH = hue;
-  propertyConfigs.forEach((config) => {
-    const { property, min, max, easing = (t) => t } = config;
-    const easedIntensity = easing(safeIntensity);
-    const newValue = min + (max - min) * easedIntensity;
-    switch (property) {
-      case OKLCHProperty.LIGHTNESS:
-        modifiedL = newValue;
-        break;
-      case OKLCHProperty.CHROMA:
-        modifiedC = newValue;
-        break;
-      case OKLCHProperty.HUE:
-        modifiedH = newValue;
-        break;
-    }
-  });
-  return `oklch(${modifiedL} ${modifiedC} ${modifiedH})`;
-}
-
-function getFrequencyBasedColor(baseOklchColor, positionRatio) {
-  return getReactiveColor(baseOklchColor, positionRatio, [
-    { property: OKLCHProperty.HUE, min: 240, max: 0 }
-  ]);
-}
-function getIntensityBasedColor(baseOklchColor, intensityRatio) {
-  return getReactiveColor(baseOklchColor, intensityRatio, [
-    { property: OKLCHProperty.LIGHTNESS, min: 0.3, max: 0.7 }
-  ]);
-}
-function getSpectrumColor(baseOklchColor, positionRatio) {
-  return getReactiveColor(baseOklchColor, positionRatio, [
-    { property: OKLCHProperty.HUE, min: 0, max: 360 }
-  ]);
-}
-function getDynamicColor(baseOklchColor, intensityRatio) {
-  return getReactiveColor(baseOklchColor, intensityRatio, [
-    { property: OKLCHProperty.LIGHTNESS, min: 0.4, max: 0.6 },
-    { property: OKLCHProperty.CHROMA, min: 0.2, max: 0.3 }
-  ]);
 }
 
 function useAudioVisualizerFrequencyBars(options) {
@@ -6241,16 +6361,16 @@ function useAudioVisualizerFrequencyBars(options) {
         const intensityRatio = normalizedValue;
         switch (colorMode) {
           case "frequency":
-            ctx.fillStyle = getFrequencyBasedColor(baseOklchColor, positionRatio);
+            ctx.fillStyle = getColorByFrequencyPosition(baseOklchColor, positionRatio);
             break;
           case "intensity":
-            ctx.fillStyle = getIntensityBasedColor(baseOklchColor, intensityRatio);
+            ctx.fillStyle = getColorByAudioIntensity(baseOklchColor, intensityRatio);
             break;
           case "spectrum":
-            ctx.fillStyle = getSpectrumColor(baseOklchColor, positionRatio);
+            ctx.fillStyle = getColorBySpectrum(baseOklchColor, positionRatio);
             break;
           case "dynamic":
-            ctx.fillStyle = getDynamicColor(baseOklchColor, intensityRatio);
+            ctx.fillStyle = getColorByDynamicIntensity(baseOklchColor, intensityRatio);
             break;
         }
         ctx.fillRect(x, displayHeight - barHeight, barWidth, barHeight);
@@ -6306,9 +6426,10 @@ function AudioVisualizerFrequencyBars(props) {
     deleteAudioSource
   });
   return /* @__PURE__ */ jsxRuntime.jsx(
-    CanvasResponsive,
+    AudioVisualizerCanvas,
     {
       ref: mergedRef,
+      frameRate,
       ...restProps
     }
   );

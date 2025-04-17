@@ -1,3 +1,22 @@
+# [1.28.0](https://github.com/gdominguez210/gdom-ui/compare/v1.27.0...v1.28.0) (2025-04-17)
+
+
+### Bug Fixes
+
+* **lib/AudioVisualizerFrequency:** pass frameFrate to AudioVisualizerCanvas ([8559131](https://github.com/gdominguez210/gdom-ui/commit/85591314a58015bbf80023cc19617a0b158ffa9e))
+
+
+### Features
+
+* **lib/AudioVisualizerCanvas:** add AudioVisualizerCanvas, styled wrapper around CanvasResponsive ([7ead672](https://github.com/gdominguez210/gdom-ui/commit/7ead672ff48fb44ed8dedae26a223b746f8b1844))
+* **lib/AudioVisualizerWaveform/drawingUtils:** add drawingUtils ([5aa700e](https://github.com/gdominguez210/gdom-ui/commit/5aa700eeca83eb9fbcf71250d4e9c074c5b38ea5))
+* **lib/AudioVisualizerWaveform/useAudioVisualizerWaveform:** add support for dynamic colors ([14c3574](https://github.com/gdominguez210/gdom-ui/commit/14c35745817a16ef37ac8bc82f161aef334745cb))
+* **lib/AudioVisualizerWaveform/waveformUtils:** add waveformUtils ([b723c64](https://github.com/gdominguez210/gdom-ui/commit/b723c646414bb5725d1a5ac56ad9e92d32230c05))
+* **lib/utils/getColorByAudioIntensity:** add getColorByAudioIntensity ([2546f96](https://github.com/gdominguez210/gdom-ui/commit/2546f96f775b5f628be258374dcb9457ddfcde71))
+* **lib/utils/getColorByDynamicIntensity:** add getColorByDynamicIntensity ([a0f0565](https://github.com/gdominguez210/gdom-ui/commit/a0f0565dfc5f0173c4670a847e25643decc47b08))
+* **lib/utils/getColorByFrequencyPosition:** add getColorByFrequencyPosition ([7c7e7ce](https://github.com/gdominguez210/gdom-ui/commit/7c7e7ce8a226b6c6e54d6427384b0d96e80310a1))
+* **lib/utils/getColorBySpectrum:** add getColorBySpectrum ([1b81f54](https://github.com/gdominguez210/gdom-ui/commit/1b81f54ed1e5cf05a8c2cfbfa6657c6fa008d7d6))
+
 # [1.27.0](https://github.com/gdominguez210/gdom-ui/compare/v1.26.0...v1.27.0) (2025-04-15)
 
 

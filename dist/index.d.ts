@@ -800,7 +800,7 @@ export declare type AudioVisualizerFrequencyBarsProps = ComponentPropsWithRef<'c
 
 export declare function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps): JSX.Element;
 
-export declare type AudioVisualizerWaveformProps = ComponentPropsWithRef<'canvas'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'>;
+export declare type AudioVisualizerWaveformProps = ComponentPropsWithRef<'canvas'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> & useAudioVisualizerWaveformOptions;
 
 export declare const Badge: ForwardRefExoticComponent<BadgeProps & RefAttributes<HTMLElement>>;
 
@@ -1020,9 +1020,9 @@ declare type useAudioVisualizerFrequencyBarOptions = {
     colorMode?: 'static' | 'frequency' | 'intensity' | 'spectrum' | 'dynamic';
 };
 
-export declare function useAudioVisualizerWaveform(options?: useAudioVisualizerWaveformProps): useAudioVisualizerWaveformReturn;
+export declare function useAudioVisualizerWaveform(options?: useAudioVisualizerWaveformOptions): useAudioVisualizerWaveformReturn;
 
-declare type useAudioVisualizerWaveformProps = {
+export declare type useAudioVisualizerWaveformOptions = {
     /**
      * Color of the waveform line
      */
@@ -1031,6 +1031,17 @@ declare type useAudioVisualizerWaveformProps = {
      * Thickness of the waveform line
      */
     lineWidth?: number;
+    /**
+     * Coloring mode for the waveform
+     */
+    colorMode?: WaveformColorMode;
+    /**
+     * Number of colored segments to divide the waveform into
+     * Higher values create more color transitions, lower values improve performance
+     * Only applies when colorMode is not 'static'
+     * @default 40
+     */
+    segmentCount?: number;
 };
 
 declare type useAudioVisualizerWaveformReturn = {
@@ -1056,5 +1067,18 @@ declare type UseCanvasResponsiveOptions = {
 declare type Variant = (typeof variants)[number];
 
 declare const variants: readonly ["primary", "secondary", "tertiary", "destructive", "linkColor", "linkGray"];
+
+declare const WAVEFORM_COLOR_MODES: {
+    readonly STATIC: "static";
+    readonly AMPLITUDE: "amplitude";
+    readonly FREQUENCY: "frequency";
+    readonly SPECTRUM: "spectrum";
+    readonly DYNAMIC: "dynamic";
+};
+
+/**
+ * Types of color modes available for the waveform
+ */
+declare type WaveformColorMode = (typeof WAVEFORM_COLOR_MODES)[keyof typeof WAVEFORM_COLOR_MODES];
 
 export { }
