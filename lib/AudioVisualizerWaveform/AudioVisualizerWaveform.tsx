@@ -1,13 +1,18 @@
-import { useAudioVisualizerWaveform } from '@lib/AudioVisualizerWaveform/useAudioVisualizerWaveform';
+import {
+  useAudioVisualizerWaveform,
+  type useAudioVisualizerWaveformOptions,
+} from '@lib/AudioVisualizerWaveform/useAudioVisualizerWaveform';
 import { type ComponentPropsWithRef, type RefObject } from 'react';
 import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
 import {
   useAudioAnalyzer,
   type UseAudioAnalyzerOptions,
 } from '@lib/useAudioAnalyzer/useAudioAnalyzer';
-import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
+import { AudioVisualizerCanvas } from '@lib/AudioVisualizerCanvas/AudioVisualizerCanvas';
+
 export type AudioVisualizerWaveformProps = ComponentPropsWithRef<'canvas'> &
-  Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'>;
+  Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> &
+  useAudioVisualizerWaveformOptions;
 
 export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
   const {
@@ -22,10 +27,19 @@ export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
     fftSize,
     smoothingTimeConstant,
     frameRate,
+    colorMode,
+    lineColor,
+    lineWidth,
+    segmentCount,
     ...restProps
   } = props;
 
-  const { canvasRef, drawWaveform } = useAudioVisualizerWaveform();
+  const { canvasRef, drawWaveform } = useAudioVisualizerWaveform({
+    colorMode,
+    lineColor,
+    lineWidth,
+    segmentCount,
+  });
 
   const mergedRef = useComposedRefs(ref, canvasRef);
 
@@ -44,8 +58,9 @@ export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
   });
 
   return (
-    <CanvasResponsive
+    <AudioVisualizerCanvas
       ref={mergedRef}
+      frameRate={frameRate}
       {...restProps}
     />
   );

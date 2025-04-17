@@ -1,6 +1,13 @@
-import { useRef, useCallback } from 'react';
+import { convertColorToOKLCH } from '@lib/utils/convertColorToOKLCH/convertColorToOKLCH';
+import { useRef, useCallback, useMemo } from 'react';
+import {
+  type WaveformColorMode,
+  drawStaticWaveform,
+  drawSegmentedWaveform,
+  WAVEFORM_COLOR_MODES,
+} from '@lib/AudioVisualizerWaveform/drawingUtils';
 
-export type useAudioVisualizerWaveformProps = {
+export type useAudioVisualizerWaveformOptions = {
   /**
    * Color of the waveform line
    */
@@ -10,6 +17,18 @@ export type useAudioVisualizerWaveformProps = {
    * Thickness of the waveform line
    */
   lineWidth?: number;
+
+  /**
+   * Coloring mode for the waveform
+   */
+  colorMode?: WaveformColorMode;
+  /**
+   * Number of colored segments to divide the waveform into
+   * Higher values create more color transitions, lower values improve performance
+   * Only applies when colorMode is not 'static'
+   * @default 40
+   */
+  segmentCount?: number;
 };
 
 export type useAudioVisualizerWaveformReturn = {
@@ -18,9 +37,18 @@ export type useAudioVisualizerWaveformReturn = {
 };
 
 export function useAudioVisualizerWaveform(
-  options?: useAudioVisualizerWaveformProps,
+  options?: useAudioVisualizerWaveformOptions,
 ): useAudioVisualizerWaveformReturn {
-  const { lineColor = '#ffffff', lineWidth = 2 } = options || {};
+  const {
+    lineColor = '#ffffff',
+    lineWidth = 2,
+    colorMode = WAVEFORM_COLOR_MODES.STATIC,
+    segmentCount = 40,
+  } = options || {};
+
+  const baseOklchColor = useMemo(() => {
+    return convertColorToOKLCH(lineColor);
+  }, [lineColor]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -35,41 +63,25 @@ export function useAudioVisualizerWaveform(
       const displayWidth = canvas.clientWidth;
       const displayHeight = canvas.clientHeight;
 
-      // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Setup for drawing the waveform
       ctx.lineWidth = lineWidth;
-      ctx.strokeStyle = lineColor;
-      ctx.beginPath();
 
-      // Calculate how much horizontal space each data point gets
-      const sliceWidth = displayWidth / dataArray.length;
-      let x = 0;
-
-      const centerY = displayHeight / 2;
-
-      dataArray.forEach((value, index) => {
-        // Convert data range (0-255) to y-coordinate
-        const normalizedOffset = (value - 128) / 128;
-        // Center around the middle of the canvas
-        // This makes values of 128 align with the center line
-        const y = centerY + normalizedOffset * centerY;
-
-        if (index === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-
-        x += sliceWidth;
-      });
-
-      // Complete the path and render
-      ctx.lineTo(canvas.width, centerY);
-      ctx.stroke();
+      if (colorMode === WAVEFORM_COLOR_MODES.STATIC) {
+        drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, lineColor);
+      } else {
+        drawSegmentedWaveform(
+          ctx,
+          dataArray,
+          displayWidth,
+          displayHeight,
+          baseOklchColor,
+          colorMode,
+          segmentCount,
+        );
+      }
     },
-    [lineColor, lineWidth],
+    [lineColor, lineWidth, colorMode, baseOklchColor, segmentCount],
   );
 
   return { canvasRef, drawWaveform };
