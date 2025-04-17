@@ -359,7 +359,6 @@ export const WithCollapsiblePlaylistAndVisualizer: StoryObj<typeof AudioPlayer> 
       <AudioPlayerCompoundComponent.AudioContextProvider>
         <AudioPlaylistCompoundComponent.Provider>
           <AudioPlayerCompoundComponent.Root className="flex flex-col">
-            {/* Collapsible Playlist that appears above */}
             <AudioPlaylistCompoundComponent.ExpandableContainer>
               <AudioPlaylistCompoundComponent.Root>
                 <AudioPlaylistCompoundComponent.Header>
@@ -387,9 +386,12 @@ export const WithCollapsiblePlaylistAndVisualizer: StoryObj<typeof AudioPlayer> 
                 </AudioPlaylistCompoundComponent.ScrollableContainer>
               </AudioPlaylistCompoundComponent.Root>
             </AudioPlaylistCompoundComponent.ExpandableContainer>
-            <AudioPlayerCompoundComponent.VisualizerFrequencyBars className="max-h-[150px] bg-slate-900" />
+            <AudioPlayerCompoundComponent.VisualizerFrequencyBars
+              className="max-h-[150px]"
+              barColor="rgb(2, 156, 253)"
+              colorMode="spectrum"
+            />
             <div className="flex grow justify-between gap-4">
-              {/* Main Player UI */}
               <AudioPlayerCompoundComponent.Info className="basis-1/3">
                 <AudioPlayerCompoundComponent.Image />
                 <div className="py-2">
