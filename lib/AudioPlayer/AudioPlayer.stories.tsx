@@ -260,7 +260,7 @@ export const WithFrequencyBarsVisualizer: StoryObj<typeof AudioPlayer> = {
       <AudioPlayerCompoundComponent.AudioContextProvider>
         <AudioPlayerCompoundComponent.Root className="@container/audio-player">
           <AudioPlayerCompoundComponent.VisualizerFrequencyBars
-            className="max-h-[150px] bg-slate-900"
+            className="max-h-[150px]"
             barColor="rgb(2, 156, 253)"
             colorMode="intensity"
           />
@@ -308,7 +308,11 @@ export const WithWaveformVisualizer: StoryObj<typeof AudioPlayer> = {
     <AudioPlayerCompoundComponent.Provider tracks={trackData}>
       <AudioPlayerCompoundComponent.AudioContextProvider>
         <AudioPlayerCompoundComponent.Root className="@container/audio-player">
-          <AudioPlayerCompoundComponent.VisualizerWaveform className="max-h-[150px] bg-slate-900" />
+          <AudioPlayerCompoundComponent.VisualizerWaveform
+            className="max-h-[150px]"
+            lineColor="rgb(2, 156, 253)"
+            colorMode="amplitude"
+          />
           <div className="justify-space-between grow gap-4 @min-lg/audio-player:flex">
             <AudioPlayerCompoundComponent.Info className="basis-1/3">
               <AudioPlayerCompoundComponent.Image />
