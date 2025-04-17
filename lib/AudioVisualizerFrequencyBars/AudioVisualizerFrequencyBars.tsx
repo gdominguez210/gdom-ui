@@ -65,6 +65,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
   return (
     <AudioVisualizerCanvas
       ref={mergedRef}
+      frameRate={frameRate}
       {...restProps}
     />
   );
