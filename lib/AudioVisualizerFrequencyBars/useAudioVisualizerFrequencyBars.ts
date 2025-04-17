@@ -6,12 +6,10 @@ import {
   calculateLogarithmicIndex,
   calculateAmplifiedValue,
 } from '@lib/AudioVisualizerFrequencyBars/frequencyDistribution';
-import {
-  getFrequencyBasedColor,
-  getIntensityBasedColor,
-  getSpectrumColor,
-  getDynamicColor,
-} from '@lib/AudioVisualizerFrequencyBars/colorModes';
+import { getColorByFrequencyPosition } from '@lib/utils/getColorByFrequencyPosition/getColorByFrequencyPosition';
+import { getColorByAudioIntensity } from '@lib/utils/getColorByAudioIntensity/getColorByAudioIntensity';
+import { getColorBySpectrum } from '@lib/utils/getColorBySpectrum/getColorBySpectrum';
+import { getColorByDynamicIntensity } from '@lib/utils/getColorByDynamicIntensity/getColorByDynamicIntensity';
 import { VISUALIZATION_PARAMS } from '@lib/AudioVisualizerFrequencyBars/visualizationParams';
 
 export type useAudioVisualizerFrequencyBarOptions = {
@@ -143,16 +141,16 @@ export function useAudioVisualizerFrequencyBars(
 
         switch (colorMode) {
           case 'frequency':
-            ctx.fillStyle = getFrequencyBasedColor(baseOklchColor, positionRatio);
+            ctx.fillStyle = getColorByFrequencyPosition(baseOklchColor, positionRatio);
             break;
           case 'intensity':
-            ctx.fillStyle = getIntensityBasedColor(baseOklchColor, intensityRatio);
+            ctx.fillStyle = getColorByAudioIntensity(baseOklchColor, intensityRatio);
             break;
           case 'spectrum':
-            ctx.fillStyle = getSpectrumColor(baseOklchColor, positionRatio);
+            ctx.fillStyle = getColorBySpectrum(baseOklchColor, positionRatio);
             break;
           case 'dynamic':
-            ctx.fillStyle = getDynamicColor(baseOklchColor, intensityRatio);
+            ctx.fillStyle = getColorByDynamicIntensity(baseOklchColor, intensityRatio);
             break;
         }
 
