@@ -1,0 +1,1 @@
+export { getColorByFrequencyPosition } from './getColorByFrequencyPosition';
