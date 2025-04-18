@@ -1,4 +1,4 @@
-import { useRef, useCallback, useMemo, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { convertColorToOKLCH } from '@lib/utils/convertColorToOKLCH/convertColorToOKLCH';
 import {
   calculateLogarithmicDistributionDenominator,
