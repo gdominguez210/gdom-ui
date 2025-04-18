@@ -51,9 +51,9 @@ export type UseAudioAnalyzerOptions = Partial<AnalyserOptions> & {
   isAudioContextReady: UseAudioContextWebAPIReturn['isReady'];
 
   /**
-   * Whether the audio is currently playing
+   * Whether the audio analyzer is active
    */
-  isPlaying: boolean;
+  isActive: boolean;
 
   /**
    * Audio duration in seconds
@@ -109,7 +109,7 @@ export function useAudioAnalyzer(options: UseAudioAnalyzerOptions): UseAudioAnal
     createAudioSource,
     deleteAudioSource,
     isAudioContextReady,
-    isPlaying,
+    isActive,
     duration,
     smoothingTimeConstant,
     fftSize,
@@ -150,7 +150,7 @@ export function useAudioAnalyzer(options: UseAudioAnalyzerOptions): UseAudioAnal
   }, [dataType, onAnalyze, frameTransitionSmoothing, analyzerRef, dataArrayRef, previousDataRef]);
 
   useAnimationFrame({
-    isActive: isPlaying,
+    isActive,
     callback: analyzeAudio,
     frameRate,
     dependencies: [duration],
