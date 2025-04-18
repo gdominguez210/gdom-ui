@@ -6,12 +6,13 @@ import clsx from 'clsx';
 
 export type CanvasResponsiveProps = ComponentPropsWithRef<'canvas'> & {
   frameRate?: number;
+  onResize?: () => void;
 };
 
 export function CanvasResponsive(props: CanvasResponsiveProps) {
-  const { frameRate, ref, className, ...rest } = props;
+  const { frameRate, onResize, ref, className, ...rest } = props;
 
-  const canvasRef = useCanvasResponsive({ frameRate });
+  const canvasRef = useCanvasResponsive({ frameRate, onResize });
 
   const mergedRef = useComposedRefs(ref, canvasRef);
 

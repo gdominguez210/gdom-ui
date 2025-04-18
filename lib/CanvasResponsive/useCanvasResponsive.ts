@@ -6,6 +6,10 @@ import { rafThrottle } from '@lib/utils/rafThrottle/rafThrottle';
  */
 export type UseCanvasResponsiveOptions = {
   /**
+   * Optional callback to be called when the canvas is resized
+   */
+  onResize?: () => void;
+  /**
    * Optional frame rate limit for resize handling (fps)
    */
   frameRate?: number;
@@ -15,7 +19,7 @@ export type UseCanvasResponsiveOptions = {
  * Hook to create a canvas that automatically scales to its size and device pixel ratio
  */
 export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
-  const { frameRate } = options ?? {};
+  const { frameRate, onResize } = options ?? {};
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -34,8 +38,9 @@ export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
       canvas.width = width * scale;
       canvas.height = height * scale;
       context.setTransform(scale, 0, 0, scale, 0, 0);
+      onResize?.();
     }
-  }, []);
+  }, [onResize]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
