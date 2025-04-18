@@ -9,7 +9,7 @@ import {
 
 export type AudioPlayerVisualizerWaveformProps = Omit<
   AudioVisualizerWaveformProps,
-  | 'isPlaying'
+  | 'isActive'
   | 'audioRef'
   | 'duration'
   | 'audioContextRef'
@@ -27,7 +27,7 @@ export function AudioPlayerVisualizerWaveform(props: AudioPlayerVisualizerWavefo
   return (
     <AudioVisualizerWaveform
       {...props}
-      isPlaying={isPlaying}
+      isActive={isPlaying}
       audioRef={audioRef}
       duration={duration}
       audioContextRef={audioContextRef}
