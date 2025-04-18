@@ -10,7 +10,7 @@ import {
 } from '@lib/useAudioAnalyzer/useAudioAnalyzer';
 import { AudioVisualizerCanvas } from '@lib/AudioVisualizerCanvas/AudioVisualizerCanvas';
 
-export type AudioVisualizerWaveformProps = ComponentPropsWithRef<'canvas'> &
+export type AudioVisualizerWaveformProps = Omit<ComponentPropsWithRef<'canvas'>, 'onResize'> &
   Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> &
   useAudioVisualizerWaveformOptions;
 
