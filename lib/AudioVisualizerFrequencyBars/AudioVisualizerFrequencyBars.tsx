@@ -17,7 +17,7 @@ export type AudioVisualizerFrequencyBarsProps = ComponentPropsWithRef<'canvas'> 
 export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBarsProps) {
   const {
     ref,
-    isPlaying,
+    isActive,
     audioRef,
     duration,
     audioContextRef,
@@ -51,7 +51,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     audioRef: audioRef as RefObject<HTMLAudioElement>,
     audioContextRef,
     isAudioContextReady,
-    isPlaying,
+    isActive,
     duration,
     onAnalyze: drawFrequencyBars,
     dataType: 'frequency',
