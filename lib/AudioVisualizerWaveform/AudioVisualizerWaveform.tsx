@@ -17,7 +17,7 @@ export type AudioVisualizerWaveformProps = ComponentPropsWithRef<'canvas'> &
 export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
   const {
     ref,
-    isPlaying,
+    isActive,
     audioRef,
     duration,
     audioContextRef,
@@ -47,7 +47,7 @@ export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
     audioRef: audioRef as RefObject<HTMLAudioElement>,
     audioContextRef,
     isAudioContextReady,
-    isPlaying,
+    isActive,
     duration,
     onAnalyze: drawWaveform,
     fftSize,
