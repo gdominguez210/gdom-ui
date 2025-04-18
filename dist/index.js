@@ -5801,8 +5801,13 @@ function useAudioVisualizerWaveform(options) {
     colorMode = WAVEFORM_COLOR_MODES.STATIC,
     segmentCount = 40
   } = options || {};
-  const baseOklchColor = useMemo(() => {
-    return convertColorToOKLCH(lineColor);
+  const colorRef = useRef({
+    baseOKlchColor: convertColorToOKLCH(lineColor),
+    lineColor
+  });
+  useEffect(() => {
+    colorRef.current.baseOKlchColor = convertColorToOKLCH(lineColor);
+    colorRef.current.lineColor = lineColor;
   }, [lineColor]);
   const canvasRef = useRef(null);
   const drawWaveform = useCallback(
@@ -5816,20 +5821,20 @@ function useAudioVisualizerWaveform(options) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.lineWidth = lineWidth;
       if (colorMode === WAVEFORM_COLOR_MODES.STATIC) {
-        drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, lineColor);
+        drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, colorRef.current.lineColor);
       } else {
         drawSegmentedWaveform(
           ctx,
           dataArray,
           displayWidth,
           displayHeight,
-          baseOklchColor,
+          colorRef.current.baseOKlchColor,
           colorMode,
           segmentCount
         );
       }
     },
-    [lineColor, lineWidth, colorMode, baseOklchColor, segmentCount]
+    [colorRef, lineWidth, colorMode, segmentCount]
   );
   return { canvasRef, drawWaveform };
 }
@@ -6012,7 +6017,7 @@ function useAudioAnalyzer(options) {
     createAudioSource,
     deleteAudioSource,
     isAudioContextReady,
-    isPlaying,
+    isActive,
     duration,
     smoothingTimeConstant,
     fftSize,
@@ -6043,7 +6048,7 @@ function useAudioAnalyzer(options) {
     onAnalyze?.(smoothedData, analyzer);
   }, [dataType, onAnalyze, frameTransitionSmoothing, analyzerRef, dataArrayRef, previousDataRef]);
   useAnimationFrame({
-    isActive: isPlaying,
+    isActive,
     callback: analyzeAudio,
     frameRate,
     dependencies: [duration]
@@ -6096,7 +6101,7 @@ function rafThrottle(callback, frameRate) {
 }
 
 function useCanvasResponsive(options) {
-  const { frameRate } = options ?? {};
+  const { frameRate, onResize } = options ?? {};
   const canvasRef = useRef(null);
   const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
@@ -6110,8 +6115,9 @@ function useCanvasResponsive(options) {
       canvas.width = width * scale;
       canvas.height = height * scale;
       context.setTransform(scale, 0, 0, scale, 0, 0);
+      onResize?.();
     }
-  }, []);
+  }, [onResize]);
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -6127,8 +6133,8 @@ function useCanvasResponsive(options) {
 }
 
 function CanvasResponsive(props) {
-  const { frameRate, ref, className, ...rest } = props;
-  const canvasRef = useCanvasResponsive({ frameRate });
+  const { frameRate, onResize, ref, className, ...rest } = props;
+  const canvasRef = useCanvasResponsive({ frameRate, onResize });
   const mergedRef = useComposedRefs(ref, canvasRef);
   return /* @__PURE__ */ jsx(
     "canvas",
@@ -6159,7 +6165,7 @@ const AudioVisualizerCanvas = (props) => {
 function AudioVisualizerWaveform(props) {
   const {
     ref,
-    isPlaying,
+    isActive,
     audioRef,
     duration,
     audioContextRef,
@@ -6186,7 +6192,7 @@ function AudioVisualizerWaveform(props) {
     audioRef,
     audioContextRef,
     isAudioContextReady,
-    isPlaying,
+    isActive,
     duration,
     onAnalyze: drawWaveform,
     fftSize,
@@ -6214,7 +6220,7 @@ function AudioPlayerVisualizerWaveform(props) {
     AudioVisualizerWaveform,
     {
       ...props,
-      isPlaying,
+      isActive: isPlaying,
       audioRef,
       duration,
       audioContextRef,
@@ -6283,8 +6289,13 @@ function useAudioVisualizerFrequencyBars(options) {
     minHeight = 0,
     colorMode = "static"
   } = options || {};
-  const baseOklchColor = useMemo(() => {
-    return convertColorToOKLCH(barColor);
+  const colorRef = useRef({
+    baseOKlchColor: convertColorToOKLCH(barColor),
+    barColor
+  });
+  useEffect(() => {
+    colorRef.current.baseOKlchColor = convertColorToOKLCH(barColor);
+    colorRef.current.barColor = barColor;
   }, [barColor]);
   const canvasRef = useRef(null);
   const drawFrequencyBars = useCallback(
@@ -6297,7 +6308,7 @@ function useAudioVisualizerFrequencyBars(options) {
       const displayHeight = canvas.clientHeight;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (colorMode === "static") {
-        ctx.fillStyle = barColor;
+        ctx.fillStyle = colorRef.current.barColor;
       }
       const gapWidth = displayWidth * barGapRatio;
       const totalGapWidth = (barCount - 1) * gapWidth;
@@ -6339,22 +6350,31 @@ function useAudioVisualizerFrequencyBars(options) {
         const intensityRatio = normalizedValue;
         switch (colorMode) {
           case "frequency":
-            ctx.fillStyle = getColorByFrequencyPosition(baseOklchColor, positionRatio);
+            ctx.fillStyle = getColorByFrequencyPosition(
+              colorRef.current.baseOKlchColor,
+              positionRatio
+            );
             break;
           case "intensity":
-            ctx.fillStyle = getColorByAudioIntensity(baseOklchColor, intensityRatio);
+            ctx.fillStyle = getColorByAudioIntensity(
+              colorRef.current.baseOKlchColor,
+              intensityRatio
+            );
             break;
           case "spectrum":
-            ctx.fillStyle = getColorBySpectrum(baseOklchColor, positionRatio);
+            ctx.fillStyle = getColorBySpectrum(colorRef.current.baseOKlchColor, positionRatio);
             break;
           case "dynamic":
-            ctx.fillStyle = getColorByDynamicIntensity(baseOklchColor, intensityRatio);
+            ctx.fillStyle = getColorByDynamicIntensity(
+              colorRef.current.baseOKlchColor,
+              intensityRatio
+            );
             break;
         }
         ctx.fillRect(x, displayHeight - barHeight, barWidth, barHeight);
       }
     },
-    [barColor, barCount, heightMultiplier, minHeight, colorMode, baseOklchColor, barGapRatio]
+    [colorRef, barCount, heightMultiplier, minHeight, colorMode, barGapRatio]
   );
   return { canvasRef, drawFrequencyBars };
 }
@@ -6362,7 +6382,7 @@ function useAudioVisualizerFrequencyBars(options) {
 function AudioVisualizerFrequencyBars(props) {
   const {
     ref,
-    isPlaying,
+    isActive,
     audioRef,
     duration,
     audioContextRef,
@@ -6393,7 +6413,7 @@ function AudioVisualizerFrequencyBars(props) {
     audioRef,
     audioContextRef,
     isAudioContextReady,
-    isPlaying,
+    isActive,
     duration,
     onAnalyze: drawFrequencyBars,
     dataType: "frequency",
@@ -6422,7 +6442,7 @@ function AudioPlayerVisualizerFrequencyBars(props) {
     AudioVisualizerFrequencyBars,
     {
       ...props,
-      isPlaying,
+      isActive: isPlaying,
       audioRef,
       duration,
       audioContextRef,

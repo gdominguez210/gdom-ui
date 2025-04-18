@@ -1,3 +1,16 @@
+# [1.29.0](https://github.com/gdominguez210/gdom-ui/compare/v1.28.0...v1.29.0) (2025-04-18)
+
+
+### Bug Fixes
+
+* **lib/AudioVisualizerFrequencyBars:** omit onResize from ComponentPropsWithRef<‘canvas’> ([b088f26](https://github.com/gdominguez210/gdom-ui/commit/b088f263f232a1063f508bf7be2d98126ee59170))
+* **lib/AudioVisualizerVisualizerWaveform:** omit onResize from ComponentPropsWithRef<‘canvas’> ([c8bcf3e](https://github.com/gdominguez210/gdom-ui/commit/c8bcf3e98bad0c5a4905e52482a509b0ce79fbc0))
+
+
+### Features
+
+* **lib/CanvasResponsive/useCanvasResponsive:** add support for static drawings ([82492fc](https://github.com/gdominguez210/gdom-ui/commit/82492fce8279e5168edc694232ba2b6fd2096c5f))
+
 # [1.28.0](https://github.com/gdominguez210/gdom-ui/compare/v1.27.0...v1.28.0) (2025-04-17)
 
 

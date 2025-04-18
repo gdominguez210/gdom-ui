@@ -451,11 +451,11 @@ export declare type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
 
 export declare function AudioPlayerVisualizerFrequencyBars(props: AudioPlayerVisualizerFrequencyBarsProps): JSX.Element;
 
-export declare type AudioPlayerVisualizerFrequencyBarsProps = Omit<AudioVisualizerFrequencyBarsProps, 'isPlaying' | 'audioRef' | 'duration' | 'audioContextRef' | 'isAudioContextReady' | 'createAudioSource' | 'deleteAudioSource'>;
+export declare type AudioPlayerVisualizerFrequencyBarsProps = Omit<AudioVisualizerFrequencyBarsProps, 'isActive' | 'audioRef' | 'duration' | 'audioContextRef' | 'isAudioContextReady' | 'createAudioSource' | 'deleteAudioSource'>;
 
 export declare function AudioPlayerVisualizerWaveform(props: AudioPlayerVisualizerWaveformProps): JSX.Element;
 
-export declare type AudioPlayerVisualizerWaveformProps = Omit<AudioVisualizerWaveformProps, 'isPlaying' | 'audioRef' | 'duration' | 'audioContextRef' | 'isAudioContextReady' | 'createAudioSource' | 'deleteAudioSource'>;
+export declare type AudioPlayerVisualizerWaveformProps = Omit<AudioVisualizerWaveformProps, 'isActive' | 'audioRef' | 'duration' | 'audioContextRef' | 'isAudioContextReady' | 'createAudioSource' | 'deleteAudioSource'>;
 
 /**
  * Base container component for volume controls
@@ -796,11 +796,11 @@ declare type AudioTrackData = {
 
 export declare function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBarsProps): JSX.Element;
 
-export declare type AudioVisualizerFrequencyBarsProps = ComponentPropsWithRef<'canvas'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> & useAudioVisualizerFrequencyBarOptions;
+export declare type AudioVisualizerFrequencyBarsProps = Omit<ComponentPropsWithRef<'canvas'>, 'onResize'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> & useAudioVisualizerFrequencyBarOptions;
 
 export declare function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps): JSX.Element;
 
-export declare type AudioVisualizerWaveformProps = ComponentPropsWithRef<'canvas'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> & useAudioVisualizerWaveformOptions;
+export declare type AudioVisualizerWaveformProps = Omit<ComponentPropsWithRef<'canvas'>, 'onResize'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> & useAudioVisualizerWaveformOptions;
 
 export declare const Badge: ForwardRefExoticComponent<BadgeProps & RefAttributes<HTMLElement>>;
 
@@ -821,6 +821,7 @@ export declare function CanvasResponsive(props: CanvasResponsiveProps): JSX.Elem
 
 declare type CanvasResponsiveProps = ComponentPropsWithRef<'canvas'> & {
     frameRate?: number;
+    onResize?: () => void;
 };
 
 declare interface CommonButtonProps extends ComponentPropsWithRef<'button'> {
@@ -906,9 +907,9 @@ declare type UseAudioAnalyzerOptions = Partial<AnalyserOptions> & {
      */
     isAudioContextReady: UseAudioContextWebAPIReturn['isReady'];
     /**
-     * Whether the audio is currently playing
+     * Whether the audio analyzer is active
      */
-    isPlaying: boolean;
+    isActive: boolean;
     /**
      * Audio duration in seconds
      */
@@ -1058,6 +1059,10 @@ export declare function useCanvasResponsive(options?: UseCanvasResponsiveOptions
  * Options for the useCanvasResponsive hook
  */
 declare type UseCanvasResponsiveOptions = {
+    /**
+     * Optional callback to be called when the canvas is resized
+     */
+    onResize?: () => void;
     /**
      * Optional frame rate limit for resize handling (fps)
      */
