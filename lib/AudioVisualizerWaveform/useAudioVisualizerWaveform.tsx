@@ -1,5 +1,5 @@
 import { convertColorToOKLCH } from '@lib/utils/convertColorToOKLCH/convertColorToOKLCH';
-import { useRef, useCallback, useMemo } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import {
   type WaveformColorMode,
   drawStaticWaveform,
@@ -46,8 +46,18 @@ export function useAudioVisualizerWaveform(
     segmentCount = 40,
   } = options || {};
 
-  const baseOklchColor = useMemo(() => {
-    return convertColorToOKLCH(lineColor);
+  /**
+   * Create stable reference to color values to prevent animation restarting
+   * when color changes to allow for smooth transitioning between colors
+   */
+  const colorRef = useRef({
+    baseOKlchColor: convertColorToOKLCH(lineColor),
+    lineColor,
+  });
+
+  useEffect(() => {
+    colorRef.current.baseOKlchColor = convertColorToOKLCH(lineColor);
+    colorRef.current.lineColor = lineColor;
   }, [lineColor]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -68,20 +78,20 @@ export function useAudioVisualizerWaveform(
       ctx.lineWidth = lineWidth;
 
       if (colorMode === WAVEFORM_COLOR_MODES.STATIC) {
-        drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, lineColor);
+        drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, colorRef.current.lineColor);
       } else {
         drawSegmentedWaveform(
           ctx,
           dataArray,
           displayWidth,
           displayHeight,
-          baseOklchColor,
+          colorRef.current.baseOKlchColor,
           colorMode,
           segmentCount,
         );
       }
     },
-    [lineColor, lineWidth, colorMode, baseOklchColor, segmentCount],
+    [colorRef, lineWidth, colorMode, segmentCount],
   );
 
   return { canvasRef, drawWaveform };
