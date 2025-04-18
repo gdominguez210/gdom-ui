@@ -1,4 +1,4 @@
-import { useRef, useCallback, useMemo } from 'react';
+import { useRef, useCallback, useMemo, useEffect } from 'react';
 import { convertColorToOKLCH } from '@lib/utils/convertColorToOKLCH/convertColorToOKLCH';
 import {
   calculateLogarithmicDistributionDenominator,
@@ -66,8 +66,18 @@ export function useAudioVisualizerFrequencyBars(
     colorMode = 'static',
   } = options || {};
 
-  const baseOklchColor = useMemo(() => {
-    return convertColorToOKLCH(barColor);
+  /**
+   * Create stable reference to color values to prevent animation restarting
+   * when color changes to allow for smooth transitioning between colors
+   */
+  const colorRef = useRef({
+    baseOKlchColor: convertColorToOKLCH(barColor),
+    barColor,
+  });
+
+  useEffect(() => {
+    colorRef.current.baseOKlchColor = convertColorToOKLCH(barColor);
+    colorRef.current.barColor = barColor;
   }, [barColor]);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -86,7 +96,7 @@ export function useAudioVisualizerFrequencyBars(
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (colorMode === 'static') {
-        ctx.fillStyle = barColor;
+        ctx.fillStyle = colorRef.current.barColor;
       }
 
       const gapWidth = displayWidth * barGapRatio;
@@ -141,23 +151,32 @@ export function useAudioVisualizerFrequencyBars(
 
         switch (colorMode) {
           case 'frequency':
-            ctx.fillStyle = getColorByFrequencyPosition(baseOklchColor, positionRatio);
+            ctx.fillStyle = getColorByFrequencyPosition(
+              colorRef.current.baseOKlchColor,
+              positionRatio,
+            );
             break;
           case 'intensity':
-            ctx.fillStyle = getColorByAudioIntensity(baseOklchColor, intensityRatio);
+            ctx.fillStyle = getColorByAudioIntensity(
+              colorRef.current.baseOKlchColor,
+              intensityRatio,
+            );
             break;
           case 'spectrum':
-            ctx.fillStyle = getColorBySpectrum(baseOklchColor, positionRatio);
+            ctx.fillStyle = getColorBySpectrum(colorRef.current.baseOKlchColor, positionRatio);
             break;
           case 'dynamic':
-            ctx.fillStyle = getColorByDynamicIntensity(baseOklchColor, intensityRatio);
+            ctx.fillStyle = getColorByDynamicIntensity(
+              colorRef.current.baseOKlchColor,
+              intensityRatio,
+            );
             break;
         }
 
         ctx.fillRect(x, displayHeight - barHeight, barWidth, barHeight);
       }
     },
-    [barColor, barCount, heightMultiplier, minHeight, colorMode, baseOklchColor, barGapRatio],
+    [colorRef, barCount, heightMultiplier, minHeight, colorMode, barGapRatio],
   );
 
   return { canvasRef, drawFrequencyBars };
