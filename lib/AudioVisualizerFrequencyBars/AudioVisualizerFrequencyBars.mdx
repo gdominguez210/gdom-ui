@@ -1,0 +1,184 @@
+import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/blocks';
+import * as AudioVisualizerFrequencyBarsStories from './AudioVisualizerFrequencyBars.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+
+<Meta of={AudioVisualizerFrequencyBarsStories} />
+
+# AudioVisualizerFrequencyBars
+
+A highly customizable audio frequency visualizer that displays audio spectrum data as vertical bars, with support for various color modes and responsive design.
+
+<DocumentationNav />
+
+## Features
+
+The AudioVisualizerFrequencyBars component provides several key features:
+
+- **Real-time Frequency Analysis**: Visualizes audio frequency data in real-time using the Web Audio API
+- **Customizable Appearance**: Control bar count, colors, gaps, and height to match your design
+- **Multiple Color Modes**: Choose from static, frequency-based, intensity-based, spectrum, or dynamic coloring
+- **Responsive Design**: Automatically scales to fit its container with proper pixel density handling
+- **Performance Optimized**: Uses efficient rendering techniques to maintain smooth animation
+- **AudioPlayer Integration**: Seamlessly works with the AudioPlayer component system for a complete audio experience
+
+<Primary />
+## Props
+<Controls />
+
+## Stories
+
+<div className="rounded-md border border-slate-400 bg-slate-100 p-3 text-slate-700">
+  <div className="mb-1 font-bold">Usage Note</div>
+  <div>
+    This component requires an audio source to visualize. In these examples, we've used the
+    AudioPlayer component system to handle audio playback. Click the play button to see the
+    frequency bars animate.
+  </div>
+</div>
+
+<Stories
+  title=""
+  includePrimary={false}
+/>
+
+## Component Usage
+
+The AudioVisualizerFrequencyBars component can be used both standalone with a direct audio element reference or as part of the AudioPlayer component system:
+
+### Standalone Usage
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { useRef, useState } from 'react';
+import { AudioVisualizerFrequencyBars } from '@gdominguez210/gdom-ui/AudioVisualizerFrequencyBars';
+
+const MyAudioVisualizer = () => {
+const audioRef = useRef<HTMLAudioElement>(null);
+const [isActive, useState] = useState(false);
+
+return (
+
+<div>
+  <AudioVisualizerFrequencyBars
+    audioRef={audioRef}
+    isActive={isActive}
+    colorMode="intensity"
+    barColor="#029CFD"
+    className="h-[200px] w-full"
+  />
+  <audio
+    ref={audioRef}
+    src="/path/to/audio.mp3"
+    controls
+    onPlay={() => setIsActive(true)}
+    onPause={() => setIsActive(false)}
+  />
+</div>
+); }; `} />
+
+### With AudioPlayer Component System
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+
+const MyAudioVisualizer = () => {
+return (
+
+<AudioPlayer.Provider tracks={myTracks}>
+  <AudioPlayer.AudioContextProvider>
+    <AudioPlayer.Root>
+      {/* The visualizer will automatically connect to the audio context */}
+      <AudioPlayer.VisualizerFrequencyBars
+        colorMode="intensity"
+        barColor="#029CFD"
+        className="h-[200px] w-full"
+      />
+      <div className="flex items-center gap-2">
+        <AudioPlayer.ControlPlay />
+        <AudioPlayer.Title />
+      </div>
+    </AudioPlayer.Root>
+  </AudioPlayer.AudioContextProvider>
+</AudioPlayer.Provider>
+); }; `} />
+
+## Color Modes
+
+The AudioVisualizerFrequencyBars component supports five color modes:
+
+- **static**: All bars use the same color as defined by `barColor`
+- **frequency**: Colors vary based on frequency position, with lower frequencies closer to the base color
+- **intensity**: Colors vary based on amplitude, with louder frequencies appearing brighter
+- **spectrum**: Full spectrum coloring across frequency range (like a rainbow visualizer)
+- **dynamic**: Colors dynamically adjust based on audio intensity, creating the most vibrant effect
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Examples of different color modes
+<AudioPlayer.VisualizerFrequencyBars
+    barColor="#029CFD" 
+    colorMode="static"
+/>
+
+<AudioPlayer.VisualizerFrequencyBars
+  barColor="#03C988"
+  colorMode="intensity"
+/>
+
+<AudioPlayer.VisualizerFrequencyBars
+  barColor="#A084DC"
+  colorMode="spectrum"
+/>
+
+`}
+/>
+
+## Bar Customization
+
+The component offers several options to customize the appearance of the frequency bars:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// High-resolution visualization with many narrow bars
+<AudioPlayer.VisualizerFrequencyBars
+  barColor="#FF6C22"
+  barCount={256}       // More bars for detailed frequency display
+  barGapRatio={0.001}  // Very small gaps between bars
+/>
+
+// Low-resolution visualization with fewer, wider bars
+
+<AudioPlayer.VisualizerFrequencyBars
+  barColor="#F875AA"
+  barCount={32} // Fewer bars for a classic equalizer look
+  barGapRatio={0.015} // Wider gaps between bars
+  heightMultiplier={2} // Taller bars
+  minHeight={0.05} // Minimum bar height (as proportion of container)
+/>
+`} />
+
+## Integration with Audio Context
+
+The AudioVisualizerFrequencyBars automatically manages the Web Audio API setup, but also accepts optional parameters for more control:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Using custom Web Audio API parameters
+<AudioPlayer.VisualizerFrequencyBars
+  barColor="#029CFD"
+  fftSize={2048}               // Higher FFT size for more detailed analysis
+  smoothingTimeConstant={0.85} // Control how much the visualization smooths between frames
+/>
+`}
+/>
