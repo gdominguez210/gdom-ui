@@ -1,5 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react';
-import { convertColorToOKLCH } from '@lib/utils/convertColorToOKLCH/convertColorToOKLCH';
+import { useRef, useCallback } from 'react';
 import {
   calculateLogarithmicDistributionDenominator,
   calculateLogarithmicIndexRatio,
@@ -11,7 +10,7 @@ import { getColorByAudioIntensity } from '@lib/utils/getColorByAudioIntensity/ge
 import { getColorBySpectrum } from '@lib/utils/getColorBySpectrum/getColorBySpectrum';
 import { getColorByDynamicIntensity } from '@lib/utils/getColorByDynamicIntensity/getColorByDynamicIntensity';
 import { VISUALIZATION_PARAMS } from '@lib/AudioVisualizerFrequencyBars/visualizationParams';
-
+import { useColorTransition } from '@lib/useColorTransition/useColorTransition';
 export type useAudioVisualizerFrequencyBarOptions = {
   /**
    * Color of the frequency bars
@@ -47,6 +46,12 @@ export type useAudioVisualizerFrequencyBarOptions = {
    * Whether to use reactive color
    */
   colorMode?: 'static' | 'frequency' | 'intensity' | 'spectrum' | 'dynamic';
+
+  /**
+   * Duration of the color transition in milliseconds
+   * @default 1000
+   */
+  colorTransitionDuration?: number;
 };
 
 export type useAudioVisualizerFrequencyBarsReturn = {
@@ -64,23 +69,15 @@ export function useAudioVisualizerFrequencyBars(
     heightMultiplier = 1.2,
     minHeight = 0,
     colorMode = 'static',
+    colorTransitionDuration = 1000,
   } = options || {};
 
-  /**
-   * Create stable reference to color values to prevent animation restarting
-   * when color changes to allow for smooth transitioning between colors
-   */
-  const colorRef = useRef({
-    baseOKlchColor: convertColorToOKLCH(barColor),
-    barColor,
-  });
-
-  useEffect(() => {
-    colorRef.current.baseOKlchColor = convertColorToOKLCH(barColor);
-    colorRef.current.barColor = barColor;
-  }, [barColor]);
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const { getColorString, getCurrentColor } = useColorTransition({
+    targetColor: barColor,
+    transitionDuration: colorTransitionDuration,
+  });
 
   const drawFrequencyBars = useCallback(
     (dataArray: Uint8Array) => {
@@ -96,7 +93,7 @@ export function useAudioVisualizerFrequencyBars(
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (colorMode === 'static') {
-        ctx.fillStyle = colorRef.current.barColor;
+        ctx.fillStyle = getColorString();
       }
 
       const gapWidth = displayWidth * barGapRatio;
@@ -151,32 +148,31 @@ export function useAudioVisualizerFrequencyBars(
 
         switch (colorMode) {
           case 'frequency':
-            ctx.fillStyle = getColorByFrequencyPosition(
-              colorRef.current.baseOKlchColor,
-              positionRatio,
-            );
+            ctx.fillStyle = getColorByFrequencyPosition(getCurrentColor(), positionRatio);
             break;
           case 'intensity':
-            ctx.fillStyle = getColorByAudioIntensity(
-              colorRef.current.baseOKlchColor,
-              intensityRatio,
-            );
+            ctx.fillStyle = getColorByAudioIntensity(getCurrentColor(), intensityRatio);
             break;
           case 'spectrum':
-            ctx.fillStyle = getColorBySpectrum(colorRef.current.baseOKlchColor, positionRatio);
+            ctx.fillStyle = getColorBySpectrum(getCurrentColor(), positionRatio);
             break;
           case 'dynamic':
-            ctx.fillStyle = getColorByDynamicIntensity(
-              colorRef.current.baseOKlchColor,
-              intensityRatio,
-            );
+            ctx.fillStyle = getColorByDynamicIntensity(getCurrentColor(), intensityRatio);
             break;
         }
 
         ctx.fillRect(x, displayHeight - barHeight, barWidth, barHeight);
       }
     },
-    [colorRef, barCount, heightMultiplier, minHeight, colorMode, barGapRatio],
+    [
+      barCount,
+      heightMultiplier,
+      minHeight,
+      colorMode,
+      barGapRatio,
+      getColorString,
+      getCurrentColor,
+    ],
   );
 
   return { canvasRef, drawFrequencyBars };

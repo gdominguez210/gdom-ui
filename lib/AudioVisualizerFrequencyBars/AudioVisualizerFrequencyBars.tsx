@@ -33,6 +33,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     heightMultiplier,
     minHeight,
     colorMode,
+    colorTransitionDuration,
     ...restProps
   } = props;
 
@@ -43,6 +44,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     heightMultiplier,
     minHeight,
     colorMode,
+    colorTransitionDuration,
   });
 
   const mergedRef = useComposedRefs(ref, canvasRef);
