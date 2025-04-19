@@ -1019,6 +1019,11 @@ declare type useAudioVisualizerFrequencyBarOptions = {
      * Whether to use reactive color
      */
     colorMode?: 'static' | 'frequency' | 'intensity' | 'spectrum' | 'dynamic';
+    /**
+     * Duration of the color transition in milliseconds
+     * @default 1000
+     */
+    colorTransitionDuration?: number;
 };
 
 export declare function useAudioVisualizerWaveform(options?: useAudioVisualizerWaveformOptions): useAudioVisualizerWaveformReturn;

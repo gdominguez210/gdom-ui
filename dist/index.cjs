@@ -6302,6 +6302,84 @@ function calculateAmplifiedValue(normalizedValue, minHeight) {
   return minHeight + normalizedValue * (VISUALIZATION_PARAMS.MAX_NORMALIZED_VALUE - minHeight);
 }
 
+function OKLCHToCSS(lightness, chroma, hue) {
+  return `oklch(${lightness} ${chroma} ${hue})`;
+}
+
+function useColorTransition(options) {
+  const { targetColor, transitionDuration = 500 } = options;
+  const transitionRef = React.useRef({
+    targetOKLCH: convertColorToOKLCH(targetColor),
+    previousOKLCH: convertColorToOKLCH(targetColor),
+    isTransitioning: false,
+    progress: 1,
+    targetColorString: targetColor
+  });
+  const timeRef = React.useRef({
+    transitionStartTime: 0
+  });
+  React.useEffect(() => {
+    if (targetColor !== transitionRef.current.targetColorString) {
+      transitionRef.current.previousOKLCH = transitionRef.current.targetOKLCH;
+      transitionRef.current.targetOKLCH = convertColorToOKLCH(targetColor);
+      transitionRef.current.targetColorString = targetColor;
+      transitionRef.current.isTransitioning = true;
+      transitionRef.current.progress = 0;
+      timeRef.current.transitionStartTime = performance.now();
+    }
+  }, [targetColor]);
+  const interpolateOKLCH = React.useCallback(
+    (colorA, colorB, progress) => {
+      const [l1, c1, h1] = colorA;
+      const [l2, c2, h2] = colorB;
+      let hDiff = h2 - h1;
+      if (hDiff > 180) hDiff -= 360;
+      if (hDiff < -180) hDiff += 360;
+      const interpolatedHue = (h1 + hDiff * progress) % 360;
+      return [
+        l1 + (l2 - l1) * progress,
+        c1 + (c2 - c1) * progress,
+        interpolatedHue < 0 ? interpolatedHue + 360 : interpolatedHue
+      ];
+    },
+    []
+  );
+  const updateTransition = React.useCallback(() => {
+    if (!transitionRef.current.isTransitioning) return;
+    const now = performance.now();
+    const elapsed = now - timeRef.current.transitionStartTime;
+    transitionRef.current.progress = Math.min(elapsed / transitionDuration, 1);
+    if (transitionRef.current.progress >= 1) {
+      transitionRef.current.isTransitioning = false;
+      transitionRef.current.progress = 1;
+    }
+  }, [transitionDuration]);
+  const getCurrentColor = React.useCallback(() => {
+    updateTransition();
+    if (!transitionRef.current.isTransitioning) {
+      return transitionRef.current.targetOKLCH;
+    }
+    return interpolateOKLCH(
+      transitionRef.current.previousOKLCH,
+      transitionRef.current.targetOKLCH,
+      transitionRef.current.progress
+    );
+  }, [updateTransition, interpolateOKLCH]);
+  const getColorString = React.useCallback(() => {
+    const [lightness, chroma, hue] = getCurrentColor();
+    return OKLCHToCSS(lightness, chroma, hue);
+  }, [getCurrentColor]);
+  const isTransitioning = React.useCallback(() => {
+    return transitionRef.current.isTransitioning;
+  }, []);
+  return {
+    getCurrentColor,
+    getColorString,
+    isTransitioning,
+    updateTransition
+  };
+}
+
 function useAudioVisualizerFrequencyBars(options) {
   const {
     barColor = "#FFFFFF",
@@ -6309,17 +6387,14 @@ function useAudioVisualizerFrequencyBars(options) {
     barCount = 128,
     heightMultiplier = 1.2,
     minHeight = 0,
-    colorMode = "static"
+    colorMode = "static",
+    colorTransitionDuration = 1e3
   } = options || {};
-  const colorRef = React.useRef({
-    baseOKlchColor: convertColorToOKLCH(barColor),
-    barColor
-  });
-  React.useEffect(() => {
-    colorRef.current.baseOKlchColor = convertColorToOKLCH(barColor);
-    colorRef.current.barColor = barColor;
-  }, [barColor]);
   const canvasRef = React.useRef(null);
+  const { getColorString, getCurrentColor } = useColorTransition({
+    targetColor: barColor,
+    transitionDuration: colorTransitionDuration
+  });
   const drawFrequencyBars = React.useCallback(
     (dataArray) => {
       const canvas = canvasRef.current;
@@ -6330,7 +6405,7 @@ function useAudioVisualizerFrequencyBars(options) {
       const displayHeight = canvas.clientHeight;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (colorMode === "static") {
-        ctx.fillStyle = colorRef.current.barColor;
+        ctx.fillStyle = getColorString();
       }
       const gapWidth = displayWidth * barGapRatio;
       const totalGapWidth = (barCount - 1) * gapWidth;
@@ -6372,31 +6447,30 @@ function useAudioVisualizerFrequencyBars(options) {
         const intensityRatio = normalizedValue;
         switch (colorMode) {
           case "frequency":
-            ctx.fillStyle = getColorByFrequencyPosition(
-              colorRef.current.baseOKlchColor,
-              positionRatio
-            );
+            ctx.fillStyle = getColorByFrequencyPosition(getCurrentColor(), positionRatio);
             break;
           case "intensity":
-            ctx.fillStyle = getColorByAudioIntensity(
-              colorRef.current.baseOKlchColor,
-              intensityRatio
-            );
+            ctx.fillStyle = getColorByAudioIntensity(getCurrentColor(), intensityRatio);
             break;
           case "spectrum":
-            ctx.fillStyle = getColorBySpectrum(colorRef.current.baseOKlchColor, positionRatio);
+            ctx.fillStyle = getColorBySpectrum(getCurrentColor(), positionRatio);
             break;
           case "dynamic":
-            ctx.fillStyle = getColorByDynamicIntensity(
-              colorRef.current.baseOKlchColor,
-              intensityRatio
-            );
+            ctx.fillStyle = getColorByDynamicIntensity(getCurrentColor(), intensityRatio);
             break;
         }
         ctx.fillRect(x, displayHeight - barHeight, barWidth, barHeight);
       }
     },
-    [colorRef, barCount, heightMultiplier, minHeight, colorMode, barGapRatio]
+    [
+      barCount,
+      heightMultiplier,
+      minHeight,
+      colorMode,
+      barGapRatio,
+      getColorString,
+      getCurrentColor
+    ]
   );
   return { canvasRef, drawFrequencyBars };
 }
@@ -6420,6 +6494,7 @@ function AudioVisualizerFrequencyBars(props) {
     heightMultiplier,
     minHeight,
     colorMode,
+    colorTransitionDuration,
     ...restProps
   } = props;
   const { canvasRef, drawFrequencyBars } = useAudioVisualizerFrequencyBars({
@@ -6428,7 +6503,8 @@ function AudioVisualizerFrequencyBars(props) {
     barCount,
     heightMultiplier,
     minHeight,
-    colorMode
+    colorMode,
+    colorTransitionDuration
   });
   const mergedRef = useComposedRefs(ref, canvasRef);
   useAudioAnalyzer({

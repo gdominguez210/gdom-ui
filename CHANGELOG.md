@@ -1,3 +1,11 @@
+# [1.30.0](https://github.com/gdominguez210/gdom-ui/compare/v1.29.0...v1.30.0) (2025-04-19)
+
+
+### Features
+
+* **lib/AudioVisualizerFrequencyBars:** add support for smooth transitions between colors when barColor changes ([757d596](https://github.com/gdominguez210/gdom-ui/commit/757d5969eaca62eaa4efc2cbf1a8b9ac86474532))
+* **lib/useColorTransition:** add useColorTransition hook ([03ade15](https://github.com/gdominguez210/gdom-ui/commit/03ade15dca4883efde8ba9bda64d8e9c8aa17092))
+
 # [1.29.0](https://github.com/gdominguez210/gdom-ui/compare/v1.28.0...v1.29.0) (2025-04-18)
 
 
