@@ -31,6 +31,26 @@ function NavLink({ active, className, children, ...props }: NavLinkProps) {
   );
 }
 
+/**
+ * Validates if a string is a valid CSS selector
+ * @param selector - The selector string to validate
+ * @returns boolean indicating if the selector is valid
+ */
+function isValidSelector(selector: string): boolean {
+  if (!selector || selector === '#' || selector === '#-') return false;
+
+  // Check for selectors starting with numbers or dashes after the #
+  if (selector.startsWith('#-')) return false;
+
+  try {
+    // Test if the selector is valid by attempting to query for it
+    document.createDocumentFragment().querySelector(selector);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 export type DocumentationNavProps = {
   items?: NavItem[];
 };
@@ -49,8 +69,12 @@ export function DocumentationNav({ items: providedItems }: DocumentationNavProps
           label: heading.textContent || '',
           href: `#${heading.id}`,
         }))
-        .filter((item) => item.href !== '#');
+        // Filter out items with invalid selectors
+        .filter((item) => item.href !== '#' && isValidSelector(item.href));
       setItems(navItems);
+    } else {
+      // Filter out any provided items with invalid selectors
+      setItems(providedItems.filter((item) => isValidSelector(item.href)));
     }
   }, [providedItems]);
 
@@ -71,8 +95,15 @@ export function DocumentationNav({ items: providedItems }: DocumentationNavProps
     );
 
     items.forEach((item) => {
-      const element = document.querySelector(item.href);
-      if (element) observer.observe(element);
+      // Only observe elements with valid selectors
+      if (isValidSelector(item.href)) {
+        try {
+          const element = document.querySelector(item.href);
+          if (element) observer.observe(element);
+        } catch (error) {
+          console.warn(`Invalid selector: ${item.href}`);
+        }
+      }
     });
 
     return () => observer.disconnect();
@@ -100,11 +131,22 @@ export function DocumentationNav({ items: providedItems }: DocumentationNavProps
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      setIsNavigatingViaLink(true);
-      setActiveSection(href.slice(1));
-      element.scrollIntoView({ behavior: 'smooth' });
+
+    // Validate selector before trying to use it
+    if (!isValidSelector(href)) {
+      console.warn(`Cannot navigate to invalid selector: ${href}`);
+      return;
+    }
+
+    try {
+      const element = document.querySelector(href);
+      if (element) {
+        setIsNavigatingViaLink(true);
+        setActiveSection(href.slice(1));
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } catch (error) {
+      console.warn(`Error navigating to ${href}:`, error);
     }
   };
 
