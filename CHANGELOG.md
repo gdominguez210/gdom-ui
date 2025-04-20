@@ -1,3 +1,15 @@
+# [1.31.0](https://github.com/gdominguez210/gdom-ui/compare/v1.30.0...v1.31.0) (2025-04-20)
+
+
+### Bug Fixes
+
+* **lib/AudioVisualizerFrequencyBars/useAudioVisualizerFrequencyBars:** clear canvas if currentTrack changes while paused ([ba48007](https://github.com/gdominguez210/gdom-ui/commit/ba48007edf885fd5a4b134fb9efc1e97ebf14986))
+
+
+### Features
+
+* **lib/AudioVisualizerWaveform:** add support for color transitions ([aac046d](https://github.com/gdominguez210/gdom-ui/commit/aac046d512bd94c4b0ed83b2f41ce2550746fa5e))
+
 # [1.30.0](https://github.com/gdominguez210/gdom-ui/compare/v1.29.0...v1.30.0) (2025-04-19)
 
 

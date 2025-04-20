@@ -991,6 +991,14 @@ export declare function useAudioPlaylistExpandableContainer(props: useAudioPlaye
 
 declare type useAudioVisualizerFrequencyBarOptions = {
     /**
+     * Whether the frequency bars are active
+     */
+    isActive?: boolean;
+    /**
+     * Duration of the audio to visualize
+     */
+    duration?: number;
+    /**
      * Color of the frequency bars
      */
     barColor?: string;
@@ -1048,6 +1056,19 @@ export declare type useAudioVisualizerWaveformOptions = {
      * @default 40
      */
     segmentCount?: number;
+    /**
+     * Duration of the color transition in milliseconds
+     * @default 1000
+     */
+    colorTransitionDuration?: number;
+    /**
+     * Duration of the audio to visualize
+     */
+    duration?: number;
+    /**
+     * Whether the waveform is active
+     */
+    isActive?: boolean;
 };
 
 declare type useAudioVisualizerWaveformReturn = {

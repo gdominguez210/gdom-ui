@@ -5521,6 +5521,74 @@ function useAudioContext() {
   return context;
 }
 
+function normalizeAudioValue(value) {
+  return (value - 128) / 128;
+}
+function calculateWaveformY(normalizedValue, centerY) {
+  return centerY + normalizedValue * centerY;
+}
+function calculateAmplitudeRatio(normalizedValue) {
+  return Math.abs(normalizedValue);
+}
+function calculatePositionRatio(segmentIndex, totalLength) {
+  return segmentIndex / totalLength;
+}
+
+const OKLCHProperty = {
+  LIGHTNESS: "lightness",
+  CHROMA: "chroma",
+  HUE: "hue"
+};
+function getReactiveColor(baseOklch, intensity, propertyConfigs) {
+  const safeIntensity = Math.max(0, Math.min(1, intensity));
+  const [lightness, chroma, hue] = baseOklch;
+  let modifiedL = lightness;
+  let modifiedC = chroma;
+  let modifiedH = hue;
+  propertyConfigs.forEach((config) => {
+    const { property, min, max, easing = (t) => t } = config;
+    const easedIntensity = easing(safeIntensity);
+    const newValue = min + (max - min) * easedIntensity;
+    switch (property) {
+      case OKLCHProperty.LIGHTNESS:
+        modifiedL = newValue;
+        break;
+      case OKLCHProperty.CHROMA:
+        modifiedC = newValue;
+        break;
+      case OKLCHProperty.HUE:
+        modifiedH = newValue;
+        break;
+    }
+  });
+  return `oklch(${modifiedL} ${modifiedC} ${modifiedH})`;
+}
+
+function getColorByAudioIntensity(baseOklchColor, intensityRatio) {
+  return getReactiveColor(baseOklchColor, intensityRatio, [
+    { property: OKLCHProperty.LIGHTNESS, min: 0.3, max: 0.7 }
+  ]);
+}
+
+function getColorByFrequencyPosition(baseOklchColor, positionRatio) {
+  return getReactiveColor(baseOklchColor, positionRatio, [
+    { property: OKLCHProperty.HUE, min: 240, max: 0 }
+  ]);
+}
+
+function getColorBySpectrum(baseOklchColor, positionRatio) {
+  return getReactiveColor(baseOklchColor, positionRatio, [
+    { property: OKLCHProperty.HUE, min: 0, max: 360 }
+  ]);
+}
+
+function getColorByDynamicIntensity(baseOklchColor, intensityRatio) {
+  return getReactiveColor(baseOklchColor, intensityRatio, [
+    { property: OKLCHProperty.LIGHTNESS, min: 0.4, max: 0.6 },
+    { property: OKLCHProperty.CHROMA, min: 0.2, max: 0.3 }
+  ]);
+}
+
 const RGB_TO_LMS_MATRIX = {
   /** LMS matrix coefficient for L from R component */
   L_FROM_R: 0.4122214708,
@@ -5652,72 +5720,82 @@ function convertColorToOKLCH(color) {
   return formatOKLCH(oklch);
 }
 
-function normalizeAudioValue(value) {
-  return (value - 128) / 128;
-}
-function calculateWaveformY(normalizedValue, centerY) {
-  return centerY + normalizedValue * centerY;
-}
-function calculateAmplitudeRatio(normalizedValue) {
-  return Math.abs(normalizedValue);
-}
-function calculatePositionRatio(segmentIndex, totalLength) {
-  return segmentIndex / totalLength;
+function OKLCHToCSS(lightness, chroma, hue) {
+  return `oklch(${lightness} ${chroma} ${hue})`;
 }
 
-const OKLCHProperty = {
-  LIGHTNESS: "lightness",
-  CHROMA: "chroma",
-  HUE: "hue"
-};
-function getReactiveColor(baseOklch, intensity, propertyConfigs) {
-  const safeIntensity = Math.max(0, Math.min(1, intensity));
-  const [lightness, chroma, hue] = baseOklch;
-  let modifiedL = lightness;
-  let modifiedC = chroma;
-  let modifiedH = hue;
-  propertyConfigs.forEach((config) => {
-    const { property, min, max, easing = (t) => t } = config;
-    const easedIntensity = easing(safeIntensity);
-    const newValue = min + (max - min) * easedIntensity;
-    switch (property) {
-      case OKLCHProperty.LIGHTNESS:
-        modifiedL = newValue;
-        break;
-      case OKLCHProperty.CHROMA:
-        modifiedC = newValue;
-        break;
-      case OKLCHProperty.HUE:
-        modifiedH = newValue;
-        break;
-    }
+function useColorTransition(options) {
+  const { targetColor, transitionDuration = 500 } = options;
+  const transitionRef = useRef({
+    targetOKLCH: convertColorToOKLCH(targetColor),
+    previousOKLCH: convertColorToOKLCH(targetColor),
+    isTransitioning: false,
+    progress: 1,
+    targetColorString: targetColor
   });
-  return `oklch(${modifiedL} ${modifiedC} ${modifiedH})`;
-}
-
-function getColorByAudioIntensity(baseOklchColor, intensityRatio) {
-  return getReactiveColor(baseOklchColor, intensityRatio, [
-    { property: OKLCHProperty.LIGHTNESS, min: 0.3, max: 0.7 }
-  ]);
-}
-
-function getColorByFrequencyPosition(baseOklchColor, positionRatio) {
-  return getReactiveColor(baseOklchColor, positionRatio, [
-    { property: OKLCHProperty.HUE, min: 240, max: 0 }
-  ]);
-}
-
-function getColorBySpectrum(baseOklchColor, positionRatio) {
-  return getReactiveColor(baseOklchColor, positionRatio, [
-    { property: OKLCHProperty.HUE, min: 0, max: 360 }
-  ]);
-}
-
-function getColorByDynamicIntensity(baseOklchColor, intensityRatio) {
-  return getReactiveColor(baseOklchColor, intensityRatio, [
-    { property: OKLCHProperty.LIGHTNESS, min: 0.4, max: 0.6 },
-    { property: OKLCHProperty.CHROMA, min: 0.2, max: 0.3 }
-  ]);
+  const timeRef = useRef({
+    transitionStartTime: 0
+  });
+  useEffect(() => {
+    if (targetColor !== transitionRef.current.targetColorString) {
+      transitionRef.current.previousOKLCH = transitionRef.current.targetOKLCH;
+      transitionRef.current.targetOKLCH = convertColorToOKLCH(targetColor);
+      transitionRef.current.targetColorString = targetColor;
+      transitionRef.current.isTransitioning = true;
+      transitionRef.current.progress = 0;
+      timeRef.current.transitionStartTime = performance.now();
+    }
+  }, [targetColor]);
+  const interpolateOKLCH = useCallback(
+    (colorA, colorB, progress) => {
+      const [l1, c1, h1] = colorA;
+      const [l2, c2, h2] = colorB;
+      let hDiff = h2 - h1;
+      if (hDiff > 180) hDiff -= 360;
+      if (hDiff < -180) hDiff += 360;
+      const interpolatedHue = (h1 + hDiff * progress) % 360;
+      return [
+        l1 + (l2 - l1) * progress,
+        c1 + (c2 - c1) * progress,
+        interpolatedHue < 0 ? interpolatedHue + 360 : interpolatedHue
+      ];
+    },
+    []
+  );
+  const updateTransition = useCallback(() => {
+    if (!transitionRef.current.isTransitioning) return;
+    const now = performance.now();
+    const elapsed = now - timeRef.current.transitionStartTime;
+    transitionRef.current.progress = Math.min(elapsed / transitionDuration, 1);
+    if (transitionRef.current.progress >= 1) {
+      transitionRef.current.isTransitioning = false;
+      transitionRef.current.progress = 1;
+    }
+  }, [transitionDuration]);
+  const getCurrentColor = useCallback(() => {
+    updateTransition();
+    if (!transitionRef.current.isTransitioning) {
+      return transitionRef.current.targetOKLCH;
+    }
+    return interpolateOKLCH(
+      transitionRef.current.previousOKLCH,
+      transitionRef.current.targetOKLCH,
+      transitionRef.current.progress
+    );
+  }, [updateTransition, interpolateOKLCH]);
+  const getColorString = useCallback(() => {
+    const [lightness, chroma, hue] = getCurrentColor();
+    return OKLCHToCSS(lightness, chroma, hue);
+  }, [getCurrentColor]);
+  const isTransitioning = useCallback(() => {
+    return transitionRef.current.isTransitioning;
+  }, []);
+  return {
+    getCurrentColor,
+    getColorString,
+    isTransitioning,
+    updateTransition
+  };
 }
 
 const WAVEFORM_COLOR_MODES = {
@@ -5744,22 +5822,22 @@ function drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, lineCol
   });
   ctx.stroke();
 }
-function applySegmentColor(ctx, segmentStartIndex, dataArray, baseOklchColor, colorMode) {
+function applySegmentColor(ctx, segmentStartIndex, dataArray, currentColor, colorMode) {
   const positionRatio = calculatePositionRatio(segmentStartIndex, dataArray.length);
   const normalizedValue = normalizeAudioValue(dataArray[segmentStartIndex]);
   const amplitudeRatio = calculateAmplitudeRatio(normalizedValue);
   switch (colorMode) {
     case WAVEFORM_COLOR_MODES.AMPLITUDE:
-      ctx.strokeStyle = getColorByAudioIntensity(baseOklchColor, amplitudeRatio);
+      ctx.strokeStyle = getColorByAudioIntensity(currentColor, amplitudeRatio);
       break;
     case WAVEFORM_COLOR_MODES.FREQUENCY:
-      ctx.strokeStyle = getColorByFrequencyPosition(baseOklchColor, positionRatio);
+      ctx.strokeStyle = getColorByFrequencyPosition(currentColor, positionRatio);
       break;
     case WAVEFORM_COLOR_MODES.SPECTRUM:
-      ctx.strokeStyle = getColorBySpectrum(baseOklchColor, positionRatio);
+      ctx.strokeStyle = getColorBySpectrum(currentColor, positionRatio);
       break;
     case WAVEFORM_COLOR_MODES.DYNAMIC:
-      ctx.strokeStyle = getColorByDynamicIntensity(baseOklchColor, amplitudeRatio);
+      ctx.strokeStyle = getColorByDynamicIntensity(currentColor, amplitudeRatio);
       break;
   }
 }
@@ -5799,17 +5877,25 @@ function useAudioVisualizerWaveform(options) {
     lineColor = "#ffffff",
     lineWidth = 2,
     colorMode = WAVEFORM_COLOR_MODES.STATIC,
-    segmentCount = 40
+    segmentCount = 40,
+    colorTransitionDuration = 1e3,
+    duration,
+    isActive
   } = options || {};
-  const colorRef = useRef({
-    baseOKlchColor: convertColorToOKLCH(lineColor),
-    lineColor
+  const { getColorString, getCurrentColor } = useColorTransition({
+    targetColor: lineColor,
+    transitionDuration: colorTransitionDuration
   });
-  useEffect(() => {
-    colorRef.current.baseOKlchColor = convertColorToOKLCH(lineColor);
-    colorRef.current.lineColor = lineColor;
-  }, [lineColor]);
   const canvasRef = useRef(null);
+  const previousDuration = useRef(duration);
+  useEffect(() => {
+    if (duration !== previousDuration.current && !isActive) {
+      const ctx = canvasRef.current?.getContext("2d");
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvasRef.current?.width ?? 0, canvasRef.current?.height ?? 0);
+    }
+    previousDuration.current = duration;
+  }, [duration, isActive]);
   const drawWaveform = useCallback(
     (dataArray) => {
       const canvas = canvasRef.current;
@@ -5821,20 +5907,20 @@ function useAudioVisualizerWaveform(options) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.lineWidth = lineWidth;
       if (colorMode === WAVEFORM_COLOR_MODES.STATIC) {
-        drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, colorRef.current.lineColor);
+        drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, getColorString());
       } else {
         drawSegmentedWaveform(
           ctx,
           dataArray,
           displayWidth,
           displayHeight,
-          colorRef.current.baseOKlchColor,
+          getCurrentColor(),
           colorMode,
           segmentCount
         );
       }
     },
-    [colorRef, lineWidth, colorMode, segmentCount]
+    [getCurrentColor, getColorString, lineWidth, colorMode, segmentCount]
   );
   return { canvasRef, drawWaveform };
 }
@@ -6280,84 +6366,6 @@ function calculateAmplifiedValue(normalizedValue, minHeight) {
   return minHeight + normalizedValue * (VISUALIZATION_PARAMS.MAX_NORMALIZED_VALUE - minHeight);
 }
 
-function OKLCHToCSS(lightness, chroma, hue) {
-  return `oklch(${lightness} ${chroma} ${hue})`;
-}
-
-function useColorTransition(options) {
-  const { targetColor, transitionDuration = 500 } = options;
-  const transitionRef = useRef({
-    targetOKLCH: convertColorToOKLCH(targetColor),
-    previousOKLCH: convertColorToOKLCH(targetColor),
-    isTransitioning: false,
-    progress: 1,
-    targetColorString: targetColor
-  });
-  const timeRef = useRef({
-    transitionStartTime: 0
-  });
-  useEffect(() => {
-    if (targetColor !== transitionRef.current.targetColorString) {
-      transitionRef.current.previousOKLCH = transitionRef.current.targetOKLCH;
-      transitionRef.current.targetOKLCH = convertColorToOKLCH(targetColor);
-      transitionRef.current.targetColorString = targetColor;
-      transitionRef.current.isTransitioning = true;
-      transitionRef.current.progress = 0;
-      timeRef.current.transitionStartTime = performance.now();
-    }
-  }, [targetColor]);
-  const interpolateOKLCH = useCallback(
-    (colorA, colorB, progress) => {
-      const [l1, c1, h1] = colorA;
-      const [l2, c2, h2] = colorB;
-      let hDiff = h2 - h1;
-      if (hDiff > 180) hDiff -= 360;
-      if (hDiff < -180) hDiff += 360;
-      const interpolatedHue = (h1 + hDiff * progress) % 360;
-      return [
-        l1 + (l2 - l1) * progress,
-        c1 + (c2 - c1) * progress,
-        interpolatedHue < 0 ? interpolatedHue + 360 : interpolatedHue
-      ];
-    },
-    []
-  );
-  const updateTransition = useCallback(() => {
-    if (!transitionRef.current.isTransitioning) return;
-    const now = performance.now();
-    const elapsed = now - timeRef.current.transitionStartTime;
-    transitionRef.current.progress = Math.min(elapsed / transitionDuration, 1);
-    if (transitionRef.current.progress >= 1) {
-      transitionRef.current.isTransitioning = false;
-      transitionRef.current.progress = 1;
-    }
-  }, [transitionDuration]);
-  const getCurrentColor = useCallback(() => {
-    updateTransition();
-    if (!transitionRef.current.isTransitioning) {
-      return transitionRef.current.targetOKLCH;
-    }
-    return interpolateOKLCH(
-      transitionRef.current.previousOKLCH,
-      transitionRef.current.targetOKLCH,
-      transitionRef.current.progress
-    );
-  }, [updateTransition, interpolateOKLCH]);
-  const getColorString = useCallback(() => {
-    const [lightness, chroma, hue] = getCurrentColor();
-    return OKLCHToCSS(lightness, chroma, hue);
-  }, [getCurrentColor]);
-  const isTransitioning = useCallback(() => {
-    return transitionRef.current.isTransitioning;
-  }, []);
-  return {
-    getCurrentColor,
-    getColorString,
-    isTransitioning,
-    updateTransition
-  };
-}
-
 function useAudioVisualizerFrequencyBars(options) {
   const {
     barColor = "#FFFFFF",
@@ -6366,9 +6374,20 @@ function useAudioVisualizerFrequencyBars(options) {
     heightMultiplier = 1.2,
     minHeight = 0,
     colorMode = "static",
-    colorTransitionDuration = 1e3
+    colorTransitionDuration = 1e3,
+    isActive,
+    duration
   } = options || {};
   const canvasRef = useRef(null);
+  const previousDuration = useRef(duration);
+  useEffect(() => {
+    if (duration !== previousDuration.current && !isActive) {
+      const ctx = canvasRef.current?.getContext("2d");
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvasRef.current?.width ?? 0, canvasRef.current?.height ?? 0);
+    }
+    previousDuration.current = duration;
+  }, [duration, isActive]);
   const { getColorString, getCurrentColor } = useColorTransition({
     targetColor: barColor,
     transitionDuration: colorTransitionDuration
@@ -6482,7 +6501,9 @@ function AudioVisualizerFrequencyBars(props) {
     heightMultiplier,
     minHeight,
     colorMode,
-    colorTransitionDuration
+    colorTransitionDuration,
+    isActive,
+    duration
   });
   const mergedRef = useComposedRefs(ref, canvasRef);
   useAudioAnalyzer({
