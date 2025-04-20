@@ -1,4 +1,3 @@
-import { convertColorToOKLCH } from '@lib/utils/convertColorToOKLCH/convertColorToOKLCH';
 import { useRef, useCallback, useEffect } from 'react';
 import {
   type WaveformColorMode,
@@ -6,6 +5,7 @@ import {
   drawSegmentedWaveform,
   WAVEFORM_COLOR_MODES,
 } from '@lib/AudioVisualizerWaveform/drawingUtils';
+import { useColorTransition } from '@lib/useColorTransition/useColorTransition';
 
 export type useAudioVisualizerWaveformOptions = {
   /**
@@ -29,6 +29,22 @@ export type useAudioVisualizerWaveformOptions = {
    * @default 40
    */
   segmentCount?: number;
+
+  /**
+   * Duration of the color transition in milliseconds
+   * @default 1000
+   */
+  colorTransitionDuration?: number;
+
+  /**
+   * Duration of the audio to visualize
+   */
+  duration?: number;
+
+  /**
+   * Whether the waveform is active
+   */
+  isActive?: boolean;
 };
 
 export type useAudioVisualizerWaveformReturn = {
@@ -44,23 +60,29 @@ export function useAudioVisualizerWaveform(
     lineWidth = 2,
     colorMode = WAVEFORM_COLOR_MODES.STATIC,
     segmentCount = 40,
+    colorTransitionDuration = 1000,
+    duration,
+    isActive,
   } = options || {};
 
-  /**
-   * Create stable reference to color values to prevent animation restarting
-   * when color changes to allow for smooth transitioning between colors
-   */
-  const colorRef = useRef({
-    baseOKlchColor: convertColorToOKLCH(lineColor),
-    lineColor,
+  const { getColorString, getCurrentColor } = useColorTransition({
+    targetColor: lineColor,
+    transitionDuration: colorTransitionDuration,
   });
 
-  useEffect(() => {
-    colorRef.current.baseOKlchColor = convertColorToOKLCH(lineColor);
-    colorRef.current.lineColor = lineColor;
-  }, [lineColor]);
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const previousDuration = useRef<number | null>(duration);
+
+  useEffect(() => {
+    if (duration !== previousDuration.current && !isActive) {
+      const ctx = canvasRef.current?.getContext('2d');
+      if (!ctx) return;
+
+      ctx.clearRect(0, 0, canvasRef.current?.width ?? 0, canvasRef.current?.height ?? 0);
+    }
+
+    previousDuration.current = duration;
+  }, [duration, isActive]);
 
   const drawWaveform = useCallback(
     (dataArray: Uint8Array) => {
@@ -78,20 +100,20 @@ export function useAudioVisualizerWaveform(
       ctx.lineWidth = lineWidth;
 
       if (colorMode === WAVEFORM_COLOR_MODES.STATIC) {
-        drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, colorRef.current.lineColor);
+        drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, getColorString());
       } else {
         drawSegmentedWaveform(
           ctx,
           dataArray,
           displayWidth,
           displayHeight,
-          colorRef.current.baseOKlchColor,
+          getCurrentColor(),
           colorMode,
           segmentCount,
         );
       }
     },
-    [colorRef, lineWidth, colorMode, segmentCount],
+    [getCurrentColor, getColorString, lineWidth, colorMode, segmentCount],
   );
 
   return { canvasRef, drawWaveform };
