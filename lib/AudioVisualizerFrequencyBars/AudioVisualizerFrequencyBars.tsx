@@ -31,7 +31,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     barGapRatio,
     barCount,
     heightMultiplier,
-    minHeight,
+    minBarHeight,
     colorMode,
     colorTransitionDuration,
     ...restProps
@@ -42,7 +42,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     barGapRatio,
     barCount,
     heightMultiplier,
-    minHeight,
+    minBarHeight,
     colorMode,
     colorTransitionDuration,
     isActive,
