@@ -1,4 +1,12 @@
-import { VISUALIZATION_PARAMS } from '@lib/AudioVisualizerFrequencyBars/visualizationParams';
+/**
+ * Maximum value for audio data (8-bit)
+ */
+const MAX_AUDIO_VALUE = 255;
+
+/**
+ * Maximum normalized value (represents 100% in the 0-1 scale)
+ */
+const MAX_NORMALIZED_VALUE = 1;
 
 /**
  * Constants for frequency distribution calculation
@@ -72,16 +80,21 @@ export function calculateLogarithmicIndex(
   dataArrayLength: number,
   denominator: number,
 ): number {
+  if (dataArrayLength <= 0) return 0;
+
+  const clampedRatio = Math.max(0, Math.min(1, ratio));
+
   return Math.round(
     ((Math.pow(
       FREQUENCY_DISTRIBUTION.LOG_BASE,
-      FREQUENCY_DISTRIBUTION.EXPONENT_MULTIPLIER * ratio,
+      FREQUENCY_DISTRIBUTION.EXPONENT_MULTIPLIER * clampedRatio,
     ) -
       FREQUENCY_DISTRIBUTION.ZERO_POINT_OFFSET) /
       denominator) *
       (dataArrayLength - 1),
   );
 }
+
 /**
  * Amplifies a normalized audio value using a minimum height threshold.
  *
@@ -101,7 +114,13 @@ export function calculateLogarithmicIndex(
  * @returns The amplified value in 0-1 range
  */
 export function calculateAmplifiedValue(normalizedValue: number, minHeight: number): number {
-  return minHeight + normalizedValue * (VISUALIZATION_PARAMS.MAX_NORMALIZED_VALUE - minHeight);
+  const clampedValue = Math.max(0, Math.min(1, normalizedValue));
+
+  if (minHeight >= 1) return 1;
+
+  const result = minHeight + clampedValue * (MAX_NORMALIZED_VALUE - minHeight);
+
+  return Math.round(result * 100) / 100;
 }
 
 /**
@@ -126,7 +145,7 @@ export function calculateFrequencyBandAverage(
   dataArray: Uint8Array,
   startIndex: number,
   endIndex: number,
-  maxValue: number = VISUALIZATION_PARAMS.MAX_AUDIO_VALUE,
+  maxValue: number = MAX_AUDIO_VALUE,
 ): { normalizedValue: number; rawAverage: number } {
   let sum = 0;
   let sampleCount = 0;
