@@ -96,5 +96,9 @@ export function getReactiveColor(
     }
   });
 
-  return `oklch(${modifiedL} ${modifiedC} ${modifiedH})`;
+  const roundedL = Math.round(modifiedL * 1000) / 1000;
+  const roundedC = Math.round(modifiedC * 1000) / 1000;
+  const roundedH = Math.round(modifiedH);
+
+  return `oklch(${roundedL} ${roundedC} ${roundedH})`;
 }
