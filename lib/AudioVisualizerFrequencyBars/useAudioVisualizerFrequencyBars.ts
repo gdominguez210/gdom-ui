@@ -4,12 +4,12 @@ import {
   calculateLogarithmicIndexRatio,
   calculateLogarithmicIndex,
   calculateAmplifiedValue,
+  calculateFrequencyBandAverage,
 } from '@lib/AudioVisualizerFrequencyBars/frequencyDistribution';
 import { getColorByFrequencyPosition } from '@lib/utils/getColorByFrequencyPosition/getColorByFrequencyPosition';
 import { getColorByAudioIntensity } from '@lib/utils/getColorByAudioIntensity/getColorByAudioIntensity';
 import { getColorBySpectrum } from '@lib/utils/getColorBySpectrum/getColorBySpectrum';
 import { getColorByDynamicIntensity } from '@lib/utils/getColorByDynamicIntensity/getColorByDynamicIntensity';
-import { VISUALIZATION_PARAMS } from '@lib/AudioVisualizerFrequencyBars/visualizationParams';
 import { useColorTransition } from '@lib/useColorTransition/useColorTransition';
 export type useAudioVisualizerFrequencyBarOptions = {
   /**
@@ -24,12 +24,14 @@ export type useAudioVisualizerFrequencyBarOptions = {
 
   /**
    * Color of the frequency bars
+   * @default '#FFFFFF'
    */
   barColor?: string;
 
   /**
    * Number of frequency bars to display
    * Lower values will group frequencies together for broader analysis
+   * @default 128
    */
   barCount?: number;
 
@@ -37,23 +39,33 @@ export type useAudioVisualizerFrequencyBarOptions = {
    * Gap between bars as a proportion of canvas width (0-1)
    * For example, 0.01 would make gaps 1% of the total width
    * Default is auto-calculated based on bar count
+   * @default 0.004
    */
   barGapRatio?: number;
 
   /**
    * Height multiplier to enhance visualization
    * Higher values make bars taller
+   * @default 1
    */
   heightMultiplier?: number;
 
   /**
    * Minimum height for bars as percentage of canvas height (0-1)
    * Ensures even quiet frequencies have visible presence
+   * @default 0
    */
   minHeight?: number;
 
   /**
+   * Minimum width for bars (in pixels)
+   * @default 1
+   */
+  minBarWidth?: number;
+
+  /**
    * Whether to use reactive color
+   * @default 'static'
    */
   colorMode?: 'static' | 'frequency' | 'intensity' | 'spectrum' | 'dynamic';
 
@@ -76,8 +88,9 @@ export function useAudioVisualizerFrequencyBars(
     barColor = '#FFFFFF',
     barGapRatio = 0.004,
     barCount = 128,
-    heightMultiplier = 1.2,
+    heightMultiplier = 1,
     minHeight = 0,
+    minBarWidth = 1,
     colorMode = 'static',
     colorTransitionDuration = 1000,
     isActive,
@@ -123,10 +136,7 @@ export function useAudioVisualizerFrequencyBars(
       const gapWidth = displayWidth * barGapRatio;
 
       const totalGapWidth = (barCount - 1) * gapWidth;
-      const barWidth = Math.max(
-        VISUALIZATION_PARAMS.MIN_BAR_WIDTH,
-        (displayWidth - totalGapWidth) / barCount,
-      );
+      const barWidth = Math.max(minBarWidth, (displayWidth - totalGapWidth) / barCount);
 
       const logDistributionDenominator = calculateLogarithmicDistributionDenominator();
 
@@ -146,18 +156,11 @@ export function useAudioVisualizerFrequencyBars(
           logDistributionDenominator,
         );
 
-        let sum = 0;
-        let sampleCount = 0;
-
-        for (let j = logIndex; j <= nextLogIndex; j++) {
-          if (j < dataArray.length) {
-            sum += dataArray[j] ?? 0;
-            sampleCount++;
-          }
-        }
-
-        const averageValue = sampleCount > 0 ? sum / sampleCount : 0;
-        const normalizedValue = averageValue / VISUALIZATION_PARAMS.MAX_AUDIO_VALUE;
+        const { normalizedValue } = calculateFrequencyBandAverage(
+          dataArray,
+          logIndex,
+          nextLogIndex,
+        );
 
         const amplifiedValue = calculateAmplifiedValue(normalizedValue, minHeight);
         const barHeight = Math.min(
@@ -196,6 +199,7 @@ export function useAudioVisualizerFrequencyBars(
       barGapRatio,
       getColorString,
       getCurrentColor,
+      minBarWidth,
     ],
   );
 

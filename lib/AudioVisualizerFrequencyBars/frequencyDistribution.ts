@@ -103,3 +103,44 @@ export function calculateLogarithmicIndex(
 export function calculateAmplifiedValue(normalizedValue: number, minHeight: number): number {
   return minHeight + normalizedValue * (VISUALIZATION_PARAMS.MAX_NORMALIZED_VALUE - minHeight);
 }
+
+/**
+ * Calculates the average frequency value for a specific frequency band.
+ *
+ * This function aggregates multiple frequency data points into a single value,
+ * creating a "band" or "bar" from the raw frequency data. It works by:
+ * 1. Taking a range of indices from the frequency data array
+ * 2. Calculating the sum of all values in that range
+ * 3. Determining the average value for that frequency band
+ *
+ * Condenses a potentially large number of frequency data points into a single value,
+ * allowing for a more readable visualization.
+ *
+ * @param dataArray - The raw frequency data array from the analyzer
+ * @param startIndex - The starting index in the frequency data array for this band
+ * @param endIndex - The ending index in the frequency data array for this band
+ * @param maxValue - The maximum possible value in the frequency data (for normalization)
+ * @returns An object containing the normalized average value (0-1) and the raw average
+ */
+export function calculateFrequencyBandAverage(
+  dataArray: Uint8Array,
+  startIndex: number,
+  endIndex: number,
+  maxValue: number = VISUALIZATION_PARAMS.MAX_AUDIO_VALUE,
+): { normalizedValue: number; rawAverage: number } {
+  let sum = 0;
+  let sampleCount = 0;
+
+  for (let j = startIndex; j <= endIndex; j++) {
+    if (j < dataArray.length) {
+      sum += dataArray[j] ?? 0;
+      sampleCount++;
+    }
+  }
+
+  const rawAverage = sampleCount > 0 ? sum / sampleCount : 0;
+
+  const normalizedValue = rawAverage / maxValue;
+
+  return { normalizedValue, rawAverage };
+}
