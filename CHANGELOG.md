@@ -1,3 +1,10 @@
+## [1.31.1](https://github.com/gdominguez210/gdom-ui/compare/v1.31.0...v1.31.1) (2025-04-21)
+
+
+### Bug Fixes
+
+* **lib/utils/getReactiveColor:** round to the thousands decimal place ([5593575](https://github.com/gdominguez210/gdom-ui/commit/559357525fca7d32aadbd8acab8db8d81510775a))
+
 # [1.31.0](https://github.com/gdominguez210/gdom-ui/compare/v1.30.0...v1.31.0) (2025-04-20)
 
 
