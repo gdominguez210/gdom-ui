@@ -65,7 +65,7 @@ export default {
       description: 'Height multiplier for bars',
       table: {
         type: { summary: 'number' },
-        defaultValue: { summary: '1.2' },
+        defaultValue: { summary: '1' },
       },
     },
     minBarHeight: {
@@ -171,7 +171,7 @@ export const Primary: StoryObj<typeof AudioVisualizerFrequencyBars> = {
     barColor: PREDEFINED_COLORS.Blue,
     colorMode: 'intensity',
     barCount: 128,
-    heightMultiplier: 1.2,
+    heightMultiplier: 1,
     minBarHeight: 0,
     minBarWidth: 1,
     barGapRatio: 0.004,
