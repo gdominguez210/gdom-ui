@@ -6,10 +6,10 @@ import {
   calculateAmplifiedValue,
   calculateFrequencyBandAverage,
 } from '@lib/AudioVisualizerFrequencyBars/frequencyDistribution';
-import { getColorByFrequencyPosition } from '@lib/utils/getColorByFrequencyPosition/getColorByFrequencyPosition';
-import { getColorByAudioIntensity } from '@lib/utils/getColorByAudioIntensity/getColorByAudioIntensity';
-import { getColorBySpectrum } from '@lib/utils/getColorBySpectrum/getColorBySpectrum';
-import { getColorByDynamicIntensity } from '@lib/utils/getColorByDynamicIntensity/getColorByDynamicIntensity';
+import {
+  FREQUENCY_BARS_COLOR_MODES,
+  getBarColor,
+} from '@lib/AudioVisualizerFrequencyBars/drawingUtils';
 import { useColorTransition } from '@lib/useColorTransition/useColorTransition';
 export type useAudioVisualizerFrequencyBarOptions = {
   /**
@@ -91,7 +91,7 @@ export function useAudioVisualizerFrequencyBars(
     heightMultiplier = 1,
     minBarHeight = 0,
     minBarWidth = 1,
-    colorMode = 'static',
+    colorMode = FREQUENCY_BARS_COLOR_MODES.STATIC,
     colorTransitionDuration = 1000,
     isActive,
     duration,
@@ -129,7 +129,7 @@ export function useAudioVisualizerFrequencyBars(
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      if (colorMode === 'static') {
+      if (colorMode === FREQUENCY_BARS_COLOR_MODES.STATIC) {
         ctx.fillStyle = getColorString();
       }
 
@@ -173,19 +173,14 @@ export function useAudioVisualizerFrequencyBars(
         const positionRatio = i / barCount;
         const intensityRatio = normalizedValue;
 
-        switch (colorMode) {
-          case 'frequency':
-            ctx.fillStyle = getColorByFrequencyPosition(getCurrentColor(), positionRatio);
-            break;
-          case 'intensity':
-            ctx.fillStyle = getColorByAudioIntensity(getCurrentColor(), intensityRatio);
-            break;
-          case 'spectrum':
-            ctx.fillStyle = getColorBySpectrum(getCurrentColor(), positionRatio);
-            break;
-          case 'dynamic':
-            ctx.fillStyle = getColorByDynamicIntensity(getCurrentColor(), intensityRatio);
-            break;
+        if (colorMode !== FREQUENCY_BARS_COLOR_MODES.STATIC) {
+          const dynamicColor = getBarColor(
+            getCurrentColor(),
+            colorMode,
+            positionRatio,
+            intensityRatio,
+          );
+          ctx.fillStyle = dynamicColor;
         }
 
         ctx.fillRect(x, displayHeight - barHeight, barWidth, barHeight);
