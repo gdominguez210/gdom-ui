@@ -68,12 +68,20 @@ export default {
         defaultValue: { summary: '1.2' },
       },
     },
-    minHeight: {
+    minBarHeight: {
       control: { type: 'range', min: 0, max: 0.5, step: 0.05 },
       description: 'Minimum height of bars (0-1)',
       table: {
         type: { summary: 'number' },
         defaultValue: { summary: '0' },
+      },
+    },
+    minBarWidth: {
+      control: { type: 'range', min: 1, max: 10, step: 1 },
+      description: 'Minimum width of bars (in pixels)',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '1' },
       },
     },
     barGapRatio: {

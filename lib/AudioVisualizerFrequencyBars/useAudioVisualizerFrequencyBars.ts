@@ -55,7 +55,7 @@ export type useAudioVisualizerFrequencyBarOptions = {
    * Ensures even quiet frequencies have visible presence
    * @default 0
    */
-  minHeight?: number;
+  minBarHeight?: number;
 
   /**
    * Minimum width for bars (in pixels)
@@ -89,7 +89,7 @@ export function useAudioVisualizerFrequencyBars(
     barGapRatio = 0.004,
     barCount = 128,
     heightMultiplier = 1,
-    minHeight = 0,
+    minBarHeight = 0,
     minBarWidth = 1,
     colorMode = 'static',
     colorTransitionDuration = 1000,
@@ -162,7 +162,7 @@ export function useAudioVisualizerFrequencyBars(
           nextLogIndex,
         );
 
-        const amplifiedValue = calculateAmplifiedValue(normalizedValue, minHeight);
+        const amplifiedValue = calculateAmplifiedValue(normalizedValue, minBarHeight);
         const barHeight = Math.min(
           displayHeight,
           amplifiedValue * displayHeight * heightMultiplier,
@@ -194,7 +194,7 @@ export function useAudioVisualizerFrequencyBars(
     [
       barCount,
       heightMultiplier,
-      minHeight,
+      minBarHeight,
       colorMode,
       barGapRatio,
       getColorString,
