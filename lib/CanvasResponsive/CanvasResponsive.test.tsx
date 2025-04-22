@@ -3,7 +3,6 @@ import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
 import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
 import { useCanvasResponsive } from '@lib/CanvasResponsive/useCanvasResponsive';
 
-// Mock the dependencies
 vi.mock('@lib/CanvasResponsive/useCanvasResponsive', () => ({
   useCanvasResponsive: vi.fn().mockImplementation(() => {
     const canvasRef = { current: document.createElement('canvas') };
@@ -11,9 +10,8 @@ vi.mock('@lib/CanvasResponsive/useCanvasResponsive', () => ({
   }),
 }));
 
-describe('CanvasResponsive', () => {
+describe('CanvasResponsive should...', () => {
   beforeEach(() => {
-    // Reset all mocks before each test
     vi.clearAllMocks();
   });
 
@@ -21,7 +19,7 @@ describe('CanvasResponsive', () => {
     vi.restoreAllMocks();
   });
 
-  test('renders canvas element with default classes', () => {
+  test('render the canvas element with default classes', () => {
     render(<CanvasResponsive data-testid="responsive-canvas" />);
 
     const canvas = screen.getByTestId('responsive-canvas');
@@ -30,7 +28,7 @@ describe('CanvasResponsive', () => {
     expect(canvas).toHaveClass('w-full', 'max-w-full', 'object-contain');
   });
 
-  test('applies additional className when provided', () => {
+  test('apply additional classes when provided', () => {
     render(
       <CanvasResponsive
         data-testid="responsive-canvas"
@@ -48,7 +46,7 @@ describe('CanvasResponsive', () => {
     );
   });
 
-  test('forwards additional props to canvas element', () => {
+  test('forward additional props to the canvas element', () => {
     render(
       <CanvasResponsive
         data-testid="responsive-canvas"
@@ -66,7 +64,7 @@ describe('CanvasResponsive', () => {
     expect(canvas).toHaveAttribute('aria-label', 'A responsive canvas');
   });
 
-  test('forwards ref to canvas element', () => {
+  test('forward the ref to the canvas element', () => {
     const ref = { current: null };
 
     render(
@@ -80,14 +78,13 @@ describe('CanvasResponsive', () => {
     expect(ref.current).toBe(canvas);
   });
 
-  test('uses useCanvasResponsive hook for canvas responsiveness', () => {
+  test('use the useCanvasResponsive hook for canvas responsiveness', () => {
     render(<CanvasResponsive data-testid="responsive-canvas" />);
 
-    // Check that the hook was called at least once
     expect(useCanvasResponsive).toHaveBeenCalled();
   });
 
-  test('accepts and passes frameRate prop', () => {
+  test('accept and pass the frameRate prop', () => {
     render(
       <CanvasResponsive
         data-testid="responsive-canvas"
@@ -98,7 +95,7 @@ describe('CanvasResponsive', () => {
     expect(useCanvasResponsive).toHaveBeenCalledWith(expect.objectContaining({ frameRate: 30 }));
   });
 
-  test('accepts and passes onResize prop', () => {
+  test('accept and pass the onResize prop', () => {
     const onResize = vi.fn();
 
     render(
