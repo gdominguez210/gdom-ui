@@ -11,7 +11,9 @@
  * @returns Normalized offset from center (-1 to 1)
  */
 export function normalizeAudioValue(value: number): number {
-  return (value - 128) / 128;
+  const normalized = (value - 128) / 128;
+
+  return Math.round(normalized * 100) / 100;
 }
 
 /**
