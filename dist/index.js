@@ -5522,7 +5522,8 @@ function useAudioContext() {
 }
 
 function normalizeAudioValue(value) {
-  return (value - 128) / 128;
+  const normalized = (value - 128) / 128;
+  return Math.round(normalized * 100) / 100;
 }
 function calculateWaveformY(normalizedValue, centerY) {
   return centerY + normalizedValue * centerY;
@@ -7270,6 +7271,114 @@ const AudioPlaylistCompoundComponent = {
   })
 };
 
+function calculateMinGapWidth(displayWidth, minGapPercent = 1e-3) {
+  return Math.max(1, displayWidth * minGapPercent);
+}
+function getActualGapWidth(displayWidth, barGapRatio, minGapPercent = 1e-3) {
+  const minGapWidth = calculateMinGapWidth(displayWidth, minGapPercent);
+  const desiredGapWidth = displayWidth * barGapRatio;
+  return Math.max(minGapWidth, desiredGapWidth);
+}
+function calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth) {
+  return Math.floor((displayWidth + gapWidth) / (minBarWidth + gapWidth));
+}
+function calculateSamplingRate(dataLength, maxBarsInView) {
+  if (dataLength <= maxBarsInView) {
+    return 1;
+  }
+  return Math.ceil(dataLength / maxBarsInView);
+}
+function sampleWaveformData(waveformData, samplingRate) {
+  if (samplingRate === 1) {
+    return waveformData;
+  }
+  return waveformData.filter((_, i) => i % samplingRate === 0);
+}
+function calculateBarWidth(displayWidth, numBars, gapWidth, minBarWidth) {
+  const totalGapWidth = (numBars - 1) * gapWidth;
+  const availableWidthForBars = displayWidth - totalGapWidth;
+  return Math.max(minBarWidth, availableWidthForBars / numBars);
+}
+
+const useAudioWaveform = (options) => {
+  const {
+    waveformData,
+    barColor = "#eeeeee",
+    getBarColor,
+    barGapRatio = 35e-4,
+    heightScale = 1,
+    minBarWidth = 1
+  } = options;
+  const canvasRef = useRef(null);
+  const drawWaveform = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const displayWidth = canvas.clientWidth;
+    const displayHeight = canvas.clientHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const gapWidth = getActualGapWidth(displayWidth, barGapRatio);
+    const maxBarsInView = calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth);
+    const samplingRate = calculateSamplingRate(waveformData.length, maxBarsInView);
+    const displayData = sampleWaveformData(waveformData, samplingRate);
+    const barWidth = calculateBarWidth(displayWidth, displayData.length, gapWidth, minBarWidth);
+    const centerY = displayHeight / 2;
+    const maxBarHeight = displayHeight * heightScale;
+    displayData.forEach((value, index) => {
+      const x = index * (barWidth + gapWidth);
+      const barHeight = value * maxBarHeight;
+      const originalIndex = index * samplingRate;
+      const position = waveformData.length > 1 ? originalIndex / (waveformData.length - 1) : 0;
+      const barInfo = {
+        position,
+        value,
+        index: originalIndex
+      };
+      if (getBarColor) {
+        ctx.fillStyle = getBarColor(barInfo);
+      } else {
+        ctx.fillStyle = barColor;
+      }
+      ctx.fillRect(x, centerY - barHeight / 2, barWidth, barHeight);
+    });
+  }, [barColor, getBarColor, heightScale, waveformData, barGapRatio, minBarWidth]);
+  return { canvasRef, drawWaveform };
+};
+
+function AudioWaveform(props) {
+  const {
+    ref,
+    barColor,
+    getBarColor,
+    barGapRatio,
+    minBarWidth,
+    heightScale,
+    waveformData,
+    ...restProps
+  } = props;
+  const { canvasRef, drawWaveform } = useAudioWaveform({
+    barColor,
+    getBarColor,
+    barGapRatio,
+    minBarWidth,
+    heightScale,
+    waveformData
+  });
+  const mergedRefs = useComposedRefs(canvasRef, ref);
+  useEffect(() => {
+    drawWaveform();
+  }, [drawWaveform]);
+  return /* @__PURE__ */ jsx(
+    CanvasResponsive,
+    {
+      ...restProps,
+      ref: mergedRefs,
+      onResize: drawWaveform
+    }
+  );
+}
+
 const falsyToString = (value)=>typeof value === "boolean" ? `${value}` : value === 0 ? "0" : value;
 const cx = clsx;
 const cva = (base, config)=>(props)=>{
@@ -7469,4 +7578,4 @@ function Button(props) {
   );
 }
 
-export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextPlaybackProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVisualizerFrequencyBars, AudioPlayerVisualizerWaveform, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistScrollableContainer, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackAuthorPrimitive, AudioPlaylistTrackImage, AudioPlaylistTrackImagePrimitive, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTrackTitlePrimitive, AudioPlaylistTracks, AudioVisualizerFrequencyBars, AudioVisualizerWaveform, Badge, Button, CanvasResponsive, Icon, formatAudioDurationForDisplay, useAudioPlayerContextPlayback, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer, useAudioVisualizerWaveform, useCanvasResponsive };
+export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextPlaybackProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVisualizerFrequencyBars, AudioPlayerVisualizerWaveform, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistScrollableContainer, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackAuthorPrimitive, AudioPlaylistTrackImage, AudioPlaylistTrackImagePrimitive, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTrackTitlePrimitive, AudioPlaylistTracks, AudioVisualizerFrequencyBars, AudioVisualizerWaveform, AudioWaveform, Badge, Button, CanvasResponsive, Icon, formatAudioDurationForDisplay, useAudioPlayerContextPlayback, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer, useAudioVisualizerWaveform, useCanvasResponsive };

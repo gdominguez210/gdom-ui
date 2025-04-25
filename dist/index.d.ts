@@ -788,6 +788,7 @@ export declare type AudioPlaylistTrackTitlePrimitiveProps<T extends ElementType 
 export declare type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> = Omit<AudioPlaylistTrackTitlePrimitiveProps<T>, 'children'>;
 
 declare type AudioTrackData = {
+    id: string;
     title: string;
     src: string;
     author: string;
@@ -801,6 +802,10 @@ export declare type AudioVisualizerFrequencyBarsProps = Omit<ComponentPropsWithR
 export declare function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps): JSX.Element;
 
 export declare type AudioVisualizerWaveformProps = Omit<ComponentPropsWithRef<'canvas'>, 'onResize'> & Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> & useAudioVisualizerWaveformOptions;
+
+export declare function AudioWaveform(props: AudioWaveformProps): JSX.Element;
+
+export declare type AudioWaveformProps = ComponentPropsWithRef<'canvas'> & useAudioWaveformOptions;
 
 export declare const Badge: ForwardRefExoticComponent<BadgeProps & RefAttributes<HTMLElement>>;
 
@@ -1087,6 +1092,37 @@ declare type useAudioVisualizerWaveformReturn = {
     drawWaveform: (dataArray: Uint8Array) => void;
 };
 
+declare type useAudioWaveformOptions = {
+    /**
+     * Waveform data array - normalized values between 0-1
+     */
+    waveformData: number[];
+    /**
+     * Color of the waveform
+     */
+    barColor?: string;
+    /**
+     * Function to determine bar color based on state
+     */
+    getBarColor?: (barInfo: WaveformBarInfo) => string;
+    /**
+     * Gap between bars as a proportion of canvas width (0-1)
+     * For example, 0.005 would make gaps 0.5% of the total width
+     * @default 0.003 (0.3% of canvas width)
+     */
+    barGapRatio?: number;
+    /**
+     * Minimum width for bars (in pixels)
+     * @default 1
+     */
+    minBarWidth?: number;
+    /**
+     * Height of the waveform as a percentage of canvas height
+     * @default 1 (100% of canvas height)
+     */
+    heightScale?: number;
+};
+
 /**
  * Hook to create a canvas that automatically scales to its size and device pixel ratio
  */
@@ -1116,6 +1152,21 @@ declare const WAVEFORM_COLOR_MODES: {
     readonly FREQUENCY: "frequency";
     readonly SPECTRUM: "spectrum";
     readonly DYNAMIC: "dynamic";
+};
+
+declare type WaveformBarInfo = {
+    /**
+     * Position in the waveform (0-1)
+     */
+    position: number;
+    /**
+     * Amplitude value (0-1)
+     */
+    value: number;
+    /**
+     * Index in the waveform data array
+     */
+    index: number;
 };
 
 /**

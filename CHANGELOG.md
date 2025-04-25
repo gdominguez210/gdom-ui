@@ -1,3 +1,15 @@
+# [1.32.0](https://github.com/gdominguez210/gdom-ui/compare/v1.31.1...v1.32.0) (2025-04-25)
+
+
+### Features
+
+* **lib/AudioPlayer/data:** add hardcoded waveform data for tracks ([a713c4e](https://github.com/gdominguez210/gdom-ui/commit/a713c4e063e87ab1935da63caa22dc8005128af1))
+* **lib/AudioWaveform/useAudioWaveform:** add useAudioWaveform ([686155b](https://github.com/gdominguez210/gdom-ui/commit/686155b73a019234992a17da0c5b70b628ccec77))
+* **lib/AudioWaveform:** add AudioWaveform component ([28a913b](https://github.com/gdominguez210/gdom-ui/commit/28a913b37edfbf392e592f3027ce0c9a3c25cef9))
+* **lib/utils/getWaveformData:** add getWaveformData function ([cacf872](https://github.com/gdominguez210/gdom-ui/commit/cacf87252fc02e31dc2a2754d5ba952ee3bd98aa))
+* **lib/utils/processAudioBuffer:** add processAudioBuffer function ([3adce81](https://github.com/gdominguez210/gdom-ui/commit/3adce81433ee90cc61ef4cdd794763a974488af5))
+* **lib/utils/processAudioFile:** add processAudioFile function ([bb4986c](https://github.com/gdominguez210/gdom-ui/commit/bb4986c9f2202f1491c54d8865d8e60aba447165))
+
 ## [1.31.1](https://github.com/gdominguez210/gdom-ui/compare/v1.31.0...v1.31.1) (2025-04-21)
 
 
