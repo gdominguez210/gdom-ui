@@ -1,0 +1,103 @@
+import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/blocks';
+import * as AudioWaveformStories from './AudioWaveform.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+
+<Meta of={AudioWaveformStories} />
+
+# AudioWaveform
+
+A highly customizable audio waveform visualization component that displays audio amplitude data as vertical bars.
+
+<DocumentationNav />
+
+## Features
+
+The AudioWaveform component provides several key features:
+
+- **Clean Waveform Visualization**: Displays audio amplitude data as vertical bars
+- **Customizable Appearance**: Control bar width, gap ratio, colors, and height to match your design
+- **Responsive Design**: Automatically scales to fit its container while maintaining visual proportions. The component intelligently samples data when there are too many points to display clearly, ensuring the waveform maintains visual quality across all device sizes while preserving the overall shape and important features.
+- **Performance Optimized**: Uses efficient canvas rendering for smooth visuals
+
+<Primary />
+## Props
+<Controls />
+
+## Stories
+
+<div className="rounded-md border border-slate-400 bg-slate-100 p-3 text-slate-700">
+  <div className="mb-1 font-bold">Usage Note</div>
+  <div>
+    <p className="mb-2">
+      This component expects pre-processed waveform data (an array of normalized amplitude values
+      between 0-1). It does not convert audio files to waveform data, as that conversion process
+      depends on specific application requirements and is left to the consumer.
+    </p>
+    <p className="mb-2">
+      <strong>Data Resolution:</strong> For optimal performance, a waveform data array of 100-1000
+      entries is recommended. While the component can handle larger datasets providing pre-sampled
+      data when possible will improve initial rendering performance.
+    </p>
+  </div>
+</div>
+
+<Stories
+  title=""
+  includePrimary={false}
+/>
+
+## Component Usage
+
+The AudioWaveform component can be used as a standalone visualization:
+
+### Basic Usage
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { AudioWaveform } from '@gdominguez210/gdom-ui/AudioWaveform';
+
+const MyWaveform = () => {
+
+    // Array of normalized amplitude values (0-1)
+    const waveformData = [0.5, 0.6, 0.8, 0.4, 0.7, 0.3, 0.9, ...];
+
+    return (
+        <AudioWaveform
+            waveformData={waveformData}
+            barColor="#333333"
+            barGapRatio={0.003}
+            minBarWidth={2}
+            heightScale={0.8}
+        />
+    );
+
+}; `} />
+
+## Advanced Customization
+
+For more advanced customization, you can use the `getBarColor` function to provide dynamic coloring:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+<AudioWaveform
+  waveformData={waveformData}
+  getBarColor={(barInfo) => {
+    // barInfo contains: position, value, index
+    
+    // Example: Color bars based on amplitude
+    if (barInfo.value > 0.7) return '#ff3300';  // Loud sections
+    if (barInfo.value > 0.4) return '#ff9900';  // Medium sections
+    return '#cccccc';                          // Quiet sections
+    
+    // Example: Color based on position
+    // return \`hsl(\${barInfo.position * 360}, 100%, 50%)\`;  // Rainbow effect
+  }}
+  barGapRatio={0.003}
+  minBarWidth={2}
+/>
+`}
+/>
