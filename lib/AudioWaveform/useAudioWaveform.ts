@@ -1,4 +1,11 @@
 import { useCallback, useRef } from 'react';
+import {
+  getActualGapWidth,
+  calculateMaxBarsInView,
+  calculateSamplingRate,
+  sampleWaveformData,
+  calculateBarWidth,
+} from '@lib/AudioWaveform/drawingUtils';
 
 export type WaveformBarInfo = {
   /**
@@ -47,7 +54,7 @@ export type useAudioWaveformOptions = {
   minBarWidth?: number;
   /**
    * Height of the waveform as a percentage of canvas height
-   * @default 0.8 (80% of canvas height)
+   * @default 1 (100% of canvas height)
    */
   heightScale?: number;
 };
@@ -58,7 +65,7 @@ export const useAudioWaveform = (options: useAudioWaveformOptions) => {
     barColor = '#eeeeee',
     getBarColor,
     barGapRatio = 0.0035,
-    heightScale = 0.8,
+    heightScale = 1,
     minBarWidth = 1,
   } = options;
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -75,40 +82,38 @@ export const useAudioWaveform = (options: useAudioWaveformOptions) => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const totalBars = waveformData.length;
+    const gapWidth = getActualGapWidth(displayWidth, barGapRatio);
+
+    const maxBarsInView = calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth);
+
+    const samplingRate = calculateSamplingRate(waveformData.length, maxBarsInView);
+    const displayData = sampleWaveformData(waveformData, samplingRate);
+
+    const barWidth = calculateBarWidth(displayWidth, displayData.length, gapWidth, minBarWidth);
+
     const centerY = displayHeight / 2;
     const maxBarHeight = displayHeight * heightScale;
 
-    // Calculate gap width based on proportion of canvas width
-    const gapWidth = displayWidth * barGapRatio;
-
-    // Calculate total width needed for gaps
-    const totalGapWidth = (totalBars - 1) * gapWidth;
-
-    // Calculate bar width to fill the remaining space
-    const barWidth = Math.max(minBarWidth, (displayWidth - totalGapWidth) / totalBars);
-
-    // Draw each bar
-    waveformData.forEach((value, index) => {
-      // Calculate bar position with proper spacing
+    displayData.forEach((value, index) => {
       const x = index * (barWidth + gapWidth);
       const barHeight = value * maxBarHeight;
 
-      // Bar info for color determination
+      // Calculate original position in full dataset for correct color mapping
+      const originalIndex = index * samplingRate;
+      const position = waveformData.length > 1 ? originalIndex / (waveformData.length - 1) : 0;
+
       const barInfo: WaveformBarInfo = {
-        position: index / (totalBars - 1),
+        position,
         value,
-        index,
+        index: originalIndex,
       };
 
-      // Set the color
       if (getBarColor) {
         ctx.fillStyle = getBarColor(barInfo);
       } else {
         ctx.fillStyle = barColor;
       }
 
-      // Draw the bar centered vertically
       ctx.fillRect(x, centerY - barHeight / 2, barWidth, barHeight);
     });
   }, [barColor, getBarColor, heightScale, waveformData, barGapRatio, minBarWidth]);
