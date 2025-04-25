@@ -28,6 +28,7 @@ export * from './AudioPlaylistTrackTitle';
 export * from './AudioPlaylistTracks';
 export * from './AudioVisualizerFrequencyBars';
 export * from './AudioVisualizerWaveform';
+export * from './AudioWaveform';
 export * from './Badge';
 export * from './Button';
 export * from './CanvasResponsive';
