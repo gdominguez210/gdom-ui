@@ -1,4 +1,5 @@
-import { getReactiveColor, OKLCHProperty } from '@lib/utils/getReactiveColor/getReactiveColor';
+import { getReactiveColor } from '@lib/utils/getReactiveColor/getReactiveColor';
+import { OKLCHProperty } from '@lib/types/colors';
 
 /**
  * Generates a color that changes based on audio intensity
