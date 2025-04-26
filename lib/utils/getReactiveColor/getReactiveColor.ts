@@ -1,11 +1,4 @@
-/**
- * Represents which OKLCH properties can be modified by the reactive color function
- */
-export const OKLCHProperty = {
-  LIGHTNESS: 'lightness',
-  CHROMA: 'chroma',
-  HUE: 'hue',
-} as const;
+import { OKLCHProperty } from '@lib/types/colors';
 
 /**
  * Configuration for how a specific OKLCH property should react to audio intensity
