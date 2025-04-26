@@ -1,3 +1,12 @@
+import {
+  type LinearRGB,
+  type LMS,
+  type LMSPrime,
+  type Oklab,
+  type OKLCH,
+  type NormalizedRGB,
+} from '@lib/types/colors';
+
 /**
  * Constants for Oklab to LMS conversion matrices
  */
@@ -65,60 +74,6 @@ const SRGB_CONSTANTS = {
   /** Scale factor for power function in sRGB conversion */
   GAMMA_SCALE: 1.055,
 } as const;
-
-/**
- * Type representing OKLCH color space values
- */
-type OKLCH = {
-  L: number;
-  C: number;
-  h: number;
-};
-
-/**
- * Type representing Oklab color space values
- */
-type Oklab = {
-  L: number;
-  a: number;
-  b: number;
-};
-
-/**
- * Type representing LMS prime values (after applying cube root)
- */
-type LMSPrime = {
-  l: number;
-  m: number;
-  s: number;
-};
-
-/**
- * Type representing LMS color space values
- */
-type LMS = {
-  l: number;
-  m: number;
-  s: number;
-};
-
-/**
- * Type representing linear RGB color values
- */
-type LinearRGB = {
-  r: number;
-  g: number;
-  b: number;
-};
-
-/**
- * Type representing RGB color values normalized to 0-1 range
- */
-type NormalizedRGB = {
-  r: number;
-  g: number;
-  b: number;
-};
 
 /**
  * Converts OKLCH values to Oklab color space
