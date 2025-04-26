@@ -1,4 +1,5 @@
-import { getReactiveColor, OKLCHProperty } from '../getReactiveColor/getReactiveColor';
+import { getReactiveColor } from '@lib/utils/getReactiveColor/getReactiveColor';
+import { OKLCHProperty } from '@lib/types/colors';
 
 /**
  * Generates a full spectrum color based on position
