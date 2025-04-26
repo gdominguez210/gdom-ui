@@ -1,6 +1,8 @@
 import { useRef, useCallback, useEffect } from 'react';
 import { convertColorToOKLCH } from '@lib/utils/convertColorToOKLCH/convertColorToOKLCH';
 import { OKLCHToCSS } from '@lib/utils/OKLCHToCSS/OKLCHtoCSS';
+import { type OKLCHColor } from '@lib/types/colors';
+import { interpolateOKLCH } from '@lib/utils/interpolateOKLCH/interpolateOKLCH';
 
 export type UseColorTransitionOptions = {
   /**
@@ -14,8 +16,6 @@ export type UseColorTransitionOptions = {
    */
   transitionDuration?: number;
 };
-
-export type OKLCHColor = [number, number, number]; // [lightness, chroma, hue]
 
 /**
  * Hook for handling smooth color transitions in OKLCH color space, expected to be used within an animation loop
@@ -52,32 +52,7 @@ export function useColorTransition(options: UseColorTransitionOptions) {
     }
   }, [targetColor]);
 
-  // Function to interpolate between two OKLCH colors
-  const interpolateOKLCH = useCallback(
-    (colorA: OKLCHColor, colorB: OKLCHColor, progress: number): OKLCHColor => {
-      const [l1, c1, h1] = colorA;
-      const [l2, c2, h2] = colorB;
-
-      // Handle hue interpolation correctly (shortest path around the circle)
-      let hDiff = h2 - h1;
-      if (hDiff > 180) hDiff -= 360;
-      if (hDiff < -180) hDiff += 360;
-
-      const interpolatedHue = (h1 + hDiff * progress) % 360;
-
-      return [
-        l1 + (l2 - l1) * progress,
-        c1 + (c2 - c1) * progress,
-        interpolatedHue < 0 ? interpolatedHue + 360 : interpolatedHue,
-      ];
-    },
-    [],
-  );
-
-  // Function to update transition progress based on elapsed time
   const updateTransition = useCallback(() => {
-    if (!transitionRef.current.isTransitioning) return;
-
     const now = performance.now();
     const elapsed = now - timeRef.current.transitionStartTime;
     transitionRef.current.progress = Math.min(elapsed / transitionDuration, 1);
@@ -88,22 +63,20 @@ export function useColorTransition(options: UseColorTransitionOptions) {
     }
   }, [transitionDuration]);
 
-  // Function to get the current interpolated color in OKLCH format
   const getCurrentColor = useCallback((): OKLCHColor => {
-    updateTransition();
-
     if (!transitionRef.current.isTransitioning) {
       return transitionRef.current.targetOKLCH;
     }
+
+    updateTransition();
 
     return interpolateOKLCH(
       transitionRef.current.previousOKLCH,
       transitionRef.current.targetOKLCH,
       transitionRef.current.progress,
     );
-  }, [updateTransition, interpolateOKLCH]);
+  }, [updateTransition]);
 
-  // Function to convert the current OKLCH color to a CSS string using our utility
   const getColorString = useCallback((): string => {
     const [lightness, chroma, hue] = getCurrentColor();
     return OKLCHToCSS(lightness, chroma, hue);
