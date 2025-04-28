@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, type DependencyList } from 'react';
-
+import { useLatest } from '@lib/useLatest/useLatest';
 export type useAnimationFrameOptions = {
   /**
    * Whether the animation should be running
@@ -43,11 +43,7 @@ export function useAnimationFrame(options: useAnimationFrameOptions): useAnimati
   const animationRef = useRef<number | null>(null);
   const lastFrameTimeRef = useRef<number>(0);
   const frameIntervalMs = useRef<number>(frameRate ? 1000 / frameRate : 0);
-  const callbackRef = useRef(callback);
-
-  useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
+  const callbackRef = useLatest(callback);
 
   useEffect(() => {
     frameIntervalMs.current = frameRate ? 1000 / frameRate : 0;
@@ -83,7 +79,7 @@ export function useAnimationFrame(options: useAnimationFrameOptions): useAnimati
 
       animationRef.current = requestAnimationFrame(animate);
     },
-    [stopAnimation],
+    [stopAnimation, callbackRef],
   );
 
   const startAnimation = useCallback(() => {
