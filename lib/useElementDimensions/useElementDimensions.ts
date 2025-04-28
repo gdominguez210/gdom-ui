@@ -1,5 +1,7 @@
 import { useRef, useCallback, type RefObject } from 'react';
 import { useIntersectionObserver } from '@lib/useIntersectionObserver';
+import { useResizeObserver } from '@lib/useResizeObserver';
+import { useComposedRefs } from '@lib/useComposedRefs';
 
 export type ElementDimensions = {
   width: number;
@@ -49,7 +51,37 @@ export function useElementDimensions(): UseElementDimensionsReturn {
     }
   }, []);
 
-  const { setRef: elementRef } = useIntersectionObserver(intersectionCallback);
+  const resizeCallback = useCallback((entries: ResizeObserverEntry[]) => {
+    if (entries.length > 0) {
+      const entry = entries[0];
+
+      if (!entry) return;
+
+      let width = 0;
+      let height = 0;
+
+      if (entry.borderBoxSize && entry.borderBoxSize[0]) {
+        width = entry.borderBoxSize[0].inlineSize;
+        height = entry.borderBoxSize[0].blockSize;
+      }
+      // Fallback
+      else if (entry.contentRect) {
+        width = entry.contentRect.width;
+        height = entry.contentRect.height;
+      }
+
+      dimensionsRef.current = {
+        ...dimensionsRef.current,
+        width,
+        height,
+      };
+    }
+  }, []);
+
+  const { setRef: intersectionRef } = useIntersectionObserver(intersectionCallback);
+  const { setRef: resizeRef } = useResizeObserver(resizeCallback);
+
+  const elementRef = useComposedRefs(intersectionRef, resizeRef);
 
   return {
     dimensions: dimensionsRef.current,

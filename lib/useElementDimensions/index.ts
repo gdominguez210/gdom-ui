@@ -1,1 +1,4 @@
-export { useElementDimensions } from '@lib/useElementDimensions/useElementDimensions';
+export {
+  useElementDimensions,
+  type UseElementDimensionsReturn,
+} from '@lib/useElementDimensions/useElementDimensions';
