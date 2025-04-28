@@ -1,5 +1,8 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { rafThrottle } from '@lib/utils/rafThrottle/rafThrottle';
+import { useResizeObserver } from '@lib/useResizeObserver/useResizeObserver';
+import { useRefReady } from '@lib/useRefReady/useRefReady';
+import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
 
 /**
  * Options for the useCanvasResponsive hook
@@ -21,43 +24,51 @@ export type UseCanvasResponsiveOptions = {
 export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
   const { frameRate, onResize } = options ?? {};
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [setCanvasRef, isReady, canvasRef] = useRefReady<HTMLCanvasElement | null>(null);
 
-  const handleResize = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+  const resizeCanvas = useCallback(
+    (canvas: HTMLCanvasElement) => {
+      if (!canvas) return;
+      const context = canvas.getContext('2d');
+      if (!context) return;
 
-    const context = canvas.getContext('2d');
-    if (!context) return;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      const scale = window.devicePixelRatio;
 
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const scale = window.devicePixelRatio;
+      if (canvas.width !== width * scale || canvas.height !== height * scale) {
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        context.setTransform(scale, 0, 0, scale, 0, 0);
+        onResize?.();
+      }
+    },
+    [onResize],
+  );
 
-    if (canvas.width !== width * scale || canvas.height !== height * scale) {
-      canvas.width = width * scale;
-      canvas.height = height * scale;
-      context.setTransform(scale, 0, 0, scale, 0, 0);
-      onResize?.();
-    }
-  }, [onResize]);
+  const throttledResize = useMemo(() => {
+    return rafThrottle(resizeCanvas, frameRate);
+  }, [frameRate, resizeCanvas]);
+
+  const handleResize = useCallback(
+    (entries: ResizeObserverEntry[]) => {
+      if (!entries?.length) return;
+
+      const canvas = entries[0]!.target as HTMLCanvasElement;
+      throttledResize(canvas);
+    },
+    [throttledResize],
+  );
+
+  const { setRef: setResizeObserverRef } = useResizeObserver(handleResize);
+
+  const mergedRef = useComposedRefs(setResizeObserverRef, setCanvasRef);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (isReady && canvasRef.current) {
+      resizeCanvas(canvasRef.current);
+    }
+  }, [isReady, canvasRef, resizeCanvas]);
 
-    const throttledResize = rafThrottle(handleResize, frameRate);
-
-    handleResize();
-
-    const observer = new ResizeObserver(throttledResize);
-
-    observer.observe(canvas);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [handleResize, frameRate]);
-
-  return canvasRef;
+  return { canvasRef: mergedRef };
 }

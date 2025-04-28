@@ -12,7 +12,7 @@ export type CanvasResponsiveProps = ComponentPropsWithRef<'canvas'> & {
 export function CanvasResponsive(props: CanvasResponsiveProps) {
   const { frameRate, onResize, ref, className, ...rest } = props;
 
-  const canvasRef = useCanvasResponsive({ frameRate, onResize });
+  const { canvasRef } = useCanvasResponsive({ frameRate, onResize });
 
   const mergedRef = useComposedRefs(ref, canvasRef);
 
