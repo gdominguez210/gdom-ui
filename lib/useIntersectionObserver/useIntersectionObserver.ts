@@ -1,4 +1,10 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useLatest } from '@lib/useLatest/useLatest';
+const DEFAULT_OPTIONS: IntersectionObserverInit = {
+  rootMargin: '0px',
+  threshold: 0,
+  root: null,
+};
 
 /**
  * Hook to observe an element's intersection with the viewport
@@ -9,33 +15,33 @@ import { useEffect, useRef, useCallback } from 'react';
  */
 export function useIntersectionObserver(
   callback: IntersectionObserverCallback,
-  options: IntersectionObserverInit = {},
+  options: IntersectionObserverInit = DEFAULT_OPTIONS,
 ): { setRef: (node: Element | null) => void } {
-  const callbackRef = useRef(callback);
+  const mergedOptions = useMemo(() => ({ ...DEFAULT_OPTIONS, ...options }), [options]);
 
-  useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
+  const callbackRef = useLatest(callback);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver((entries, observer) => {
       callbackRef.current(entries, observer);
-    }, options);
+    }, mergedOptions);
 
     return () => {
       observerRef.current?.disconnect();
       observerRef.current = null;
     };
-  }, [options]);
+  }, [mergedOptions, callbackRef]);
 
   const setRef = useCallback((node: Element | null) => {
-    observerRef.current?.disconnect();
-
     if (node && observerRef.current) {
       observerRef.current.observe(node);
     }
+
+    return () => {
+      observerRef.current?.disconnect();
+    };
   }, []);
 
   return { setRef };
