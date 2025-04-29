@@ -35,18 +35,22 @@ export default {
     barColor: {
       control: 'color',
       description: 'Color of the waveform bars',
+      defaultValue: { summary: '#000000' },
     },
     barGapRatio: {
       control: { type: 'range', min: 0, max: 0.02, step: 0.001 },
       description: 'Gap between bars as a proportion of canvas width',
+      defaultValue: { summary: 0.0035 },
     },
     minBarWidth: {
       control: { type: 'range', min: 1, max: 10, step: 1 },
       description: 'Minimum width for each bar in pixels',
+      defaultValue: { summary: 1 },
     },
     heightScale: {
       control: { type: 'range', min: 0.1, max: 1, step: 0.1 },
       description: 'Height of waveform as a proportion of canvas height',
+      defaultValue: { summary: 1 },
     },
     className: {
       table: {
