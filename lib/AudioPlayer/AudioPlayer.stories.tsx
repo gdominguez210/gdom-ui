@@ -26,6 +26,28 @@ import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackPro
 import { AudioPlaylistCompoundComponent } from '@lib/AudioPlaylist/namespace';
 import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
 import { AudioPlayerVisualizerWaveform } from '@lib/AudioPlayerVisualizerWaveform/AudioPlayerVisualizerWaveform';
+import {
+  AudioPlayerProgressWaveform,
+  type AudioPlayerProgressWaveformProps,
+} from '@lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
+import { waveformData } from '@lib/AudioPlayer/data';
+import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+
+function AudioPlayerProgressWaveformWithWaveformData(
+  props: Omit<AudioPlayerProgressWaveformProps, 'waveformData'>,
+) {
+  const { currentTrack } = useAudioPlayerContextTrack();
+  const currentTrackWaveformData = waveformData[currentTrack?.id ?? ''] || [];
+
+  return (
+    <AudioPlayerProgressWaveform
+      {...props}
+      waveformData={currentTrackWaveformData}
+    />
+  );
+}
+
+AudioPlayerProgressWaveformWithWaveformData.displayName = 'AudioPlayer.ProgressWaveform';
 
 export default {
   title: 'components/AudioPlayer',
@@ -69,6 +91,7 @@ export default {
     AudioPlayerContextRefsProvider,
     AudioPlayerContextAudioProvider,
     AudioPlayerVisualizerWaveform,
+    AudioPlayerProgressWaveform,
   },
 } as Meta<typeof AudioPlayer>;
 
@@ -88,28 +111,28 @@ export const Example: StoryObj<typeof AudioPlayer> = {
   },
   render: () => (
     <AudioPlayerCompoundComponent.Provider tracks={trackData}>
-      <AudioPlayerCompoundComponent.Root>
-        <div className="justify-space-between flex grow gap-4">
+      <AudioPlayerCompoundComponent.Root className="@container/audio-player">
+        <div className="justify-space-between grow gap-4 @min-lg/audio-player:flex">
           <AudioPlayerCompoundComponent.Info className="basis-1/3">
             <AudioPlayerCompoundComponent.Image />
-            <div className="py-2">
+            <div className="p-2 @min-lg/audio-player:py-2">
               <AudioPlayerCompoundComponent.Title />
               <AudioPlayerCompoundComponent.Author />
               <AudioPlayerCompoundComponent.Time />
             </div>
           </AudioPlayerCompoundComponent.Info>
-          <AudioPlayerCompoundComponent.Controls className="basis-1/3">
+          <AudioPlayerCompoundComponent.Controls className="basis-2/3 @min-lg/audio-player:gap-1 @min-lg/audio-player:text-2xl">
             <AudioPlayerCompoundComponent.ControlAudio />
-            <AudioPlayerCompoundComponent.ControlLoop />
+            <AudioPlayerCompoundComponent.ControlLoop className="hidden @min-lg/audio-player:block" />
             <AudioPlayerCompoundComponent.ControlPrevious />
             <AudioPlayerCompoundComponent.ControlPlay />
             <AudioPlayerCompoundComponent.ControlNext />
-            <AudioPlayerCompoundComponent.ControlShuffle />
+            <AudioPlayerCompoundComponent.ControlShuffle className="hidden @min-lg/audio-player:block" />
+            <AudioPlayerCompoundComponent.Volume className="ml-auto pr-4">
+              <AudioPlayerCompoundComponent.VolumeButton />
+              <AudioPlayerCompoundComponent.VolumeSlider />
+            </AudioPlayerCompoundComponent.Volume>
           </AudioPlayerCompoundComponent.Controls>
-          <AudioPlayerCompoundComponent.Volume className="ml-auto pr-4">
-            <AudioPlayerCompoundComponent.VolumeButton />
-            <AudioPlayerCompoundComponent.VolumeSlider />
-          </AudioPlayerCompoundComponent.Volume>
         </div>
         <AudioPlayerCompoundComponent.ProgressBar />
       </AudioPlayerCompoundComponent.Root>
@@ -420,6 +443,55 @@ export const WithCollapsiblePlaylistAndVisualizer: StoryObj<typeof AudioPlayer> 
           </AudioPlayerCompoundComponent.Root>
         </AudioPlaylistCompoundComponent.Provider>
       </AudioPlayerCompoundComponent.AudioContextProvider>
+    </AudioPlayerCompoundComponent.Provider>
+  ),
+};
+
+export const WithProgressWaveform: StoryObj<typeof AudioPlayer> = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A player with a pre-rendered waveform visualization that shows playback progress. Users can click anywhere on the waveform to seek to that position in the track. The colored portion of the waveform represents the played section, while interactive hover effects provide visual feedback when navigating through the track.',
+      },
+      source: {
+        type: 'dynamic',
+      },
+    },
+  },
+  render: () => (
+    <AudioPlayerCompoundComponent.Provider tracks={trackData}>
+      <AudioPlayerCompoundComponent.Root>
+        <AudioPlayerProgressWaveformWithWaveformData
+          className="h-[150px]"
+          barColor={'#a1a1a1'}
+          progressColor={'#00bcff'}
+          heightScale={0.8}
+          barGapRatio={0}
+        />
+        <div className="justify-space-between flex grow gap-4">
+          <AudioPlayerCompoundComponent.Info className="basis-1/3">
+            <AudioPlayerCompoundComponent.Image />
+            <div className="py-2">
+              <AudioPlayerCompoundComponent.Title />
+              <AudioPlayerCompoundComponent.Author />
+              <AudioPlayerCompoundComponent.Time />
+            </div>
+          </AudioPlayerCompoundComponent.Info>
+          <AudioPlayerCompoundComponent.Controls className="basis-1/3">
+            <AudioPlayerCompoundComponent.ControlAudio />
+            <AudioPlayerCompoundComponent.ControlLoop />
+            <AudioPlayerCompoundComponent.ControlPrevious />
+            <AudioPlayerCompoundComponent.ControlPlay />
+            <AudioPlayerCompoundComponent.ControlNext />
+            <AudioPlayerCompoundComponent.ControlShuffle />
+          </AudioPlayerCompoundComponent.Controls>
+          <AudioPlayerCompoundComponent.Volume className="ml-auto pr-4">
+            <AudioPlayerCompoundComponent.VolumeButton />
+            <AudioPlayerCompoundComponent.VolumeSlider />
+          </AudioPlayerCompoundComponent.Volume>
+        </div>
+      </AudioPlayerCompoundComponent.Root>
     </AudioPlayerCompoundComponent.Provider>
   ),
 };
