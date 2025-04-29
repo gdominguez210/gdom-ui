@@ -7,7 +7,14 @@ type MousePosition = {
   offsetY: number | null;
 };
 
-export function useMousePositionState() {
+export type useMousePositionStateReturn = {
+  position: MousePosition;
+  handleMouseMove: (e: React.MouseEvent) => void;
+  handleMouseLeave: () => void;
+  isHovering: boolean;
+};
+
+export function useMousePositionState(): useMousePositionStateReturn {
   const [position, setPosition] = useState<MousePosition>({
     clientX: null,
     clientY: null,
