@@ -7,6 +7,37 @@ import {
   calculateBarWidth,
 } from '@lib/AudioWaveform/drawingUtils';
 
+export type GradientStop = {
+  /**
+   * Position of the stop (0-1)
+   */
+  offset: number;
+
+  /**
+   * Color of the stop as a CSS color string
+   */
+  color: string;
+};
+
+export type BarColorResult =
+  | string
+  | {
+      type: 'gradient';
+      stops: GradientStop[];
+    };
+
+export type WaveformGradientStop = {
+  /**
+   * Position of the stop (0-1)
+   */
+  offset: number;
+
+  /**
+   * Color of the stop as a CSS color string
+   */
+  color: string;
+};
+
 export type WaveformBarInfo = {
   /**
    * Position in the waveform (0-1)
@@ -22,6 +53,11 @@ export type WaveformBarInfo = {
    * Index in the waveform data array
    */
   index: number;
+
+  /**
+   * Width of this specific bar as a percentage of total width (0-1)
+   */
+  width: number;
 };
 
 export type useAudioWaveformOptions = {
@@ -38,7 +74,7 @@ export type useAudioWaveformOptions = {
   /**
    * Function to determine bar color based on state
    */
-  getBarColor?: (barInfo: WaveformBarInfo) => string;
+  getBarColor?: (barInfo: WaveformBarInfo) => BarColorResult;
 
   /**
    * Gap between bars as a proportion of canvas width (0-1)
@@ -106,10 +142,28 @@ export const useAudioWaveform = (options: useAudioWaveformOptions) => {
         position,
         value,
         index: originalIndex,
+        width: barWidth / displayWidth,
       };
 
       if (getBarColor) {
-        ctx.fillStyle = getBarColor(barInfo);
+        const barColorResult = getBarColor(barInfo);
+
+        if (typeof barColorResult === 'string') {
+          ctx.fillStyle = barColorResult;
+        } else if (barColorResult.type === 'gradient') {
+          const gradient = ctx.createLinearGradient(
+            x,
+            centerY + barHeight / 2, // Bottom of bar
+            x,
+            centerY - barHeight / 2, // Top of bar
+          );
+
+          barColorResult.stops.forEach((stop) => {
+            gradient.addColorStop(stop.offset, stop.color);
+          });
+
+          ctx.fillStyle = gradient;
+        }
       } else {
         ctx.fillStyle = barColor;
       }
