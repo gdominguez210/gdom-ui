@@ -1,1 +1,4 @@
-export { useMousePositionState } from '@lib/useMousePositionState/useMousePositionState';
+export {
+  useMousePositionState,
+  type useMousePositionStateReturn,
+} from '@lib/useMousePositionState/useMousePositionState';
