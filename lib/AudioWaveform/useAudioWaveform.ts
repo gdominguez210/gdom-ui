@@ -84,6 +84,12 @@ export type useAudioWaveformOptions = {
   barGapRatio?: number;
 
   /**
+   * Minimum gap between bars as a percentage of canvas width
+   * @default 0.001 (0.1% of canvas width)
+   */
+  minBarGapPercent?: number;
+
+  /**
    * Minimum width for bars (in pixels)
    * @default 1
    */
@@ -103,6 +109,7 @@ export const useAudioWaveform = (options: useAudioWaveformOptions) => {
     barGapRatio = 0.0035,
     heightScale = 1,
     minBarWidth = 1,
+    minBarGapPercent = 0.001,
   } = options;
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -118,7 +125,7 @@ export const useAudioWaveform = (options: useAudioWaveformOptions) => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const gapWidth = getActualGapWidth(displayWidth, barGapRatio);
+    const gapWidth = getActualGapWidth(displayWidth, barGapRatio, minBarGapPercent);
 
     const maxBarsInView = calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth);
 
@@ -131,10 +138,10 @@ export const useAudioWaveform = (options: useAudioWaveformOptions) => {
     const maxBarHeight = displayHeight * heightScale;
 
     displayData.forEach((value, index) => {
-      const x = index * (barWidth + gapWidth);
+      const isGapless = barGapRatio === 0 || minBarGapPercent === 0;
+      const x = isGapless ? Math.round(index * barWidth) : index * (barWidth + gapWidth);
       const barHeight = value * maxBarHeight;
 
-      // Calculate original position in full dataset for correct color mapping
       const originalIndex = index * samplingRate;
       const position = waveformData.length > 1 ? originalIndex / (waveformData.length - 1) : 0;
 
@@ -153,9 +160,9 @@ export const useAudioWaveform = (options: useAudioWaveformOptions) => {
         } else if (barColorResult.type === 'gradient') {
           const gradient = ctx.createLinearGradient(
             x,
-            centerY + barHeight / 2, // Bottom of bar
+            centerY + barHeight / 2,
             x,
-            centerY - barHeight / 2, // Top of bar
+            centerY - barHeight / 2,
           );
 
           barColorResult.stops.forEach((stop) => {
@@ -167,10 +174,19 @@ export const useAudioWaveform = (options: useAudioWaveformOptions) => {
       } else {
         ctx.fillStyle = barColor;
       }
+      const effectiveBarWidth = isGapless ? Math.ceil(barWidth) : barWidth;
 
-      ctx.fillRect(x, centerY - barHeight / 2, barWidth, barHeight);
+      ctx.fillRect(x, centerY - barHeight / 2, effectiveBarWidth, barHeight);
     });
-  }, [barColor, getBarColor, heightScale, waveformData, barGapRatio, minBarWidth]);
+  }, [
+    barColor,
+    getBarColor,
+    heightScale,
+    waveformData,
+    barGapRatio,
+    minBarWidth,
+    minBarGapPercent,
+  ]);
 
   return { canvasRef, drawWaveform };
 };

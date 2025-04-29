@@ -52,6 +52,11 @@ export default {
       description: 'Height of waveform as a proportion of canvas height',
       defaultValue: { summary: 1 },
     },
+    minBarGapPercent: {
+      control: { type: 'range', min: 0, max: 0.02, step: 0.001 },
+      description: 'Minimum gap between bars as a percentage of canvas width',
+      defaultValue: { summary: 0.001 },
+    },
     className: {
       table: {
         disable: true,
@@ -67,6 +72,7 @@ export const Basic: StoryObj<typeof AudioWaveform> = {
     barColor: '#0066cc',
     barGapRatio: 0.0035,
     minBarWidth: 2,
+    minBarGapPercent: 0.001,
     heightScale: 0.8,
     className: 'max-h-[150px]',
   },
@@ -94,6 +100,7 @@ export const DenseWaveform: StoryObj<typeof AudioWaveform> = {
     barGapRatio: 0, // No gap
     minBarWidth: 1, // Thinner bars
     heightScale: 0.8,
+    minBarGapPercent: 0,
     className: 'max-h-[150px]',
   },
   parameters: {
@@ -114,6 +121,7 @@ export const SparseWaveform: StoryObj<typeof AudioWaveform> = {
     barGapRatio: 0.01, // Wider gaps
     minBarWidth: 4, // Thicker bars
     heightScale: 0.8,
+    minBarGapPercent: 0.001,
     className: 'max-h-[150px]',
   },
   parameters: {
@@ -134,6 +142,7 @@ export const CustomHeightScale: StoryObj<typeof AudioWaveform> = {
     barGapRatio: 0.0035,
     minBarWidth: 2,
     heightScale: 0.5, // Only 50% of container height
+    minBarGapPercent: 0.001,
     className: 'max-h-[150px]',
   },
   parameters: {
@@ -153,6 +162,7 @@ export const CustomColorFunction: StoryObj<typeof AudioWaveform> = {
     barGapRatio: 0.0035,
     minBarWidth: 2,
     heightScale: 0.8,
+    minBarGapPercent: 0.001,
     className: 'max-h-[150px]',
     getBarColor: (barInfo) => {
       // Color based on amplitude

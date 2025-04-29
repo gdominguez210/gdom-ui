@@ -14,6 +14,7 @@ export function AudioWaveform(props: AudioWaveformProps) {
     minBarWidth,
     heightScale,
     waveformData,
+    minBarGapPercent,
     ...restProps
   } = props;
 
@@ -24,6 +25,7 @@ export function AudioWaveform(props: AudioWaveformProps) {
     minBarWidth,
     heightScale,
     waveformData,
+    minBarGapPercent,
   });
 
   const mergedRefs = useComposedRefs(canvasRef, ref);

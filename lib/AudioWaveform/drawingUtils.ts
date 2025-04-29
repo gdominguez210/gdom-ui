@@ -20,6 +20,10 @@ export function getActualGapWidth(
   barGapRatio: number,
   minGapPercent = 0.001,
 ): number {
+  if (barGapRatio === 0 || minGapPercent === 0) {
+    return 0;
+  }
+
   const minGapWidth = calculateMinGapWidth(displayWidth, minGapPercent);
   const desiredGapWidth = displayWidth * barGapRatio;
   return Math.max(minGapWidth, desiredGapWidth);
