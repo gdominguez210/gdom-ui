@@ -2,7 +2,7 @@ import { getColorByFrequencyPosition } from '@lib/utils/getColorByFrequencyPosit
 import { getColorByAudioIntensity } from '@lib/utils/getColorByAudioIntensity/getColorByAudioIntensity';
 import { getColorBySpectrum } from '@lib/utils/getColorBySpectrum/getColorBySpectrum';
 import { getColorByDynamicIntensity } from '@lib/utils/getColorByDynamicIntensity/getColorByDynamicIntensity';
-import { type OKLCHColor } from '@lib/useColorTransition/useColorTransition';
+import { type OKLCHColor } from '@lib/types/colors';
 
 export const FREQUENCY_BARS_COLOR_MODES = {
   STATIC: 'static',
