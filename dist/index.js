@@ -3402,15 +3402,20 @@ function useAudioPlayerContextRefs() {
   return context;
 }
 
+function useLatest(value) {
+  const ref = useRef(value);
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref;
+}
+
 function useAnimationFrame(options) {
   const { isActive, callback, frameRate, dependencies = [], autoStart = true } = options;
   const animationRef = useRef(null);
   const lastFrameTimeRef = useRef(0);
   const frameIntervalMs = useRef(frameRate ? 1e3 / frameRate : 0);
-  const callbackRef = useRef(callback);
-  useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
+  const callbackRef = useLatest(callback);
   useEffect(() => {
     frameIntervalMs.current = frameRate ? 1e3 / frameRate : 0;
   }, [frameRate]);
@@ -3438,7 +3443,7 @@ function useAnimationFrame(options) {
       }
       animationRef.current = requestAnimationFrame(animate);
     },
-    [stopAnimation]
+    [stopAnimation, callbackRef]
   );
   const startAnimation = useCallback(() => {
     if (animationRef.current !== null) {
@@ -5540,6 +5545,7 @@ const OKLCHProperty = {
   CHROMA: "chroma",
   HUE: "hue"
 };
+
 function getReactiveColor(baseOklch, intensity, propertyConfigs) {
   const safeIntensity = Math.max(0, Math.min(1, intensity));
   const [lightness, chroma, hue] = baseOklch;
@@ -5591,6 +5597,80 @@ function getColorByDynamicIntensity(baseOklchColor, intensityRatio) {
     { property: OKLCHProperty.LIGHTNESS, min: 0.4, max: 0.6 },
     { property: OKLCHProperty.CHROMA, min: 0.2, max: 0.3 }
   ]);
+}
+
+const WAVEFORM_COLOR_MODES = {
+  STATIC: "static",
+  AMPLITUDE: "amplitude",
+  FREQUENCY: "frequency",
+  SPECTRUM: "spectrum",
+  DYNAMIC: "dynamic"
+};
+function drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, lineColor) {
+  const sliceWidth = displayWidth / dataArray.length;
+  const centerY = displayHeight / 2;
+  ctx.strokeStyle = lineColor;
+  ctx.beginPath();
+  dataArray.forEach((value, index) => {
+    const x = index * sliceWidth;
+    const normalizedValue = normalizeAudioValue(value);
+    const y = calculateWaveformY(normalizedValue, centerY);
+    if (index === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  });
+  ctx.stroke();
+}
+function applySegmentColor(ctx, segmentStartIndex, dataArray, currentColor, colorMode) {
+  const positionRatio = calculatePositionRatio(segmentStartIndex, dataArray.length);
+  const normalizedValue = normalizeAudioValue(dataArray[segmentStartIndex]);
+  const amplitudeRatio = calculateAmplitudeRatio(normalizedValue);
+  switch (colorMode) {
+    case WAVEFORM_COLOR_MODES.AMPLITUDE:
+      ctx.strokeStyle = getColorByAudioIntensity(currentColor, amplitudeRatio);
+      break;
+    case WAVEFORM_COLOR_MODES.FREQUENCY:
+      ctx.strokeStyle = getColorByFrequencyPosition(currentColor, positionRatio);
+      break;
+    case WAVEFORM_COLOR_MODES.SPECTRUM:
+      ctx.strokeStyle = getColorBySpectrum(currentColor, positionRatio);
+      break;
+    case WAVEFORM_COLOR_MODES.DYNAMIC:
+      ctx.strokeStyle = getColorByDynamicIntensity(currentColor, amplitudeRatio);
+      break;
+  }
+}
+function drawSegmentedWaveform(ctx, dataArray, displayWidth, displayHeight, baseOklchColor, colorMode, segmentCount) {
+  const sliceWidth = displayWidth / dataArray.length;
+  const centerY = displayHeight / 2;
+  const segmentSize = Math.max(1, Math.floor(dataArray.length / segmentCount));
+  let lastX = 0;
+  let lastY = 0;
+  for (let i = 0; i < dataArray.length; i += segmentSize) {
+    const segmentEnd = Math.min(i + segmentSize, dataArray.length);
+    ctx.beginPath();
+    if (i > 0) {
+      ctx.moveTo(lastX, lastY);
+    }
+    for (let j = i; j < segmentEnd; j++) {
+      const x = j * sliceWidth;
+      const normalizedValue = normalizeAudioValue(dataArray[j]);
+      const y = calculateWaveformY(normalizedValue, centerY);
+      if (i === 0 && j === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+        if (j === segmentEnd - 1) {
+          lastX = x;
+          lastY = y;
+        }
+      }
+    }
+    applySegmentColor(ctx, i, dataArray, baseOklchColor, colorMode);
+    ctx.stroke();
+  }
 }
 
 const RGB_TO_LMS_MATRIX = {
@@ -5728,6 +5808,21 @@ function OKLCHToCSS(lightness, chroma, hue) {
   return `oklch(${lightness} ${chroma} ${hue})`;
 }
 
+function interpolateOKLCH(colorA, colorB, progress) {
+  const t = Math.max(0, Math.min(1, progress));
+  const [l1, c1, h1] = colorA;
+  const [l2, c2, h2] = colorB;
+  let hDiff = h2 - h1;
+  if (hDiff > 180) hDiff -= 360;
+  if (hDiff < -180) hDiff += 360;
+  const interpolatedHue = (h1 + hDiff * t) % 360;
+  return [
+    l1 + (l2 - l1) * t,
+    c1 + (c2 - c1) * t,
+    interpolatedHue < 0 ? interpolatedHue + 360 : interpolatedHue
+  ];
+}
+
 function useColorTransition(options) {
   const { targetColor, transitionDuration = 500 } = options;
   const transitionRef = useRef({
@@ -5750,24 +5845,7 @@ function useColorTransition(options) {
       timeRef.current.transitionStartTime = performance.now();
     }
   }, [targetColor]);
-  const interpolateOKLCH = useCallback(
-    (colorA, colorB, progress) => {
-      const [l1, c1, h1] = colorA;
-      const [l2, c2, h2] = colorB;
-      let hDiff = h2 - h1;
-      if (hDiff > 180) hDiff -= 360;
-      if (hDiff < -180) hDiff += 360;
-      const interpolatedHue = (h1 + hDiff * progress) % 360;
-      return [
-        l1 + (l2 - l1) * progress,
-        c1 + (c2 - c1) * progress,
-        interpolatedHue < 0 ? interpolatedHue + 360 : interpolatedHue
-      ];
-    },
-    []
-  );
   const updateTransition = useCallback(() => {
-    if (!transitionRef.current.isTransitioning) return;
     const now = performance.now();
     const elapsed = now - timeRef.current.transitionStartTime;
     transitionRef.current.progress = Math.min(elapsed / transitionDuration, 1);
@@ -5777,16 +5855,16 @@ function useColorTransition(options) {
     }
   }, [transitionDuration]);
   const getCurrentColor = useCallback(() => {
-    updateTransition();
     if (!transitionRef.current.isTransitioning) {
       return transitionRef.current.targetOKLCH;
     }
+    updateTransition();
     return interpolateOKLCH(
       transitionRef.current.previousOKLCH,
       transitionRef.current.targetOKLCH,
       transitionRef.current.progress
     );
-  }, [updateTransition, interpolateOKLCH]);
+  }, [updateTransition]);
   const getColorString = useCallback(() => {
     const [lightness, chroma, hue] = getCurrentColor();
     return OKLCHToCSS(lightness, chroma, hue);
@@ -5800,80 +5878,6 @@ function useColorTransition(options) {
     isTransitioning,
     updateTransition
   };
-}
-
-const WAVEFORM_COLOR_MODES = {
-  STATIC: "static",
-  AMPLITUDE: "amplitude",
-  FREQUENCY: "frequency",
-  SPECTRUM: "spectrum",
-  DYNAMIC: "dynamic"
-};
-function drawStaticWaveform(ctx, dataArray, displayWidth, displayHeight, lineColor) {
-  const sliceWidth = displayWidth / dataArray.length;
-  const centerY = displayHeight / 2;
-  ctx.strokeStyle = lineColor;
-  ctx.beginPath();
-  dataArray.forEach((value, index) => {
-    const x = index * sliceWidth;
-    const normalizedValue = normalizeAudioValue(value);
-    const y = calculateWaveformY(normalizedValue, centerY);
-    if (index === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
-  });
-  ctx.stroke();
-}
-function applySegmentColor(ctx, segmentStartIndex, dataArray, currentColor, colorMode) {
-  const positionRatio = calculatePositionRatio(segmentStartIndex, dataArray.length);
-  const normalizedValue = normalizeAudioValue(dataArray[segmentStartIndex]);
-  const amplitudeRatio = calculateAmplitudeRatio(normalizedValue);
-  switch (colorMode) {
-    case WAVEFORM_COLOR_MODES.AMPLITUDE:
-      ctx.strokeStyle = getColorByAudioIntensity(currentColor, amplitudeRatio);
-      break;
-    case WAVEFORM_COLOR_MODES.FREQUENCY:
-      ctx.strokeStyle = getColorByFrequencyPosition(currentColor, positionRatio);
-      break;
-    case WAVEFORM_COLOR_MODES.SPECTRUM:
-      ctx.strokeStyle = getColorBySpectrum(currentColor, positionRatio);
-      break;
-    case WAVEFORM_COLOR_MODES.DYNAMIC:
-      ctx.strokeStyle = getColorByDynamicIntensity(currentColor, amplitudeRatio);
-      break;
-  }
-}
-function drawSegmentedWaveform(ctx, dataArray, displayWidth, displayHeight, baseOklchColor, colorMode, segmentCount) {
-  const sliceWidth = displayWidth / dataArray.length;
-  const centerY = displayHeight / 2;
-  const segmentSize = Math.max(1, Math.floor(dataArray.length / segmentCount));
-  let lastX = 0;
-  let lastY = 0;
-  for (let i = 0; i < dataArray.length; i += segmentSize) {
-    const segmentEnd = Math.min(i + segmentSize, dataArray.length);
-    ctx.beginPath();
-    if (i > 0) {
-      ctx.moveTo(lastX, lastY);
-    }
-    for (let j = i; j < segmentEnd; j++) {
-      const x = j * sliceWidth;
-      const normalizedValue = normalizeAudioValue(dataArray[j]);
-      const y = calculateWaveformY(normalizedValue, centerY);
-      if (i === 0 && j === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-        if (j === segmentEnd - 1) {
-          lastX = x;
-          lastY = y;
-        }
-      }
-    }
-    applySegmentColor(ctx, i, dataArray, baseOklchColor, colorMode);
-    ctx.stroke();
-  }
 }
 
 function useAudioVisualizerWaveform(options) {
@@ -6190,41 +6194,78 @@ function rafThrottle(callback, frameRate) {
   return throttledFn;
 }
 
+function useResizeObserver(callback) {
+  const callbackRef = useLatest(callback);
+  const observerRef = useRef(null);
+  useEffect(() => {
+    observerRef.current = new ResizeObserver((entries, observer) => {
+      callbackRef.current(entries, observer);
+    });
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+    };
+  }, [callbackRef]);
+  const setRef = useCallback((node) => {
+    const currentNode = node;
+    if (currentNode && observerRef.current) {
+      observerRef.current.observe(currentNode);
+    }
+    return () => {
+      if (currentNode && observerRef.current) {
+        observerRef.current.unobserve(currentNode);
+      }
+    };
+  }, []);
+  return { setRef };
+}
+
 function useCanvasResponsive(options) {
   const { frameRate, onResize } = options ?? {};
-  const canvasRef = useRef(null);
-  const handleResize = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext("2d");
-    if (!context) return;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const scale = window.devicePixelRatio;
-    if (canvas.width !== width * scale || canvas.height !== height * scale) {
-      canvas.width = width * scale;
-      canvas.height = height * scale;
-      context.setTransform(scale, 0, 0, scale, 0, 0);
-      onResize?.();
-    }
-  }, [onResize]);
+  const [setCanvasRef, isReady, canvasRef] = useRefReady(null);
+  const resizeCanvas = useCallback(
+    (canvas) => {
+      if (!canvas) return;
+      const context = canvas.getContext("2d");
+      if (!context) return;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      const scale = window.devicePixelRatio;
+      if (canvas.width !== width * scale || canvas.height !== height * scale) {
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        context.setTransform(scale, 0, 0, scale, 0, 0);
+        onResize?.();
+      }
+    },
+    [onResize]
+  );
+  const throttledResize = useMemo(() => {
+    return rafThrottle(resizeCanvas, frameRate);
+  }, [frameRate, resizeCanvas]);
+  const handleResize = useCallback(
+    (entries) => {
+      if (!entries?.length) return;
+      const canvas = entries[0].target;
+      throttledResize(canvas);
+    },
+    [throttledResize]
+  );
+  const { setRef: setResizeObserverRef } = useResizeObserver(handleResize);
+  const mergedRef = useComposedRefs(setResizeObserverRef, setCanvasRef);
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const throttledResize = rafThrottle(handleResize, frameRate);
-    handleResize();
-    const observer = new ResizeObserver(throttledResize);
-    observer.observe(canvas);
-    return () => {
-      observer.disconnect();
-    };
-  }, [handleResize, frameRate]);
-  return canvasRef;
+    if (isReady && canvasRef.current) {
+      resizeCanvas(canvasRef.current);
+    }
+  }, [isReady, canvasRef, resizeCanvas]);
+  return { canvasRef: mergedRef };
 }
 
 function CanvasResponsive(props) {
   const { frameRate, onResize, ref, className, ...rest } = props;
-  const canvasRef = useCanvasResponsive({ frameRate, onResize });
+  const { canvasRef } = useCanvasResponsive({ frameRate, onResize });
   const mergedRef = useComposedRefs(ref, canvasRef);
   return /* @__PURE__ */ jsx(
     "canvas",
@@ -6568,6 +6609,535 @@ function AudioPlayerVisualizerFrequencyBars(props) {
   );
 }
 
+function calculateMinGapWidth(displayWidth, minGapPercent = 1e-3) {
+  return Math.max(1, displayWidth * minGapPercent);
+}
+function getActualGapWidth(displayWidth, barGapRatio, minGapPercent = 1e-3) {
+  const minGapWidth = calculateMinGapWidth(displayWidth, minGapPercent);
+  const desiredGapWidth = displayWidth * barGapRatio;
+  return Math.max(minGapWidth, desiredGapWidth);
+}
+function calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth) {
+  return Math.floor((displayWidth + gapWidth) / (minBarWidth + gapWidth));
+}
+function calculateSamplingRate(dataLength, maxBarsInView) {
+  if (dataLength <= maxBarsInView) {
+    return 1;
+  }
+  return Math.ceil(dataLength / maxBarsInView);
+}
+function sampleWaveformData(waveformData, samplingRate) {
+  if (samplingRate === 1) {
+    return waveformData;
+  }
+  return waveformData.filter((_, i) => i % samplingRate === 0);
+}
+function calculateBarWidth(displayWidth, numBars, gapWidth, minBarWidth) {
+  const totalGapWidth = (numBars - 1) * gapWidth;
+  const availableWidthForBars = displayWidth - totalGapWidth;
+  return Math.max(minBarWidth, availableWidthForBars / numBars);
+}
+
+const useAudioWaveform = (options) => {
+  const {
+    waveformData,
+    barColor = "#eeeeee",
+    getBarColor,
+    barGapRatio = 35e-4,
+    heightScale = 1,
+    minBarWidth = 1
+  } = options;
+  const canvasRef = useRef(null);
+  const drawWaveform = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const displayWidth = canvas.clientWidth;
+    const displayHeight = canvas.clientHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const gapWidth = getActualGapWidth(displayWidth, barGapRatio);
+    const maxBarsInView = calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth);
+    const samplingRate = calculateSamplingRate(waveformData.length, maxBarsInView);
+    const displayData = sampleWaveformData(waveformData, samplingRate);
+    const barWidth = calculateBarWidth(displayWidth, displayData.length, gapWidth, minBarWidth);
+    const centerY = displayHeight / 2;
+    const maxBarHeight = displayHeight * heightScale;
+    displayData.forEach((value, index) => {
+      const x = index * (barWidth + gapWidth);
+      const barHeight = value * maxBarHeight;
+      const originalIndex = index * samplingRate;
+      const position = waveformData.length > 1 ? originalIndex / (waveformData.length - 1) : 0;
+      const barInfo = {
+        position,
+        value,
+        index: originalIndex,
+        width: barWidth / displayWidth
+      };
+      if (getBarColor) {
+        const barColorResult = getBarColor(barInfo);
+        if (typeof barColorResult === "string") {
+          ctx.fillStyle = barColorResult;
+        } else if (barColorResult.type === "gradient") {
+          const gradient = ctx.createLinearGradient(
+            x,
+            centerY + barHeight / 2,
+            // Bottom of bar
+            x,
+            centerY - barHeight / 2
+            // Top of bar
+          );
+          barColorResult.stops.forEach((stop) => {
+            gradient.addColorStop(stop.offset, stop.color);
+          });
+          ctx.fillStyle = gradient;
+        }
+      } else {
+        ctx.fillStyle = barColor;
+      }
+      ctx.fillRect(x, centerY - barHeight / 2, barWidth, barHeight);
+    });
+  }, [barColor, getBarColor, heightScale, waveformData, barGapRatio, minBarWidth]);
+  return { canvasRef, drawWaveform };
+};
+
+function useMousePositionRef() {
+  const positionRef = useRef({
+    clientX: null,
+    clientY: null,
+    offsetX: null,
+    offsetY: null
+  });
+  const handleMouseMove = useCallback((e) => {
+    const { clientX, clientY } = e;
+    const { offsetX, offsetY } = e.nativeEvent;
+    positionRef.current = {
+      clientX,
+      clientY,
+      offsetX,
+      offsetY
+    };
+  }, []);
+  const handleMouseLeave = useCallback(() => {
+    positionRef.current = {
+      clientX: null,
+      clientY: null,
+      offsetX: null,
+      offsetY: null
+    };
+  }, []);
+  const getPosition = useCallback(() => positionRef.current, []);
+  const getIsHovering = useCallback(() => positionRef.current.clientX !== null, []);
+  return {
+    getPosition,
+    positionRef,
+    handleMouseMove,
+    handleMouseLeave,
+    getIsHovering
+  };
+}
+
+const DEFAULT_OPTIONS = {
+  rootMargin: "0px",
+  threshold: 0,
+  root: null
+};
+function useIntersectionObserver(callback, options = DEFAULT_OPTIONS) {
+  const mergedOptions = useMemo(() => ({ ...DEFAULT_OPTIONS, ...options }), [options]);
+  const callbackRef = useLatest(callback);
+  const observerRef = useRef(null);
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver((entries, observer) => {
+      callbackRef.current(entries, observer);
+    }, mergedOptions);
+    return () => {
+      observerRef.current?.disconnect();
+      observerRef.current = null;
+    };
+  }, [mergedOptions, callbackRef]);
+  const setRef = useCallback((node) => {
+    if (node && observerRef.current) {
+      observerRef.current.observe(node);
+    }
+    return () => {
+      observerRef.current?.disconnect();
+    };
+  }, []);
+  return { setRef };
+}
+
+function useElementDimensions() {
+  const dimensionsRef = useRef({
+    width: 0,
+    height: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    x: 0,
+    y: 0
+  });
+  const intersectionCallback = useCallback((entries) => {
+    if (entries.length > 0) {
+      const entry = entries[0];
+      if (entry?.isIntersecting) {
+        const rect = entry.boundingClientRect;
+        dimensionsRef.current = {
+          width: rect.width,
+          height: rect.height,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+          left: rect.left,
+          x: rect.x,
+          y: rect.y
+        };
+      }
+    }
+  }, []);
+  const resizeCallback = useCallback((entries) => {
+    if (entries.length > 0) {
+      const entry = entries[0];
+      if (!entry) return;
+      let width = 0;
+      let height = 0;
+      if (entry.borderBoxSize && entry.borderBoxSize[0]) {
+        width = entry.borderBoxSize[0].inlineSize;
+        height = entry.borderBoxSize[0].blockSize;
+      } else if (entry.contentRect) {
+        width = entry.contentRect.width;
+        height = entry.contentRect.height;
+      }
+      dimensionsRef.current = {
+        ...dimensionsRef.current,
+        width,
+        height
+      };
+    }
+  }, []);
+  const { setRef: intersectionRef } = useIntersectionObserver(intersectionCallback);
+  const { setRef: resizeRef } = useResizeObserver(resizeCallback);
+  const elementRef = useComposedRefs(intersectionRef, resizeRef);
+  return {
+    dimensions: dimensionsRef.current,
+    dimensionsRef,
+    elementRef
+  };
+}
+
+const AUDIO_PROGRESS_COLOR_MODES = {
+  /**
+   * Gradient effect for played regions
+   */
+  GRADIENT: "gradient"
+};
+
+function getInterpolatedColorString(barColor, progressColor, ratio) {
+  const interpolatedColor = interpolateOKLCH(barColor, progressColor, ratio);
+  return OKLCHToCSS(...interpolatedColor);
+}
+function generateGradientStops(progressColorOKLCH, progressColorCSS, lightnessDelta = -0.1) {
+  const [l, c, h] = progressColorOKLCH;
+  const adjustedLightness = lightnessDelta > 0 ? Math.min(l + lightnessDelta, 1) : Math.max(l + lightnessDelta, 0);
+  const adjustedColor = OKLCHToCSS(adjustedLightness, c, h);
+  return [
+    { offset: 0, color: adjustedColor },
+    { offset: 0.4, color: progressColorCSS },
+    { offset: 1, color: progressColorCSS }
+    // Top of bar
+  ];
+}
+function calculateBarCoverage(barInfo, progress) {
+  const halfWidth = barInfo.width / 2;
+  const barStartPosition = barInfo.position - halfWidth;
+  const barEndPosition = barInfo.position + halfWidth;
+  if (barEndPosition <= progress) {
+    return 1;
+  }
+  if (barStartPosition >= progress) {
+    return 0;
+  }
+  const barWidth = barEndPosition - barStartPosition;
+  const coveredWidth = progress - barStartPosition;
+  return coveredWidth / barWidth;
+}
+function shouldApplyHoverEffect(barPosition, currentProgress, hoverPosition) {
+  if (hoverPosition > currentProgress) {
+    return barPosition > currentProgress && barPosition < hoverPosition;
+  } else if (hoverPosition < currentProgress) {
+    return barPosition > hoverPosition && barPosition < currentProgress;
+  }
+  return false;
+}
+function getNormalizedHoverPosition(mousePosition, dimensions) {
+  if (typeof mousePosition?.offsetX === "number" && typeof dimensions?.width === "number" && dimensions.width > 0) {
+    return mousePosition.offsetX / dimensions.width;
+  }
+  return void 0;
+}
+
+function useAudioProgressWaveformColor(options) {
+  const {
+    duration,
+    audioRef,
+    dimensionsRef,
+    progressColor = "#000000",
+    barColor = "#eeeeee",
+    getIsHovering,
+    hoverPositionRef,
+    hoverColor,
+    hoverColorDelta = 0.15,
+    colorMode = AUDIO_PROGRESS_COLOR_MODES.GRADIENT,
+    gradientStops,
+    gradientLightnessDelta = -0.1
+  } = options;
+  const progressColorOKLCH = useMemo(() => convertColorToOKLCH(progressColor), [progressColor]);
+  const barColorOKLCH = useMemo(() => convertColorToOKLCH(barColor), [barColor]);
+  const progressColorCSS = useMemo(() => OKLCHToCSS(...progressColorOKLCH), [progressColorOKLCH]);
+  const barColorCSS = useMemo(() => OKLCHToCSS(...barColorOKLCH), [barColorOKLCH]);
+  const hoverColorOKLCH = useMemo(() => {
+    if (hoverColor) {
+      return convertColorToOKLCH(hoverColor);
+    }
+    const [l, c, h] = progressColorOKLCH;
+    return [Math.min(1, l + hoverColorDelta), Math.max(0, c - c / 2), h];
+  }, [hoverColor, progressColorOKLCH, hoverColorDelta]);
+  const hoverColorCSS = useMemo(() => OKLCHToCSS(...hoverColorOKLCH), [hoverColorOKLCH]);
+  const effectiveGradientStops = useMemo(() => {
+    if (colorMode !== AUDIO_PROGRESS_COLOR_MODES.GRADIENT) {
+      return [];
+    }
+    if (gradientStops) {
+      return gradientStops;
+    }
+    return generateGradientStops(progressColorOKLCH, progressColorCSS, gradientLightnessDelta);
+  }, [colorMode, gradientStops, gradientLightnessDelta, progressColorOKLCH, progressColorCSS]);
+  const getWaveformBarColor = useCallback(
+    (barInfo) => {
+      const progress = audioRef.current?.currentTime ? audioRef.current.currentTime / duration : 0;
+      const coverage = calculateBarCoverage(barInfo, progress);
+      const isHovering = getIsHovering?.();
+      if (isHovering) {
+        const normalizedHoverPosition = getNormalizedHoverPosition(
+          hoverPositionRef?.current,
+          dimensionsRef?.current
+        );
+        if (normalizedHoverPosition !== void 0 && shouldApplyHoverEffect(barInfo.position, progress, normalizedHoverPosition)) {
+          return hoverColorCSS;
+        }
+      }
+      if (coverage === 1) {
+        if (colorMode === AUDIO_PROGRESS_COLOR_MODES.GRADIENT) {
+          return {
+            type: "gradient",
+            stops: effectiveGradientStops
+          };
+        }
+        return progressColorCSS;
+      }
+      if (coverage === 0) {
+        return barColorCSS;
+      }
+      return getInterpolatedColorString(barColorOKLCH, progressColorOKLCH, coverage);
+    },
+    [
+      barColorCSS,
+      progressColorCSS,
+      barColorOKLCH,
+      progressColorOKLCH,
+      duration,
+      audioRef,
+      colorMode,
+      effectiveGradientStops,
+      getIsHovering,
+      hoverPositionRef,
+      hoverColorCSS,
+      dimensionsRef
+    ]
+  );
+  return {
+    getWaveformBarColor
+  };
+}
+
+function useAudioProgressWaveform(options) {
+  const { onProgressChange, audioRef, duration } = options;
+  const { dimensionsRef, elementRef: canvasRef } = useElementDimensions();
+  const { getPosition, getIsHovering, positionRef, handleMouseMove, handleMouseLeave } = useMousePositionRef();
+  const seekToPosition = useCallback(
+    (position) => {
+      if (!audioRef.current) return;
+      const normalizedPosition = Math.max(0, Math.min(1, position));
+      const timeToSeek = normalizedPosition * duration;
+      audioRef.current.currentTime = timeToSeek;
+      onProgressChange?.(timeToSeek);
+    },
+    [audioRef, duration, onProgressChange]
+  );
+  const handleWaveformClick = useCallback(
+    (e) => {
+      if (!audioRef.current) return;
+      const { width, left } = dimensionsRef.current;
+      if (width === 0) return;
+      const clickX = e.clientX - left;
+      const position = clickX / width;
+      seekToPosition(position);
+    },
+    [audioRef, dimensionsRef, seekToPosition]
+  );
+  return {
+    canvasRef,
+    dimensionsRef,
+    handleWaveformClick,
+    handleMouseMove,
+    handleMouseLeave,
+    getPosition,
+    getIsHovering,
+    positionRef
+  };
+}
+
+function AudioProgressWaveform(props) {
+  const {
+    ref,
+    className,
+    onClick,
+    // AudioWaveform props
+    waveformData,
+    barColor,
+    barGapRatio,
+    minBarWidth,
+    heightScale,
+    // useAudioProgressWaveform props
+    audioRef,
+    duration,
+    onProgressChange,
+    // useAudioProgressWaveformColor props
+    hoverColor,
+    hoverColorDelta,
+    colorMode,
+    gradientStops,
+    gradientLightnessDelta,
+    progressColor,
+    // useAnimationFrame props
+    isActive,
+    frameRate,
+    dependencies: animationDependencies,
+    // html canvas props
+    ...restProps
+  } = props;
+  const {
+    canvasRef: audioProgressWaveformCanvasRef,
+    handleWaveformClick,
+    dimensionsRef,
+    getIsHovering,
+    positionRef,
+    handleMouseMove: handleMouseMoveForMousePosition,
+    handleMouseLeave
+  } = useAudioProgressWaveform({
+    audioRef,
+    duration,
+    onProgressChange
+  });
+  const { getWaveformBarColor } = useAudioProgressWaveformColor({
+    duration,
+    audioRef,
+    progressColor,
+    barColor,
+    dimensionsRef,
+    getIsHovering,
+    hoverPositionRef: positionRef,
+    hoverColor,
+    hoverColorDelta,
+    colorMode,
+    gradientStops,
+    gradientLightnessDelta
+  });
+  const { canvasRef: audioWaveformCanvasRef, drawWaveform } = useAudioWaveform({
+    waveformData,
+    barColor,
+    getBarColor: getWaveformBarColor,
+    barGapRatio,
+    minBarWidth,
+    heightScale
+  });
+  const mergedRef = useComposedRefs(ref, audioWaveformCanvasRef, audioProgressWaveformCanvasRef);
+  const handleProgressChange = useCallback(() => {
+    drawWaveform();
+    onProgressChange?.(audioRef.current?.currentTime ?? 0);
+  }, [drawWaveform, audioRef, onProgressChange]);
+  const handleCanvasClick = useCallback(
+    (event) => {
+      handleWaveformClick(event);
+      drawWaveform();
+      onClick?.(event);
+    },
+    [handleWaveformClick, drawWaveform, onClick]
+  );
+  const handleMouseMove = useCallback(
+    (event) => {
+      if (isActive) {
+        handleMouseMoveForMousePosition(event);
+      }
+    },
+    [handleMouseMoveForMousePosition, isActive]
+  );
+  useEffect(() => {
+    drawWaveform();
+  }, [drawWaveform]);
+  useAnimationFrame({
+    isActive,
+    callback: handleProgressChange,
+    frameRate,
+    dependencies: animationDependencies
+  });
+  return /* @__PURE__ */ jsx(
+    CanvasResponsive,
+    {
+      ...restProps,
+      ref: mergedRef,
+      onResize: drawWaveform,
+      onClick: handleCanvasClick,
+      onMouseMove: handleMouseMove,
+      onMouseLeave: handleMouseLeave,
+      className: twMerge(
+        clsx(
+          'relative cursor-pointer bg-radial from-neutral-50 from-0% to-neutral-100 to-90% before:absolute before:inset-0 before:bg-radial before:from-white before:to-transparent before:bg-[size:1px_1px] before:content-[""]',
+          className
+        )
+      )
+    }
+  );
+}
+
+function AudioPlayerProgressWaveform(props) {
+  const { waveformData, onClick, ...restProps } = props;
+  const { audioRef } = useAudioPlayerContextRefs();
+  const { duration, seek } = useAudioPlayerContextTime();
+  const { isPlaying, play } = useAudioPlayerContextPlayback();
+  const handleClick = useCallback(
+    (event) => {
+      if (!isPlaying) {
+        play();
+      }
+      onClick?.(event);
+    },
+    [onClick, isPlaying, play]
+  );
+  return /* @__PURE__ */ jsx(
+    AudioProgressWaveform,
+    {
+      isActive: isPlaying,
+      audioRef,
+      duration,
+      onProgressChange: seek,
+      waveformData,
+      onClick: handleClick,
+      ...restProps
+    }
+  );
+}
+
 const AudioPlayerCompoundComponent = {
   Root: Object.assign(AudioPlayer, { displayName: "AudioPlayer.Root" }),
   Provider: Object.assign(AudioPlayerContextProvider, { displayName: "AudioPlayer.Provider" }),
@@ -6599,6 +7169,9 @@ const AudioPlayerCompoundComponent = {
   }),
   VisualizerFrequencyBars: Object.assign(AudioPlayerVisualizerFrequencyBars, {
     displayName: "AudioPlayer.VisualizerFrequencyBars"
+  }),
+  ProgressWaveform: Object.assign(AudioPlayerProgressWaveform, {
+    displayName: "AudioPlayer.ProgressWaveform"
   })
 };
 
@@ -7271,81 +7844,6 @@ const AudioPlaylistCompoundComponent = {
   })
 };
 
-function calculateMinGapWidth(displayWidth, minGapPercent = 1e-3) {
-  return Math.max(1, displayWidth * minGapPercent);
-}
-function getActualGapWidth(displayWidth, barGapRatio, minGapPercent = 1e-3) {
-  const minGapWidth = calculateMinGapWidth(displayWidth, minGapPercent);
-  const desiredGapWidth = displayWidth * barGapRatio;
-  return Math.max(minGapWidth, desiredGapWidth);
-}
-function calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth) {
-  return Math.floor((displayWidth + gapWidth) / (minBarWidth + gapWidth));
-}
-function calculateSamplingRate(dataLength, maxBarsInView) {
-  if (dataLength <= maxBarsInView) {
-    return 1;
-  }
-  return Math.ceil(dataLength / maxBarsInView);
-}
-function sampleWaveformData(waveformData, samplingRate) {
-  if (samplingRate === 1) {
-    return waveformData;
-  }
-  return waveformData.filter((_, i) => i % samplingRate === 0);
-}
-function calculateBarWidth(displayWidth, numBars, gapWidth, minBarWidth) {
-  const totalGapWidth = (numBars - 1) * gapWidth;
-  const availableWidthForBars = displayWidth - totalGapWidth;
-  return Math.max(minBarWidth, availableWidthForBars / numBars);
-}
-
-const useAudioWaveform = (options) => {
-  const {
-    waveformData,
-    barColor = "#eeeeee",
-    getBarColor,
-    barGapRatio = 35e-4,
-    heightScale = 1,
-    minBarWidth = 1
-  } = options;
-  const canvasRef = useRef(null);
-  const drawWaveform = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const displayWidth = canvas.clientWidth;
-    const displayHeight = canvas.clientHeight;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const gapWidth = getActualGapWidth(displayWidth, barGapRatio);
-    const maxBarsInView = calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth);
-    const samplingRate = calculateSamplingRate(waveformData.length, maxBarsInView);
-    const displayData = sampleWaveformData(waveformData, samplingRate);
-    const barWidth = calculateBarWidth(displayWidth, displayData.length, gapWidth, minBarWidth);
-    const centerY = displayHeight / 2;
-    const maxBarHeight = displayHeight * heightScale;
-    displayData.forEach((value, index) => {
-      const x = index * (barWidth + gapWidth);
-      const barHeight = value * maxBarHeight;
-      const originalIndex = index * samplingRate;
-      const position = waveformData.length > 1 ? originalIndex / (waveformData.length - 1) : 0;
-      const barInfo = {
-        position,
-        value,
-        index: originalIndex
-      };
-      if (getBarColor) {
-        ctx.fillStyle = getBarColor(barInfo);
-      } else {
-        ctx.fillStyle = barColor;
-      }
-      ctx.fillRect(x, centerY - barHeight / 2, barWidth, barHeight);
-    });
-  }, [barColor, getBarColor, heightScale, waveformData, barGapRatio, minBarWidth]);
-  return { canvasRef, drawWaveform };
-};
-
 function AudioWaveform(props) {
   const {
     ref,
@@ -7578,4 +8076,4 @@ function Button(props) {
   );
 }
 
-export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextPlaybackProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVisualizerFrequencyBars, AudioPlayerVisualizerWaveform, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistScrollableContainer, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackAuthorPrimitive, AudioPlaylistTrackImage, AudioPlaylistTrackImagePrimitive, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTrackTitlePrimitive, AudioPlaylistTracks, AudioVisualizerFrequencyBars, AudioVisualizerWaveform, AudioWaveform, Badge, Button, CanvasResponsive, Icon, formatAudioDurationForDisplay, useAudioPlayerContextPlayback, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer, useAudioVisualizerWaveform, useCanvasResponsive };
+export { AudioPlayerCompoundComponent as AudioPlayer, AudioPlayerAuthor, AudioPlayerAuthorPrimitive, AudioPlayerContextPlaybackProvider, AudioPlayerContextProvider, AudioPlayerContextRefsProvider, AudioPlayerContextTimeProvider, AudioPlayerContextTrackProvider, AudioPlayerControls, AudioPlayerImage, AudioPlayerImagePrimitive, AudioPlayerInfo, AudioPlayer as AudioPlayerPrimitive, AudioPlayerProgressBar, AudioPlayerProgressBarPrimitive, AudioPlayerProgressWaveform, AudioPlayerTime, AudioPlayerTimePrimitive, AudioPlayerTitle, AudioPlayerTitlePrimitive, AudioPlayerVisualizerFrequencyBars, AudioPlayerVisualizerWaveform, AudioPlayerVolume, AudioPlaylistCompoundComponent as AudioPlaylist, AudioPlaylistContextProvider, AudioPlaylistControlToggle, AudioPlaylistControlTogglePrimitive, AudioPlaylistDismiss, AudioPlaylistDismissPrimitive, AudioPlaylistExpandableContainer, AudioPlaylistExpandableContainerPrimitive, AudioPlaylistHeader, AudioPlaylist as AudioPlaylistPrimitive, AudioPlaylistScrollableContainer, AudioPlaylistTrack, AudioPlaylistTrackAuthor, AudioPlaylistTrackAuthorPrimitive, AudioPlaylistTrackImage, AudioPlaylistTrackImagePrimitive, AudioPlaylistTrackPrimitive, AudioPlaylistTrackTitle, AudioPlaylistTrackTitlePrimitive, AudioPlaylistTracks, AudioProgressWaveform, AudioVisualizerFrequencyBars, AudioVisualizerWaveform, AudioWaveform, Badge, Button, CanvasResponsive, Icon, formatAudioDurationForDisplay, useAudioPlayerContextPlayback, useAudioPlayerContextRefs, useAudioPlayerContextTime, useAudioPlayerContextTrack, useAudioPlayerProgressBar, useAudioPlayerTime, useAudioPlaylistContext, useAudioPlaylistExpandableContainer, useAudioProgressWaveformColor, useAudioVisualizerWaveform, useCanvasResponsive };

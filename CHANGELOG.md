@@ -1,3 +1,22 @@
+# [1.33.0](https://github.com/gdominguez210/gdom-ui/compare/v1.32.0...v1.33.0) (2025-04-29)
+
+
+### Features
+
+* **lib/AudioPlayer:** add ProgressWaveform subcomponent ([6c3d1b3](https://github.com/gdominguez210/gdom-ui/commit/6c3d1b373ca584f284f013c1cbceee5667444b57))
+* **lib/AudioPlayerProgressWaveform:** add AudioPlayerProgressWaveform component ([9d80840](https://github.com/gdominguez210/gdom-ui/commit/9d80840a01469d18eeb7db4bb8fe9482cd90b72d))
+* **lib/AudioProgressWaveform/useAudioProgressWaveform:** add hook for managing progress updating ([cdf8a66](https://github.com/gdominguez210/gdom-ui/commit/cdf8a66ee5cce07ceba5d5913ae050ee4d50d3dd))
+* **lib/AudioProgressWaveform/useAudioProgressWaveformColor:** add hook for creating custom barColors based on progress for AudioWaveform ([a050b76](https://github.com/gdominguez210/gdom-ui/commit/a050b76049f384708ed448c0335924922cf712a4))
+* **lib/AudioProgressWaveform:** add AudioProgressWaveform component ([bfedaeb](https://github.com/gdominguez210/gdom-ui/commit/bfedaebfe6ae4e6b6fd17e82f86e9907953be3e3))
+* **lib/AudioWaveform/useAudioWaveform:** add support for gradient colors ([21fd8a4](https://github.com/gdominguez210/gdom-ui/commit/21fd8a4e5b82600639219e658109c76c18430318))
+* **lib/useElementDimensions:** add useElementDimensions ([86f739f](https://github.com/gdominguez210/gdom-ui/commit/86f739f7cf0bf0f3a6563fe57cef71bf6b7485cf))
+* **lib/useIntersectionObserver:** add useIntersectionObserver hook ([fa8a5e5](https://github.com/gdominguez210/gdom-ui/commit/fa8a5e5e3d0ea9bec323b2da0240aa2fb6347197))
+* **lib/useLatest:** add useLatest hook ([d601db0](https://github.com/gdominguez210/gdom-ui/commit/d601db078e8a57ba8b04c48cb7f654f6d1258318))
+* **lib/useMousePositionRef:** add useMousePositionRef hook ([da38ef5](https://github.com/gdominguez210/gdom-ui/commit/da38ef58939d803e02f70209b7d7c8af5e866d48))
+* **lib/useMousePositionState:** add useMousePositionState ([9442d97](https://github.com/gdominguez210/gdom-ui/commit/9442d97411b16e8f77fec6d2f7b085620debaa9e))
+* **lib/useResizeObserver:** add useResizeObserver hook ([2202c8c](https://github.com/gdominguez210/gdom-ui/commit/2202c8cfeeb665c4dfb236f510d91867ce530eb7))
+* **lib/utils/interpolateOKLCH:** add interpolateOKLCH util ([2868564](https://github.com/gdominguez210/gdom-ui/commit/2868564058d227072213348cbd1042b826c80d61))
+
 # [1.32.0](https://github.com/gdominguez210/gdom-ui/compare/v1.31.1...v1.32.0) (2025-04-25)
 
 

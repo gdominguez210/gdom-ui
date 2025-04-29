@@ -5,14 +5,30 @@ import { AudioPlaylistTrackImage as AudioPlaylistTrackImage_2 } from '..';
 import { AudioPlaylistTrackTitle as AudioPlaylistTrackTitle_2 } from '..';
 import { ChangeEventHandler } from 'react';
 import { ComponentPropsWithRef } from 'react';
+import { DependencyList } from 'react';
 import { ElementType } from 'react';
 import { ForwardRefExoticComponent } from 'react';
 import { HTMLAttributes } from 'react';
 import { JSX } from 'react/jsx-runtime';
 import { PropsWithChildren } from 'react';
 import { RefAttributes } from 'react';
+import { RefCallback } from 'react';
 import { RefObject } from 'react';
 import { SVGProps } from 'react';
+
+/**
+ * Color modes for the audio progress waveform
+ */
+declare const AUDIO_PROGRESS_COLOR_MODES: {
+    /**
+     * Solid colors for played and unplayed regions
+     */
+    readonly SOLID: "solid";
+    /**
+     * Gradient effect for played regions
+     */
+    readonly GRADIENT: "gradient";
+};
 
 declare type AudioContextProviderProps = PropsWithChildren & {
     isPlaying?: boolean;
@@ -80,6 +96,9 @@ export declare const AudioPlayer: {
         displayName: string;
     };
     VisualizerFrequencyBars: typeof AudioPlayerVisualizerFrequencyBars & {
+        displayName: string;
+    };
+    ProgressWaveform: typeof AudioPlayerProgressWaveform & {
         displayName: string;
     };
 };
@@ -397,6 +416,10 @@ export declare type AudioPlayerProgressBarPrimitiveProps = AudioPlayerProgressBa
  * Props for the progress bar component
  */
 export declare type AudioPlayerProgressBarProps = Omit<ComponentPropsWithRef<'input'>, 'type'>;
+
+export declare function AudioPlayerProgressWaveform(props: AudioPlayerProgressWaveformProps): JSX.Element;
+
+export declare type AudioPlayerProgressWaveformProps = Omit<AudioProgressWaveformProps, 'audioRef' | 'duration' | 'onProgressChange' | 'isActive'>;
 
 /**
  * Displays the current playback time and total duration from context
@@ -787,6 +810,15 @@ export declare type AudioPlaylistTrackTitlePrimitiveProps<T extends ElementType 
 
 export declare type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> = Omit<AudioPlaylistTrackTitlePrimitiveProps<T>, 'children'>;
 
+/**
+ * Color mode for the audio progress waveform, as string union
+ */
+declare type AudioProgressColorMode = (typeof AUDIO_PROGRESS_COLOR_MODES)[keyof typeof AUDIO_PROGRESS_COLOR_MODES];
+
+export declare function AudioProgressWaveform(props: AudioProgressWaveformProps): JSX.Element;
+
+export declare type AudioProgressWaveformProps = Omit<useAudioWaveformOptions, 'getBarColor'> & Omit<useAudioProgressWaveformColorOptions, 'dimensionsRef' | 'hoverPositionRef' | 'getIsHovering'> & Omit<useAnimationFrameOptions, 'callback'> & ComponentPropsWithRef<'canvas'> & useAudioProgressWaveformOptions;
+
 declare type AudioTrackData = {
     id: string;
     title: string;
@@ -818,6 +850,19 @@ export declare interface BadgeProps extends HTMLAttributes<HTMLElement> {
     size?: 'sm' | 'md' | 'lg';
 }
 
+declare type BarColorResult = string | {
+    type: 'gradient';
+    stops: GradientStop[];
+};
+
+/**
+ * Result type for the waveform bar color
+ */
+declare type BarColorResult_2 = string | {
+    type: 'gradient';
+    stops: GradientStop_2[];
+};
+
 export declare function Button(props: ButtonProps): JSX.Element;
 
 export declare type ButtonProps = CommonButtonProps & iconButtonAccessibleProps;
@@ -842,7 +887,40 @@ declare interface CommonButtonProps extends ComponentPropsWithRef<'button'> {
     size?: Size;
 }
 
+declare type ElementDimensions = {
+    width: number;
+    height: number;
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+    x: number;
+    y: number;
+};
+
 export declare function formatAudioDurationForDisplay(audioDurationInSeconds?: number): string;
+
+declare type GradientStop = {
+    /**
+     * Position of the stop (0-1)
+     */
+    offset: number;
+    /**
+     * Color of the stop as a CSS color string
+     */
+    color: string;
+};
+
+declare type GradientStop_2 = {
+    /**
+     * Position of the stop (0-1)
+     */
+    offset: number;
+    /**
+     * Color of the stop as a CSS color string
+     */
+    color: string;
+};
 
 export declare function Icon(props: IconProps): JSX.Element;
 
@@ -886,9 +964,43 @@ declare const icons: {
     readonly 'close-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
 };
 
+declare type MousePosition = {
+    clientX: number | null;
+    clientY: number | null;
+    offsetX: number | null;
+    offsetY: number | null;
+};
+
 declare type Size = (typeof sizes)[number];
 
 declare const sizes: readonly ["md", "lg", "xl", "xxl"];
+
+declare type useAnimationFrameOptions = {
+    /**
+     * Whether the animation should be running
+     */
+    isActive: boolean;
+    /**
+     * Callback function to execute on each animation frame
+     */
+    callback: (timestamp: number) => void;
+    /**
+     * Optional frame rate limit in frames per second
+     * If not provided, runs at browser's native refresh rate
+     */
+    frameRate?: number;
+    /**
+     * Optional dependencies that should trigger a reset of the animation
+     * when changed (similar to useEffect dependencies)
+     */
+    dependencies?: DependencyList;
+    /**
+     * Whether to automatically start/stop the animation based on isActive
+     * If false, you must manually control the animation with start/stop methods
+     * @default true
+     */
+    autoStart?: boolean;
+};
 
 declare type UseAudioAnalyzerOptions = Partial<AnalyserOptions> & {
     /**
@@ -993,6 +1105,85 @@ export declare function useAudioPlayerTime(props: {
 export declare function useAudioPlaylistContext(): AudioPlaylistContextType;
 
 export declare function useAudioPlaylistExpandableContainer(props: useAudioPlayerExpandableContainer): void;
+
+export declare function useAudioProgressWaveformColor(options: useAudioProgressWaveformColorOptions): useAudioProgressWaveformColorReturn;
+
+export declare type useAudioProgressWaveformColorOptions = {
+    /**
+     * The duration of the audio to visualize
+     */
+    duration: number;
+    /**
+     * The audio element to visualize
+     */
+    audioRef: RefObject<HTMLAudioElement>;
+    /**
+     * The dimensions of the waveform
+     */
+    dimensionsRef: UseElementDimensionsReturn['dimensionsRef'];
+    /**
+     * The color of the progress bar
+     */
+    progressColor?: string;
+    /**
+     * The color of the waveform bars
+     */
+    barColor?: string;
+    /**
+     * The color of the waveform bars when hovered
+     */
+    hoverColor?: string;
+    /**
+     * The relative position (0-1) of the mouse on the waveform
+     */
+    hoverPositionRef?: useMousePositionRefReturn['positionRef'];
+    /**
+     * How much to adjust the progress color for hover effect
+     * @default 0.15
+     */
+    hoverColorDelta?: number;
+    /**
+     * A function that returns whether the mouse is hovering over the waveform
+     */
+    getIsHovering?: useMousePositionRefReturn['getIsHovering'];
+    /**
+     * Color mode for the progress visualization
+     * @default AUDIO_PROGRESS_COLOR_MODES.SOLID
+     */
+    colorMode?: AudioProgressColorMode;
+    /**
+     * Custom gradient stops for progressed bars when colorMode is GRADIENT
+     * If not provided, stops will be generated based on progressColor and gradientLightnessDelta
+     */
+    gradientStops?: GradientStop_2[];
+    /**
+     * How much to adjust the lightness of the progress color for the gradient top
+     * Positive values make it lighter, negative values make it darker
+     * Only used when colorMode is GRADIENT and gradientStops are not provided
+     * @default -0.15
+     */
+    gradientLightnessDelta?: number;
+};
+
+export declare type useAudioProgressWaveformColorReturn = {
+    getWaveformBarColor: (barInfo: WaveformBarInfo) => BarColorResult_2;
+};
+
+declare type useAudioProgressWaveformOptions = {
+    /**
+     * The duration of the audio to visualize
+     */
+    duration: number;
+    /**
+     * The audio element to visualize
+     */
+    audioRef: RefObject<HTMLAudioElement>;
+    /**
+     * Callback fired when a seek operation is performed
+     * @param time The time in seconds to seek to
+     */
+    onProgressChange?: (time: number) => void;
+};
 
 declare type useAudioVisualizerFrequencyBarOptions = {
     /**
@@ -1104,7 +1295,7 @@ declare type useAudioWaveformOptions = {
     /**
      * Function to determine bar color based on state
      */
-    getBarColor?: (barInfo: WaveformBarInfo) => string;
+    getBarColor?: (barInfo: WaveformBarInfo) => BarColorResult;
     /**
      * Gap between bars as a proportion of canvas width (0-1)
      * For example, 0.005 would make gaps 0.5% of the total width
@@ -1126,7 +1317,9 @@ declare type useAudioWaveformOptions = {
 /**
  * Hook to create a canvas that automatically scales to its size and device pixel ratio
  */
-export declare function useCanvasResponsive(options?: UseCanvasResponsiveOptions): RefObject<HTMLCanvasElement | null>;
+export declare function useCanvasResponsive(options?: UseCanvasResponsiveOptions): {
+    canvasRef: RefCallback<Element>;
+};
 
 /**
  * Options for the useCanvasResponsive hook
@@ -1140,6 +1333,20 @@ declare type UseCanvasResponsiveOptions = {
      * Optional frame rate limit for resize handling (fps)
      */
     frameRate?: number;
+};
+
+declare type UseElementDimensionsReturn = {
+    dimensions: ElementDimensions;
+    dimensionsRef: RefObject<ElementDimensions>;
+    elementRef: (node: Element | null) => void;
+};
+
+declare type useMousePositionRefReturn = {
+    getPosition: () => MousePosition;
+    positionRef: RefObject<MousePosition>;
+    handleMouseMove: (e: React.MouseEvent) => void;
+    handleMouseLeave: () => void;
+    getIsHovering: () => boolean;
 };
 
 declare type Variant = (typeof variants)[number];
@@ -1167,6 +1374,10 @@ declare type WaveformBarInfo = {
      * Index in the waveform data array
      */
     index: number;
+    /**
+     * Width of this specific bar as a percentage of total width (0-1)
+     */
+    width: number;
 };
 
 /**
