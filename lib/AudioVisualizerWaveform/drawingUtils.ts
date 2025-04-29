@@ -8,7 +8,8 @@ import { getColorByAudioIntensity } from '@lib/utils/getColorByAudioIntensity/ge
 import { getColorByFrequencyPosition } from '@lib/utils/getColorByFrequencyPosition/getColorByFrequencyPosition';
 import { getColorBySpectrum } from '@lib/utils/getColorBySpectrum/getColorBySpectrum';
 import { getColorByDynamicIntensity } from '@lib/utils/getColorByDynamicIntensity/getColorByDynamicIntensity';
-import { type OKLCHColor } from '@lib/useColorTransition/useColorTransition';
+import { type OKLCHColor } from '@lib/types/colors';
+
 export const WAVEFORM_COLOR_MODES = {
   STATIC: 'static',
   AMPLITUDE: 'amplitude',
