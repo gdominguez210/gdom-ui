@@ -1,0 +1,153 @@
+import { twMerge } from 'tailwind-merge';
+import clsx from 'clsx';
+import { useCallback, useEffect, type ComponentPropsWithRef, type MouseEventHandler } from 'react';
+import {
+  useAudioProgressWaveformColor,
+  type useAudioProgressWaveformColorOptions,
+} from '@lib/AudioProgressWaveform/useAudioProgressWaveformColor';
+import {
+  useAudioProgressWaveform,
+  type useAudioProgressWaveformOptions,
+} from '@lib/AudioProgressWaveform/useAudioProgressWaveform';
+import {
+  type useAudioWaveformOptions,
+  useAudioWaveform,
+} from '@lib/AudioWaveform/useAudioWaveform';
+import {
+  useAnimationFrame,
+  type useAnimationFrameOptions,
+} from '@lib/useAnimationFrame/useAnimationFrame';
+import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
+import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
+
+export type AudioProgressWaveformProps = Omit<useAudioWaveformOptions, 'getBarColor'> &
+  Omit<
+    useAudioProgressWaveformColorOptions,
+    'dimensionsRef' | 'hoverPositionRef' | 'getIsHovering'
+  > &
+  Omit<useAnimationFrameOptions, 'callback'> &
+  ComponentPropsWithRef<'canvas'> &
+  useAudioProgressWaveformOptions;
+
+export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
+  const {
+    ref,
+    className,
+    onClick,
+    // AudioWaveform props
+    waveformData,
+    barColor,
+    barGapRatio,
+    minBarWidth,
+    heightScale,
+    // useAudioProgressWaveform props
+    audioRef,
+    duration,
+    onProgressChange,
+    // useAudioProgressWaveformColor props
+    hoverColor,
+    hoverColorDelta,
+    colorMode,
+    gradientStops,
+    gradientLightnessDelta,
+    progressColor,
+
+    // useAnimationFrame props
+    isActive,
+    frameRate,
+    dependencies: animationDependencies,
+    // html canvas props
+    ...restProps
+  } = props;
+
+  const {
+    canvasRef: audioProgressWaveformCanvasRef,
+    handleWaveformClick,
+    dimensionsRef,
+    getIsHovering,
+    positionRef,
+    handleMouseMove: handleMouseMoveForMousePosition,
+    handleMouseLeave,
+  } = useAudioProgressWaveform({
+    audioRef,
+    duration,
+    onProgressChange,
+  });
+
+  const { getWaveformBarColor } = useAudioProgressWaveformColor({
+    duration,
+    audioRef,
+    progressColor,
+    barColor,
+    dimensionsRef,
+    getIsHovering,
+    hoverPositionRef: positionRef,
+    hoverColor,
+    hoverColorDelta,
+    colorMode,
+    gradientStops,
+    gradientLightnessDelta,
+  });
+
+  const { canvasRef: audioWaveformCanvasRef, drawWaveform } = useAudioWaveform({
+    waveformData,
+    barColor,
+    getBarColor: getWaveformBarColor,
+    barGapRatio,
+    minBarWidth,
+    heightScale,
+  });
+
+  const mergedRef = useComposedRefs(ref, audioWaveformCanvasRef, audioProgressWaveformCanvasRef);
+
+  const handleProgressChange = useCallback(() => {
+    drawWaveform();
+    onProgressChange?.(audioRef.current?.currentTime ?? 0);
+  }, [drawWaveform, audioRef, onProgressChange]);
+
+  const handleCanvasClick: MouseEventHandler<HTMLCanvasElement> = useCallback(
+    (event) => {
+      handleWaveformClick(event);
+      drawWaveform();
+      onClick?.(event);
+    },
+    [handleWaveformClick, drawWaveform, onClick],
+  );
+
+  const handleMouseMove: MouseEventHandler = useCallback(
+    (event) => {
+      if (isActive) {
+        handleMouseMoveForMousePosition(event);
+      }
+    },
+    [handleMouseMoveForMousePosition, isActive],
+  );
+
+  useEffect(() => {
+    drawWaveform();
+  }, [drawWaveform]);
+
+  useAnimationFrame({
+    isActive,
+    callback: handleProgressChange,
+    frameRate,
+    dependencies: animationDependencies,
+  });
+
+  return (
+    <CanvasResponsive
+      {...restProps}
+      ref={mergedRef}
+      onResize={drawWaveform}
+      onClick={handleCanvasClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={twMerge(
+        clsx(
+          'relative cursor-pointer bg-radial from-neutral-50 from-0% to-neutral-100 to-90% before:absolute before:inset-0 before:bg-radial before:from-white before:to-transparent before:bg-[size:1px_1px] before:content-[""]',
+          className,
+        ),
+      )}
+    />
+  );
+}
