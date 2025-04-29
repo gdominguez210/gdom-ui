@@ -1,1 +1,5 @@
-export { useMousePositionRef } from '@lib/useMousePositionRef/useMousePositionRef';
+export {
+  useMousePositionRef,
+  type MousePosition,
+  type useMousePositionRefReturn,
+} from '@lib/useMousePositionRef/useMousePositionRef';
