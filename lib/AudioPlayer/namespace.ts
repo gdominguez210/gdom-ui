@@ -19,6 +19,7 @@ import { AudioPlayer } from '@lib/AudioPlayer/AudioPlayer';
 import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
 import { AudioPlayerVisualizerWaveform } from '@lib/AudioPlayerVisualizerWaveform/AudioPlayerVisualizerWaveform';
 import { AudioPlayerVisualizerFrequencyBars } from '@lib/AudioPlayerVisualizerFrequencyBars/AudioPlayerVisualizerFrequencyBars';
+import { AudioPlayerProgressWaveform } from '@lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
 
 // Create the namespace with Object.assign inline for each component
 export const AudioPlayerCompoundComponent = {
@@ -52,5 +53,8 @@ export const AudioPlayerCompoundComponent = {
   }),
   VisualizerFrequencyBars: Object.assign(AudioPlayerVisualizerFrequencyBars, {
     displayName: 'AudioPlayer.VisualizerFrequencyBars',
+  }),
+  ProgressWaveform: Object.assign(AudioPlayerProgressWaveform, {
+    displayName: 'AudioPlayer.ProgressWaveform',
   }),
 };
