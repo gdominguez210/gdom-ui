@@ -1,3 +1,10 @@
+## [1.33.3](https://github.com/gdominguez210/gdom-ui/compare/v1.33.2...v1.33.3) (2025-04-30)
+
+
+### Bug Fixes
+
+* **lib/useResizeObserver:** initialize observerRef in initial useRef call ([19d5de1](https://github.com/gdominguez210/gdom-ui/commit/19d5de16b0de34a047aa26f622896ce3fe8cccb5))
+
 ## [1.33.2](https://github.com/gdominguez210/gdom-ui/compare/v1.33.1...v1.33.2) (2025-04-30)
 
 

@@ -6218,11 +6218,17 @@ function rafThrottle(callback, frameRate) {
 
 function useResizeObserver(callback) {
   const callbackRef = useLatest(callback);
-  const observerRef = React.useRef(null);
-  React.useEffect(() => {
-    observerRef.current = new ResizeObserver((entries, observer) => {
+  const observerRef = React.useRef(
+    typeof ResizeObserver !== "undefined" ? new ResizeObserver((entries, observer) => {
       callbackRef.current(entries, observer);
-    });
+    }) : null
+  );
+  React.useEffect(() => {
+    if (!observerRef.current) {
+      observerRef.current = new ResizeObserver((entries, observer) => {
+        callbackRef.current(entries, observer);
+      });
+    }
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
@@ -6256,7 +6262,6 @@ function useCanvasResponsive(options) {
       const height = canvas.clientHeight;
       const scale = window.devicePixelRatio;
       if (canvas.width !== width * scale || canvas.height !== height * scale) {
-        console.log("resizing canvas", width, height, scale);
         canvas.width = width * scale;
         canvas.height = height * scale;
         context.setTransform(scale, 0, 0, scale, 0, 0);
@@ -6272,15 +6277,6 @@ function useCanvasResponsive(options) {
     (entries) => {
       if (!entries?.length) return;
       const canvas = entries[0].target;
-      console.log("ResizeObserver fired:", {
-        clientWidth: canvas.clientWidth,
-        clientHeight: canvas.clientHeight,
-        offsetWidth: canvas.offsetWidth,
-        offsetHeight: canvas.offsetHeight,
-        scrollWidth: canvas.scrollWidth,
-        scrollHeight: canvas.scrollHeight,
-        time: performance.now()
-      });
       throttledResize(canvas);
     },
     [throttledResize]
