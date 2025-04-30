@@ -37,6 +37,7 @@ export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
       const scale = window.devicePixelRatio;
 
       if (canvas.width !== width * scale || canvas.height !== height * scale) {
+        console.log('resizing canvas', width, height, scale);
         canvas.width = width * scale;
         canvas.height = height * scale;
         context.setTransform(scale, 0, 0, scale, 0, 0);
