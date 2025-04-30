@@ -37,7 +37,6 @@ export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
       const scale = window.devicePixelRatio;
 
       if (canvas.width !== width * scale || canvas.height !== height * scale) {
-        console.log('resizing canvas', width, height, scale);
         canvas.width = width * scale;
         canvas.height = height * scale;
         context.setTransform(scale, 0, 0, scale, 0, 0);
@@ -56,16 +55,6 @@ export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
       if (!entries?.length) return;
 
       const canvas = entries[0]!.target as HTMLCanvasElement;
-      // Log the exact dimensions that are triggering the resize
-      console.log('ResizeObserver fired:', {
-        clientWidth: canvas.clientWidth,
-        clientHeight: canvas.clientHeight,
-        offsetWidth: canvas.offsetWidth,
-        offsetHeight: canvas.offsetHeight,
-        scrollWidth: canvas.scrollWidth,
-        scrollHeight: canvas.scrollHeight,
-        time: performance.now(),
-      });
       throttledResize(canvas);
     },
     [throttledResize],
