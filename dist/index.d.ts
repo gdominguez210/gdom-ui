@@ -1303,6 +1303,11 @@ declare type useAudioWaveformOptions = {
      */
     barGapRatio?: number;
     /**
+     * Minimum gap between bars as a percentage of canvas width
+     * @default 0.001 (0.1% of canvas width)
+     */
+    minBarGapPercent?: number;
+    /**
      * Minimum width for bars (in pixels)
      * @default 1
      */

@@ -6234,6 +6234,7 @@ function useCanvasResponsive(options) {
       const height = canvas.clientHeight;
       const scale = window.devicePixelRatio;
       if (canvas.width !== width * scale || canvas.height !== height * scale) {
+        console.log("resizing canvas", width, height, scale);
         canvas.width = width * scale;
         canvas.height = height * scale;
         context.setTransform(scale, 0, 0, scale, 0, 0);
@@ -6613,6 +6614,9 @@ function calculateMinGapWidth(displayWidth, minGapPercent = 1e-3) {
   return Math.max(1, displayWidth * minGapPercent);
 }
 function getActualGapWidth(displayWidth, barGapRatio, minGapPercent = 1e-3) {
+  if (barGapRatio === 0 || minGapPercent === 0) {
+    return 0;
+  }
   const minGapWidth = calculateMinGapWidth(displayWidth, minGapPercent);
   const desiredGapWidth = displayWidth * barGapRatio;
   return Math.max(minGapWidth, desiredGapWidth);
@@ -6645,7 +6649,8 @@ const useAudioWaveform = (options) => {
     getBarColor,
     barGapRatio = 35e-4,
     heightScale = 1,
-    minBarWidth = 1
+    minBarWidth = 1,
+    minBarGapPercent = 1e-3
   } = options;
   const canvasRef = useRef(null);
   const drawWaveform = useCallback(() => {
@@ -6656,7 +6661,7 @@ const useAudioWaveform = (options) => {
     const displayWidth = canvas.clientWidth;
     const displayHeight = canvas.clientHeight;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const gapWidth = getActualGapWidth(displayWidth, barGapRatio);
+    const gapWidth = getActualGapWidth(displayWidth, barGapRatio, minBarGapPercent);
     const maxBarsInView = calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth);
     const samplingRate = calculateSamplingRate(waveformData.length, maxBarsInView);
     const displayData = sampleWaveformData(waveformData, samplingRate);
@@ -6664,7 +6669,8 @@ const useAudioWaveform = (options) => {
     const centerY = displayHeight / 2;
     const maxBarHeight = displayHeight * heightScale;
     displayData.forEach((value, index) => {
-      const x = index * (barWidth + gapWidth);
+      const isGapless = barGapRatio === 0 || minBarGapPercent === 0;
+      const x = isGapless ? Math.round(index * barWidth) : index * (barWidth + gapWidth);
       const barHeight = value * maxBarHeight;
       const originalIndex = index * samplingRate;
       const position = waveformData.length > 1 ? originalIndex / (waveformData.length - 1) : 0;
@@ -6682,10 +6688,8 @@ const useAudioWaveform = (options) => {
           const gradient = ctx.createLinearGradient(
             x,
             centerY + barHeight / 2,
-            // Bottom of bar
             x,
             centerY - barHeight / 2
-            // Top of bar
           );
           barColorResult.stops.forEach((stop) => {
             gradient.addColorStop(stop.offset, stop.color);
@@ -6695,9 +6699,18 @@ const useAudioWaveform = (options) => {
       } else {
         ctx.fillStyle = barColor;
       }
-      ctx.fillRect(x, centerY - barHeight / 2, barWidth, barHeight);
+      const effectiveBarWidth = isGapless ? Math.ceil(barWidth) : barWidth;
+      ctx.fillRect(x, centerY - barHeight / 2, effectiveBarWidth, barHeight);
     });
-  }, [barColor, getBarColor, heightScale, waveformData, barGapRatio, minBarWidth]);
+  }, [
+    barColor,
+    getBarColor,
+    heightScale,
+    waveformData,
+    barGapRatio,
+    minBarWidth,
+    minBarGapPercent
+  ]);
   return { canvasRef, drawWaveform };
 };
 
@@ -7853,6 +7866,7 @@ function AudioWaveform(props) {
     minBarWidth,
     heightScale,
     waveformData,
+    minBarGapPercent,
     ...restProps
   } = props;
   const { canvasRef, drawWaveform } = useAudioWaveform({
@@ -7861,7 +7875,8 @@ function AudioWaveform(props) {
     barGapRatio,
     minBarWidth,
     heightScale,
-    waveformData
+    waveformData,
+    minBarGapPercent
   });
   const mergedRefs = useComposedRefs(canvasRef, ref);
   useEffect(() => {

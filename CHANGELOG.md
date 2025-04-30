@@ -1,3 +1,10 @@
+## [1.33.1](https://github.com/gdominguez210/gdom-ui/compare/v1.33.0...v1.33.1) (2025-04-30)
+
+
+### Bug Fixes
+
+* **lib/AudioWaveform:** allow 0 gap-width waveforms ([8ac9687](https://github.com/gdominguez210/gdom-ui/commit/8ac968769e860288e0f75b73cce8b9cc3c57fdb7))
+
 # [1.33.0](https://github.com/gdominguez210/gdom-ui/compare/v1.32.0...v1.33.0) (2025-04-29)
 
 
