@@ -1,3 +1,10 @@
+## [1.33.2](https://github.com/gdominguez210/gdom-ui/compare/v1.33.1...v1.33.2) (2025-04-30)
+
+
+### Bug Fixes
+
+* **lib/useComposedRefs:** fix dependency array ([f3aafb5](https://github.com/gdominguez210/gdom-ui/commit/f3aafb55719953b9bdd7ca7e9272b09566acbfdc))
+
 ## [1.33.1](https://github.com/gdominguez210/gdom-ui/compare/v1.33.0...v1.33.1) (2025-04-30)
 
 

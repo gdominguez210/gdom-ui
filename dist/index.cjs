@@ -3580,7 +3580,7 @@ function composeRefs(...refs) {
   };
 }
 function useComposedRefs(...refs) {
-  return React.useCallback(composeRefs(...refs), [refs]);
+  return React.useCallback(composeRefs(...refs), refs);
 }
 
 function AudioPlayerProgressBarPrimitive(props) {
@@ -6272,6 +6272,15 @@ function useCanvasResponsive(options) {
     (entries) => {
       if (!entries?.length) return;
       const canvas = entries[0].target;
+      console.log("ResizeObserver fired:", {
+        clientWidth: canvas.clientWidth,
+        clientHeight: canvas.clientHeight,
+        offsetWidth: canvas.offsetWidth,
+        offsetHeight: canvas.offsetHeight,
+        scrollWidth: canvas.scrollWidth,
+        scrollHeight: canvas.scrollHeight,
+        time: performance.now()
+      });
       throttledResize(canvas);
     },
     [throttledResize]
