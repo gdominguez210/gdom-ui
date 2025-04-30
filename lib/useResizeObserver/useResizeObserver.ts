@@ -12,12 +12,20 @@ export function useResizeObserver(callback: ResizeObserverCallback): {
 } {
   const callbackRef = useLatest(callback);
 
-  const observerRef = useRef<ResizeObserver | null>(null);
+  const observerRef = useRef<ResizeObserver | null>(
+    typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver((entries, observer) => {
+          callbackRef.current(entries, observer);
+        })
+      : null,
+  );
 
   useEffect(() => {
-    observerRef.current = new ResizeObserver((entries, observer) => {
-      callbackRef.current(entries, observer);
-    });
+    if (!observerRef.current) {
+      observerRef.current = new ResizeObserver((entries, observer) => {
+        callbackRef.current(entries, observer);
+      });
+    }
 
     return () => {
       if (observerRef.current) {
