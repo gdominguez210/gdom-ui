@@ -59,5 +59,5 @@ export function composeRefs<T>(...refs: ComposableRef<T>[]) {
  */
 export function useComposedRefs<T>(...refs: ComposableRef<T>[]): RefCallback<T> {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useCallback(composeRefs<T>(...refs), [refs]);
+  return useCallback(composeRefs<T>(...refs), refs);
 }
