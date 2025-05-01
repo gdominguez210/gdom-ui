@@ -104,7 +104,7 @@ export type useAudioWaveformOptions = {
 export const useAudioWaveform = (options: useAudioWaveformOptions) => {
   const {
     waveformData,
-    barColor = '#eeeeee',
+    barColor = '#9f9fa9',
     getBarColor,
     barGapRatio = 0.0035,
     heightScale = 1,
