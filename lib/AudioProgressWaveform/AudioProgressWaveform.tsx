@@ -40,6 +40,7 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     barGapRatio,
     minBarWidth,
     heightScale,
+    minBarGapPercent,
     // useAudioProgressWaveform props
     audioRef,
     duration,
@@ -96,6 +97,7 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     barGapRatio,
     minBarWidth,
     heightScale,
+    minBarGapPercent,
   });
 
   const mergedRef = useComposedRefs(ref, audioWaveformCanvasRef, audioProgressWaveformCanvasRef);
