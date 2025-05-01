@@ -1,3 +1,12 @@
+## [1.33.4](https://github.com/gdominguez210/gdom-ui/compare/v1.33.3...v1.33.4) (2025-05-01)
+
+
+### Bug Fixes
+
+* **lib/AudioProgressWaveform:** pass minBarGapPercent to useAudioWaveform ([de43c31](https://github.com/gdominguez210/gdom-ui/commit/de43c31709cf29185dd382a234ea82ac77cf5a0b))
+* **lib/useElementDimensions:** add support for when window resizes, and changes the left/right values of the element observed ([07fdb5b](https://github.com/gdominguez210/gdom-ui/commit/07fdb5bc6b60ae566ad4abd2ed0dc68fff0c4fc5))
+* **lib/useIntersectionObserver:** initialize IntersectionObserver immediately ([4f57263](https://github.com/gdominguez210/gdom-ui/commit/4f57263a890a9b0c433c48c91c752adcf159a4a4))
+
 ## [1.33.3](https://github.com/gdominguez210/gdom-ui/compare/v1.33.2...v1.33.3) (2025-04-30)
 
 

@@ -6650,7 +6650,7 @@ function calculateBarWidth(displayWidth, numBars, gapWidth, minBarWidth) {
 const useAudioWaveform = (options) => {
   const {
     waveformData,
-    barColor = "#eeeeee",
+    barColor = "#9f9fa9",
     getBarColor,
     barGapRatio = 35e-4,
     heightScale = 1,
@@ -6763,11 +6763,17 @@ const DEFAULT_OPTIONS = {
 function useIntersectionObserver(callback, options = DEFAULT_OPTIONS) {
   const mergedOptions = useMemo(() => ({ ...DEFAULT_OPTIONS, ...options }), [options]);
   const callbackRef = useLatest(callback);
-  const observerRef = useRef(null);
-  useEffect(() => {
-    observerRef.current = new IntersectionObserver((entries, observer) => {
+  const observerRef = useRef(
+    typeof IntersectionObserver !== "undefined" ? new IntersectionObserver((entries, observer) => {
       callbackRef.current(entries, observer);
-    }, mergedOptions);
+    }) : null
+  );
+  useEffect(() => {
+    if (!observerRef.current) {
+      observerRef.current = new IntersectionObserver((entries, observer) => {
+        callbackRef.current(entries, observer);
+      }, mergedOptions);
+    }
     return () => {
       observerRef.current?.disconnect();
       observerRef.current = null;
@@ -6795,6 +6801,7 @@ function useElementDimensions() {
     x: 0,
     y: 0
   });
+  const elementRef = useRef(null);
   const intersectionCallback = useCallback((entries) => {
     if (entries.length > 0) {
       const entry = entries[0];
@@ -6835,11 +6842,37 @@ function useElementDimensions() {
   }, []);
   const { setRef: intersectionRef } = useIntersectionObserver(intersectionCallback);
   const { setRef: resizeRef } = useResizeObserver(resizeCallback);
-  const elementRef = useComposedRefs(intersectionRef, resizeRef);
+  const mergedRef = useComposedRefs(intersectionRef, resizeRef, elementRef);
+  useEffect(() => {
+    const measurePosition = () => {
+      if (!elementRef.current) return;
+      const rect = elementRef.current.getBoundingClientRect();
+      const current = dimensionsRef.current;
+      if (rect.top === current.top && rect.right === current.right && rect.bottom === current.bottom && rect.left === current.left && rect.x === current.x && rect.y === current.y) {
+        return;
+      }
+      requestAnimationFrame(() => {
+        dimensionsRef.current = {
+          ...dimensionsRef.current,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+          left: rect.left,
+          x: rect.x,
+          y: rect.y
+        };
+      });
+    };
+    const throttledMeasurePosition = rafThrottle(measurePosition);
+    window.addEventListener("resize", throttledMeasurePosition);
+    return () => {
+      window.removeEventListener("resize", throttledMeasurePosition);
+    };
+  }, []);
   return {
     dimensions: dimensionsRef.current,
     dimensionsRef,
-    elementRef
+    elementRef: mergedRef
   };
 }
 
@@ -6900,7 +6933,7 @@ function useAudioProgressWaveformColor(options) {
     audioRef,
     dimensionsRef,
     progressColor = "#000000",
-    barColor = "#eeeeee",
+    barColor = "#9f9fa9",
     getIsHovering,
     hoverPositionRef,
     hoverColor,
@@ -7026,6 +7059,7 @@ function AudioProgressWaveform(props) {
     barGapRatio,
     minBarWidth,
     heightScale,
+    minBarGapPercent,
     // useAudioProgressWaveform props
     audioRef,
     duration,
@@ -7077,7 +7111,8 @@ function AudioProgressWaveform(props) {
     getBarColor: getWaveformBarColor,
     barGapRatio,
     minBarWidth,
-    heightScale
+    heightScale,
+    minBarGapPercent
   });
   const mergedRef = useComposedRefs(ref, audioWaveformCanvasRef, audioProgressWaveformCanvasRef);
   const handleProgressChange = useCallback(() => {
