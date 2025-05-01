@@ -37,10 +37,12 @@ export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
       const scale = window.devicePixelRatio;
 
       if (canvas.width !== width * scale || canvas.height !== height * scale) {
-        canvas.width = width * scale;
-        canvas.height = height * scale;
-        context.setTransform(scale, 0, 0, scale, 0, 0);
-        onResize?.();
+        requestAnimationFrame(() => {
+          canvas.width = width * scale;
+          canvas.height = height * scale;
+          context.setTransform(scale, 0, 0, scale, 0, 0);
+          onResize?.();
+        });
       }
     },
     [onResize],
