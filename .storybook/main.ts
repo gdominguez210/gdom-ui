@@ -27,6 +27,7 @@ const config: StorybookConfig = {
         alias: {
           ...config.resolve?.alias,
           '@storybook-components': join(__dirname, './components'),
+          '@lib': join(__dirname, '../lib'),
         },
       },
     };
