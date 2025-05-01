@@ -1,8 +1,19 @@
 import type { StoryObj, Meta } from '@storybook/react';
-import { AudioWaveform } from '@lib/AudioWaveform/AudioWaveform';
+import { AudioWaveform, type AudioWaveformProps } from '@lib/AudioWaveform/AudioWaveform';
 import { waveformData } from '@lib/AudioPlayer/data';
+import { DeferredRender } from '@storybook-components/DeferredRender/DeferredRender';
 
 const sampleWaveformData = waveformData['58730401-c910-4a77-935e-83d71d5d1a52'] || [];
+
+function AudioWaveformWrapper(props: AudioWaveformProps) {
+  return (
+    <DeferredRender height={150}>
+      <AudioWaveform {...props} />
+    </DeferredRender>
+  );
+}
+
+AudioWaveformWrapper.displayName = 'AudioWaveform';
 
 export default {
   title: 'components/AudioWaveform',
@@ -35,7 +46,7 @@ export default {
     barColor: {
       control: 'color',
       description: 'Color of the waveform bars',
-      defaultValue: { summary: '#000000' },
+      defaultValue: { summary: '#9f9fa9' },
     },
     barGapRatio: {
       control: { type: 'range', min: 0, max: 0.02, step: 0.001 },
@@ -69,9 +80,9 @@ export default {
 export const Basic: StoryObj<typeof AudioWaveform> = {
   args: {
     waveformData: sampleWaveformData,
-    barColor: '#0066cc',
+    barColor: '#9f9fa9',
     barGapRatio: 0.0035,
-    minBarWidth: 2,
+    minBarWidth: 1,
     minBarGapPercent: 0.001,
     heightScale: 0.8,
     className: 'max-h-[150px]',
@@ -91,6 +102,7 @@ export const Basic: StoryObj<typeof AudioWaveform> = {
       },
     },
   },
+  render: (args) => <AudioWaveformWrapper {...args} />,
 };
 
 export const DenseWaveform: StoryObj<typeof AudioWaveform> = {
@@ -98,7 +110,6 @@ export const DenseWaveform: StoryObj<typeof AudioWaveform> = {
     waveformData: sampleWaveformData,
     barColor: '#333333',
     barGapRatio: 0, // No gap
-    minBarWidth: 1, // Thinner bars
     heightScale: 0.8,
     minBarGapPercent: 0,
     className: 'max-h-[150px]',
@@ -112,6 +123,7 @@ export const DenseWaveform: StoryObj<typeof AudioWaveform> = {
       },
     },
   },
+  render: (args) => <AudioWaveformWrapper {...args} />,
 };
 
 export const SparseWaveform: StoryObj<typeof AudioWaveform> = {
@@ -133,6 +145,7 @@ export const SparseWaveform: StoryObj<typeof AudioWaveform> = {
       },
     },
   },
+  render: (args) => <AudioWaveformWrapper {...args} />,
 };
 
 export const CustomHeightScale: StoryObj<typeof AudioWaveform> = {
@@ -154,6 +167,7 @@ export const CustomHeightScale: StoryObj<typeof AudioWaveform> = {
       },
     },
   },
+  render: (args) => <AudioWaveformWrapper {...args} />,
 };
 
 export const CustomColorFunction: StoryObj<typeof AudioWaveform> = {
@@ -180,4 +194,5 @@ export const CustomColorFunction: StoryObj<typeof AudioWaveform> = {
       },
     },
   },
+  render: (args) => <AudioWaveformWrapper {...args} />,
 };
