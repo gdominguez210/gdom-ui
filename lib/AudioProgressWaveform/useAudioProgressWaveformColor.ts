@@ -98,7 +98,7 @@ export function useAudioProgressWaveformColor(
     audioRef,
     dimensionsRef,
     progressColor = '#000000',
-    barColor = '#eeeeee',
+    barColor = '#9f9fa9',
     getIsHovering,
     hoverPositionRef,
     hoverColor,
