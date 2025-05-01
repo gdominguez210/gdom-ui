@@ -1,7 +1,8 @@
-import { useRef, useCallback, type RefObject } from 'react';
+import { useRef, useCallback, useEffect, type RefObject } from 'react';
 import { useIntersectionObserver } from '@lib/useIntersectionObserver';
 import { useResizeObserver } from '@lib/useResizeObserver';
 import { useComposedRefs } from '@lib/useComposedRefs';
+import { rafThrottle } from '@lib/utils/rafThrottle/rafThrottle';
 
 export type ElementDimensions = {
   width: number;
@@ -31,6 +32,8 @@ export function useElementDimensions(): UseElementDimensionsReturn {
     x: 0,
     y: 0,
   });
+
+  const elementRef = useRef<Element | null>(null);
 
   const intersectionCallback = useCallback((entries: IntersectionObserverEntry[]) => {
     if (entries.length > 0) {
@@ -81,11 +84,51 @@ export function useElementDimensions(): UseElementDimensionsReturn {
   const { setRef: intersectionRef } = useIntersectionObserver(intersectionCallback);
   const { setRef: resizeRef } = useResizeObserver(resizeCallback);
 
-  const elementRef = useComposedRefs(intersectionRef, resizeRef);
+  const mergedRef = useComposedRefs(intersectionRef, resizeRef, elementRef);
+
+  useEffect(() => {
+    const measurePosition = () => {
+      if (!elementRef.current) return;
+
+      const rect = elementRef.current.getBoundingClientRect();
+      const current = dimensionsRef.current;
+
+      if (
+        rect.top === current.top &&
+        rect.right === current.right &&
+        rect.bottom === current.bottom &&
+        rect.left === current.left &&
+        rect.x === current.x &&
+        rect.y === current.y
+      ) {
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        dimensionsRef.current = {
+          ...dimensionsRef.current,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+          left: rect.left,
+          x: rect.x,
+          y: rect.y,
+        };
+      });
+    };
+
+    const throttledMeasurePosition = rafThrottle(measurePosition);
+
+    window.addEventListener('resize', throttledMeasurePosition);
+
+    return () => {
+      window.removeEventListener('resize', throttledMeasurePosition);
+    };
+  }, []);
 
   return {
     dimensions: dimensionsRef.current,
     dimensionsRef,
-    elementRef,
+    elementRef: mergedRef,
   };
 }
