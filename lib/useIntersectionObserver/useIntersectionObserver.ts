@@ -21,12 +21,20 @@ export function useIntersectionObserver(
 
   const callbackRef = useLatest(callback);
 
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(
+    typeof IntersectionObserver !== 'undefined'
+      ? new IntersectionObserver((entries, observer) => {
+          callbackRef.current(entries, observer);
+        })
+      : null,
+  );
 
   useEffect(() => {
-    observerRef.current = new IntersectionObserver((entries, observer) => {
-      callbackRef.current(entries, observer);
-    }, mergedOptions);
+    if (!observerRef.current) {
+      observerRef.current = new IntersectionObserver((entries, observer) => {
+        callbackRef.current(entries, observer);
+      }, mergedOptions);
+    }
 
     return () => {
       observerRef.current?.disconnect();
