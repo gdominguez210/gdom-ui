@@ -35,7 +35,7 @@ export function useMousePositionRef(): useMousePositionRefReturn {
     };
   }, []);
 
-  const handleMouseLeave = useCallback((e: React.MouseEvent) => {
+  const handleMouseLeave = useCallback(() => {
     positionRef.current = {
       clientX: null,
       clientY: null,
