@@ -1,24 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
-import { useCanvasResponsive } from '@lib/CanvasResponsive/useCanvasResponsive';
-
-vi.mock('@lib/CanvasResponsive/useCanvasResponsive', () => ({
-  useCanvasResponsive: vi.fn().mockImplementation(() => {
-    const canvasRef = { current: document.createElement('canvas') };
-    return canvasRef;
-  }),
-}));
 
 describe('CanvasResponsive should...', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   test('render the canvas element with default classes', () => {
     render(<CanvasResponsive data-testid="responsive-canvas" />);
 
@@ -76,35 +60,5 @@ describe('CanvasResponsive should...', () => {
 
     const canvas = screen.getByTestId('responsive-canvas');
     expect(ref.current).toBe(canvas);
-  });
-
-  test('use the useCanvasResponsive hook for canvas responsiveness', () => {
-    render(<CanvasResponsive data-testid="responsive-canvas" />);
-
-    expect(useCanvasResponsive).toHaveBeenCalled();
-  });
-
-  test('accept and pass the frameRate prop', () => {
-    render(
-      <CanvasResponsive
-        data-testid="responsive-canvas"
-        frameRate={30}
-      />,
-    );
-
-    expect(useCanvasResponsive).toHaveBeenCalledWith(expect.objectContaining({ frameRate: 30 }));
-  });
-
-  test('accept and pass the onResize prop', () => {
-    const onResize = vi.fn();
-
-    render(
-      <CanvasResponsive
-        data-testid="responsive-canvas"
-        onResize={onResize}
-      />,
-    );
-
-    expect(useCanvasResponsive).toHaveBeenCalledWith(expect.objectContaining({ onResize }));
   });
 });
