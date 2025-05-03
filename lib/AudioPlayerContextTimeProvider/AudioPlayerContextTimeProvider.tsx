@@ -23,6 +23,7 @@ export function AudioPlayerContextTimeProvider(props: AudioPlayerContextTimeProv
   const [state, dispatch] = useReducer(timeReducer, {
     currentTime: defaultCurrentTime,
     duration: defaultDuration,
+    previewTime: null,
   });
 
   const seek = useCallback((time: number) => {
@@ -33,13 +34,18 @@ export function AudioPlayerContextTimeProvider(props: AudioPlayerContextTimeProv
     dispatch({ type: TIME_ACTIONS.SET_DURATION, payload: { duration } });
   }, []);
 
+  const setPreviewTime = useCallback((previewTime: number | null) => {
+    dispatch({ type: TIME_ACTIONS.SET_PREVIEW_TIME, payload: { previewTime } });
+  }, []);
+
   const contextValue = useMemo(
     () => ({
       ...state,
       seek,
       setDuration,
+      setPreviewTime,
     }),
-    [state, seek, setDuration],
+    [state, seek, setDuration, setPreviewTime],
   );
 
   return (

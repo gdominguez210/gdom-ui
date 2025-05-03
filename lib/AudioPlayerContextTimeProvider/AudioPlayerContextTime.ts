@@ -8,6 +8,8 @@ export interface AudioPlayerContextTimeType {
   duration: number;
   seek: (time: number) => void;
   setDuration: (duration: number) => void;
+  previewTime: number | null;
+  setPreviewTime: (time: number | null) => void;
 }
 
 export const AudioPlayerContextTime = createContext<AudioPlayerContextTimeType | null>(null);
