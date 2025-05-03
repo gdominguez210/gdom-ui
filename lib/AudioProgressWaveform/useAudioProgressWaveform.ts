@@ -22,14 +22,19 @@ export type useAudioProgressWaveformOptions = {
    * @param time The time in seconds to seek to
    */
   onProgressChange?: (time: number) => void;
+  /**
+   * Callback fired when the mouse is over the waveform
+   * @param time The time in seconds to preview
+   */
+  onPreviewTimeChange?: (time: number | null) => void;
 };
 
 export type useAudioProgressWaveformReturn = {
   canvasRef: UseElementDimensionsReturn['elementRef'];
   dimensionsRef: UseElementDimensionsReturn['dimensionsRef'];
   handleWaveformClick: MouseEventHandler;
-  handleMouseMove: useMousePositionRefReturn['handleMouseMove'];
-  handleMouseLeave: useMousePositionRefReturn['handleMouseLeave'];
+  handleWaveformMouseMove: MouseEventHandler<HTMLCanvasElement>;
+  handleWaveformMouseLeave: MouseEventHandler<HTMLCanvasElement>;
   getPosition: useMousePositionRefReturn['getPosition'];
   getIsHovering: useMousePositionRefReturn['getIsHovering'];
   positionRef: useMousePositionRefReturn['positionRef'];
@@ -38,7 +43,7 @@ export type useAudioProgressWaveformReturn = {
 export function useAudioProgressWaveform(
   options: useAudioProgressWaveformOptions,
 ): useAudioProgressWaveformReturn {
-  const { onProgressChange, audioRef, duration } = options;
+  const { onProgressChange, onPreviewTimeChange, audioRef, duration } = options;
 
   const { dimensionsRef, elementRef: canvasRef } = useElementDimensions();
   const { getPosition, getIsHovering, positionRef, handleMouseMove, handleMouseLeave } =
@@ -61,10 +66,24 @@ export function useAudioProgressWaveform(
     [audioRef, duration, onProgressChange],
   );
 
+  const updatePreviewFromPosition = useCallback(
+    (position: number | null) => {
+      if (position === null) {
+        onPreviewTimeChange?.(null);
+        return;
+      }
+
+      const normalizedPosition = Math.max(0, Math.min(1, position));
+
+      const previewTime = normalizedPosition * duration;
+
+      onPreviewTimeChange?.(previewTime);
+    },
+    [duration, onPreviewTimeChange],
+  );
+
   const handleWaveformClick: MouseEventHandler = useCallback(
     (e) => {
-      if (!audioRef.current) return;
-
       const { width, left } = dimensionsRef.current;
 
       if (width === 0) return;
@@ -75,15 +94,37 @@ export function useAudioProgressWaveform(
 
       seekToPosition(position);
     },
-    [audioRef, dimensionsRef, seekToPosition],
+    [dimensionsRef, seekToPosition],
+  );
+
+  const handleWaveformMouseMove: MouseEventHandler<HTMLCanvasElement> = useCallback(
+    (e) => {
+      handleMouseMove(e);
+      const { width, left } = dimensionsRef.current;
+      if (width === 0) return;
+
+      const mouseX = e.clientX - left;
+      const position = mouseX / width;
+
+      updatePreviewFromPosition(position);
+    },
+    [dimensionsRef, handleMouseMove, updatePreviewFromPosition],
+  );
+
+  const handleWaveformMouseLeave: MouseEventHandler<HTMLCanvasElement> = useCallback(
+    (e) => {
+      handleMouseLeave(e);
+      updatePreviewFromPosition(null);
+    },
+    [handleMouseLeave, updatePreviewFromPosition],
   );
 
   return {
     canvasRef,
     dimensionsRef,
     handleWaveformClick,
-    handleMouseMove,
-    handleMouseLeave,
+    handleWaveformMouseMove,
+    handleWaveformMouseLeave,
     getPosition,
     getIsHovering,
     positionRef,

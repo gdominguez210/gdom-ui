@@ -16,7 +16,7 @@ export function AudioPlayerProgressWaveform(props: AudioPlayerProgressWaveformPr
   const { waveformData, onClick, ...restProps } = props;
 
   const { audioRef } = useAudioPlayerContextRefs();
-  const { duration, seek } = useAudioPlayerContextTime();
+  const { duration, seek, setPreviewTime } = useAudioPlayerContextTime();
   const { isPlaying, play } = useAudioPlayerContextPlayback();
 
   const handleClick: MouseEventHandler<HTMLCanvasElement> = useCallback(
@@ -35,6 +35,7 @@ export function AudioPlayerProgressWaveform(props: AudioPlayerProgressWaveformPr
       audioRef={audioRef as RefObject<HTMLAudioElement>}
       duration={duration}
       onProgressChange={seek}
+      onPreviewTimeChange={setPreviewTime}
       waveformData={waveformData}
       onClick={handleClick}
       {...restProps}

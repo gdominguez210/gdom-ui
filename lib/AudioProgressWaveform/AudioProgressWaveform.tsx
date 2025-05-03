@@ -45,6 +45,7 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     audioRef,
     duration,
     onProgressChange,
+    onPreviewTimeChange,
     // useAudioProgressWaveformColor props
     hoverColor,
     hoverColorDelta,
@@ -67,12 +68,13 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     dimensionsRef,
     getIsHovering,
     positionRef,
-    handleMouseMove: handleMouseMoveForMousePosition,
-    handleMouseLeave,
+    handleWaveformMouseMove,
+    handleWaveformMouseLeave,
   } = useAudioProgressWaveform({
     audioRef,
     duration,
     onProgressChange,
+    onPreviewTimeChange,
   });
 
   const { getWaveformBarColor } = useAudioProgressWaveformColor({
@@ -116,13 +118,13 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     [handleWaveformClick, drawWaveform, onClick],
   );
 
-  const handleMouseMove: MouseEventHandler = useCallback(
+  const handleMouseMove: MouseEventHandler<HTMLCanvasElement> = useCallback(
     (event) => {
       if (isActive) {
-        handleMouseMoveForMousePosition(event);
+        handleWaveformMouseMove(event);
       }
     },
-    [handleMouseMoveForMousePosition, isActive],
+    [handleWaveformMouseMove, isActive],
   );
 
   useEffect(() => {
@@ -143,7 +145,7 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
       onResize={drawWaveform}
       onClick={handleCanvasClick}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={handleWaveformMouseLeave}
       className={twMerge(
         clsx(
           'relative cursor-pointer bg-radial from-neutral-50 from-0% to-neutral-100 to-90% before:absolute before:inset-0 before:bg-radial before:from-white before:to-transparent before:bg-[size:1px_1px] before:content-[""]',
