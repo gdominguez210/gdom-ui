@@ -6,6 +6,7 @@ import {
   AudioPlayerTimePrimitive,
   type AudioPlayerTimePrimitiveProps,
 } from './AudioPlayerTimePrimitive';
+import { clsx } from 'clsx';
 
 /**
  * Props for the time display component (current time and duration from context)
@@ -16,13 +17,19 @@ export type AudioPlayerTimeProps = Omit<AudioPlayerTimePrimitiveProps, 'currentT
  * Displays the current playback time and total duration from context
  */
 export function AudioPlayerTime(props: AudioPlayerTimeProps) {
-  const { currentTime, duration } = useAudioPlayerContextTime();
+  const { currentTime, duration, previewTime } = useAudioPlayerContextTime();
 
-  const { currentTimeDisplay, durationDisplay } = useAudioPlayerTime({ currentTime, duration });
+  const _currentTime = previewTime ?? currentTime;
+
+  const { currentTimeDisplay, durationDisplay } = useAudioPlayerTime({
+    currentTime: _currentTime,
+    duration,
+  });
 
   return (
     <AudioPlayerTimePrimitive {...props}>
-      {currentTimeDisplay} / {durationDisplay}
+      <span className={clsx(previewTime && 'opacity-80')}>{currentTimeDisplay}</span> /{' '}
+      <span>{durationDisplay}</span>
     </AudioPlayerTimePrimitive>
   );
 }
