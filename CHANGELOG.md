@@ -1,3 +1,17 @@
+# [1.34.0](https://github.com/gdominguez210/gdom-ui/compare/v1.33.4...v1.34.0) (2025-05-03)
+
+
+### Bug Fixes
+
+* **lib/useMousePositionRef:** accept event argument in handleMouseLeave ([5226e6b](https://github.com/gdominguez210/gdom-ui/commit/5226e6be7e2f304f9c1fc9b6bb73c588dd7c09a1))
+
+
+### Features
+
+* **lib/AudioPlayerContextTime:** add support for previewTime ([2949a3e](https://github.com/gdominguez210/gdom-ui/commit/2949a3ec1a314e2da59f5dc384d2dbf65f9e092f))
+* **lib/AudioPlayerTime:** render previewTime with precendent if it exists ([5f015fc](https://github.com/gdominguez210/gdom-ui/commit/5f015fc69566be5e85a7d542530ecc2284ae69a6))
+* **lib/AudioProgressWaveform:** add support for hovered preview time while seeking ([f7d898a](https://github.com/gdominguez210/gdom-ui/commit/f7d898a38e2d17d3de0921597fd68ced5d490ac8))
+
 ## [1.33.4](https://github.com/gdominguez210/gdom-ui/compare/v1.33.3...v1.33.4) (2025-05-01)
 
 

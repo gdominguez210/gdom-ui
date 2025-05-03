@@ -226,6 +226,8 @@ declare interface AudioPlayerContextTimeType {
     duration: number;
     seek: (time: number) => void;
     setDuration: (duration: number) => void;
+    previewTime: number | null;
+    setPreviewTime: (time: number | null) => void;
 }
 
 /**
@@ -1183,6 +1185,11 @@ declare type useAudioProgressWaveformOptions = {
      * @param time The time in seconds to seek to
      */
     onProgressChange?: (time: number) => void;
+    /**
+     * Callback fired when the mouse is over the waveform
+     * @param time The time in seconds to preview
+     */
+    onPreviewTimeChange?: (time: number | null) => void;
 };
 
 declare type useAudioVisualizerFrequencyBarOptions = {
@@ -1350,7 +1357,7 @@ declare type useMousePositionRefReturn = {
     getPosition: () => MousePosition;
     positionRef: RefObject<MousePosition>;
     handleMouseMove: (e: React.MouseEvent) => void;
-    handleMouseLeave: () => void;
+    handleMouseLeave: (e: React.MouseEvent) => void;
     getIsHovering: () => boolean;
 };
 

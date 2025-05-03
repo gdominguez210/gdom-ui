@@ -3074,7 +3074,8 @@ const AudioPlayerContextTime = React.createContext(null);
 
 const TIME_ACTIONS = {
   SET_CURRENT_TIME: "SET_CURRENT_TIME",
-  SET_DURATION: "SET_DURATION"
+  SET_DURATION: "SET_DURATION",
+  SET_PREVIEW_TIME: "SET_PREVIEW_TIME"
 };
 function timeReducer(state, action) {
   switch (action.type) {
@@ -3082,6 +3083,8 @@ function timeReducer(state, action) {
       return { ...state, currentTime: action.payload.currentTime };
     case TIME_ACTIONS.SET_DURATION:
       return { ...state, duration: action.payload.duration };
+    case TIME_ACTIONS.SET_PREVIEW_TIME:
+      return { ...state, previewTime: action.payload.previewTime };
     default:
       return state;
   }
@@ -3091,7 +3094,8 @@ function AudioPlayerContextTimeProvider(props) {
   const { defaultDuration = 0, defaultCurrentTime = 0, children } = props;
   const [state, dispatch] = React.useReducer(timeReducer, {
     currentTime: defaultCurrentTime,
-    duration: defaultDuration
+    duration: defaultDuration,
+    previewTime: null
   });
   const seek = React.useCallback((time) => {
     dispatch({ type: TIME_ACTIONS.SET_CURRENT_TIME, payload: { currentTime: time } });
@@ -3099,13 +3103,17 @@ function AudioPlayerContextTimeProvider(props) {
   const setDuration = React.useCallback((duration) => {
     dispatch({ type: TIME_ACTIONS.SET_DURATION, payload: { duration } });
   }, []);
+  const setPreviewTime = React.useCallback((previewTime) => {
+    dispatch({ type: TIME_ACTIONS.SET_PREVIEW_TIME, payload: { previewTime } });
+  }, []);
   const contextValue = React.useMemo(
     () => ({
       ...state,
       seek,
-      setDuration
+      setDuration,
+      setPreviewTime
     }),
-    [state, seek, setDuration]
+    [state, seek, setDuration, setPreviewTime]
   );
   return /* @__PURE__ */ jsxRuntime.jsx(AudioPlayerContextTime.Provider, { value: contextValue, children });
 }
@@ -4779,12 +4787,17 @@ function AudioPlayerTimePrimitive(props) {
 }
 
 function AudioPlayerTime(props) {
-  const { currentTime, duration } = useAudioPlayerContextTime();
-  const { currentTimeDisplay, durationDisplay } = useAudioPlayerTime({ currentTime, duration });
+  const { currentTime, duration, previewTime } = useAudioPlayerContextTime();
+  const _currentTime = previewTime ?? currentTime;
+  const { currentTimeDisplay, durationDisplay } = useAudioPlayerTime({
+    currentTime: _currentTime,
+    duration
+  });
   return /* @__PURE__ */ jsxRuntime.jsxs(AudioPlayerTimePrimitive, { ...props, children: [
-    currentTimeDisplay,
-    " / ",
-    durationDisplay
+    /* @__PURE__ */ jsxRuntime.jsx("span", { className: clsx(previewTime && "opacity-80"), children: currentTimeDisplay }),
+    " /",
+    " ",
+    /* @__PURE__ */ jsxRuntime.jsx("span", { children: durationDisplay })
   ] });
 }
 
@@ -6262,10 +6275,12 @@ function useCanvasResponsive(options) {
       const height = canvas.clientHeight;
       const scale = window.devicePixelRatio;
       if (canvas.width !== width * scale || canvas.height !== height * scale) {
-        canvas.width = width * scale;
-        canvas.height = height * scale;
-        context.setTransform(scale, 0, 0, scale, 0, 0);
-        onResize?.();
+        requestAnimationFrame(() => {
+          canvas.width = width * scale;
+          canvas.height = height * scale;
+          context.setTransform(scale, 0, 0, scale, 0, 0);
+          onResize?.();
+        });
       }
     },
     [onResize]
@@ -7034,7 +7049,7 @@ function useAudioProgressWaveformColor(options) {
 }
 
 function useAudioProgressWaveform(options) {
-  const { onProgressChange, audioRef, duration } = options;
+  const { onProgressChange, onPreviewTimeChange, audioRef, duration } = options;
   const { dimensionsRef, elementRef: canvasRef } = useElementDimensions();
   const { getPosition, getIsHovering, positionRef, handleMouseMove, handleMouseLeave } = useMousePositionRef();
   const seekToPosition = React.useCallback(
@@ -7047,23 +7062,52 @@ function useAudioProgressWaveform(options) {
     },
     [audioRef, duration, onProgressChange]
   );
+  const updatePreviewFromPosition = React.useCallback(
+    (position) => {
+      if (position === null) {
+        onPreviewTimeChange?.(null);
+        return;
+      }
+      const normalizedPosition = Math.max(0, Math.min(1, position));
+      const previewTime = normalizedPosition * duration;
+      onPreviewTimeChange?.(previewTime);
+    },
+    [duration, onPreviewTimeChange]
+  );
   const handleWaveformClick = React.useCallback(
     (e) => {
-      if (!audioRef.current) return;
       const { width, left } = dimensionsRef.current;
       if (width === 0) return;
       const clickX = e.clientX - left;
       const position = clickX / width;
       seekToPosition(position);
     },
-    [audioRef, dimensionsRef, seekToPosition]
+    [dimensionsRef, seekToPosition]
+  );
+  const handleWaveformMouseMove = React.useCallback(
+    (e) => {
+      handleMouseMove(e);
+      const { width, left } = dimensionsRef.current;
+      if (width === 0) return;
+      const mouseX = e.clientX - left;
+      const position = mouseX / width;
+      updatePreviewFromPosition(position);
+    },
+    [dimensionsRef, handleMouseMove, updatePreviewFromPosition]
+  );
+  const handleWaveformMouseLeave = React.useCallback(
+    (e) => {
+      handleMouseLeave(e);
+      updatePreviewFromPosition(null);
+    },
+    [handleMouseLeave, updatePreviewFromPosition]
   );
   return {
     canvasRef,
     dimensionsRef,
     handleWaveformClick,
-    handleMouseMove,
-    handleMouseLeave,
+    handleWaveformMouseMove,
+    handleWaveformMouseLeave,
     getPosition,
     getIsHovering,
     positionRef
@@ -7086,6 +7130,7 @@ function AudioProgressWaveform(props) {
     audioRef,
     duration,
     onProgressChange,
+    onPreviewTimeChange,
     // useAudioProgressWaveformColor props
     hoverColor,
     hoverColorDelta,
@@ -7106,12 +7151,13 @@ function AudioProgressWaveform(props) {
     dimensionsRef,
     getIsHovering,
     positionRef,
-    handleMouseMove: handleMouseMoveForMousePosition,
-    handleMouseLeave
+    handleWaveformMouseMove,
+    handleWaveformMouseLeave
   } = useAudioProgressWaveform({
     audioRef,
     duration,
-    onProgressChange
+    onProgressChange,
+    onPreviewTimeChange
   });
   const { getWaveformBarColor } = useAudioProgressWaveformColor({
     duration,
@@ -7152,10 +7198,10 @@ function AudioProgressWaveform(props) {
   const handleMouseMove = React.useCallback(
     (event) => {
       if (isActive) {
-        handleMouseMoveForMousePosition(event);
+        handleWaveformMouseMove(event);
       }
     },
-    [handleMouseMoveForMousePosition, isActive]
+    [handleWaveformMouseMove, isActive]
   );
   React.useEffect(() => {
     drawWaveform();
@@ -7174,7 +7220,7 @@ function AudioProgressWaveform(props) {
       onResize: drawWaveform,
       onClick: handleCanvasClick,
       onMouseMove: handleMouseMove,
-      onMouseLeave: handleMouseLeave,
+      onMouseLeave: handleWaveformMouseLeave,
       className: twMerge(
         clsx(
           'relative cursor-pointer bg-radial from-neutral-50 from-0% to-neutral-100 to-90% before:absolute before:inset-0 before:bg-radial before:from-white before:to-transparent before:bg-[size:1px_1px] before:content-[""]',
@@ -7188,7 +7234,7 @@ function AudioProgressWaveform(props) {
 function AudioPlayerProgressWaveform(props) {
   const { waveformData, onClick, ...restProps } = props;
   const { audioRef } = useAudioPlayerContextRefs();
-  const { duration, seek } = useAudioPlayerContextTime();
+  const { duration, seek, setPreviewTime } = useAudioPlayerContextTime();
   const { isPlaying, play } = useAudioPlayerContextPlayback();
   const handleClick = React.useCallback(
     (event) => {
@@ -7206,6 +7252,7 @@ function AudioPlayerProgressWaveform(props) {
       audioRef,
       duration,
       onProgressChange: seek,
+      onPreviewTimeChange: setPreviewTime,
       waveformData,
       onClick: handleClick,
       ...restProps
