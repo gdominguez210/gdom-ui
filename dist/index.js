@@ -6121,6 +6121,15 @@ function formatOKLCH(oklch, precision = 2) {
   ];
 }
 function convertColorToOKLCH(color) {
+  const oklchMatch = color.match(
+    /oklch\(\s*([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)(?:\s*\/\s*[0-9.]+)?\s*\)/i
+  );
+  if (oklchMatch) {
+    const lightness = parseFloat(oklchMatch[1]);
+    const chroma = parseFloat(oklchMatch[2]);
+    const hue = parseFloat(oklchMatch[3]);
+    return formatOKLCH({ L: lightness, C: chroma, h: hue });
+  }
   const normalizedRGB = parseColorToNormalizedRGB(color);
   const linearRGB = convertToLinearRGB(normalizedRGB);
   const lms = convertLinearRGBToLMS(linearRGB);
@@ -7050,7 +7059,7 @@ function calculateBarCoverage(barInfo, progress) {
   }
   const barWidth = barEndPosition - barStartPosition;
   const coveredWidth = progress - barStartPosition;
-  return coveredWidth / barWidth;
+  return Math.round(coveredWidth / barWidth * 1e3) / 1e3;
 }
 function shouldApplyHoverEffect(barPosition, currentProgress, hoverPosition) {
   if (hoverPosition > currentProgress) {

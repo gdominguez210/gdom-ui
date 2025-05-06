@@ -1,3 +1,10 @@
+## [1.35.1](https://github.com/gdominguez210/gdom-ui/compare/v1.35.0...v1.35.1) (2025-05-06)
+
+
+### Bug Fixes
+
+* **lib/AudioProgressWaveform/drawingUtils:** normalize return value of calculateBarCoverage ([33be681](https://github.com/gdominguez210/gdom-ui/commit/33be681a5bee30b7f8075965abddaa9887a0a507))
+
 # [1.35.0](https://github.com/gdominguez210/gdom-ui/compare/v1.34.0...v1.35.0) (2025-05-06)
 
 
