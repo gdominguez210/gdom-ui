@@ -1,12 +1,21 @@
-import { useCallback, useEffect, type ChangeEventHandler, type RefObject } from 'react';
+import {
+  useCallback,
+  useEffect,
+  type ChangeEventHandler,
+  type MouseEventHandler,
+  type RefObject,
+} from 'react';
 import { useAnimationFrame } from '@lib/useAnimationFrame/useAnimationFrame';
-
+import { useElementDimensions } from '@lib/useElementDimensions/useElementDimensions';
+import { useDelayedMouseMove } from '@lib/useDelayedMouseMove/useDelayedMouseMove';
 interface UseAudioPlayerProgressBarProps {
   audioRef: RefObject<HTMLAudioElement | null>;
-  cssVariableName?: string;
+  progressCssVariableName?: string;
+  previewCssVariableName?: string;
   duration: number;
   isPlaying: boolean;
   onProgressChange: (time: number) => void;
+  onPreviewTimeChange?: (time: number | null) => void;
   progressBarRef: RefObject<HTMLInputElement | null>;
 }
 
@@ -34,12 +43,45 @@ function updateAudioCurrentTime(audio: HTMLAudioElement | null, time: number): v
  */
 export function useAudioPlayerProgressBar({
   audioRef,
-  cssVariableName = '--range-progress',
+  progressCssVariableName = '--range-progress',
+  previewCssVariableName = '--range-preview',
   duration,
   isPlaying,
   onProgressChange,
+  onPreviewTimeChange,
   progressBarRef,
 }: UseAudioPlayerProgressBarProps) {
+  const { dimensionsRef, elementRef } = useElementDimensions();
+
+  const _handleMouseMove: MouseEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      if (!progressBarRef.current) return;
+
+      const { width, left } = dimensionsRef.current;
+      if (width === 0) return;
+
+      const mouseX = e.clientX - left;
+      const position = mouseX / width;
+
+      const previewTime = position * duration;
+
+      progressBarRef.current.style.setProperty(
+        previewCssVariableName,
+        `${(previewTime / duration) * 100}%`,
+      );
+
+      onPreviewTimeChange?.(previewTime);
+    },
+    [progressBarRef, previewCssVariableName, duration, onPreviewTimeChange, dimensionsRef],
+  );
+
+  const _handleMouseOut: MouseEventHandler<HTMLInputElement> = useCallback(() => {
+    if (!progressBarRef.current) return;
+
+    progressBarRef.current.style.setProperty(previewCssVariableName, '0%');
+    onPreviewTimeChange?.(null);
+  }, [progressBarRef, previewCssVariableName, onPreviewTimeChange]);
+
   const handleProgressChange: ChangeEventHandler<HTMLInputElement> = useCallback(() => {
     if (!audioRef.current || !progressBarRef.current) return;
 
@@ -47,8 +89,11 @@ export function useAudioPlayerProgressBar({
     updateAudioCurrentTime(audioRef.current, newTime);
     onProgressChange(newTime);
 
-    progressBarRef.current.style.setProperty(cssVariableName, `${(newTime / duration) * 100}%`);
-  }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
+    progressBarRef.current.style.setProperty(
+      progressCssVariableName,
+      `${(newTime / duration) * 100}%`,
+    );
+  }, [audioRef, progressBarRef, duration, progressCssVariableName, onProgressChange]);
 
   const updateProgress = useCallback(() => {
     if (!audioRef.current || !progressBarRef.current || !duration) return;
@@ -57,14 +102,23 @@ export function useAudioPlayerProgressBar({
     onProgressChange(currentTime);
 
     updateProgressBar(progressBarRef.current, currentTime);
-    progressBarRef.current.style.setProperty(cssVariableName, `${(currentTime / duration) * 100}%`);
-  }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
+    progressBarRef.current.style.setProperty(
+      progressCssVariableName,
+      `${(currentTime / duration) * 100}%`,
+    );
+  }, [audioRef, progressBarRef, duration, progressCssVariableName, onProgressChange]);
 
   useAnimationFrame({
     isActive: isPlaying,
     callback: updateProgress,
     dependencies: [duration],
   });
+
+  const { handleMouseEnter, handleMouseMove, handleMouseOut } =
+    useDelayedMouseMove<HTMLInputElement>({
+      onMouseMove: _handleMouseMove,
+      onMouseLeave: _handleMouseOut,
+    });
 
   useEffect(() => {
     if (!isPlaying) {
@@ -74,5 +128,9 @@ export function useAudioPlayerProgressBar({
 
   return {
     handleProgressChange,
+    handleMouseEnter,
+    handleMouseMove,
+    handleMouseOut,
+    elementRef,
   };
 }

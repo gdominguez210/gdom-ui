@@ -22,15 +22,17 @@ export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
 
   const { isPlaying } = useAudioPlayerContextPlayback();
 
-  const { duration, seek } = useAudioPlayerContextTime();
+  const { duration, seek, setPreviewTime } = useAudioPlayerContextTime();
 
-  const { handleProgressChange } = useAudioPlayerProgressBar({
-    audioRef,
-    duration,
-    isPlaying,
-    onProgressChange: seek,
-    progressBarRef,
-  });
+  const { handleProgressChange, handleMouseEnter, handleMouseMove, handleMouseOut, elementRef } =
+    useAudioPlayerProgressBar({
+      audioRef,
+      duration,
+      isPlaying,
+      onProgressChange: seek,
+      progressBarRef,
+      onPreviewTimeChange: setPreviewTime,
+    });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     (e) => {
@@ -40,13 +42,16 @@ export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
     [handleProgressChange, onChange],
   );
 
-  const composedRef = useComposedRefs(progressBarRef, ref);
+  const composedRef = useComposedRefs(progressBarRef, ref, elementRef);
 
   return (
     <AudioPlayerProgressBarPrimitive
       {...restProps}
       onChange={handleChange}
       ref={composedRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseOut={handleMouseOut}
+      onMouseMove={handleMouseMove}
     />
   );
 }

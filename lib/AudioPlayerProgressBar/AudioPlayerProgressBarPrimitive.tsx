@@ -5,13 +5,15 @@ import { type AudioPlayerProgressBarProps } from '@lib/AudioPlayerProgressBar/Au
 /**
  * Props for the progress bar component
  */
-export type AudioPlayerProgressBarPrimitiveProps = AudioPlayerProgressBarProps;
+export type AudioPlayerProgressBarPrimitiveProps = AudioPlayerProgressBarProps & {
+  previewPercentage?: number;
+};
 
 /**
  * Base component for displaying and styling the audio progress bar
  */
 export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarPrimitiveProps) {
-  const { className, ...restProps } = props;
+  const { className, previewPercentage, ...restProps } = props;
 
   return (
     <input
@@ -19,6 +21,7 @@ export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarPri
         clsx(
           // Base styles
           '[--range-progress:0%]',
+          '[--range-preview:0%]',
           'appearance-none',
           'bg-gray-500',
           'relative',
@@ -35,6 +38,23 @@ export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarPri
           'before:top-0',
           'before:left-0',
           'before:h-2',
+          'before:z-[1]',
+          // Preview styles
+          'after:block',
+          'after:transition-opacity',
+          'after:delay-150',
+          'after:duration-300',
+          'after:ease-in-out',
+          'after:w-(--range-preview)',
+          'after:opacity-0',
+          'after:bg-neutral-400',
+          'after:content-[""]',
+          'after:absolute',
+          'after:top-0',
+          'after:left-0',
+          'after:h-2',
+          'after:z-[0]',
+          'hover:after:opacity-100',
           // WebKit (Chrome, Safari, newer Edge) track styles
           '[&::-webkit-slider-runnable-track]:bg-transparent',
           '[&::-webkit-slider-runnable-track]:appearance-none',
@@ -76,7 +96,12 @@ export function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgressBarPri
       defaultValue="0"
       {...restProps}
       type="range"
-      style={{ '--range-progress': `${restProps.value ?? 0}%` } as React.CSSProperties}
+      style={
+        {
+          '--range-progress': `${restProps.value ?? 0}%`,
+          '--range-preview': `${previewPercentage ?? 0}%`,
+        } as React.CSSProperties
+      }
     />
   );
 }
