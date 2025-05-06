@@ -77,7 +77,8 @@ export function calculateBarCoverage(
   // Bar is partially covered
   const barWidth = barEndPosition - barStartPosition;
   const coveredWidth = progress - barStartPosition;
-  return coveredWidth / barWidth;
+
+  return Math.round((coveredWidth / barWidth) * 1000) / 1000;
 }
 
 /**
