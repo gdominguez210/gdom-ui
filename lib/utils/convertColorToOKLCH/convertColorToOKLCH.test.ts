@@ -160,4 +160,22 @@ describe('convertColorToOKLCH should...', () => {
       expect(decimalPlaces).toBeLessThanOrEqual(2);
     });
   });
+
+  it('directly parse OKLCH values without full conversion', () => {
+    const result = convertColorToOKLCH('oklch(0.6 0.3 30)');
+
+    expect(result).toHaveLength(3);
+    expect(result[0]).toBeCloseTo(0.6);
+    expect(result[1]).toBeCloseTo(0.3);
+    expect(result[2]).toBeCloseTo(30);
+  });
+
+  it('handle OKLCH values with alpha', () => {
+    const result = convertColorToOKLCH('oklch(0.6 0.3 30 / 0.5)');
+
+    expect(result).toHaveLength(3);
+    expect(result[0]).toBeCloseTo(0.6);
+    expect(result[1]).toBeCloseTo(0.3);
+    expect(result[2]).toBeCloseTo(30);
+  });
 });
