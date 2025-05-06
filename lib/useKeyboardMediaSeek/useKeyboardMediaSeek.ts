@@ -4,7 +4,7 @@ import { formatDurationForDisplay } from '@lib/utils/formatDurationForDisplay/fo
 
 type HTMLMediaElement = HTMLAudioElement | HTMLVideoElement;
 
-export type UseKeyboardSeekOptions = {
+export type UseKeyboardMediaSeekOptions = {
   /**
    * Reference to the media element (audio or video)
    */
@@ -58,7 +58,7 @@ export type UseKeyboardSeekOptions = {
   seekInterval?: number;
 };
 
-export type UseKeyboardSeekReturn = {
+export type UseKeyboardMediaSeekReturn = {
   /**
    * Current seek increment amount (changes while accelerating)
    */
@@ -119,7 +119,7 @@ export type UseKeyboardSeekReturn = {
  * Hook to handle keyboard-based seeking for audio or video elements.
  * Provides accelerated seeking when arrow keys are held down.
  */
-export function useKeyboardSeek({
+export function useKeyboardMediaSeek({
   mediaRef,
   duration,
   onSeekComplete,
@@ -129,7 +129,7 @@ export function useKeyboardSeek({
   seekAccelerationDelay = 500,
   ariaLabel = 'Media player. Use arrow keys to navigate.',
   seekInterval = 100,
-}: UseKeyboardSeekOptions): UseKeyboardSeekReturn {
+}: UseKeyboardMediaSeekOptions): UseKeyboardMediaSeekReturn {
   const [currentSeekIncrement, setCurrentSeekIncrement] = useState(seekIncrement);
   const keyPressStartTimeRef = useRef<number | null>(null);
   const seekIntervalRef = useRef<number | null>(null);
