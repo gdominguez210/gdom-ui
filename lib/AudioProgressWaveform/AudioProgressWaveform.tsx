@@ -19,7 +19,11 @@ import {
 } from '@lib/useAnimationFrame/useAnimationFrame';
 import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
 import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
-
+import {
+  useKeyboardMediaSeek,
+  type UseKeyboardMediaSeekOptions,
+} from '@lib/useKeyboardMediaSeek/useKeyboardMediaSeek';
+import { useDelayedMouseMove } from '@lib/useDelayedMouseMove/useDelayedMouseMove';
 export type AudioProgressWaveformProps = Omit<useAudioWaveformOptions, 'getBarColor'> &
   Omit<
     useAudioProgressWaveformColorOptions,
@@ -27,7 +31,8 @@ export type AudioProgressWaveformProps = Omit<useAudioWaveformOptions, 'getBarCo
   > &
   Omit<useAnimationFrameOptions, 'callback'> &
   ComponentPropsWithRef<'canvas'> &
-  useAudioProgressWaveformOptions;
+  useAudioProgressWaveformOptions &
+  Omit<UseKeyboardMediaSeekOptions, 'mediaRef'>;
 
 export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
   const {
@@ -53,11 +58,13 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     gradientStops,
     gradientLightnessDelta,
     progressColor,
-
     // useAnimationFrame props
     isActive,
     frameRate,
     dependencies: animationDependencies,
+    // useKeyboardSeek props
+    seekIncrement,
+    maxSeekIncrement,
     // html canvas props
     ...restProps
   } = props;
@@ -118,7 +125,7 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     [handleWaveformClick, drawWaveform, onClick],
   );
 
-  const handleMouseMove: MouseEventHandler<HTMLCanvasElement> = useCallback(
+  const _handleMouseMove: MouseEventHandler<HTMLCanvasElement> = useCallback(
     (event) => {
       if (isActive) {
         handleWaveformMouseMove(event);
@@ -138,14 +145,32 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     dependencies: animationDependencies,
   });
 
+  const { handleKeyDown, handleKeyUp, a11yProps } = useKeyboardMediaSeek({
+    mediaRef: audioRef,
+    duration,
+    onSeekComplete: onProgressChange,
+    seekIncrement,
+    maxSeekIncrement,
+  });
+
+  const { handleMouseEnter, handleMouseMove, handleMouseOut } =
+    useDelayedMouseMove<HTMLCanvasElement>({
+      onMouseMove: _handleMouseMove,
+      onMouseLeave: handleWaveformMouseLeave,
+    });
+
   return (
     <CanvasResponsive
       {...restProps}
+      {...a11yProps}
       ref={mergedRef}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
       onResize={drawWaveform}
       onClick={handleCanvasClick}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleWaveformMouseLeave}
+      onMouseLeave={handleMouseOut}
+      onMouseEnter={handleMouseEnter}
       className={twMerge(
         clsx(
           'relative cursor-pointer bg-radial from-neutral-50 from-0% to-neutral-100 to-90% before:absolute before:inset-0 before:bg-radial before:from-white before:to-transparent before:bg-[size:1px_1px] before:content-[""]',
