@@ -3,4 +3,4 @@ export {
   AudioPlayerTimePrimitive,
   type AudioPlayerTimePrimitiveProps,
 } from './AudioPlayerTimePrimitive';
-export { formatAudioDurationForDisplay, useAudioPlayerTime } from './useAudioPlayerTime';
+export { useAudioPlayerTime } from './useAudioPlayerTime';
