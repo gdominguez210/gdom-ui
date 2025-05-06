@@ -269,6 +269,18 @@ function formatOKLCH(oklch: OKLCH, precision: number = 2): [number, number, numb
  * @returns OKLCH components as [lightness, chroma, hue]
  */
 export function convertColorToOKLCH(color: string): [number, number, number] {
+  const oklchMatch = color.match(
+    /oklch\(\s*([0-9.]+)\s+([0-9.]+)\s+([0-9.]+)(?:\s*\/\s*[0-9.]+)?\s*\)/i,
+  );
+
+  if (oklchMatch) {
+    const lightness = parseFloat(oklchMatch[1]!);
+    const chroma = parseFloat(oklchMatch[2]!);
+    const hue = parseFloat(oklchMatch[3]!);
+
+    return formatOKLCH({ L: lightness, C: chroma, h: hue });
+  }
+
   const normalizedRGB = parseColorToNormalizedRGB(color);
   const linearRGB = convertToLinearRGB(normalizedRGB);
   const lms = convertLinearRGBToLMS(linearRGB);
