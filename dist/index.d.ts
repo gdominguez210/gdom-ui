@@ -10,6 +10,7 @@ import { ElementType } from 'react';
 import { ForwardRefExoticComponent } from 'react';
 import { HTMLAttributes } from 'react';
 import { JSX } from 'react/jsx-runtime';
+import { MouseEventHandler } from 'react';
 import { PropsWithChildren } from 'react';
 import { RefAttributes } from 'react';
 import { RefCallback } from 'react';
@@ -412,7 +413,9 @@ export declare function AudioPlayerProgressBarPrimitive(props: AudioPlayerProgre
 /**
  * Props for the progress bar component
  */
-export declare type AudioPlayerProgressBarPrimitiveProps = AudioPlayerProgressBarProps;
+export declare type AudioPlayerProgressBarPrimitiveProps = AudioPlayerProgressBarProps & {
+    previewPercentage?: number;
+};
 
 /**
  * Props for the progress bar component
@@ -819,7 +822,7 @@ declare type AudioProgressColorMode = (typeof AUDIO_PROGRESS_COLOR_MODES)[keyof 
 
 export declare function AudioProgressWaveform(props: AudioProgressWaveformProps): JSX.Element;
 
-export declare type AudioProgressWaveformProps = Omit<useAudioWaveformOptions, 'getBarColor'> & Omit<useAudioProgressWaveformColorOptions, 'dimensionsRef' | 'hoverPositionRef' | 'getIsHovering'> & Omit<useAnimationFrameOptions, 'callback'> & ComponentPropsWithRef<'canvas'> & useAudioProgressWaveformOptions;
+export declare type AudioProgressWaveformProps = Omit<useAudioWaveformOptions, 'getBarColor'> & Omit<useAudioProgressWaveformColorOptions, 'dimensionsRef' | 'hoverPositionRef' | 'getIsHovering'> & Omit<useAnimationFrameOptions, 'callback'> & ComponentPropsWithRef<'canvas'> & useAudioProgressWaveformOptions & Omit<UseKeyboardMediaSeekOptions, 'mediaRef'>;
 
 declare type AudioTrackData = {
     id: string;
@@ -900,8 +903,6 @@ declare type ElementDimensions = {
     y: number;
 };
 
-export declare function formatAudioDurationForDisplay(audioDurationInSeconds?: number): string;
-
 declare type GradientStop = {
     /**
      * Position of the stop (0-1)
@@ -923,6 +924,8 @@ declare type GradientStop_2 = {
      */
     color: string;
 };
+
+declare type HTMLMediaElement_2 = HTMLAudioElement | HTMLVideoElement;
 
 export declare function Icon(props: IconProps): JSX.Element;
 
@@ -1080,16 +1083,22 @@ export declare type useAudioPlayerExpandableContainer = {
  * Custom hook for managing audio player progress bar
  * Handles progress bar value updates and animation
  */
-export declare function useAudioPlayerProgressBar({ audioRef, cssVariableName, duration, isPlaying, onProgressChange, progressBarRef, }: UseAudioPlayerProgressBarProps): {
+export declare function useAudioPlayerProgressBar({ audioRef, progressCssVariableName, previewCssVariableName, duration, isPlaying, onProgressChange, onPreviewTimeChange, progressBarRef, }: UseAudioPlayerProgressBarProps): {
     handleProgressChange: ChangeEventHandler<HTMLInputElement>;
+    handleMouseEnter: MouseEventHandler<HTMLInputElement>;
+    handleMouseMove: MouseEventHandler<HTMLInputElement>;
+    handleMouseOut: MouseEventHandler<HTMLInputElement>;
+    elementRef: (node: Element | null) => void;
 };
 
 declare interface UseAudioPlayerProgressBarProps {
     audioRef: RefObject<HTMLAudioElement | null>;
-    cssVariableName?: string;
+    progressCssVariableName?: string;
+    previewCssVariableName?: string;
     duration: number;
     isPlaying: boolean;
     onProgressChange: (time: number) => void;
+    onPreviewTimeChange?: (time: number | null) => void;
     progressBarRef: RefObject<HTMLInputElement | null>;
 }
 
@@ -1351,6 +1360,52 @@ declare type UseElementDimensionsReturn = {
     dimensions: ElementDimensions;
     dimensionsRef: RefObject<ElementDimensions>;
     elementRef: (node: Element | null) => void;
+};
+
+declare type UseKeyboardMediaSeekOptions = {
+    /**
+     * Reference to the media element (audio or video)
+     */
+    mediaRef: RefObject<HTMLMediaElement_2>;
+    /**
+     * The total duration of the media in seconds
+     */
+    duration: number;
+    /**
+     * Callback fired when a seek operation is completed.
+     * @param time The new time position in seconds (can be used if needed)
+     */
+    onSeekComplete?: (time: number) => void;
+    /**
+     * Initial amount of time (in seconds) to seek when using keyboard navigation
+     * @default 1
+     */
+    seekIncrement?: number;
+    /**
+     * Maximum amount of time (in seconds) to seek when holding down arrow keys
+     * @default 30
+     */
+    maxSeekIncrement?: number;
+    /**
+     * Rate at which seek increment increases when holding down arrow keys
+     * @default 1.5
+     */
+    seekAcceleration?: number;
+    /**
+     * Delay in milliseconds before seek acceleration begins
+     * @default 500
+     */
+    seekAccelerationDelay?: number;
+    /**
+     * Custom label for the media control element
+     * @default "Media player. Use arrow keys to navigate."
+     */
+    ariaLabel?: string;
+    /**
+     * Interval in milliseconds between seek operations when holding a key
+     * @default 100
+     */
+    seekInterval?: number;
 };
 
 declare type useMousePositionRefReturn = {

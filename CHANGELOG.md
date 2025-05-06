@@ -1,3 +1,14 @@
+# [1.35.0](https://github.com/gdominguez210/gdom-ui/compare/v1.34.0...v1.35.0) (2025-05-06)
+
+
+### Features
+
+* **lib/AudioPlayerProgressBar:** add hover seek functionality ([ce39703](https://github.com/gdominguez210/gdom-ui/commit/ce3970354f96cb18f879f85ccae1a9e382e96681))
+* **lib/AudioProgressWaveform:** add keyboard seeking functionality ([8f6c34f](https://github.com/gdominguez210/gdom-ui/commit/8f6c34fe55d014a67b27248be4721aacf65bdb32))
+* **lib/useDelayedMouseMove:** add useDelayedMouseMove ([18e4164](https://github.com/gdominguez210/gdom-ui/commit/18e416406d7420ebfbfa70a19cd57f18dcfde1d8))
+* **lib/useKeyboardSeek:** add useKeyboardSeek hook ([f8dda4f](https://github.com/gdominguez210/gdom-ui/commit/f8dda4f3723e59204de65e1e21bf508a5d5432e6))
+* **lib/utils/formatDurationForDisplay:** add formatDurationForDisplay ([f61ce2e](https://github.com/gdominguez210/gdom-ui/commit/f61ce2e6c8479b768fa23b9753e75b17b08bc584))
+
 # [1.34.0](https://github.com/gdominguez210/gdom-ui/compare/v1.33.4...v1.34.0) (2025-05-03)
 
 

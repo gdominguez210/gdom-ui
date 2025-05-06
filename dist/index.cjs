@@ -3500,65 +3500,73 @@ function useAnimationFrame(options) {
   };
 }
 
-function updateProgressBar(progressBar, value) {
-  if (!progressBar) return;
-  progressBar.value = value.toString();
-}
-function updateAudioCurrentTime(audio, time) {
-  if (!audio) return;
-  audio.currentTime = time;
-}
-function useAudioPlayerProgressBar({
-  audioRef,
-  cssVariableName = "--range-progress",
-  duration,
-  isPlaying,
-  onProgressChange,
-  progressBarRef
-}) {
-  const handleProgressChange = React.useCallback(() => {
-    if (!audioRef.current || !progressBarRef.current) return;
-    const newTime = Number(progressBarRef.current.value);
-    updateAudioCurrentTime(audioRef.current, newTime);
-    onProgressChange(newTime);
-    progressBarRef.current.style.setProperty(cssVariableName, `${newTime / duration * 100}%`);
-  }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
-  const updateProgress = React.useCallback(() => {
-    if (!audioRef.current || !progressBarRef.current || !duration) return;
-    const currentTime = audioRef.current.currentTime;
-    onProgressChange(currentTime);
-    updateProgressBar(progressBarRef.current, currentTime);
-    progressBarRef.current.style.setProperty(cssVariableName, `${currentTime / duration * 100}%`);
-  }, [audioRef, progressBarRef, duration, cssVariableName, onProgressChange]);
-  useAnimationFrame({
-    isActive: isPlaying,
-    callback: updateProgress,
-    dependencies: [duration]
-  });
+const DEFAULT_OPTIONS = {
+  rootMargin: "0px",
+  threshold: 0,
+  root: null
+};
+function useIntersectionObserver(callback, options = DEFAULT_OPTIONS) {
+  const mergedOptions = React.useMemo(() => ({ ...DEFAULT_OPTIONS, ...options }), [options]);
+  const callbackRef = useLatest(callback);
+  const observerRef = React.useRef(
+    typeof IntersectionObserver !== "undefined" ? new IntersectionObserver((entries, observer) => {
+      callbackRef.current(entries, observer);
+    }) : null
+  );
   React.useEffect(() => {
-    if (!isPlaying) {
-      updateProgress();
+    if (!observerRef.current) {
+      observerRef.current = new IntersectionObserver((entries, observer) => {
+        callbackRef.current(entries, observer);
+      }, mergedOptions);
     }
-  }, [isPlaying, updateProgress]);
-  return {
-    handleProgressChange
-  };
+    return () => {
+      observerRef.current?.disconnect();
+      observerRef.current = null;
+    };
+  }, [mergedOptions, callbackRef]);
+  const setRef = React.useCallback((node) => {
+    if (node && observerRef.current) {
+      observerRef.current.observe(node);
+    }
+    return () => {
+      observerRef.current?.disconnect();
+    };
+  }, []);
+  return { setRef };
 }
 
-function useAudioPlayerContextTime() {
-  const context = React.useContext(AudioPlayerContextTime);
-  if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_TIME_ERROR);
-  }
-  return context;
-}
-
-function useAudioPlayerContextPlayback() {
-  const context = React.useContext(AudioPlayerContextPlayback);
-  if (!context) {
-    throw new Error(AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR);
-  }
-  return context;
+function useResizeObserver(callback) {
+  const callbackRef = useLatest(callback);
+  const observerRef = React.useRef(
+    typeof ResizeObserver !== "undefined" ? new ResizeObserver((entries, observer) => {
+      callbackRef.current(entries, observer);
+    }) : null
+  );
+  React.useEffect(() => {
+    if (!observerRef.current) {
+      observerRef.current = new ResizeObserver((entries, observer) => {
+        callbackRef.current(entries, observer);
+      });
+    }
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+        observerRef.current = null;
+      }
+    };
+  }, [callbackRef]);
+  const setRef = React.useCallback((node) => {
+    const currentNode = node;
+    if (currentNode && observerRef.current) {
+      observerRef.current.observe(currentNode);
+    }
+    return () => {
+      if (currentNode && observerRef.current) {
+        observerRef.current.unobserve(currentNode);
+      }
+    };
+  }, []);
+  return { setRef };
 }
 
 function setRef(ref, instance) {
@@ -3591,8 +3599,287 @@ function useComposedRefs(...refs) {
   return React.useCallback(composeRefs(...refs), refs);
 }
 
+function rafThrottle(callback, frameRate) {
+  let scheduled = false;
+  let lastArgs = null;
+  let lastExecutionTime = 0;
+  const frameIntervalMs = frameRate ? 1e3 / frameRate : 0;
+  const throttledFn = (...args) => {
+    lastArgs = args;
+    if (!scheduled) {
+      scheduled = true;
+      requestAnimationFrame((timestamp) => {
+        scheduled = false;
+        if (frameIntervalMs > 0) {
+          const elapsed = timestamp - lastExecutionTime;
+          if (elapsed < frameIntervalMs) {
+            scheduled = true;
+            requestAnimationFrame((nextTimestamp) => {
+              scheduled = false;
+              lastExecutionTime = nextTimestamp;
+              callback(...lastArgs);
+            });
+            return;
+          }
+          lastExecutionTime = timestamp - elapsed % frameIntervalMs;
+        } else {
+          lastExecutionTime = timestamp;
+        }
+        callback(...lastArgs);
+      });
+    }
+  };
+  return throttledFn;
+}
+
+function useElementDimensions() {
+  const dimensionsRef = React.useRef({
+    width: 0,
+    height: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    x: 0,
+    y: 0
+  });
+  const elementRef = React.useRef(null);
+  const intersectionCallback = React.useCallback((entries) => {
+    if (entries.length > 0) {
+      const entry = entries[0];
+      if (entry?.isIntersecting) {
+        const rect = entry.boundingClientRect;
+        dimensionsRef.current = {
+          width: rect.width,
+          height: rect.height,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+          left: rect.left,
+          x: rect.x,
+          y: rect.y
+        };
+      }
+    }
+  }, []);
+  const resizeCallback = React.useCallback((entries) => {
+    if (entries.length > 0) {
+      const entry = entries[0];
+      if (!entry) return;
+      let width = 0;
+      let height = 0;
+      if (entry.borderBoxSize && entry.borderBoxSize[0]) {
+        width = entry.borderBoxSize[0].inlineSize;
+        height = entry.borderBoxSize[0].blockSize;
+      } else if (entry.contentRect) {
+        width = entry.contentRect.width;
+        height = entry.contentRect.height;
+      }
+      dimensionsRef.current = {
+        ...dimensionsRef.current,
+        width,
+        height
+      };
+    }
+  }, []);
+  const { setRef: intersectionRef } = useIntersectionObserver(intersectionCallback);
+  const { setRef: resizeRef } = useResizeObserver(resizeCallback);
+  const mergedRef = useComposedRefs(intersectionRef, resizeRef, elementRef);
+  React.useEffect(() => {
+    const measurePosition = () => {
+      if (!elementRef.current) return;
+      const rect = elementRef.current.getBoundingClientRect();
+      const current = dimensionsRef.current;
+      if (rect.top === current.top && rect.right === current.right && rect.bottom === current.bottom && rect.left === current.left && rect.x === current.x && rect.y === current.y) {
+        return;
+      }
+      requestAnimationFrame(() => {
+        dimensionsRef.current = {
+          ...dimensionsRef.current,
+          top: rect.top,
+          right: rect.right,
+          bottom: rect.bottom,
+          left: rect.left,
+          x: rect.x,
+          y: rect.y
+        };
+      });
+    };
+    const throttledMeasurePosition = rafThrottle(measurePosition);
+    window.addEventListener("resize", throttledMeasurePosition);
+    return () => {
+      window.removeEventListener("resize", throttledMeasurePosition);
+    };
+  }, []);
+  return {
+    dimensions: dimensionsRef.current,
+    dimensionsRef,
+    elementRef: mergedRef
+  };
+}
+
+function useDelayedMouseMove({
+  initialDelay = 150,
+  onMouseMove,
+  onMouseLeave
+}) {
+  const initialDelayTimeoutRef = React.useRef(null);
+  const isInitialDelayCompletedRef = React.useRef(false);
+  const lastMouseEventRef = React.useRef(null);
+  const onMouseMoveRef = useLatest(onMouseMove);
+  const onMouseLeaveRef = useLatest(onMouseLeave);
+  const handleMouseEnter = React.useCallback(
+    (e) => {
+      lastMouseEventRef.current = e;
+      isInitialDelayCompletedRef.current = false;
+      if (initialDelayTimeoutRef.current) {
+        clearTimeout(initialDelayTimeoutRef.current);
+      }
+      initialDelayTimeoutRef.current = setTimeout(() => {
+        isInitialDelayCompletedRef.current = true;
+        if (lastMouseEventRef.current && onMouseMoveRef.current) {
+          onMouseMoveRef.current(lastMouseEventRef.current);
+        }
+      }, initialDelay);
+    },
+    [initialDelay, onMouseMoveRef]
+  );
+  const handleMouseMove = React.useCallback(
+    (e) => {
+      lastMouseEventRef.current = e;
+      if (isInitialDelayCompletedRef.current) {
+        onMouseMoveRef.current?.(lastMouseEventRef.current);
+      }
+    },
+    [onMouseMoveRef]
+  );
+  const handleMouseOut = React.useCallback(
+    (e) => {
+      if (initialDelayTimeoutRef.current) {
+        clearTimeout(initialDelayTimeoutRef.current);
+        initialDelayTimeoutRef.current = null;
+      }
+      isInitialDelayCompletedRef.current = false;
+      lastMouseEventRef.current = null;
+      onMouseLeaveRef.current?.(e);
+    },
+    [onMouseLeaveRef]
+  );
+  React.useEffect(() => {
+    return () => {
+      if (initialDelayTimeoutRef.current) {
+        clearTimeout(initialDelayTimeoutRef.current);
+      }
+    };
+  }, []);
+  return {
+    handleMouseEnter,
+    handleMouseMove,
+    handleMouseOut
+  };
+}
+
+function updateProgressBar(progressBar, value) {
+  if (!progressBar) return;
+  progressBar.value = value.toString();
+}
+function updateAudioCurrentTime(audio, time) {
+  if (!audio) return;
+  audio.currentTime = time;
+}
+function useAudioPlayerProgressBar({
+  audioRef,
+  progressCssVariableName = "--range-progress",
+  previewCssVariableName = "--range-preview",
+  duration,
+  isPlaying,
+  onProgressChange,
+  onPreviewTimeChange,
+  progressBarRef
+}) {
+  const { dimensionsRef, elementRef } = useElementDimensions();
+  const _handleMouseMove = React.useCallback(
+    (e) => {
+      if (!progressBarRef.current) return;
+      const { width, left } = dimensionsRef.current;
+      if (width === 0) return;
+      const mouseX = e.clientX - left;
+      const position = mouseX / width;
+      const previewTime = position * duration;
+      progressBarRef.current.style.setProperty(
+        previewCssVariableName,
+        `${previewTime / duration * 100}%`
+      );
+      onPreviewTimeChange?.(previewTime);
+    },
+    [progressBarRef, previewCssVariableName, duration, onPreviewTimeChange, dimensionsRef]
+  );
+  const _handleMouseOut = React.useCallback(() => {
+    if (!progressBarRef.current) return;
+    progressBarRef.current.style.setProperty(previewCssVariableName, "0%");
+    onPreviewTimeChange?.(null);
+  }, [progressBarRef, previewCssVariableName, onPreviewTimeChange]);
+  const handleProgressChange = React.useCallback(() => {
+    if (!audioRef.current || !progressBarRef.current) return;
+    const newTime = Number(progressBarRef.current.value);
+    updateAudioCurrentTime(audioRef.current, newTime);
+    onProgressChange(newTime);
+    progressBarRef.current.style.setProperty(
+      progressCssVariableName,
+      `${newTime / duration * 100}%`
+    );
+  }, [audioRef, progressBarRef, duration, progressCssVariableName, onProgressChange]);
+  const updateProgress = React.useCallback(() => {
+    if (!audioRef.current || !progressBarRef.current || !duration) return;
+    const currentTime = audioRef.current.currentTime;
+    onProgressChange(currentTime);
+    updateProgressBar(progressBarRef.current, currentTime);
+    progressBarRef.current.style.setProperty(
+      progressCssVariableName,
+      `${currentTime / duration * 100}%`
+    );
+  }, [audioRef, progressBarRef, duration, progressCssVariableName, onProgressChange]);
+  useAnimationFrame({
+    isActive: isPlaying,
+    callback: updateProgress,
+    dependencies: [duration]
+  });
+  const { handleMouseEnter, handleMouseMove, handleMouseOut } = useDelayedMouseMove({
+    onMouseMove: _handleMouseMove,
+    onMouseLeave: _handleMouseOut
+  });
+  React.useEffect(() => {
+    if (!isPlaying) {
+      updateProgress();
+    }
+  }, [isPlaying, updateProgress]);
+  return {
+    handleProgressChange,
+    handleMouseEnter,
+    handleMouseMove,
+    handleMouseOut,
+    elementRef
+  };
+}
+
+function useAudioPlayerContextTime() {
+  const context = React.useContext(AudioPlayerContextTime);
+  if (!context) {
+    throw new Error(AUDIO_PLAYER_CONTEXT_TIME_ERROR);
+  }
+  return context;
+}
+
+function useAudioPlayerContextPlayback() {
+  const context = React.useContext(AudioPlayerContextPlayback);
+  if (!context) {
+    throw new Error(AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR);
+  }
+  return context;
+}
+
 function AudioPlayerProgressBarPrimitive(props) {
-  const { className, ...restProps } = props;
+  const { className, previewPercentage, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
     "input",
     {
@@ -3600,6 +3887,7 @@ function AudioPlayerProgressBarPrimitive(props) {
         clsx(
           // Base styles
           "[--range-progress:0%]",
+          "[--range-preview:0%]",
           "appearance-none",
           "bg-gray-500",
           "relative",
@@ -3616,6 +3904,23 @@ function AudioPlayerProgressBarPrimitive(props) {
           "before:top-0",
           "before:left-0",
           "before:h-2",
+          "before:z-[1]",
+          // Preview styles
+          "after:block",
+          "after:transition-opacity",
+          "after:delay-150",
+          "after:duration-300",
+          "after:ease-in-out",
+          "after:w-(--range-preview)",
+          "after:opacity-0",
+          "after:bg-neutral-400",
+          'after:content-[""]',
+          "after:absolute",
+          "after:top-0",
+          "after:left-0",
+          "after:h-2",
+          "after:z-[0]",
+          "hover:after:opacity-100",
           // WebKit (Chrome, Safari, newer Edge) track styles
           "[&::-webkit-slider-runnable-track]:bg-transparent",
           "[&::-webkit-slider-runnable-track]:appearance-none",
@@ -3657,7 +3962,10 @@ function AudioPlayerProgressBarPrimitive(props) {
       defaultValue: "0",
       ...restProps,
       type: "range",
-      style: { "--range-progress": `${restProps.value ?? 0}%` }
+      style: {
+        "--range-progress": `${restProps.value ?? 0}%`,
+        "--range-preview": `${previewPercentage ?? 0}%`
+      }
     }
   );
 }
@@ -3666,13 +3974,14 @@ function AudioPlayerProgressBar(props) {
   const { onChange, ref, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
   const { isPlaying } = useAudioPlayerContextPlayback();
-  const { duration, seek } = useAudioPlayerContextTime();
-  const { handleProgressChange } = useAudioPlayerProgressBar({
+  const { duration, seek, setPreviewTime } = useAudioPlayerContextTime();
+  const { handleProgressChange, handleMouseEnter, handleMouseMove, handleMouseOut, elementRef } = useAudioPlayerProgressBar({
     audioRef,
     duration,
     isPlaying,
     onProgressChange: seek,
-    progressBarRef
+    progressBarRef,
+    onPreviewTimeChange: setPreviewTime
   });
   const handleChange = React.useCallback(
     (e) => {
@@ -3681,13 +3990,16 @@ function AudioPlayerProgressBar(props) {
     },
     [handleProgressChange, onChange]
   );
-  const composedRef = useComposedRefs(progressBarRef, ref);
+  const composedRef = useComposedRefs(progressBarRef, ref, elementRef);
   return /* @__PURE__ */ jsxRuntime.jsx(
     AudioPlayerProgressBarPrimitive,
     {
       ...restProps,
       onChange: handleChange,
-      ref: composedRef
+      ref: composedRef,
+      onMouseEnter: handleMouseEnter,
+      onMouseOut: handleMouseOut,
+      onMouseMove: handleMouseMove
     }
   );
 }
@@ -4752,23 +5064,24 @@ function intervalToDuration(interval, options) {
 function isDefined(argument) {
   return argument !== void 0;
 }
-function formatAudioDurationForDisplay(audioDurationInSeconds = 0) {
+function formatDurationForDisplay(durationInSeconds = 0) {
   const {
     hours,
     minutes = 0,
     seconds = 0
   } = intervalToDuration({
     start: 0,
-    end: audioDurationInSeconds * 1e3
+    end: durationInSeconds * 1e3
   });
   const formatWithZero = (num) => String(num).padStart(2, "0");
   return [hours, minutes, seconds].filter(isDefined).map(formatWithZero).join(":");
 }
+
 function useAudioPlayerTime(props) {
   const { currentTime, duration } = props;
   return {
-    currentTimeDisplay: formatAudioDurationForDisplay(currentTime),
-    durationDisplay: formatAudioDurationForDisplay(duration)
+    currentTimeDisplay: formatDurationForDisplay(currentTime),
+    durationDisplay: formatDurationForDisplay(duration)
   };
 }
 
@@ -6196,73 +6509,6 @@ function useAudioAnalyzer(options) {
   };
 }
 
-function rafThrottle(callback, frameRate) {
-  let scheduled = false;
-  let lastArgs = null;
-  let lastExecutionTime = 0;
-  const frameIntervalMs = frameRate ? 1e3 / frameRate : 0;
-  const throttledFn = (...args) => {
-    lastArgs = args;
-    if (!scheduled) {
-      scheduled = true;
-      requestAnimationFrame((timestamp) => {
-        scheduled = false;
-        if (frameIntervalMs > 0) {
-          const elapsed = timestamp - lastExecutionTime;
-          if (elapsed < frameIntervalMs) {
-            scheduled = true;
-            requestAnimationFrame((nextTimestamp) => {
-              scheduled = false;
-              lastExecutionTime = nextTimestamp;
-              callback(...lastArgs);
-            });
-            return;
-          }
-          lastExecutionTime = timestamp - elapsed % frameIntervalMs;
-        } else {
-          lastExecutionTime = timestamp;
-        }
-        callback(...lastArgs);
-      });
-    }
-  };
-  return throttledFn;
-}
-
-function useResizeObserver(callback) {
-  const callbackRef = useLatest(callback);
-  const observerRef = React.useRef(
-    typeof ResizeObserver !== "undefined" ? new ResizeObserver((entries, observer) => {
-      callbackRef.current(entries, observer);
-    }) : null
-  );
-  React.useEffect(() => {
-    if (!observerRef.current) {
-      observerRef.current = new ResizeObserver((entries, observer) => {
-        callbackRef.current(entries, observer);
-      });
-    }
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-        observerRef.current = null;
-      }
-    };
-  }, [callbackRef]);
-  const setRef = React.useCallback((node) => {
-    const currentNode = node;
-    if (currentNode && observerRef.current) {
-      observerRef.current.observe(currentNode);
-    }
-    return () => {
-      if (currentNode && observerRef.current) {
-        observerRef.current.unobserve(currentNode);
-      }
-    };
-  }, []);
-  return { setRef };
-}
-
 function useCanvasResponsive(options) {
   const { frameRate, onResize } = options ?? {};
   const [setCanvasRef, isReady, canvasRef] = useRefReady(null);
@@ -6792,127 +7038,6 @@ function useMousePositionRef() {
   };
 }
 
-const DEFAULT_OPTIONS = {
-  rootMargin: "0px",
-  threshold: 0,
-  root: null
-};
-function useIntersectionObserver(callback, options = DEFAULT_OPTIONS) {
-  const mergedOptions = React.useMemo(() => ({ ...DEFAULT_OPTIONS, ...options }), [options]);
-  const callbackRef = useLatest(callback);
-  const observerRef = React.useRef(
-    typeof IntersectionObserver !== "undefined" ? new IntersectionObserver((entries, observer) => {
-      callbackRef.current(entries, observer);
-    }) : null
-  );
-  React.useEffect(() => {
-    if (!observerRef.current) {
-      observerRef.current = new IntersectionObserver((entries, observer) => {
-        callbackRef.current(entries, observer);
-      }, mergedOptions);
-    }
-    return () => {
-      observerRef.current?.disconnect();
-      observerRef.current = null;
-    };
-  }, [mergedOptions, callbackRef]);
-  const setRef = React.useCallback((node) => {
-    if (node && observerRef.current) {
-      observerRef.current.observe(node);
-    }
-    return () => {
-      observerRef.current?.disconnect();
-    };
-  }, []);
-  return { setRef };
-}
-
-function useElementDimensions() {
-  const dimensionsRef = React.useRef({
-    width: 0,
-    height: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    x: 0,
-    y: 0
-  });
-  const elementRef = React.useRef(null);
-  const intersectionCallback = React.useCallback((entries) => {
-    if (entries.length > 0) {
-      const entry = entries[0];
-      if (entry?.isIntersecting) {
-        const rect = entry.boundingClientRect;
-        dimensionsRef.current = {
-          width: rect.width,
-          height: rect.height,
-          top: rect.top,
-          right: rect.right,
-          bottom: rect.bottom,
-          left: rect.left,
-          x: rect.x,
-          y: rect.y
-        };
-      }
-    }
-  }, []);
-  const resizeCallback = React.useCallback((entries) => {
-    if (entries.length > 0) {
-      const entry = entries[0];
-      if (!entry) return;
-      let width = 0;
-      let height = 0;
-      if (entry.borderBoxSize && entry.borderBoxSize[0]) {
-        width = entry.borderBoxSize[0].inlineSize;
-        height = entry.borderBoxSize[0].blockSize;
-      } else if (entry.contentRect) {
-        width = entry.contentRect.width;
-        height = entry.contentRect.height;
-      }
-      dimensionsRef.current = {
-        ...dimensionsRef.current,
-        width,
-        height
-      };
-    }
-  }, []);
-  const { setRef: intersectionRef } = useIntersectionObserver(intersectionCallback);
-  const { setRef: resizeRef } = useResizeObserver(resizeCallback);
-  const mergedRef = useComposedRefs(intersectionRef, resizeRef, elementRef);
-  React.useEffect(() => {
-    const measurePosition = () => {
-      if (!elementRef.current) return;
-      const rect = elementRef.current.getBoundingClientRect();
-      const current = dimensionsRef.current;
-      if (rect.top === current.top && rect.right === current.right && rect.bottom === current.bottom && rect.left === current.left && rect.x === current.x && rect.y === current.y) {
-        return;
-      }
-      requestAnimationFrame(() => {
-        dimensionsRef.current = {
-          ...dimensionsRef.current,
-          top: rect.top,
-          right: rect.right,
-          bottom: rect.bottom,
-          left: rect.left,
-          x: rect.x,
-          y: rect.y
-        };
-      });
-    };
-    const throttledMeasurePosition = rafThrottle(measurePosition);
-    window.addEventListener("resize", throttledMeasurePosition);
-    return () => {
-      window.removeEventListener("resize", throttledMeasurePosition);
-    };
-  }, []);
-  return {
-    dimensions: dimensionsRef.current,
-    dimensionsRef,
-    elementRef: mergedRef
-  };
-}
-
 const AUDIO_PROGRESS_COLOR_MODES = {
   /**
    * Gradient effect for played regions
@@ -7114,6 +7239,155 @@ function useAudioProgressWaveform(options) {
   };
 }
 
+function useKeyboardMediaSeek({
+  mediaRef,
+  duration,
+  onSeekComplete,
+  seekIncrement = 1,
+  maxSeekIncrement = 30,
+  seekAcceleration = 1.5,
+  seekAccelerationDelay = 500,
+  ariaLabel = "Media player. Use arrow keys to navigate.",
+  seekInterval = 100
+}) {
+  const [currentSeekIncrement, setCurrentSeekIncrement] = React.useState(seekIncrement);
+  const keyPressStartTimeRef = React.useRef(null);
+  const seekIntervalRef = React.useRef(null);
+  const activeKeyRef = React.useRef(null);
+  const currentDirectionRef = React.useRef(null);
+  const continuousSeekTimeoutRef = React.useRef(null);
+  const performSingleSeek = React.useCallback(
+    (direction) => {
+      if (!mediaRef.current) return;
+      const currentTime = mediaRef.current.currentTime;
+      const newTime = direction === "forward" ? Math.min(duration, currentTime + seekIncrement) : Math.max(0, currentTime - seekIncrement);
+      mediaRef.current.currentTime = newTime;
+      onSeekComplete?.(newTime);
+    },
+    [mediaRef, duration, seekIncrement, onSeekComplete]
+  );
+  const performSeekWithAcceleration = React.useCallback(() => {
+    if (!mediaRef.current || !currentDirectionRef.current || !keyPressStartTimeRef.current) return;
+    const elapsedTime = Date.now() - keyPressStartTimeRef.current;
+    let effectiveIncrement = seekIncrement;
+    if (elapsedTime > seekAccelerationDelay) {
+      const accelerationTime = elapsedTime - seekAccelerationDelay;
+      const accelerationFactor = Math.min(
+        accelerationTime / 1e3 * seekAcceleration,
+        maxSeekIncrement / seekIncrement - 1
+      );
+      effectiveIncrement = Math.min(seekIncrement * (1 + accelerationFactor), maxSeekIncrement);
+    }
+    setCurrentSeekIncrement(effectiveIncrement);
+    const currentTime = mediaRef.current.currentTime;
+    const direction = currentDirectionRef.current;
+    const newTime = direction === "forward" ? Math.min(duration, currentTime + effectiveIncrement) : Math.max(0, currentTime - effectiveIncrement);
+    mediaRef.current.currentTime = newTime;
+    onSeekComplete?.(newTime);
+  }, [
+    mediaRef,
+    duration,
+    seekIncrement,
+    maxSeekIncrement,
+    seekAcceleration,
+    seekAccelerationDelay,
+    onSeekComplete
+  ]);
+  const startContinuousSeeking = React.useCallback(
+    (direction, key) => {
+      if (activeKeyRef.current === key) return;
+      performSingleSeek(direction);
+      activeKeyRef.current = key;
+      currentDirectionRef.current = direction;
+      keyPressStartTimeRef.current = Date.now();
+      if (continuousSeekTimeoutRef.current !== null) {
+        window.clearTimeout(continuousSeekTimeoutRef.current);
+      }
+      if (seekIntervalRef.current !== null) {
+        window.clearInterval(seekIntervalRef.current);
+      }
+      continuousSeekTimeoutRef.current = window.setTimeout(() => {
+        seekIntervalRef.current = window.setInterval(performSeekWithAcceleration, seekInterval);
+        continuousSeekTimeoutRef.current = null;
+      }, 250);
+    },
+    [performSingleSeek, performSeekWithAcceleration, seekInterval]
+  );
+  const stopContinuousSeeking = React.useCallback(
+    (key) => {
+      if (key && activeKeyRef.current !== key) return;
+      if (continuousSeekTimeoutRef.current !== null) {
+        window.clearTimeout(continuousSeekTimeoutRef.current);
+        continuousSeekTimeoutRef.current = null;
+      }
+      if (seekIntervalRef.current !== null) {
+        window.clearInterval(seekIntervalRef.current);
+        seekIntervalRef.current = null;
+      }
+      activeKeyRef.current = null;
+      currentDirectionRef.current = null;
+      keyPressStartTimeRef.current = null;
+      setCurrentSeekIncrement(seekIncrement);
+    },
+    [seekIncrement]
+  );
+  React.useEffect(() => {
+    return () => {
+      if (continuousSeekTimeoutRef.current !== null) {
+        window.clearTimeout(continuousSeekTimeoutRef.current);
+      }
+      if (seekIntervalRef.current !== null) {
+        window.clearInterval(seekIntervalRef.current);
+      }
+    };
+  }, []);
+  const handleKeyDown = React.useCallback(
+    (e) => {
+      switch (e.key) {
+        case "ArrowLeft":
+          e.preventDefault();
+          startContinuousSeeking("backward", e.key);
+          break;
+        case "ArrowRight":
+          e.preventDefault();
+          startContinuousSeeking("forward", e.key);
+          break;
+        default:
+          return;
+      }
+    },
+    [startContinuousSeeking]
+  );
+  const handleKeyUp = React.useCallback(
+    (e) => {
+      switch (e.key) {
+        case "ArrowLeft":
+        case "ArrowRight":
+          stopContinuousSeeking(e.key);
+          break;
+        default:
+          return;
+      }
+    },
+    [stopContinuousSeeking]
+  );
+  const a11yProps = {
+    tabIndex: 0,
+    role: "slider",
+    "aria-label": `${ariaLabel} Currently seeking ${Math.round(currentSeekIncrement)} seconds at a time.`,
+    "aria-valuemin": 0,
+    "aria-valuemax": duration,
+    "aria-valuenow": mediaRef.current?.currentTime || 0,
+    "aria-valuetext": `${formatDurationForDisplay(mediaRef.current?.currentTime || 0)} of ${formatDurationForDisplay(duration)}`
+  };
+  return {
+    currentSeekIncrement,
+    handleKeyDown,
+    handleKeyUp,
+    a11yProps
+  };
+}
+
 function AudioProgressWaveform(props) {
   const {
     ref,
@@ -7142,6 +7416,9 @@ function AudioProgressWaveform(props) {
     isActive,
     frameRate,
     dependencies: animationDependencies,
+    // useKeyboardSeek props
+    seekIncrement,
+    maxSeekIncrement,
     // html canvas props
     ...restProps
   } = props;
@@ -7195,7 +7472,7 @@ function AudioProgressWaveform(props) {
     },
     [handleWaveformClick, drawWaveform, onClick]
   );
-  const handleMouseMove = React.useCallback(
+  const _handleMouseMove = React.useCallback(
     (event) => {
       if (isActive) {
         handleWaveformMouseMove(event);
@@ -7212,15 +7489,30 @@ function AudioProgressWaveform(props) {
     frameRate,
     dependencies: animationDependencies
   });
+  const { handleKeyDown, handleKeyUp, a11yProps } = useKeyboardMediaSeek({
+    mediaRef: audioRef,
+    duration,
+    onSeekComplete: onProgressChange,
+    seekIncrement,
+    maxSeekIncrement
+  });
+  const { handleMouseEnter, handleMouseMove, handleMouseOut } = useDelayedMouseMove({
+    onMouseMove: _handleMouseMove,
+    onMouseLeave: handleWaveformMouseLeave
+  });
   return /* @__PURE__ */ jsxRuntime.jsx(
     CanvasResponsive,
     {
       ...restProps,
+      ...a11yProps,
       ref: mergedRef,
+      onKeyDown: handleKeyDown,
+      onKeyUp: handleKeyUp,
       onResize: drawWaveform,
       onClick: handleCanvasClick,
       onMouseMove: handleMouseMove,
-      onMouseLeave: handleWaveformMouseLeave,
+      onMouseLeave: handleMouseOut,
+      onMouseEnter: handleMouseEnter,
       className: twMerge(
         clsx(
           'relative cursor-pointer bg-radial from-neutral-50 from-0% to-neutral-100 to-90% before:absolute before:inset-0 before:bg-radial before:from-white before:to-transparent before:bg-[size:1px_1px] before:content-[""]',
@@ -8251,7 +8543,6 @@ exports.Badge = Badge;
 exports.Button = Button;
 exports.CanvasResponsive = CanvasResponsive;
 exports.Icon = Icon;
-exports.formatAudioDurationForDisplay = formatAudioDurationForDisplay;
 exports.useAudioPlayerContextPlayback = useAudioPlayerContextPlayback;
 exports.useAudioPlayerContextRefs = useAudioPlayerContextRefs;
 exports.useAudioPlayerContextTime = useAudioPlayerContextTime;
