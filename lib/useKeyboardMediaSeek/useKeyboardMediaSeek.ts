@@ -91,27 +91,27 @@ export type UseKeyboardMediaSeekReturn = {
     /**
      * Description of the control for screen readers
      */
-    ariaLabel: string;
+    'aria-label': string;
 
     /**
      * Minimum value of the slider
      */
-    ariaValueMin: number;
+    'aria-valuemin': number;
 
     /**
      * Maximum value of the slider
      */
-    ariaValueMax: number;
+    'aria-valuemax': number;
 
     /**
      * Current value of the slider
      */
-    ariaValueNow: number;
+    'aria-valuenow': number;
 
     /**
      * Text representation of the current value
      */
-    ariaValueText?: string;
+    'aria-valuetext'?: string;
   };
 };
 
@@ -285,11 +285,11 @@ export function useKeyboardMediaSeek({
   const a11yProps = {
     tabIndex: 0,
     role: 'slider',
-    ariaLabel: `${ariaLabel} Currently seeking ${Math.round(currentSeekIncrement)} seconds at a time.`,
-    ariaValueMin: 0,
-    ariaValueMax: duration,
-    ariaValueNow: mediaRef.current?.currentTime || 0,
-    ariaValueText: `${formatDurationForDisplay(mediaRef.current?.currentTime || 0)} of ${formatDurationForDisplay(duration)}`,
+    'aria-label': `${ariaLabel} Currently seeking ${Math.round(currentSeekIncrement)} seconds at a time.`,
+    'aria-valuemin': 0,
+    'aria-valuemax': duration,
+    'aria-valuenow': mediaRef.current?.currentTime || 0,
+    'aria-valuetext': `${formatDurationForDisplay(mediaRef.current?.currentTime || 0)} of ${formatDurationForDisplay(duration)}`,
   };
 
   return {
