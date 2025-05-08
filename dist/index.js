@@ -7108,9 +7108,20 @@ function useAudioProgressWaveformColor(options) {
       return [];
     }
     if (gradientStops) {
-      return gradientStops;
+      return gradientStops.map((stop) => ({
+        ...stop,
+        colorOKLCH: convertColorToOKLCH(stop.color)
+      }));
     }
-    return generateGradientStops(progressColorOKLCH, progressColorCSS, gradientLightnessDelta);
+    const generatedStops = generateGradientStops(
+      progressColorOKLCH,
+      progressColorCSS,
+      gradientLightnessDelta
+    );
+    return generatedStops.map((stop) => ({
+      ...stop,
+      colorOKLCH: convertColorToOKLCH(stop.color)
+    }));
   }, [colorMode, gradientStops, gradientLightnessDelta, progressColorOKLCH, progressColorCSS]);
   const getWaveformBarColor = useCallback(
     (barInfo) => {
@@ -7137,6 +7148,23 @@ function useAudioProgressWaveformColor(options) {
       }
       if (coverage === 0) {
         return barColorCSS;
+      }
+      if (colorMode === AUDIO_PROGRESS_COLOR_MODES.GRADIENT) {
+        const interpolatedStops = effectiveGradientStops.map((stop) => {
+          const interpolatedColor = getInterpolatedColorString(
+            barColorOKLCH,
+            stop.colorOKLCH,
+            coverage
+          );
+          return {
+            offset: stop.offset,
+            color: interpolatedColor
+          };
+        });
+        return {
+          type: "gradient",
+          stops: interpolatedStops
+        };
       }
       return getInterpolatedColorString(barColorOKLCH, progressColorOKLCH, coverage);
     },

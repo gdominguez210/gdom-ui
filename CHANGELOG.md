@@ -1,3 +1,10 @@
+# [1.36.0](https://github.com/gdominguez210/gdom-ui/compare/v1.35.1...v1.36.0) (2025-05-08)
+
+
+### Features
+
+* **lib/AudioProgressWaveform/useAudioProgressWaveformColor:** interpolate barColor into each gradient colorStop if color mode is gradient ([7bbd35c](https://github.com/gdominguez210/gdom-ui/commit/7bbd35cde7f62bd2c51bdf220b94aef534fb3ff3))
+
 ## [1.35.1](https://github.com/gdominguez210/gdom-ui/compare/v1.35.0...v1.35.1) (2025-05-06)
 
 
