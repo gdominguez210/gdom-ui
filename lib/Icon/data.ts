@@ -17,6 +17,18 @@ import { ReactComponent as DiscFill } from '@lib/assets/svgs/disc-fill.svg';
 import { ReactComponent as Playlist2Fill } from '@lib/assets/svgs/play-list-2-fill.svg';
 import { ReactComponent as PlaylistAddFill } from '@lib/assets/svgs/play-list-add-fill.svg';
 import { ReactComponent as CloseFill } from '@lib/assets/svgs/close-fill.svg';
+import { ReactComponent as CursorLine } from '@lib/assets/svgs/cursor-line.svg';
+import { ReactComponent as EqualizerLine } from '@lib/assets/svgs/equalizer-line.svg';
+import { ReactComponent as PaletteLine } from '@lib/assets/svgs/palette-line.svg';
+import { ReactComponent as PlayCircleLine } from '@lib/assets/svgs/play-circle-line.svg';
+import { ReactComponent as PulseLine } from '@lib/assets/svgs/pulse-line.svg';
+import { ReactComponent as RhythmLine } from '@lib/assets/svgs/rhythm-line.svg';
+import { ReactComponent as SpeedUpLine } from '@lib/assets/svgs/speed-up-line.svg';
+import { ReactComponent as VoicePrintLine } from '@lib/assets/svgs/voiceprint-line.svg';
+import { ReactComponent as AccessibilityLine } from '@lib/assets/svgs/accessibility-line.svg';
+import { ReactComponent as CodeLine } from '@lib/assets/svgs/code-line.svg';
+import { ReactComponent as FontSizeLine } from '@lib/assets/svgs/font-size-line.svg';
+import { ReactComponent as ColorFilterLine } from '@lib/assets/svgs/color-filter-line.svg';
 
 export const icons = {
   'star-line': StarLine,
@@ -38,6 +50,18 @@ export const icons = {
   'play-list-2-fill': Playlist2Fill,
   'play-list-add-line': PlaylistAddFill,
   'close-fill': CloseFill,
+  'cursor-line': CursorLine,
+  'equalizer-line': EqualizerLine,
+  'palette-line': PaletteLine,
+  'play-circle-line': PlayCircleLine,
+  'pulse-line': PulseLine,
+  'rhythm-line': RhythmLine,
+  'speed-up-line': SpeedUpLine,
+  'voice-print-line': VoicePrintLine,
+  'accessibility-line': AccessibilityLine,
+  'code-line': CodeLine,
+  'font-size-line': FontSizeLine,
+  'color-filter-line': ColorFilterLine,
 } as const;
 
 export type IconName = keyof typeof icons;
