@@ -27,7 +27,7 @@ import { ReactComponent as SpeedUpLine } from '@lib/assets/svgs/speed-up-line.sv
 import { ReactComponent as VoicePrintLine } from '@lib/assets/svgs/voiceprint-line.svg';
 import { ReactComponent as AccessibilityLine } from '@lib/assets/svgs/accessibility-line.svg';
 import { ReactComponent as CodeLine } from '@lib/assets/svgs/code-line.svg';
-import { ReactComponent as FontSizeLine } from '@lib/assets/svgs/font-size-line.svg';
+import { ReactComponent as FontSize } from '@lib/assets/svgs/font-size.svg';
 import { ReactComponent as ColorFilterLine } from '@lib/assets/svgs/color-filter-line.svg';
 
 export const icons = {
@@ -60,7 +60,7 @@ export const icons = {
   'voice-print-line': VoicePrintLine,
   'accessibility-line': AccessibilityLine,
   'code-line': CodeLine,
-  'font-size-line': FontSizeLine,
+  'font-size': FontSize,
   'color-filter-line': ColorFilterLine,
 } as const;
 
