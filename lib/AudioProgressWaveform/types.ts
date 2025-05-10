@@ -18,25 +18,3 @@ export const AUDIO_PROGRESS_COLOR_MODES = {
  */
 export type AudioProgressColorMode =
   (typeof AUDIO_PROGRESS_COLOR_MODES)[keyof typeof AUDIO_PROGRESS_COLOR_MODES];
-
-/**
- * Result type for the waveform bar color
- */
-export type BarColorResult =
-  | string
-  | {
-      type: 'gradient';
-      stops: GradientStop[];
-    };
-
-export type GradientStop = {
-  /**
-   * Position of the stop (0-1)
-   */
-  offset: number;
-
-  /**
-   * Color of the stop as a CSS color string
-   */
-  color: string;
-};
