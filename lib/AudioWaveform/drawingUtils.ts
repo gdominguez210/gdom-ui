@@ -11,8 +11,8 @@ export function calculateMinGapWidth(displayWidth: number, minGapPercent = 0.001
 /**
  * Determines the actual gap width to use based on desired ratio and minimum constraints
  * @param displayWidth - The width of the canvas in pixels
- * @param barGapRatio - The desired gap width as a proportion of display width
- * @param minGapPercent - The minimum gap as a percentage of display width
+ * @param barGapRatio - The desired gap width as a percentage of display width (value between 0 and 1)
+ * @param minGapPercent - The minimum gap as a percentage of display width (value between 0 and 1)
  * @returns The actual gap width to use, respecting minimum size constraints
  */
 export function getActualGapWidth(
