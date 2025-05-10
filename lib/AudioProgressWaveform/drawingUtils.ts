@@ -1,7 +1,7 @@
 import { interpolateOKLCH } from '@lib/utils/interpolateOKLCH/interpolateOKLCH';
 import { OKLCHToCSS } from '@lib/utils/OKLCHToCSS';
 import type { OKLCHColor } from '@lib/types/colors';
-import type { GradientStop } from '@lib/AudioProgressWaveform/types';
+import type { WaveformGradientStop } from '@lib/AudioWaveform/types';
 import type { MousePosition } from '@lib/useMousePositionRef/useMousePositionRef';
 import type { ElementDimensions } from '@lib/useElementDimensions/useElementDimensions';
 
@@ -25,7 +25,8 @@ export function getInterpolatedColorString(
 /**
  * Generates gradient stops for a waveform bar
  *
- * @param progressColor - The progress color as a CSS color string
+ * @param progressColorOKLCH - The progress color in OKLCH format
+ * @param progressColorCSS - The progress color as a CSS color string
  * @param lightnessDelta - How much to adjust lightness (positive = lighter, negative = darker)
  * @returns An array of gradient stops
  */
@@ -33,7 +34,7 @@ export function generateGradientStops(
   progressColorOKLCH: OKLCHColor,
   progressColorCSS: string,
   lightnessDelta: number = -0.1,
-): GradientStop[] {
+): WaveformGradientStop[] {
   const [l, c, h] = progressColorOKLCH;
 
   // Apply lightness delta, ensuring we stay in the valid range (0-1)
@@ -85,9 +86,9 @@ export function calculateBarCoverage(
  * Determines if a bar should have the hover effect applied:
  * - If the hover position is greater than the current progress, bars between progress and hover position get hover color
  * - If the hover position is less than the current progress, bars between hover position and progress get hover color
- * @param barPosition The relative position (0-1) of the bar on the waveform
- * @param currentProgress The current playback progress (0-1)
- * @param hoverPosition The relative mouse position (0-1) on the waveform
+ * @param barPosition The relative position (value between 0 and 1) of the bar on the waveform
+ * @param currentProgress The current playback progress (value between 0 and 1)
+ * @param hoverPosition The relative mouse position (value between 0 and 1) on the waveform
  * @returns Whether the bar should have the hover effect applied
  */
 export function shouldApplyHoverEffect(
