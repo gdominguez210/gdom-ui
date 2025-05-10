@@ -111,10 +111,11 @@ export default {
       if: { arg: 'colorMode', eq: AUDIO_PROGRESS_COLOR_MODES.GRADIENT },
     },
     gradientLightnessDelta: {
-      control: { type: 'range', min: 0, max: 1, step: 0.1 },
-      description: 'Lightness variation for gradient stops',
+      control: { type: 'range', min: -1, max: 1, step: 0.1 },
+      description:
+        'Amount to adjust the lightness of the progress color for the gradient. Positive values lighten the color, negative values darken it. Only used when colorMode is GRADIENT and gradientStops are not explicitly provided.',
       if: { arg: 'colorMode', eq: AUDIO_PROGRESS_COLOR_MODES.GRADIENT },
-      defaultValue: { summary: 0.1 },
+      defaultValue: { summary: -0.15 },
     },
     barGapRatio: {
       control: { type: 'range', min: 0, max: 0.02, step: 0.001 },
