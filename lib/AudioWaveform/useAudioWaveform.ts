@@ -6,59 +6,7 @@ import {
   sampleWaveformData,
   calculateBarWidth,
 } from '@lib/AudioWaveform/drawingUtils';
-
-export type GradientStop = {
-  /**
-   * Position of the stop (0-1)
-   */
-  offset: number;
-
-  /**
-   * Color of the stop as a CSS color string
-   */
-  color: string;
-};
-
-export type BarColorResult =
-  | string
-  | {
-      type: 'gradient';
-      stops: GradientStop[];
-    };
-
-export type WaveformGradientStop = {
-  /**
-   * Position of the stop (0-1)
-   */
-  offset: number;
-
-  /**
-   * Color of the stop as a CSS color string
-   */
-  color: string;
-};
-
-export type WaveformBarInfo = {
-  /**
-   * Position in the waveform (0-1)
-   */
-  position: number;
-
-  /**
-   * Amplitude value (0-1)
-   */
-  value: number;
-
-  /**
-   * Index in the waveform data array
-   */
-  index: number;
-
-  /**
-   * Width of this specific bar as a percentage of total width (0-1)
-   */
-  width: number;
-};
+import { type WaveformBarInfo, type WaveformBarColorResult } from '@lib/AudioWaveform/types';
 
 export type useAudioWaveformOptions = {
   /**
@@ -74,10 +22,10 @@ export type useAudioWaveformOptions = {
   /**
    * Function to determine bar color based on state
    */
-  getBarColor?: (barInfo: WaveformBarInfo) => BarColorResult;
+  getBarColor?: (barInfo: WaveformBarInfo) => WaveformBarColorResult;
 
   /**
-   * Gap between bars as a proportion of canvas width (0-1)
+   * Gap between bars as a percentage of canvas width (value between 0 and 1)
    * For example, 0.005 would make gaps 0.5% of the total width
    * @default 0.003 (0.3% of canvas width)
    */
@@ -95,7 +43,7 @@ export type useAudioWaveformOptions = {
    */
   minBarWidth?: number;
   /**
-   * Height of the waveform as a percentage of canvas height
+   * Height of the waveform as a percentage of canvas height (value between 0 and 1)
    * @default 1 (100% of canvas height)
    */
   heightScale?: number;
