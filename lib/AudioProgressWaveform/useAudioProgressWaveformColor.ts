@@ -1,12 +1,14 @@
 import { useCallback, useMemo, type RefObject } from 'react';
-import { type WaveformBarInfo } from '@lib/AudioWaveform/useAudioWaveform';
+import {
+  type WaveformBarInfo,
+  type WaveformBarColorResult,
+  type WaveformGradientStop,
+} from '@lib/AudioWaveform/types';
 import { type useMousePositionRefReturn } from '@lib/useMousePositionRef/useMousePositionRef';
 import { type UseElementDimensionsReturn } from '@lib/useElementDimensions/useElementDimensions';
 import { type OKLCHColor } from '@lib/types/colors';
 import {
   type AudioProgressColorMode,
-  type BarColorResult,
-  type GradientStop,
   AUDIO_PROGRESS_COLOR_MODES,
 } from '@lib/AudioProgressWaveform/types';
 import { convertColorToOKLCH } from '@lib/utils/convertColorToOKLCH';
@@ -50,12 +52,13 @@ export type useAudioProgressWaveformColorOptions = {
   hoverColor?: string;
 
   /**
-   * The relative position (0-1) of the mouse on the waveform
+   * The relative position (value between 0 and 1) of the mouse on the waveform
    */
   hoverPositionRef?: useMousePositionRefReturn['positionRef'];
 
   /**
    * How much to adjust the progress color for hover effect
+   * Only used when hoverColor is not provided
    * @default 0.15
    */
   hoverColorDelta?: number;
@@ -72,22 +75,22 @@ export type useAudioProgressWaveformColorOptions = {
   colorMode?: AudioProgressColorMode;
 
   /**
-   * Custom gradient stops for progressed bars when colorMode is GRADIENT
+   * Custom gradient stops for progressed bars when colorMode is 'gradient'
    * If not provided, stops will be generated based on progressColor and gradientLightnessDelta
    */
-  gradientStops?: GradientStop[];
+  gradientStops?: WaveformGradientStop[];
 
   /**
    * How much to adjust the lightness of the progress color for the gradient top
    * Positive values make it lighter, negative values make it darker
-   * Only used when colorMode is GRADIENT and gradientStops are not provided
+   * Only used when colorMode is 'gradient' and gradientStops are not provided
    * @default -0.15
    */
   gradientLightnessDelta?: number;
 };
 
 export type useAudioProgressWaveformColorReturn = {
-  getWaveformBarColor: (barInfo: WaveformBarInfo) => BarColorResult;
+  getWaveformBarColor: (barInfo: WaveformBarInfo) => WaveformBarColorResult;
 };
 
 export function useAudioProgressWaveformColor(
@@ -148,7 +151,7 @@ export function useAudioProgressWaveformColor(
   }, [colorMode, gradientStops, gradientLightnessDelta, progressColorOKLCH, progressColorCSS]);
 
   const getWaveformBarColor = useCallback(
-    (barInfo: WaveformBarInfo): BarColorResult => {
+    (barInfo: WaveformBarInfo): WaveformBarColorResult => {
       const progress = audioRef.current?.currentTime ? audioRef.current.currentTime / duration : 0;
       const coverage = calculateBarCoverage(barInfo, progress);
 
