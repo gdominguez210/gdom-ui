@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef } from 'react';
+import { type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { cva } from 'class-variance-authority';
 
@@ -17,7 +17,7 @@ type Variant = (typeof variants)[number];
 
 type Size = (typeof sizes)[number];
 
-interface CommonButtonProps extends ComponentPropsWithRef<'button'> {
+type ButtonBaseProps = {
   /**
    * The type of the button.
    * @default primary
@@ -29,23 +29,19 @@ interface CommonButtonProps extends ComponentPropsWithRef<'button'> {
    * @default md
    */
   size?: Size;
-}
+};
 
-type iconButtonAccessibleProps =
-  | {
-      /**
-       * Switches to use icon button styling
-       * @default false
-       */
-      iconOnly?: false;
-      'aria-label'?: string;
-    }
-  | {
-      iconOnly?: true;
-      'aria-label': string;
-    };
+// Better type that allows for proper discrimination
+type IconButtonAccessibilityProps =
+  | { iconOnly?: undefined; 'aria-label'?: string }
+  | { iconOnly?: false; 'aria-label'?: string }
+  | { iconOnly: true; 'aria-label': string };
 
-export type ButtonProps = CommonButtonProps & iconButtonAccessibleProps;
+export type ButtonProps<T extends ElementType = 'button'> = ButtonBaseProps &
+  IconButtonAccessibilityProps &
+  Omit<ComponentPropsWithRef<T>, keyof ButtonBaseProps | keyof IconButtonAccessibilityProps> & {
+    as?: T;
+  };
 
 const buttonStyles = cva(
   ['inline-flex justify-center items-center rounded-sm font-medium focus-visible:outline-hidden'],
@@ -142,8 +138,9 @@ const buttonStyles = cva(
   },
 );
 
-export function Button(props: ButtonProps) {
+export function Button<T extends ElementType = 'button'>(props: ButtonProps<T>) {
   const {
+    as: Element = 'button',
     children,
     disabled,
     variant = 'primary',
@@ -156,14 +153,15 @@ export function Button(props: ButtonProps) {
   const isDestructive = variant === 'destructive';
 
   return (
-    <button
+    <Element
       className={twMerge(
-        buttonStyles({ variant, size, disabled, iconOnly, isDestructive, className }),
+        buttonStyles({ variant, size, disabled, iconOnly, isDestructive }),
+        className,
       )}
       disabled={disabled}
       {...restProps}
     >
       {children}
-    </button>
+    </Element>
   );
 }
