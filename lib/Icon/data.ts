@@ -30,6 +30,8 @@ import { ReactComponent as CodeLine } from '@lib/assets/svgs/code-line.svg';
 import { ReactComponent as FontSize } from '@lib/assets/svgs/font-size.svg';
 import { ReactComponent as ColorFilterLine } from '@lib/assets/svgs/color-filter-line.svg';
 import { ReactComponent as LayoutMasonryLine } from '@lib/assets/svgs/layout-masonry-line.svg';
+import { ReactComponent as ExternalLinkLine } from '@lib/assets/svgs/external-link-line.svg';
+
 export const icons = {
   'star-line': StarLine,
   'forward-end-fill': ForwardEndFill,
@@ -63,6 +65,7 @@ export const icons = {
   'font-size': FontSize,
   'color-filter-line': ColorFilterLine,
   'layout-masonry-line': LayoutMasonryLine,
+  'external-link-line': ExternalLinkLine,
 } as const;
 
 export type IconName = keyof typeof icons;
