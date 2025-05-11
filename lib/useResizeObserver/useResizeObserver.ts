@@ -11,6 +11,7 @@ export function useResizeObserver(callback: ResizeObserverCallback): {
   setRef: (node: Element | null) => void;
 } {
   const callbackRef = useLatest(callback);
+  const nodeRef = useRef<Element | null>(null);
 
   const observerRef = useRef<ResizeObserver | null>(
     typeof ResizeObserver !== 'undefined'
@@ -25,6 +26,10 @@ export function useResizeObserver(callback: ResizeObserverCallback): {
       observerRef.current = new ResizeObserver((entries, observer) => {
         callbackRef.current(entries, observer);
       });
+
+      if (nodeRef.current) {
+        observerRef.current.observe(nodeRef.current);
+      }
     }
 
     return () => {
@@ -37,6 +42,8 @@ export function useResizeObserver(callback: ResizeObserverCallback): {
 
   const setRef = useCallback((node: Element | null) => {
     const currentNode = node;
+
+    nodeRef.current = currentNode;
 
     if (currentNode && observerRef.current) {
       observerRef.current.observe(currentNode);
