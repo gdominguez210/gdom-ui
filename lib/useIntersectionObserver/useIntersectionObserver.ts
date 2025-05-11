@@ -29,11 +29,17 @@ export function useIntersectionObserver(
       : null,
   );
 
+  const nodeRef = useRef<Element | null>(null);
+
   useEffect(() => {
     if (!observerRef.current) {
       observerRef.current = new IntersectionObserver((entries, observer) => {
         callbackRef.current(entries, observer);
       }, mergedOptions);
+
+      if (nodeRef.current) {
+        observerRef.current.observe(nodeRef.current);
+      }
     }
 
     return () => {
@@ -43,12 +49,17 @@ export function useIntersectionObserver(
   }, [mergedOptions, callbackRef]);
 
   const setRef = useCallback((node: Element | null) => {
-    if (node && observerRef.current) {
-      observerRef.current.observe(node);
+    const currentNode = node;
+    nodeRef.current = currentNode;
+
+    if (currentNode && observerRef.current) {
+      observerRef.current.observe(currentNode);
     }
 
     return () => {
-      observerRef.current?.disconnect();
+      if (currentNode && observerRef.current) {
+        observerRef.current.unobserve(currentNode);
+      }
     };
   }, []);
 
