@@ -11,7 +11,7 @@ const variants = [
   'linkGray',
 ] as const;
 
-export const sizes = ['md', 'lg', 'xl', 'xxl'] as const;
+const sizes = ['md', 'lg', 'xl', 'xxl'] as const;
 
 type Variant = (typeof variants)[number];
 
@@ -31,7 +31,6 @@ type ButtonBaseProps = {
   size?: Size;
 };
 
-// Better type that allows for proper discrimination
 type IconButtonAccessibilityProps =
   | { iconOnly?: undefined; 'aria-label'?: string }
   | { iconOnly?: false; 'aria-label'?: string }
