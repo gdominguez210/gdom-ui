@@ -1,26 +1,112 @@
-import { Meta, Primary, Controls } from '@storybook/blocks';
+import { Meta, Primary, Controls, Stories, Story, Canvas, Source } from '@storybook/blocks';
 import * as IconLibraryStories from './IconLibrary.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 
 <Meta of={IconLibraryStories} />
 
 # IconLibrary
 
-A versatile icon library component that allows using SVG icons by name.
+The IconLibrary component provides a name-based approach to using icons in your UI, built on top of the [Icon component](/docs/components-icon--docs).
 
+<DocumentationNav />
 <Primary />
 <Controls />
 
-## Usage
-
-```tsx
-import { IconLibrary } from '@lib/IconLibrary/IconLibrary';
-
-<IconLibrary name="star-line" />
-```
-
 ## Features
 
-- Name-based API for referencing icons
-- Consistent styling with text color and size
-- Type-safe with TypeScript support for icon names
-- Built on top of the base Icon component 
+The IconLibrary component offers these key benefits:
+
+- **Name-based API** for referencing icons without direct imports
+- **TypeScript support** with autocompletion for icon names
+- **Simplified integration** for rapid development and prototyping
+- **Consistent styling** inherited from the base Icon component
+- **Unified icon registry** for centralized icon management
+
+This component is particularly well-suited for:
+- Internal tools and admin panels
+- Documentation sites
+- Applications where developer convenience is prioritized over bundle size
+
+## Examples
+<Stories includePrimary={false} />
+
+## Architecture
+
+The IconLibrary component uses a name-based approach to reference SVG icons and internally leverages the base Icon component for rendering:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { IconLibrary } from '@gdominguez210/gdom-ui/IconLibrary';
+
+// Reference icons by name
+<IconLibrary name="star-line" />
+<IconLibrary name="play-large-fill" className="w-6 h-6" />
+<IconLibrary name="volume-up-fill" className="text-blue-500" />
+`}
+/>
+
+## TypeScript Usage
+
+The component provides TypeScript types for all available icons:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { IconLibrary, type IconName } from '@gdominguez210/gdom-ui/IconLibrary';
+
+// Type safe icon names with autocompletion
+const iconName: IconName = 'star-line';
+
+function IconSelector({ selectedIcon, onSelect }) {
+  return (
+    <div className="flex gap-2">
+      {['star-line', 'play-large-fill', 'volume-up-fill'].map((name) => (
+        <button
+          key={name}
+          onClick={() => onSelect(name)}
+          className={selectedIcon === name ? 'text-blue-500' : ''}
+        >
+          <IconLibrary name={name as IconName} className="h-6 w-6" />
+        </button>
+      ))}
+    </div>
+  );
+}
+`}
+/>
+
+## Bundle Size Considerations
+
+This component includes references to all icons in your bundle, which may impact performance in production applications. For better tree-shaking and bundle optimization, consider using the base [Icon component](/docs/components-icon--docs) instead:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Recommended approach for production applications
+import { Icon } from '@gdominguez210/gdom-ui/Icon';
+import { ReactComponent as StarLineSvg } from '@gdominguez210/gdom-ui/assets/svgs/star-line.svg';
+import { ReactComponent as PlayLargeFillSvg } from '@gdominguez210/gdom-ui/assets/svgs/play-large-fill.svg';
+
+function OptimizedIcons() {
+  return (
+    <div className="flex gap-4">
+      <Icon as={StarLineSvg} className="text-yellow-400" />
+      <Icon as={PlayLargeFillSvg} className="text-blue-500" />
+    </div>
+  );
+}
+`}
+/>
+
+## Styling and Accessibility
+
+The IconLibrary component inherits all styling capabilities and accessibility features from the base [Icon component](/docs/components-icon--docs). Please refer to the Icon documentation for detailed information about:
+
+- Text color inheritance
+- Size customization
+- Accessibility best practices
+- Customization options
