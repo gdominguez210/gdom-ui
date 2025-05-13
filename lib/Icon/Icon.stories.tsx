@@ -1,28 +1,83 @@
 import type { StoryObj, Meta } from '@storybook/react';
-import { Icon as IconComponent } from '@lib/Icon';
-import { icons, type IconName } from './data';
+import { Icon } from '@lib/Icon';
+import { ReactComponent as StarLineSvg } from '@lib/assets/svgs/star-line.svg';
+import { ReactComponent as PlayLargeFillSvg } from '@lib/assets/svgs/play-large-fill.svg';
+import { ReactComponent as VolumeUpFillSvg } from '@lib/assets/svgs/volume-up-fill.svg';
+import { ReactComponent as CloseFillSvg } from '@lib/assets/svgs/close-fill.svg';
+import { ReactComponent as Playlist2FillSvg } from '@lib/assets/svgs/play-list-2-fill.svg';
 import { Button } from '@lib/Button';
+
+function CustomSvg(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+        strokeWidth="2"
+        stroke="currentColor"
+      />
+      <path
+        d="M12 8v8M8 12h8"
+        strokeWidth="2"
+        stroke="currentColor"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+// Define SVG components for the dropdown
+const svgComponents = {
+  StarLineSvg,
+  PlayLargeFillSvg,
+  VolumeUpFillSvg,
+  CloseFillSvg,
+  Playlist2FillSvg,
+};
 
 export default {
   title: 'components/Icon',
-  component: IconComponent,
+  component: Icon,
   parameters: {
     docs: {
       description: {
         component:
-          'A versatile icon component that renders SVG icons with consistent styling and behavior.',
+          'A polymorphic icon component that renders SVG components with consistent styling and behavior. This component allows for tree-shaking of unused icons.',
       },
       source: {
         type: 'dynamic',
       },
     },
   },
-} as Meta<typeof IconComponent>;
-
-export const IconSandbox: StoryObj<typeof IconComponent> = {
-  args: {
-    name: 'star-line',
+  argTypes: {
+    as: {
+      control: {
+        type: 'select',
+        labels: {
+          StarLineSvg: 'StarLine',
+          PlayLargeFillSvg: 'PlayLargeFill',
+          VolumeUpFillSvg: 'VolumeUpFill',
+          CloseFillSvg: 'CloseFill',
+          Playlist2FillSvg: 'Playlist2Fill',
+        },
+      },
+      options: Object.keys(svgComponents),
+      mapping: svgComponents,
+      description: 'The SVG component to render',
+    },
   },
+  args: {
+    as: StarLineSvg,
+  },
+} as Meta<typeof Icon>;
+
+export const IconSandbox: StoryObj<typeof Icon> = {
   parameters: {
     docs: {
       description: {
@@ -32,37 +87,7 @@ export const IconSandbox: StoryObj<typeof IconComponent> = {
   },
 };
 
-export const AllIcons: StoryObj<typeof IconComponent> = {
-  parameters: {
-    docs: {
-      description: {
-        story: 'Gallery of all available icons in the library.',
-      },
-    },
-  },
-  render: () => {
-    const iconNames = Object.keys(icons) as IconName[];
-
-    return (
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {iconNames.map((name) => (
-          <div
-            key={name}
-            className="flex flex-col items-center justify-center rounded-md border border-gray-200 p-4 hover:bg-gray-50"
-          >
-            <IconComponent
-              name={name}
-              className="mb-2 h-8 w-8"
-            />
-            <code className="text-xs text-gray-600">{name}</code>
-          </div>
-        ))}
-      </div>
-    );
-  },
-};
-
-export const SizingOptions: StoryObj<typeof IconComponent> = {
+export const SizingOptions: StoryObj<typeof Icon> = {
   parameters: {
     docs: {
       description: {
@@ -91,13 +116,13 @@ export const SizingOptions: StoryObj<typeof IconComponent> = {
           >
             <div className="w-16 text-sm">{size.name}:</div>
             <div className={size.class}>
-              <IconComponent name="star-line" />
+              <Icon as={StarLineSvg} />
             </div>
             <div className={size.class}>
-              <IconComponent name="play-large-fill" />
+              <Icon as={PlayLargeFillSvg} />
             </div>
             <div className={size.class}>
-              <IconComponent name="volume-up-fill" />
+              <Icon as={VolumeUpFillSvg} />
             </div>
             <code className="text-xs text-gray-500">{size.class}</code>
           </div>
@@ -107,7 +132,7 @@ export const SizingOptions: StoryObj<typeof IconComponent> = {
   },
 };
 
-export const ColoredIcons: StoryObj<typeof IconComponent> = {
+export const ColoredIcons: StoryObj<typeof Icon> = {
   parameters: {
     docs: {
       description: {
@@ -134,7 +159,7 @@ export const ColoredIcons: StoryObj<typeof IconComponent> = {
           >
             <div className="w-16 text-sm">{color.name}:</div>
             <div className={`text-2xl ${color.class}`}>
-              <IconComponent name="star-line" />
+              <Icon as={StarLineSvg} />
             </div>
             <code className="text-xs text-gray-500">{color.class || 'Default'}</code>
           </div>
@@ -144,11 +169,14 @@ export const ColoredIcons: StoryObj<typeof IconComponent> = {
   },
 };
 
-export const IconsInButtons: StoryObj<typeof IconComponent> = {
+export const IconsInButtons: StoryObj<typeof Icon> = {
   parameters: {
     docs: {
       description: {
         story: `Icons are commonly used within buttons to enhance usability and provide visual cues. When using icon-only buttons, always provide an \`aria-label\` for accessibility. The Button component's \`iconOnly\` prop ensures proper spacing and sizing for icon-only scenarios.`,
+      },
+      source: {
+        type: 'dynamic',
       },
     },
   },
@@ -157,24 +185,24 @@ export const IconsInButtons: StoryObj<typeof IconComponent> = {
       <div className="space-y-6">
         <div className="flex flex-wrap gap-4">
           <Button variant="primary">
-            <IconComponent name="play-large-fill" />
+            <Icon as={PlayLargeFillSvg} />
             Play Now
           </Button>
 
           <Button variant="secondary">
-            <IconComponent name="volume-up-fill" />
+            <Icon as={VolumeUpFillSvg} />
             Adjust Volume
           </Button>
 
           <Button variant="destructive">
-            <IconComponent name="close-fill" />
+            <Icon as={CloseFillSvg} />
             Close
           </Button>
         </div>
 
         <div className="flex flex-wrap gap-4">
           <Button variant="linkColor">
-            <IconComponent name="star-line" />
+            <Icon as={StarLineSvg} />
             Add to Favorites
           </Button>
 
@@ -182,7 +210,7 @@ export const IconsInButtons: StoryObj<typeof IconComponent> = {
             variant="tertiary"
             size="lg"
           >
-            <IconComponent name="play-list-2-fill" />
+            <Icon as={Playlist2FillSvg} />
             View Playlist
           </Button>
         </div>
@@ -193,7 +221,7 @@ export const IconsInButtons: StoryObj<typeof IconComponent> = {
             iconOnly
             aria-label="Play"
           >
-            <IconComponent name="play-large-fill" />
+            <Icon as={PlayLargeFillSvg} />
           </Button>
 
           <Button
@@ -201,7 +229,7 @@ export const IconsInButtons: StoryObj<typeof IconComponent> = {
             iconOnly
             aria-label="Adjust Volume"
           >
-            <IconComponent name="volume-up-fill" />
+            <Icon as={VolumeUpFillSvg} />
           </Button>
 
           <Button
@@ -209,7 +237,7 @@ export const IconsInButtons: StoryObj<typeof IconComponent> = {
             iconOnly
             aria-label="Close"
           >
-            <IconComponent name="close-fill" />
+            <Icon as={CloseFillSvg} />
           </Button>
 
           <Button
@@ -217,8 +245,41 @@ export const IconsInButtons: StoryObj<typeof IconComponent> = {
             iconOnly
             aria-label="Add to Favorites"
           >
-            <IconComponent name="star-line" />
+            <Icon as={StarLineSvg} />
           </Button>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const CustomSvgExample: StoryObj<typeof Icon> = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'Example of using a custom SVG with the Icon component.',
+      },
+    },
+    source: {
+      type: 'dynamic',
+    },
+  },
+  render: () => {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center space-x-4">
+          <Icon
+            as={CustomSvg}
+            className="h-8 w-8 text-purple-500"
+          />
+          <Icon
+            as={CustomSvg}
+            className="h-12 w-12 text-green-500"
+          />
+          <Icon
+            as={CustomSvg}
+            className="h-16 w-16 text-blue-500"
+          />
         </div>
       </div>
     );

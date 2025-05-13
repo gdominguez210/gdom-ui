@@ -1,4 +1,4 @@
-import { Meta, Primary, Controls, Stories, Story, Canvas } from '@storybook/blocks';
+import { Meta, Primary, Controls, Stories, Story, Canvas, Source } from '@storybook/blocks';
 import * as IconStories from './Icon.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 
@@ -6,51 +6,65 @@ import { DocumentationNav } from '@storybook-components/DocumentationNav/Documen
 
 # Icon
 
-The Icon component is a versatile, customizable SVG icon system that provides a consistent way to include icons in your UI.
+The Icon component is a polymorphic, tree-shakable SVG icon system that provides a consistent way to include icons in your UI.
 
 <DocumentationNav />
 <Primary />
 <Controls />
-<Stories includePrimary={false} />
 
-## Component Features
+## Features
 
 The Icon component offers the following features:
 
+- **Tree-shakable architecture** for optimized bundle size
 - **Consistent sizing** relative to text using `em` units
 - **Customizable colors** via Tailwind text color utilities
 - **Accessibility support** with proper ARIA attributes
-- **TypeScript support** with type safety for icon names
+- **TypeScript support** with type safety
 - **Scalable vector graphics** that maintain quality at any size
-- **Simplified integration** with a uniform API
+- **Support for custom SVGs** with consistent styling
 
-## Usage Guidelines
+## Examples
 
-Icons enhance the user experience by:
+<Stories includePrimary={false} title=""/>
 
-- Providing visual cues that reinforce meaning
-- Saving space compared to text labels
-- Improving recognition for common actions
-- Supporting internationalization efforts
+## Architecture
 
-Choose appropriate icons that have clear meaning and avoid ambiguous symbolism that could confuse users.
+The Icon component is implemented as a polymorphic component that accepts an SVG component:
 
-## Component Architecture
-
-The Icon component uses a simple wrapper around SVG components:
-
-```tsx
+<Source
+  language="tsx"
+  dark
+  code={`
 import { Icon } from '@gdominguez210/gdom-ui/Icon';
+import { StarLine, PlayLargeFill } from '@gdominguez210/gdom-ui/icons';
 
-// Basic usage
-<Icon name="star-line" />
+// Recommended usage with named icon components (tree-shakable)
+<StarLine />
+<PlayLargeFill className="text-blue-500" />
 
-// With custom size
-<Icon name="play-large-fill" className="w-6 h-6" />
+// Alternative usage with base Icon component
+<Icon as={StarLine} />
+<Icon as={PlayLargeFill} className="text-blue-500" />
+`}
+/>
 
-// With custom color
-<Icon name="volume-up-fill" className="text-blue-500" />
-```
+## Using Custom SVGs
+
+You can use your own SVG components with the Icon component:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { Icon } from '@gdominguez210/gdom-ui/Icon';
+import { ReactComponent as CustomSvg } from './path/to/custom.svg';
+
+<Icon as={CustomSvg} className="text-green-500" />
+`}
+/>
+
+This allows you to maintain consistent styling across all icons in your application, whether they come from this library or from custom sources.
 
 ### Styling Approach
 
@@ -60,37 +74,41 @@ The Icon component:
 - Sets height to `1em` by default, making it scale with text size
 - Supports all SVG attributes like `className`, `aria-label`, etc.
 
-```tsx
+<Source
+  language="tsx"
+  dark
+  code={`
 // Icons inherit text color
 <div className="text-red-500">
-  <Icon name="star-line" />
+  <StarLine />
 </div>
 
 // Icons inherit text size
 <div className="text-2xl">
-  <Icon name="star-line" />
+  <PlayLargeFill />
 </div>
 
 // Custom classes can override defaults
-<Icon name="star-line" className="h-8 w-8 text-blue-500" />
-```
+<StarLine className="h-8 w-8 text-blue-500" />
+`}
+/>
 
-### Accessibility Considerations
+### Bundle Size Optimization
 
-When using icons:
+The Icon component is designed for optimal bundle size:
 
-- Provide text alternatives for icons that convey meaning
-- Use `aria-hidden="true"` for decorative icons
-- Ensure sufficient color contrast
-- Consider users with color blindness
+- Each icon is exported as its own component, enabling tree-shaking
+- Only the icons you import are included in your bundle
+- For applications where bundle size is critical, use the direct imports
 
-## TypeScript Usage
+<Source
+  language="tsx"
+  dark
+  code={`
+// Only these specific icons will be included in your bundle
+import { IconPlayLargeFill } from '@gdominguez210/gdom-ui/IconPlayLargeFill';
+import { IconPauseLargeFill } from '@gdominguez210/gdom-ui/IconPauseLargeFill';
+`}
+/>
 
-The component provides types for all available icons:
-
-```tsx
-import { Icon, type IconName } from '@gdominguez210/gdom-ui/Icon';
-
-// Type safe icon names
-const iconName: IconName = 'star-line';
-```
+For internal usage where bundle size is less critical (like documentation or admin panels), consider using the `IconLibrary` component instead, which allows referencing icons by name.
