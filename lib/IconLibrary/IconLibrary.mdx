@@ -1,0 +1,26 @@
+import { Meta, Primary, Controls } from '@storybook/blocks';
+import * as IconLibraryStories from './IconLibrary.stories';
+
+<Meta of={IconLibraryStories} />
+
+# IconLibrary
+
+A versatile icon library component that allows using SVG icons by name.
+
+<Primary />
+<Controls />
+
+## Usage
+
+```tsx
+import { IconLibrary } from '@lib/IconLibrary/IconLibrary';
+
+<IconLibrary name="star-line" />
+```
+
+## Features
+
+- Name-based API for referencing icons
+- Consistent styling with text color and size
+- Type-safe with TypeScript support for icon names
+- Built on top of the base Icon component 
