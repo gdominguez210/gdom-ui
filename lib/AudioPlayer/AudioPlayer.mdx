@@ -1,4 +1,4 @@
-import { Meta, Controls, Story, Source, Canvas, Stories } from '@storybook/blocks';
+import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/blocks';
 import * as AudioPlayerStories from './AudioPlayer.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
@@ -13,33 +13,37 @@ The AudioPlayer is a flexible, composable audio playback interface that provides
 
 <DocumentationNav />
 
-## Examples
-<Stories
-  title=""
-/>
+<Primary />
+## Props
 
-## Component Architecture
+<Controls />
 
-The AudioPlayer uses a compound component pattern with a two-tier architecture:
+## Features
 
-### Context-Connected Components
+The AudioPlayer component provides several key features:
 
-The main `AudioPlayer` namespace exports all subcomponents that integrate with the audio player context:
+- **Two-Tier Component Architecture**: Uses the [Two-Tier Component Architecture](/docs/core-concepts-two-tier-components--docs) with context-connected components that handle state and primitive components that focus on presentation. This allows you to use pre-connected components for quick implementation or build custom interfaces with primitive components.
 
-- These components handle state management and audio playback automatically
-- They're accessible through the `AudioPlayer.ComponentName` pattern
-- These are client components that use React hooks and context
+- **Polymorphic Components**: Most AudioPlayer components are [polymorphic](/docs/core-concepts-polymorphic-components--docs), meaning they can render as different HTML elements or React components using the `as` prop, providing maximum flexibility for integration into various UI structures.
 
-Components that handle events (like AudioPlayer.ProgressBar, AudioPlayer.ControlPlay, AudioPlayer.ControlNext, etc.) follow a consistent pattern:
+- **Consistent Event Handling**: Components that handle events follow a consistent pattern where internal handlers run first to maintain core functionality, then your custom handlers are called afterward with the event object.
 
-- They accept standard event handlers as props (onClick, onChange, etc.)
-- Internal handlers run first to maintain core functionality
-- Your custom handlers are called afterward with the event object
+- **Comprehensive Media Controls**: Provides a complete set of audio playback controls including play/pause, volume, seek, next/previous track, and loop/shuffle functionality.
+
+- **Flexible Layout Options**: Components can be arranged in any layout and styled to match your application's design system.
+
+- **Accessibility-First Design**: Built with proper ARIA attributes, keyboard navigation, and screen reader support for an inclusive user experience.
 
 <Source
   language="tsx"
   dark
   code={`
+// Polymorphic component example
+<AudioPlayer.Root as="section" className="rounded-lg">
+  Content goes here
+</AudioPlayer.Root>
+
+// Event handling example
 <AudioPlayer.ProgressBar
   onChange={(e) => {
     console.log('Progress changed:', e.target.value);
@@ -53,96 +57,12 @@ Components that handle events (like AudioPlayer.ProgressBar, AudioPlayer.Control
 />
 `} />
 
-This approach allows you to add custom behavior while the components automatically maintain their connection to the audio player context.
+See the [Core Concepts documentation](/docs/core-concepts-two-tier-components--docs) for more details on the architectural patterns used throughout GDOM-UI.
 
-### Primitive Components
-
-Each context-connected component is built on top of a primitive component:
-
-- Primitive components are purely prop-driven with no dependency on context
-- They handle presentation, and some default assignments for accessibility
-- They can be imported directly for custom implementations
-- Since they don't use React hooks or browser APIs, **primitive components can be used as server components** in Next.js
-
-This separation creates a flexible system that enables both quick implementation through the context components and advanced customization through primitives, while also allowing for server-side rendering optimizations.
-
-### Polymorphic Components
-
-All AudioPlayer components are built as polymorphic components, which means they can render as any HTML element or React component. This provides maximum flexibility for integration into various UI patterns.
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Render as a div (default)
-<AudioPlayer.Root>
-  Content goes here
-</AudioPlayer.Root>
-
-// Render as a section
-
-<AudioPlayer.Root as="section">Content goes here</AudioPlayer.Root>
-
-// Render as a custom component
-
-<AudioPlayer.Root as={CustomContainer}>Content goes here</AudioPlayer.Root>
-`} />
-
-Each component accepts an `as` prop that determines the rendered element, along with all props valid for that element type. This allows you to maintain semantic HTML structure while using AudioPlayer components.
-
-### Styling Approach
-
-All AudioPlayer components are designed for flexible styling:
-
-- Use **className props** with Tailwind CSS classes
-- Apply **custom CSS classes**
-- Use **inline style objects**
-- Work with **CSS-in-JS solutions** like styled-components
-
-Components use `twMerge` internally to intelligently merge Tailwind CSS classes, so your classes override defaults rather than conflicting with them:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Override the background color and padding
-<AudioPlayer.Info className="bg-blue-800 p-6 rounded-xl">
-  <AudioPlayer.Title className="text-2xl font-bold text-white" />
-</AudioPlayer.Info>
-
-// Using inline styles
-
-<AudioPlayer.Controls style={{ marginTop: '2rem', opacity: 0.9 }} />
-
-// Combining approaches (Tailwind, style object, custom class)
-
-<AudioPlayer.ProgressBar
-  className="my-custom-class h-3 rounded-full bg-gray-200"
-  style={{ boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
-/>
-`} />
-
-### Accessibility Features
-
-The AudioPlayer components are built with accessibility as a core principle:
-
-- All controls use semantic HTML elements
-- Proper ARIA attributes for media controls
-- Keyboard navigation support
-- Focus management for interactive elements
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Example of accessibility attributes automatically applied
-<AudioPlayer.ControlPlay />
-// Renders with:
-// - aria-label that changes based on play/pause state
-// - role="button" 
-// - keyboard focus handling
-// - screen reader announcements for state changes
-`}
+## Examples
+<Stories
+  includePrimary={false}
+  title=""
 />
 
 ## Available Subcomponents
@@ -506,6 +426,32 @@ import { AudioPlayerProgressBarPrimitive } from '@gdominguez210/gdom-ui/AudioPla
 />
 `} />
 
+#### Progress Waveform
+
+An enhanced progress control that displays a waveform visualization of the audio and allows seeking by clicking on different parts of the waveform.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.ProgressWaveform waveformData={waveformData} />
+
+// Direct import
+import { AudioPlayerProgressWaveform } from '@gdominguez210/gdom-ui/AudioPlayerProgressWaveform';
+
+<AudioPlayerProgressWaveform waveformData={waveformData} />
+
+// With custom styling
+<AudioPlayerProgressWaveform 
+  waveformData={waveformData}
+  progressColor="rgba(59, 130, 246, 1)"
+  backgroundColor="rgba(229, 231, 235, 0.5)"
+  className="h-12 w-full rounded-md"
+/>
+`} />
+
 #### Volume Container
 
 Container for volume controls that can be configured to expand/collapse.
@@ -581,6 +527,67 @@ import { AudioPlayerVolumeSliderPrimitive } from '@gdominguez210/gdom-ui/AudioPl
 />
 `} />
 
-## Props
+### Visualizers
 
-<Controls />
+AudioPlayer includes several audio visualization components that can be added to enhance the player experience.
+
+#### Waveform Visualizer
+
+Displays a real-time waveform visualization of the audio being played.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.VisualizerWaveform />
+
+// Direct import
+import { AudioPlayerVisualizerWaveform } from '@gdominguez210/gdom-ui/AudioPlayerVisualizerWaveform';
+
+<AudioPlayerVisualizerWaveform />
+
+// With custom styling
+<AudioPlayerVisualizerWaveform 
+  lineColor="rgba(59, 130, 246, 1)"
+  lineWidth={2}
+  className="h-24 w-full rounded-md bg-gray-100"
+/>
+`} />
+
+#### Frequency Bars Visualizer
+
+Displays a real-time frequency spectrum visualization as animated vertical bars. Shows different frequency ranges of the audio being played, similar to an equalizer display.
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Compound component usage
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+<AudioPlayer.VisualizerFrequencyBars />
+
+// Direct import
+import { AudioPlayerVisualizerFrequencyBars } from '@gdominguez210/gdom-ui/AudioPlayerVisualizerFrequencyBars';
+
+<AudioPlayerVisualizerFrequencyBars />
+
+// With custom styling and options
+<AudioPlayerVisualizerFrequencyBars 
+  barColor="rgba(59, 130, 246, 1)"
+  barCount={32}
+  barGapRatio={0.3}
+  heightMultiplier={1.5}
+  minBarHeight={3}
+  colorMode="gradient"
+  className="h-24 w-full rounded-md bg-gray-100"
+/>
+
+// With rainbow color effect
+<AudioPlayerVisualizerFrequencyBars 
+  colorMode="rainbow"
+  barCount={64}
+  className="h-36 w-full rounded-md"
+/>
+`} />
