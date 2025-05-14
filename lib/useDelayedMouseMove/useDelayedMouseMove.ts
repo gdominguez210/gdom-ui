@@ -4,7 +4,7 @@ import { useLatest } from '@lib/useLatest/useLatest';
 /**
  * Options for the useDelayedMouseMove hook
  */
-interface UseDelayedMouseMoveOptions<T extends HTMLElement> {
+export type UseDelayedMouseMoveOptions<T extends HTMLElement> = {
   /**
    * Delay in milliseconds before mouse move events are processed
    */
@@ -19,7 +19,7 @@ interface UseDelayedMouseMoveOptions<T extends HTMLElement> {
    * Optional callback for when mouse leaves the element
    */
   onMouseLeave?: MouseEventHandler<T>;
-}
+};
 
 /**
  * Hook that delays processing mouse move events until after an initial delay period
