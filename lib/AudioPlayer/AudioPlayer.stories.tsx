@@ -95,11 +95,11 @@ export default {
   },
 } as Meta<typeof AudioPlayer>;
 
-export const Example: StoryObj<typeof AudioPlayer> = {
+export const Base: StoryObj<typeof AudioPlayer> = {
   parameters: {
     docs: {
       description: {
-        story: 'An example layout with all available components',
+        story: 'A base layout set audio player components',
       },
       canvas: {
         sourceState: 'shown',
