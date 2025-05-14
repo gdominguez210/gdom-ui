@@ -1249,21 +1249,21 @@ const getDefaultConfig = () => {
        * @see https://tailwindcss.com/docs/height
        */
       h: [{
-        h: ['screen', ...scaleSizing()]
+        h: ['screen', 'lh', ...scaleSizing()]
       }],
       /**
        * Min-Height
        * @see https://tailwindcss.com/docs/min-height
        */
       'min-h': [{
-        'min-h': ['screen', 'none', ...scaleSizing()]
+        'min-h': ['screen', 'lh', 'none', ...scaleSizing()]
       }],
       /**
        * Max-Height
        * @see https://tailwindcss.com/docs/max-height
        */
       'max-h': [{
-        'max-h': ['screen', ...scaleSizing()]
+        'max-h': ['screen', 'lh', ...scaleSizing()]
       }],
       // ------------------
       // --- Typography ---
@@ -3275,95 +3275,22 @@ function AudioPlayerControls(props) {
   );
 }
 
-const SvgStarLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { viewBox: "0 0 16 16", xmlns: "http://www.w3.org/2000/svg", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8.00044 12.3471L3.10221 15.0889L4.19619 9.58317L0.0749512 5.77199L5.64928 5.11106L8.00044 0.0137939L10.3516 5.11106L15.9259 5.77199L11.8047 9.58317L12.8986 15.0889L8.00044 12.3471ZM8.00044 10.7555L10.9495 12.4062L10.2909 9.09136L12.7722 6.79671L9.416 6.39875L8.00044 3.32978L6.58485 6.39875L3.22865 6.79671L5.70997 9.09136L5.0513 12.4062L8.00044 10.7555Z" }));
-const ForwardRef$i = React.forwardRef(SvgStarLine);
-
-const SvgForwardEndFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M22 4C21.4477 4 21 4.44772 21 5V10.6665L11.7774 4.51806C11.6952 4.4633 11.5987 4.43408 11.5 4.43408C11.2239 4.43408 11 4.65794 11 4.93408V10.6665L1.77735 4.51806C1.69522 4.4633 1.59871 4.43408 1.5 4.43408C1.22386 4.43408 1 4.65794 1 4.93408V19.0656C1 19.1643 1.02922 19.2608 1.08397 19.3429C1.23715 19.5727 1.54759 19.6348 1.77735 19.4816L11 13.3332V19.0656C11 19.1643 11.0292 19.2608 11.084 19.3429C11.2372 19.5727 11.5476 19.6348 11.7774 19.4816L21 13.3332V19C21 19.5523 21.4477 20 22 20C22.5523 20 23 19.5523 23 19V5C23 4.44772 22.5523 4 22 4Z" }));
-const ForwardRef$h = React.forwardRef(SvgForwardEndFill);
-
-const SvgPauseLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 3H8V21H6V3ZM16 3H18V21H16V3Z" }));
-const ForwardRef$g = React.forwardRef(SvgPauseLargeFill);
-
-const SvgPlayLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 20.1957V3.80421C6 3.01878 6.86395 2.53993 7.53 2.95621L20.6432 11.152C21.2699 11.5436 21.2699 12.4563 20.6432 12.848L7.53 21.0437C6.86395 21.46 6 20.9812 6 20.1957Z" }));
-const ForwardRef$f = React.forwardRef(SvgPlayLargeFill);
-
-const SvgRewindFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 10.6667L21.2227 4.51823C21.4524 4.36506 21.7629 4.42714 21.9161 4.65691C21.9708 4.73904 22 4.83554 22 4.93426V19.0657C22 19.3419 21.7762 19.5657 21.5 19.5657C21.4013 19.5657 21.3048 19.5365 21.2227 19.4818L12 13.3333V19.0657C12 19.3419 11.7762 19.5657 11.5 19.5657C11.4013 19.5657 11.3048 19.5365 11.2227 19.4818L0.62407 12.416C0.394306 12.2628 0.332219 11.9524 0.485395 11.7226C0.522013 11.6677 0.569144 11.6206 0.62407 11.584L11.2227 4.51823C11.4524 4.36506 11.7629 4.42714 11.9161 4.65691C11.9708 4.73904 12 4.83554 12 4.93426V10.6667Z" }));
-const ForwardRef$e = React.forwardRef(SvgRewindFill);
-
-const SvgRewindStartFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 4C1.44772 4 1 4.44772 1 5V19C1 19.5523 1.44772 20 2 20C2.55228 20 3 19.5523 3 19V13.3332L12.2227 19.4816C12.3048 19.5364 12.4013 19.5656 12.5 19.5656C12.7762 19.5656 13 19.3418 13 19.0656V13.3332L22.2227 19.4816C22.3048 19.5364 22.4013 19.5656 22.5 19.5656C22.7762 19.5656 23 19.3418 23 19.0656V4.93413C23 4.83542 22.9708 4.73892 22.9161 4.65679C22.7629 4.42702 22.4524 4.36493 22.2227 4.51811L13 10.6665V4.93413C13 4.83542 12.9708 4.73892 12.9161 4.65679C12.7629 4.42702 12.4524 4.36493 12.2227 4.51811L3 10.6666V5C3 4.44772 2.55228 4 2 4Z" }));
-const ForwardRef$d = React.forwardRef(SvgRewindStartFill);
-
-const SvgShuffleFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M18 17.8832V16L23 19L18 22V19.9095C14.9224 19.4698 12.2513 17.4584 11.0029 14.5453L11 14.5386L10.9971 14.5453C9.57893 17.8544 6.32508 20 2.72483 20H2V18H2.72483C5.52503 18 8.05579 16.3312 9.15885 13.7574L9.91203 12L9.15885 10.2426C8.05579 7.66878 5.52503 6 2.72483 6H2V4H2.72483C6.32508 4 9.57893 6.14557 10.9971 9.45473L11 9.46141L11.0029 9.45473C12.2513 6.5416 14.9224 4.53022 18 4.09051V2L23 5L18 8V6.11684C15.7266 6.53763 13.7737 8.0667 12.8412 10.2426L12.088 12L12.8412 13.7574C13.7737 15.9333 15.7266 17.4624 18 17.8832Z" }));
-const ForwardRef$c = React.forwardRef(SvgShuffleFill);
-
-const SvgSpeedFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 13.3334L2.77735 19.4818C2.54759 19.635 2.23715 19.5729 2.08397 19.3432C2.02922 19.261 2 19.1645 2 19.0658V4.93433C2 4.65818 2.22386 4.43433 2.5 4.43433C2.59871 4.43433 2.69522 4.46355 2.77735 4.5183L12 10.6667V4.93433C12 4.65818 12.2239 4.43433 12.5 4.43433C12.5987 4.43433 12.6952 4.46355 12.7774 4.5183L23.376 11.584C23.6057 11.7372 23.6678 12.0477 23.5146 12.2774C23.478 12.3323 23.4309 12.3795 23.376 12.4161L12.7774 19.4818C12.5476 19.635 12.2372 19.5729 12.084 19.3432C12.0292 19.261 12 19.1645 12 19.0658V13.3334Z" }));
-const ForwardRef$b = React.forwardRef(SvgSpeedFill);
-
-const SvgStopLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M3 4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4Z" }));
-const ForwardRef$a = React.forwardRef(SvgStopLargeFill);
-
-const SvgVolumeMuteFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M5.88889 16H2C1.44772 16 1 15.5523 1 15V9.00001C1 8.44772 1.44772 8.00001 2 8.00001H5.88889L11.1834 3.66815C11.3971 3.49329 11.7121 3.52479 11.887 3.73851C11.9601 3.82784 12 3.93971 12 4.05513V19.9449C12 20.221 11.7761 20.4449 11.5 20.4449C11.3846 20.4449 11.2727 20.405 11.1834 20.3319L5.88889 16ZM20.4142 12L23.9497 15.5355L22.5355 16.9498L19 13.4142L15.4645 16.9498L14.0503 15.5355L17.5858 12L14.0503 8.46447L15.4645 7.05026L19 10.5858L22.5355 7.05026L23.9497 8.46447L20.4142 12Z" }));
-const ForwardRef$9 = React.forwardRef(SvgVolumeMuteFill);
-
-const SvgVolumeDownFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8.88889 16H5C4.44772 16 4 15.5523 4 15V9.00001C4 8.44772 4.44772 8.00001 5 8.00001H8.88889L14.1834 3.66815C14.3971 3.49329 14.7121 3.52479 14.887 3.73851C14.9601 3.82784 15 3.93971 15 4.05513V19.9449C15 20.221 14.7761 20.4449 14.5 20.4449C14.3846 20.4449 14.2727 20.405 14.1834 20.3319L8.88889 16ZM18.8631 16.5911L17.4411 15.169C18.3892 14.4376 19 13.2901 19 12C19 10.5697 18.2493 9.31469 17.1203 8.6076L18.5589 7.169C20.0396 8.2616 21 10.0187 21 12C21 13.8422 20.1698 15.4904 18.8631 16.5911Z" }));
-const ForwardRef$8 = React.forwardRef(SvgVolumeDownFill);
-
-const SvgVolumeUpFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 16.0001H5.88889L11.1834 20.3319C11.2727 20.405 11.3846 20.4449 11.5 20.4449C11.7761 20.4449 12 20.2211 12 19.9449V4.05519C12 3.93977 11.9601 3.8279 11.887 3.73857C11.7121 3.52485 11.3971 3.49335 11.1834 3.66821L5.88889 8.00007H2C1.44772 8.00007 1 8.44778 1 9.00007V15.0001C1 15.5524 1.44772 16.0001 2 16.0001ZM23 12C23 15.292 21.5539 18.2463 19.2622 20.2622L17.8445 18.8444C19.7758 17.1937 21 14.7398 21 12C21 9.26016 19.7758 6.80629 17.8445 5.15557L19.2622 3.73779C21.5539 5.75368 23 8.70795 23 12ZM18 12C18 10.0883 17.106 8.38548 15.7133 7.28673L14.2842 8.71584C15.3213 9.43855 16 10.64 16 12C16 13.36 15.3213 14.5614 14.2842 15.2841L15.7133 16.7132C17.106 15.6145 18 13.9116 18 12Z" }));
-const ForwardRef$7 = React.forwardRef(SvgVolumeUpFill);
-
-const SvgRepeatFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 4H21C21.5523 4 22 4.44772 22 5V12H20V6H6V9L1 5L6 1V4ZM18 20H3C2.44772 20 2 19.5523 2 19V12H4V18H18V15L23 19L18 23V20Z" }));
-const ForwardRef$6 = React.forwardRef(SvgRepeatFill);
-
-const SvgRepeatOneFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8 20V21.9325C8 22.2086 7.77614 22.4325 7.5 22.4325C7.38303 22.4325 7.26977 22.3915 7.17991 22.3166L3.06093 18.8841C2.84879 18.7073 2.82013 18.392 2.99691 18.1799C3.09191 18.0659 3.23264 18 3.38103 18H8L18 18C19.1046 18 20 17.1046 20 16V8H22V16C22 18.2091 20.2091 20 18 20H8ZM16 4V2.0675C16 1.79136 16.2239 1.5675 16.5 1.5675C16.617 1.5675 16.7302 1.60851 16.8201 1.68339L20.9391 5.11587C21.1512 5.29266 21.1799 5.60794 21.0031 5.82008C20.9081 5.93407 20.7674 5.99998 20.619 5.99998H16L6 6C4.89543 6 4 6.89543 4 8V16H2V8C2 5.79086 3.79086 4 6 4H16ZM11 8H13V16H11V10H9V9L11 8Z" }));
-const ForwardRef$5 = React.forwardRef(SvgRepeatOneFill);
-
-const SvgRepeat2Fill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8 20V21.9325C8 22.2086 7.77614 22.4325 7.5 22.4325C7.38303 22.4325 7.26977 22.3915 7.17991 22.3166L3.06093 18.8841C2.84879 18.7073 2.82013 18.392 2.99691 18.1799C3.09191 18.0659 3.23264 18 3.38103 18L18 18C19.1046 18 20 17.1046 20 16V8H22V16C22 18.2091 20.2091 20 18 20H8ZM16 4V2.0675C16 1.79136 16.2239 1.5675 16.5 1.5675C16.617 1.5675 16.7302 1.60851 16.8201 1.68339L20.9391 5.11587C21.1512 5.29266 21.1799 5.60794 21.0031 5.82008C20.9081 5.93407 20.7674 5.99998 20.619 5.99998L6 6C4.89543 6 4 6.89543 4 8V16H2V8C2 5.79086 3.79086 4 6 4H16Z" }));
-const ForwardRef$4 = React.forwardRef(SvgRepeat2Fill);
-
 const SvgDiscFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M13 9.17071C12.6872 9.06015 12.3506 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15C13.6569 15 15 13.6569 15 12V2.4578C19.0571 3.73207 22 7.52236 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C12.3375 2 12.6711 2.01672 13 2.04938V9.17071Z" }));
-const ForwardRef$3 = React.forwardRef(SvgDiscFill);
-
-const SvgPlayList2Fill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M22 18V20H2V18H22ZM2 3.5L10 8.5L2 13.5V3.5ZM22 11V13H12V11H22ZM22 4V6H12V4H22Z" }));
-const ForwardRef$2 = React.forwardRef(SvgPlayList2Fill);
-
-const SvgPlayListAddFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 18H12V20H2V18ZM2 11H22V13H2V11ZM2 4H22V6H2V4ZM18 18V15H20V18H23V20H20V23H18V20H15V18H18Z" }));
-const ForwardRef$1 = React.forwardRef(SvgPlayListAddFill);
-
-const SvgCloseFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z" }));
-const ForwardRef = React.forwardRef(SvgCloseFill);
-
-const icons = {
-  "star-line": ForwardRef$i,
-  "forward-end-fill": ForwardRef$h,
-  "pause-large-fill": ForwardRef$g,
-  "play-large-fill": ForwardRef$f,
-  "repeat-fill": ForwardRef$6,
-  "repeat-one-fill": ForwardRef$5,
-  "repeat-2-fill": ForwardRef$4,
-  "rewind-fill": ForwardRef$e,
-  "rewind-start-fill": ForwardRef$d,
-  "shuffle-fill": ForwardRef$c,
-  "speed-fill": ForwardRef$b,
-  "stop-large-fill": ForwardRef$a,
-  "volume-mute-fill": ForwardRef$9,
-  "volume-down-fill": ForwardRef$8,
-  "volume-up-fill": ForwardRef$7,
-  "disc-fill": ForwardRef$3,
-  "play-list-2-fill": ForwardRef$2,
-  "play-list-add-line": ForwardRef$1,
-  "close-fill": ForwardRef
-};
+const ForwardRef$y = React.forwardRef(SvgDiscFill);
 
 function Icon(props) {
-  const { name, className, ...restProps } = props;
-  const Icon2 = icons[name];
+  const { as: IconComponent, className, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
-    Icon2,
+    IconComponent,
     {
       className: twMerge(clsx("h-[1em] fill-current", className)),
       ...restProps
     }
   );
+}
+
+function IconDiscFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$y, ...props });
 }
 
 function AudioPlayerImagePrimitive(props) {
@@ -3395,7 +3322,7 @@ function AudioPlayerImagePrimitive(props) {
           width,
           height
         }
-      ) : /* @__PURE__ */ jsxRuntime.jsx("div", { className: "flex h-full w-full items-center justify-center", children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text-4xl", children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { name: "disc-fill" }) }) })
+      ) : /* @__PURE__ */ jsxRuntime.jsx("div", { className: "flex h-full w-full items-center justify-center", children: /* @__PURE__ */ jsxRuntime.jsx("span", { className: "text-4xl", children: /* @__PURE__ */ jsxRuntime.jsx(IconDiscFill, {}) }) })
     }
   );
 }
@@ -3513,11 +3440,15 @@ function useIntersectionObserver(callback, options = DEFAULT_OPTIONS) {
       callbackRef.current(entries, observer);
     }) : null
   );
+  const nodeRef = React.useRef(null);
   React.useEffect(() => {
     if (!observerRef.current) {
       observerRef.current = new IntersectionObserver((entries, observer) => {
         callbackRef.current(entries, observer);
       }, mergedOptions);
+      if (nodeRef.current) {
+        observerRef.current.observe(nodeRef.current);
+      }
     }
     return () => {
       observerRef.current?.disconnect();
@@ -3525,11 +3456,15 @@ function useIntersectionObserver(callback, options = DEFAULT_OPTIONS) {
     };
   }, [mergedOptions, callbackRef]);
   const setRef = React.useCallback((node) => {
-    if (node && observerRef.current) {
-      observerRef.current.observe(node);
+    const currentNode = node;
+    nodeRef.current = currentNode;
+    if (currentNode && observerRef.current) {
+      observerRef.current.observe(currentNode);
     }
     return () => {
-      observerRef.current?.disconnect();
+      if (currentNode && observerRef.current) {
+        observerRef.current.unobserve(currentNode);
+      }
     };
   }, []);
   return { setRef };
@@ -3537,6 +3472,7 @@ function useIntersectionObserver(callback, options = DEFAULT_OPTIONS) {
 
 function useResizeObserver(callback) {
   const callbackRef = useLatest(callback);
+  const nodeRef = React.useRef(null);
   const observerRef = React.useRef(
     typeof ResizeObserver !== "undefined" ? new ResizeObserver((entries, observer) => {
       callbackRef.current(entries, observer);
@@ -3547,6 +3483,9 @@ function useResizeObserver(callback) {
       observerRef.current = new ResizeObserver((entries, observer) => {
         callbackRef.current(entries, observer);
       });
+      if (nodeRef.current) {
+        observerRef.current.observe(nodeRef.current);
+      }
     }
     return () => {
       if (observerRef.current) {
@@ -3557,6 +3496,7 @@ function useResizeObserver(callback) {
   }, [callbackRef]);
   const setRef = React.useCallback((node) => {
     const currentNode = node;
+    nodeRef.current = currentNode;
     if (currentNode && observerRef.current) {
       observerRef.current.observe(currentNode);
     }
@@ -5151,6 +5091,138 @@ function AudioPlayerVolume(props) {
   );
 }
 
+const SvgStarLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { viewBox: "0 0 16 16", xmlns: "http://www.w3.org/2000/svg", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8.00044 12.3471L3.10221 15.0889L4.19619 9.58317L0.0749512 5.77199L5.64928 5.11106L8.00044 0.0137939L10.3516 5.11106L15.9259 5.77199L11.8047 9.58317L12.8986 15.0889L8.00044 12.3471ZM8.00044 10.7555L10.9495 12.4062L10.2909 9.09136L12.7722 6.79671L9.416 6.39875L8.00044 3.32978L6.58485 6.39875L3.22865 6.79671L5.70997 9.09136L5.0513 12.4062L8.00044 10.7555Z" }));
+const ForwardRef$x = React.forwardRef(SvgStarLine);
+
+const SvgForwardEndFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M22 4C21.4477 4 21 4.44772 21 5V10.6665L11.7774 4.51806C11.6952 4.4633 11.5987 4.43408 11.5 4.43408C11.2239 4.43408 11 4.65794 11 4.93408V10.6665L1.77735 4.51806C1.69522 4.4633 1.59871 4.43408 1.5 4.43408C1.22386 4.43408 1 4.65794 1 4.93408V19.0656C1 19.1643 1.02922 19.2608 1.08397 19.3429C1.23715 19.5727 1.54759 19.6348 1.77735 19.4816L11 13.3332V19.0656C11 19.1643 11.0292 19.2608 11.084 19.3429C11.2372 19.5727 11.5476 19.6348 11.7774 19.4816L21 13.3332V19C21 19.5523 21.4477 20 22 20C22.5523 20 23 19.5523 23 19V5C23 4.44772 22.5523 4 22 4Z" }));
+const ForwardRef$w = React.forwardRef(SvgForwardEndFill);
+
+const SvgPauseLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 3H8V21H6V3ZM16 3H18V21H16V3Z" }));
+const ForwardRef$v = React.forwardRef(SvgPauseLargeFill);
+
+const SvgPlayLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 20.1957V3.80421C6 3.01878 6.86395 2.53993 7.53 2.95621L20.6432 11.152C21.2699 11.5436 21.2699 12.4563 20.6432 12.848L7.53 21.0437C6.86395 21.46 6 20.9812 6 20.1957Z" }));
+const ForwardRef$u = React.forwardRef(SvgPlayLargeFill);
+
+const SvgRewindFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 10.6667L21.2227 4.51823C21.4524 4.36506 21.7629 4.42714 21.9161 4.65691C21.9708 4.73904 22 4.83554 22 4.93426V19.0657C22 19.3419 21.7762 19.5657 21.5 19.5657C21.4013 19.5657 21.3048 19.5365 21.2227 19.4818L12 13.3333V19.0657C12 19.3419 11.7762 19.5657 11.5 19.5657C11.4013 19.5657 11.3048 19.5365 11.2227 19.4818L0.62407 12.416C0.394306 12.2628 0.332219 11.9524 0.485395 11.7226C0.522013 11.6677 0.569144 11.6206 0.62407 11.584L11.2227 4.51823C11.4524 4.36506 11.7629 4.42714 11.9161 4.65691C11.9708 4.73904 12 4.83554 12 4.93426V10.6667Z" }));
+const ForwardRef$t = React.forwardRef(SvgRewindFill);
+
+const SvgRewindStartFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 4C1.44772 4 1 4.44772 1 5V19C1 19.5523 1.44772 20 2 20C2.55228 20 3 19.5523 3 19V13.3332L12.2227 19.4816C12.3048 19.5364 12.4013 19.5656 12.5 19.5656C12.7762 19.5656 13 19.3418 13 19.0656V13.3332L22.2227 19.4816C22.3048 19.5364 22.4013 19.5656 22.5 19.5656C22.7762 19.5656 23 19.3418 23 19.0656V4.93413C23 4.83542 22.9708 4.73892 22.9161 4.65679C22.7629 4.42702 22.4524 4.36493 22.2227 4.51811L13 10.6665V4.93413C13 4.83542 12.9708 4.73892 12.9161 4.65679C12.7629 4.42702 12.4524 4.36493 12.2227 4.51811L3 10.6666V5C3 4.44772 2.55228 4 2 4Z" }));
+const ForwardRef$s = React.forwardRef(SvgRewindStartFill);
+
+const SvgShuffleFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M18 17.8832V16L23 19L18 22V19.9095C14.9224 19.4698 12.2513 17.4584 11.0029 14.5453L11 14.5386L10.9971 14.5453C9.57893 17.8544 6.32508 20 2.72483 20H2V18H2.72483C5.52503 18 8.05579 16.3312 9.15885 13.7574L9.91203 12L9.15885 10.2426C8.05579 7.66878 5.52503 6 2.72483 6H2V4H2.72483C6.32508 4 9.57893 6.14557 10.9971 9.45473L11 9.46141L11.0029 9.45473C12.2513 6.5416 14.9224 4.53022 18 4.09051V2L23 5L18 8V6.11684C15.7266 6.53763 13.7737 8.0667 12.8412 10.2426L12.088 12L12.8412 13.7574C13.7737 15.9333 15.7266 17.4624 18 17.8832Z" }));
+const ForwardRef$r = React.forwardRef(SvgShuffleFill);
+
+const SvgSpeedFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 13.3334L2.77735 19.4818C2.54759 19.635 2.23715 19.5729 2.08397 19.3432C2.02922 19.261 2 19.1645 2 19.0658V4.93433C2 4.65818 2.22386 4.43433 2.5 4.43433C2.59871 4.43433 2.69522 4.46355 2.77735 4.5183L12 10.6667V4.93433C12 4.65818 12.2239 4.43433 12.5 4.43433C12.5987 4.43433 12.6952 4.46355 12.7774 4.5183L23.376 11.584C23.6057 11.7372 23.6678 12.0477 23.5146 12.2774C23.478 12.3323 23.4309 12.3795 23.376 12.4161L12.7774 19.4818C12.5476 19.635 12.2372 19.5729 12.084 19.3432C12.0292 19.261 12 19.1645 12 19.0658V13.3334Z" }));
+const ForwardRef$q = React.forwardRef(SvgSpeedFill);
+
+const SvgStopLargeFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M3 4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4Z" }));
+const ForwardRef$p = React.forwardRef(SvgStopLargeFill);
+
+const SvgVolumeMuteFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M5.88889 16H2C1.44772 16 1 15.5523 1 15V9.00001C1 8.44772 1.44772 8.00001 2 8.00001H5.88889L11.1834 3.66815C11.3971 3.49329 11.7121 3.52479 11.887 3.73851C11.9601 3.82784 12 3.93971 12 4.05513V19.9449C12 20.221 11.7761 20.4449 11.5 20.4449C11.3846 20.4449 11.2727 20.405 11.1834 20.3319L5.88889 16ZM20.4142 12L23.9497 15.5355L22.5355 16.9498L19 13.4142L15.4645 16.9498L14.0503 15.5355L17.5858 12L14.0503 8.46447L15.4645 7.05026L19 10.5858L22.5355 7.05026L23.9497 8.46447L20.4142 12Z" }));
+const ForwardRef$o = React.forwardRef(SvgVolumeMuteFill);
+
+const SvgVolumeDownFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8.88889 16H5C4.44772 16 4 15.5523 4 15V9.00001C4 8.44772 4.44772 8.00001 5 8.00001H8.88889L14.1834 3.66815C14.3971 3.49329 14.7121 3.52479 14.887 3.73851C14.9601 3.82784 15 3.93971 15 4.05513V19.9449C15 20.221 14.7761 20.4449 14.5 20.4449C14.3846 20.4449 14.2727 20.405 14.1834 20.3319L8.88889 16ZM18.8631 16.5911L17.4411 15.169C18.3892 14.4376 19 13.2901 19 12C19 10.5697 18.2493 9.31469 17.1203 8.6076L18.5589 7.169C20.0396 8.2616 21 10.0187 21 12C21 13.8422 20.1698 15.4904 18.8631 16.5911Z" }));
+const ForwardRef$n = React.forwardRef(SvgVolumeDownFill);
+
+const SvgVolumeUpFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 16.0001H5.88889L11.1834 20.3319C11.2727 20.405 11.3846 20.4449 11.5 20.4449C11.7761 20.4449 12 20.2211 12 19.9449V4.05519C12 3.93977 11.9601 3.8279 11.887 3.73857C11.7121 3.52485 11.3971 3.49335 11.1834 3.66821L5.88889 8.00007H2C1.44772 8.00007 1 8.44778 1 9.00007V15.0001C1 15.5524 1.44772 16.0001 2 16.0001ZM23 12C23 15.292 21.5539 18.2463 19.2622 20.2622L17.8445 18.8444C19.7758 17.1937 21 14.7398 21 12C21 9.26016 19.7758 6.80629 17.8445 5.15557L19.2622 3.73779C21.5539 5.75368 23 8.70795 23 12ZM18 12C18 10.0883 17.106 8.38548 15.7133 7.28673L14.2842 8.71584C15.3213 9.43855 16 10.64 16 12C16 13.36 15.3213 14.5614 14.2842 15.2841L15.7133 16.7132C17.106 15.6145 18 13.9116 18 12Z" }));
+const ForwardRef$m = React.forwardRef(SvgVolumeUpFill);
+
+const SvgRepeatFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6 4H21C21.5523 4 22 4.44772 22 5V12H20V6H6V9L1 5L6 1V4ZM18 20H3C2.44772 20 2 19.5523 2 19V12H4V18H18V15L23 19L18 23V20Z" }));
+const ForwardRef$l = React.forwardRef(SvgRepeatFill);
+
+const SvgRepeatOneFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8 20V21.9325C8 22.2086 7.77614 22.4325 7.5 22.4325C7.38303 22.4325 7.26977 22.3915 7.17991 22.3166L3.06093 18.8841C2.84879 18.7073 2.82013 18.392 2.99691 18.1799C3.09191 18.0659 3.23264 18 3.38103 18H8L18 18C19.1046 18 20 17.1046 20 16V8H22V16C22 18.2091 20.2091 20 18 20H8ZM16 4V2.0675C16 1.79136 16.2239 1.5675 16.5 1.5675C16.617 1.5675 16.7302 1.60851 16.8201 1.68339L20.9391 5.11587C21.1512 5.29266 21.1799 5.60794 21.0031 5.82008C20.9081 5.93407 20.7674 5.99998 20.619 5.99998H16L6 6C4.89543 6 4 6.89543 4 8V16H2V8C2 5.79086 3.79086 4 6 4H16ZM11 8H13V16H11V10H9V9L11 8Z" }));
+const ForwardRef$k = React.forwardRef(SvgRepeatOneFill);
+
+const SvgRepeat2Fill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M8 20V21.9325C8 22.2086 7.77614 22.4325 7.5 22.4325C7.38303 22.4325 7.26977 22.3915 7.17991 22.3166L3.06093 18.8841C2.84879 18.7073 2.82013 18.392 2.99691 18.1799C3.09191 18.0659 3.23264 18 3.38103 18L18 18C19.1046 18 20 17.1046 20 16V8H22V16C22 18.2091 20.2091 20 18 20H8ZM16 4V2.0675C16 1.79136 16.2239 1.5675 16.5 1.5675C16.617 1.5675 16.7302 1.60851 16.8201 1.68339L20.9391 5.11587C21.1512 5.29266 21.1799 5.60794 21.0031 5.82008C20.9081 5.93407 20.7674 5.99998 20.619 5.99998L6 6C4.89543 6 4 6.89543 4 8V16H2V8C2 5.79086 3.79086 4 6 4H16Z" }));
+const ForwardRef$j = React.forwardRef(SvgRepeat2Fill);
+
+const SvgPlayList2Fill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M22 18V20H2V18H22ZM2 3.5L10 8.5L2 13.5V3.5ZM22 11V13H12V11H22ZM22 4V6H12V4H22Z" }));
+const ForwardRef$i = React.forwardRef(SvgPlayList2Fill);
+
+const SvgPlayListAddFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 18H12V20H2V18ZM2 11H22V13H2V11ZM2 4H22V6H2V4ZM18 18V15H20V18H23V20H20V23H18V20H15V18H18Z" }));
+const ForwardRef$h = React.forwardRef(SvgPlayListAddFill);
+
+const SvgCloseFill = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z" }));
+const ForwardRef$g = React.forwardRef(SvgCloseFill);
+
+const SvgCursorLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M15.3873 13.4975L17.9403 20.5117L13.2418 22.2218L10.6889 15.2076L6.79004 17.6529L8.4086 1.63318L19.9457 12.8646L15.3873 13.4975ZM15.3768 19.3163L12.6618 11.8568L15.6212 11.4459L9.98201 5.9561L9.19088 13.7863L11.7221 12.1988L14.4371 19.6583L15.3768 19.3163Z" }));
+const ForwardRef$f = React.forwardRef(SvgCursorLine);
+
+const SvgEqualizerLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M6.17071 18C6.58254 16.8348 7.69378 16 9 16C10.3062 16 11.4175 16.8348 11.8293 18H22V20H11.8293C11.4175 21.1652 10.3062 22 9 22C7.69378 22 6.58254 21.1652 6.17071 20H2V18H6.17071ZM12.1707 11C12.5825 9.83481 13.6938 9 15 9C16.3062 9 17.4175 9.83481 17.8293 11H22V13H17.8293C17.4175 14.1652 16.3062 15 15 15C13.6938 15 12.5825 14.1652 12.1707 13H2V11H12.1707ZM6.17071 4C6.58254 2.83481 7.69378 2 9 2C10.3062 2 11.4175 2.83481 11.8293 4H22V6H11.8293C11.4175 7.16519 10.3062 8 9 8C7.69378 8 6.58254 7.16519 6.17071 6H2V4H6.17071ZM9 6C9.55228 6 10 5.55228 10 5C10 4.44772 9.55228 4 9 4C8.44772 4 8 4.44772 8 5C8 5.55228 8.44772 6 9 6ZM15 13C15.5523 13 16 12.5523 16 12C16 11.4477 15.5523 11 15 11C14.4477 11 14 11.4477 14 12C14 12.5523 14.4477 13 15 13ZM9 20C9.55228 20 10 19.5523 10 19C10 18.4477 9.55228 18 9 18C8.44772 18 8 18.4477 8 19C8 19.5523 8.44772 20 9 20Z" }));
+const ForwardRef$e = React.forwardRef(SvgEqualizerLine);
+
+const SvgPaletteLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 2C17.5222 2 22 5.97778 22 10.8889C22 13.9556 19.5111 16.4444 16.4444 16.4444H14.4778C13.5556 16.4444 12.8111 17.1889 12.8111 18.1111C12.8111 18.5333 12.9778 18.9222 13.2333 19.2111C13.5 19.5111 13.6667 19.9 13.6667 20.3333C13.6667 21.2556 12.9 22 12 22C6.47778 22 2 17.5222 2 12C2 6.47778 6.47778 2 12 2ZM10.8111 18.1111C10.8111 16.0843 12.451 14.4444 14.4778 14.4444H16.4444C18.4065 14.4444 20 12.851 20 10.8889C20 7.1392 16.4677 4 12 4C7.58235 4 4 7.58235 4 12C4 16.19 7.2226 19.6285 11.324 19.9718C10.9948 19.4168 10.8111 18.7761 10.8111 18.1111ZM7.5 12C6.67157 12 6 11.3284 6 10.5C6 9.67157 6.67157 9 7.5 9C8.32843 9 9 9.67157 9 10.5C9 11.3284 8.32843 12 7.5 12ZM16.5 12C15.6716 12 15 11.3284 15 10.5C15 9.67157 15.6716 9 16.5 9C17.3284 9 18 9.67157 18 10.5C18 11.3284 17.3284 12 16.5 12ZM12 9C11.1716 9 10.5 8.32843 10.5 7.5C10.5 6.67157 11.1716 6 12 6C12.8284 6 13.5 6.67157 13.5 7.5C13.5 8.32843 12.8284 9 12 9Z" }));
+const ForwardRef$d = React.forwardRef(SvgPaletteLine);
+
+const SvgPlayCircleLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM10.6219 8.41459L15.5008 11.6672C15.6846 11.7897 15.7343 12.0381 15.6117 12.2219C15.5824 12.2658 15.5447 12.3035 15.5008 12.3328L10.6219 15.5854C10.4381 15.708 10.1897 15.6583 10.0672 15.4745C10.0234 15.4088 10 15.3316 10 15.2526V8.74741C10 8.52649 10.1791 8.34741 10.4 8.34741C10.479 8.34741 10.5562 8.37078 10.6219 8.41459Z" }));
+const ForwardRef$c = React.forwardRef(SvgPlayCircleLine);
+
+const SvgPulseLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M9 7.53861L15 21.5386L18.6594 13H23V11H17.3406L15 16.4614L9 2.46143L5.3406 11H1V13H6.6594L9 7.53861Z" }));
+const ForwardRef$b = React.forwardRef(SvgPulseLine);
+
+const SvgRhythmLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 9H4V21H2V9ZM8 3H10V21H8V3ZM14 12H16V21H14V12ZM20 6H22V21H20V6Z" }));
+const ForwardRef$a = React.forwardRef(SvgRhythmLine);
+
+const SvgSpeedUpLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M20 13C20 15.2091 19.1046 17.2091 17.6569 18.6569L19.0711 20.0711C20.8807 18.2614 22 15.7614 22 13 22 7.47715 17.5228 3 12 3 6.47715 3 2 7.47715 2 13 2 15.7614 3.11929 18.2614 4.92893 20.0711L6.34315 18.6569C4.89543 17.2091 4 15.2091 4 13 4 8.58172 7.58172 5 12 5 16.4183 5 20 8.58172 20 13ZM15.293 8.29297 10.793 12.793 12.2072 14.2072 16.7072 9.70718 15.293 8.29297Z" }));
+const ForwardRef$9 = React.forwardRef(SvgSpeedUpLine);
+
+const SvgVoiceprintLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M5 7H7V17H5V7ZM1 10H3V14H1V10ZM9 2H11V20H9V2ZM13 4H15V22H13V4ZM17 7H19V17H17V7ZM21 10H23V14H21V10Z" }));
+const ForwardRef$8 = React.forwardRef(SvgVoiceprintLine);
+
+const SvgAccessibilityLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12ZM12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 8.5C12.8284 8.5 13.5 7.82843 13.5 7C13.5 6.17157 12.8284 5.5 12 5.5C11.1716 5.5 10.5 6.17157 10.5 7C10.5 7.82843 11.1716 8.5 12 8.5ZM12 9.49988C10.4427 9.49988 8.82151 9.14306 7.37106 8.57129L6.62891 10.4285C7.70479 10.8579 8.8573 11.1468 9.99989 11.3301C9.99989 12.2004 10.0849 13.0939 9.68317 13.8974L8.10546 17.0528L9.89432 17.9472L11.4471 14.8416C11.5518 14.6322 11.7658 14.5 11.9999 14.5C12.234 14.5 12.448 14.6323 12.5527 14.8416L14.1055 17.9472L15.8943 17.0528L14.3166 13.8974C13.9149 13.0939 13.9999 12.2004 13.9999 11.3301C15.1409 11.1471 16.2818 10.8534 17.359 10.4332C17.3843 10.4233 16.6291 8.57118 16.6264 8.57225C15.1728 9.13901 13.5595 9.49988 12 9.49988Z" }));
+const ForwardRef$7 = React.forwardRef(SvgAccessibilityLine);
+
+const SvgCodeLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M23 12L15.9289 19.0711L14.5147 17.6569L20.1716 12L14.5147 6.34317L15.9289 4.92896L23 12ZM3.82843 12L9.48528 17.6569L8.07107 19.0711L1 12L8.07107 4.92896L9.48528 6.34317L3.82843 12Z" }));
+const ForwardRef$6 = React.forwardRef(SvgCodeLine);
+
+const SvgFontSize = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M11.246 15H4.75416L2.75416 20H0.600098L7.0001 4H9.0001L15.4001 20H13.246L11.246 15ZM10.446 13L8.0001 6.88516L5.55416 13H10.446ZM21.0001 12.5351V12H23.0001V20H21.0001V19.4649C20.4118 19.8052 19.7287 20 19.0001 20C16.791 20 15.0001 18.2091 15.0001 16C15.0001 13.7909 16.791 12 19.0001 12C19.7287 12 20.4118 12.1948 21.0001 12.5351ZM19.0001 18C20.1047 18 21.0001 17.1046 21.0001 16C21.0001 14.8954 20.1047 14 19.0001 14C17.8955 14 17.0001 14.8954 17.0001 16C17.0001 17.1046 17.8955 18 19.0001 18Z" }));
+const ForwardRef$5 = React.forwardRef(SvgFontSize);
+
+const SvgColorFilterLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M12 2.99988C14.2091 2.99988 16 4.79074 16 6.99988C16 7.54431 15.8917 8.06177 15.6958 8.53327C14.0548 8.70904 12.5038 9.5584 11.4804 10.9666C10.2212 10.8033 9.14476 10.0545 8.53417 8.99859C8.19462 8.41137 7.99998 7.72986 7.99998 6.99988C7.99998 4.79074 9.79084 2.99988 12 2.99988ZM17.7635 8.67236C17.9175 8.14099 18 7.57964 18 6.99988C18 3.68617 15.3137 0.999879 12 0.999878C8.68627 0.999877 5.99998 3.68617 5.99998 6.99988C5.99998 7.57966 6.08247 8.14104 6.23647 8.67242C5.69935 8.80476 5.172 9.01399 4.66995 9.30385C1.80019 10.9607 0.81694 14.6302 2.47379 17.5C4.13065 20.3698 7.80019 21.353 10.6699 19.6962C11.172 19.4063 11.6169 19.0542 12 18.6552C12.3832 19.0542 12.828 19.4062 13.33 19.6961C16.1998 21.3529 19.8693 20.3697 21.5262 17.4999C23.183 14.6302 22.1998 10.9606 19.33 9.30377C18.828 9.01392 18.3006 8.80469 17.7635 8.67236ZM13.1543 16.9342C13.8227 15.4251 13.8627 13.6571 13.1549 12.0667C13.9259 11.0577 15.1125 10.4999 16.3322 10.4991C17.0104 10.4987 17.6979 10.6709 18.33 11.0358C20.2432 12.1404 20.8987 14.5868 19.7941 16.4999C18.6895 18.4131 16.2432 19.0686 14.33 17.964C13.8586 17.6919 13.4647 17.3395 13.1543 16.9342ZM11.3649 12.9668C11.8532 14.139 11.7429 15.4456 11.1337 16.5023C10.7949 17.0899 10.3021 17.5991 9.66995 17.9641C7.75678 19.0687 5.31042 18.4132 4.20585 16.5C3.10128 14.5868 3.75678 12.1405 5.66995 11.0359C6.14142 10.7637 6.64366 10.5987 7.1499 10.5326C8.12267 11.8659 9.63373 12.7845 11.3649 12.9668Z" }));
+const ForwardRef$4 = React.forwardRef(SvgColorFilterLine);
+
+const SvgLayoutMasonryLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M22 20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H21C21.5523 3 22 3.44772 22 4V20ZM11 15H4V19H11V15ZM20 11H13V19H20V11ZM11 5H4V13H11V5ZM20 5H13V9H20V5Z" }));
+const ForwardRef$3 = React.forwardRef(SvgLayoutMasonryLine);
+
+const SvgExternalLinkLine = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", width: "1em", height: "1em", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M10 6V8H5V19H16V14H18V20C18 20.5523 17.5523 21 17 21H4C3.44772 21 3 20.5523 3 20V7C3 6.44772 3.44772 6 4 6H10ZM21 3V11H19L18.9999 6.413L11.2071 14.2071L9.79289 12.7929L17.5849 5H13V3H21Z" }));
+const ForwardRef$2 = React.forwardRef(SvgExternalLinkLine);
+
+const icons = {
+  "star-line": ForwardRef$x,
+  "forward-end-fill": ForwardRef$w,
+  "pause-large-fill": ForwardRef$v,
+  "play-large-fill": ForwardRef$u,
+  "repeat-fill": ForwardRef$l,
+  "repeat-one-fill": ForwardRef$k,
+  "repeat-2-fill": ForwardRef$j,
+  "rewind-fill": ForwardRef$t,
+  "rewind-start-fill": ForwardRef$s,
+  "shuffle-fill": ForwardRef$r,
+  "speed-fill": ForwardRef$q,
+  "stop-large-fill": ForwardRef$p,
+  "volume-mute-fill": ForwardRef$o,
+  "volume-down-fill": ForwardRef$n,
+  "volume-up-fill": ForwardRef$m,
+  "disc-fill": ForwardRef$y,
+  "play-list-2-fill": ForwardRef$i,
+  "play-list-add-line": ForwardRef$h,
+  "close-fill": ForwardRef$g,
+  "cursor-line": ForwardRef$f,
+  "equalizer-line": ForwardRef$e,
+  "palette-line": ForwardRef$d,
+  "play-circle-line": ForwardRef$c,
+  "pulse-line": ForwardRef$b,
+  "rhythm-line": ForwardRef$a,
+  "speed-up-line": ForwardRef$9,
+  "voice-print-line": ForwardRef$8,
+  "accessibility-line": ForwardRef$7,
+  "code-line": ForwardRef$6,
+  "font-size": ForwardRef$5,
+  "color-filter-line": ForwardRef$4,
+  "layout-masonry-line": ForwardRef$3,
+  "external-link-line": ForwardRef$2
+};
+
 function AudioPlayerControlButton(props) {
   const { active = false, className, children, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -5170,15 +5242,31 @@ function AudioPlayerControlButton(props) {
   );
 }
 
+function IconVolumeMuteFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$o, ...props });
+}
+
+function IconVolumeDownFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$n, ...props });
+}
+
+function IconVolumeUpFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$m, ...props });
+}
+
 function AudioPlayerVolumeButtonPrimitive(props) {
   const { iconName, title, className, ...restProps } = props;
-  return /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsxRuntime.jsxs(
     AudioPlayerControlButton,
     {
       className: twMerge(clsx("text-2xl", className)),
       title,
       ...restProps,
-      children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { name: iconName })
+      children: [
+        iconName === "volume-mute-fill" && /* @__PURE__ */ jsxRuntime.jsx(IconVolumeMuteFill, {}),
+        iconName === "volume-down-fill" && /* @__PURE__ */ jsxRuntime.jsx(IconVolumeDownFill, {}),
+        iconName === "volume-up-fill" && /* @__PURE__ */ jsxRuntime.jsx(IconVolumeUpFill, {})
+      ]
     }
   );
 }
@@ -5385,6 +5473,14 @@ function useAudioPlayerControlPlay(props) {
   }, [audioRef, isPlaying, currentTrackIndex]);
 }
 
+function IconPauseLargeFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$v, ...props });
+}
+
+function IconPlayLargeFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$u, ...props });
+}
+
 function AudioPlayerControlPlayPrimitive(props) {
   const { active = false, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -5393,7 +5489,7 @@ function AudioPlayerControlPlayPrimitive(props) {
       "aria-label": active ? "Pause" : "Play",
       "aria-pressed": active,
       ...restProps,
-      children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { name: active ? "pause-large-fill" : "play-large-fill" })
+      children: active ? /* @__PURE__ */ jsxRuntime.jsx(IconPauseLargeFill, {}) : /* @__PURE__ */ jsxRuntime.jsx(IconPlayLargeFill, {})
     }
   );
 }
@@ -5463,19 +5559,17 @@ function useAudioPlayerPreviousTrack({
   };
 }
 
+function IconRewindStartFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$s, ...props });
+}
+
 function AudioPlayerControlPreviousPrimitive(props) {
   return /* @__PURE__ */ jsxRuntime.jsx(
     AudioPlayerControlButton,
     {
       "aria-label": "Previous Track",
       ...props,
-      children: /* @__PURE__ */ jsxRuntime.jsx(
-        Icon,
-        {
-          name: "rewind-start-fill",
-          className: "scale-90"
-        }
-      )
+      children: /* @__PURE__ */ jsxRuntime.jsx(IconRewindStartFill, { className: "scale-90" })
     }
   );
 }
@@ -5553,19 +5647,17 @@ function useAudioPlayerNextTrack({
   };
 }
 
+function IconForwardEndFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$w, ...props });
+}
+
 function AudioPlayerControlNextPrimitive(props) {
   return /* @__PURE__ */ jsxRuntime.jsx(
     AudioPlayerControlButton,
     {
       "aria-label": "Next Track",
       ...props,
-      children: /* @__PURE__ */ jsxRuntime.jsx(
-        Icon,
-        {
-          name: "forward-end-fill",
-          className: "scale-90"
-        }
-      )
+      children: /* @__PURE__ */ jsxRuntime.jsx(IconForwardEndFill, { className: "scale-90" })
     }
   );
 }
@@ -5601,6 +5693,10 @@ function AudioPlayerControlNext(props) {
   );
 }
 
+function IconShuffleFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$r, ...props });
+}
+
 function AudioPlayerControlShufflePrimitive(props) {
   const { active = false, className, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -5617,13 +5713,7 @@ function AudioPlayerControlShufflePrimitive(props) {
       "aria-label": "Toggle Shuffle",
       "aria-pressed": active,
       ...restProps,
-      children: /* @__PURE__ */ jsxRuntime.jsx(
-        Icon,
-        {
-          name: "shuffle-fill",
-          className: "scale-75"
-        }
-      )
+      children: /* @__PURE__ */ jsxRuntime.jsx(IconShuffleFill, { className: "scale-75" })
     }
   );
 }
@@ -5648,6 +5738,14 @@ function AudioPlayerControlShuffle(props) {
   );
 }
 
+function IconRepeatOneFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$k, ...props });
+}
+
+function IconRepeat2Fill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$j, ...props });
+}
+
 function AudioPlayerControlLoopPrimitive(props) {
   const { active = false, className, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -5664,13 +5762,7 @@ function AudioPlayerControlLoopPrimitive(props) {
       "aria-label": "Toggle Loop",
       "aria-pressed": active,
       ...restProps,
-      children: /* @__PURE__ */ jsxRuntime.jsx(
-        Icon,
-        {
-          name: active ? "repeat-one-fill" : "repeat-2-fill",
-          className: "scale-75"
-        }
-      )
+      children: active ? /* @__PURE__ */ jsxRuntime.jsx(IconRepeatOneFill, { className: "scale-75" }) : /* @__PURE__ */ jsxRuntime.jsx(IconRepeat2Fill, { className: "scale-75" })
     }
   );
 }
@@ -6907,110 +6999,6 @@ function AudioPlayerVisualizerFrequencyBars(props) {
   );
 }
 
-function calculateMinGapWidth(displayWidth, minGapPercent = 1e-3) {
-  return Math.max(1, displayWidth * minGapPercent);
-}
-function getActualGapWidth(displayWidth, barGapRatio, minGapPercent = 1e-3) {
-  if (barGapRatio === 0 || minGapPercent === 0) {
-    return 0;
-  }
-  const minGapWidth = calculateMinGapWidth(displayWidth, minGapPercent);
-  const desiredGapWidth = displayWidth * barGapRatio;
-  return Math.max(minGapWidth, desiredGapWidth);
-}
-function calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth) {
-  return Math.floor((displayWidth + gapWidth) / (minBarWidth + gapWidth));
-}
-function calculateSamplingRate(dataLength, maxBarsInView) {
-  if (dataLength <= maxBarsInView) {
-    return 1;
-  }
-  return Math.ceil(dataLength / maxBarsInView);
-}
-function sampleWaveformData(waveformData, samplingRate) {
-  if (samplingRate === 1) {
-    return waveformData;
-  }
-  return waveformData.filter((_, i) => i % samplingRate === 0);
-}
-function calculateBarWidth(displayWidth, numBars, gapWidth, minBarWidth) {
-  const totalGapWidth = (numBars - 1) * gapWidth;
-  const availableWidthForBars = displayWidth - totalGapWidth;
-  return Math.max(minBarWidth, availableWidthForBars / numBars);
-}
-
-const useAudioWaveform = (options) => {
-  const {
-    waveformData,
-    barColor = "#9f9fa9",
-    getBarColor,
-    barGapRatio = 35e-4,
-    heightScale = 1,
-    minBarWidth = 1,
-    minBarGapPercent = 1e-3
-  } = options;
-  const canvasRef = React.useRef(null);
-  const drawWaveform = React.useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const displayWidth = canvas.clientWidth;
-    const displayHeight = canvas.clientHeight;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const gapWidth = getActualGapWidth(displayWidth, barGapRatio, minBarGapPercent);
-    const maxBarsInView = calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth);
-    const samplingRate = calculateSamplingRate(waveformData.length, maxBarsInView);
-    const displayData = sampleWaveformData(waveformData, samplingRate);
-    const barWidth = calculateBarWidth(displayWidth, displayData.length, gapWidth, minBarWidth);
-    const centerY = displayHeight / 2;
-    const maxBarHeight = displayHeight * heightScale;
-    displayData.forEach((value, index) => {
-      const isGapless = barGapRatio === 0 || minBarGapPercent === 0;
-      const x = isGapless ? Math.round(index * barWidth) : index * (barWidth + gapWidth);
-      const barHeight = value * maxBarHeight;
-      const originalIndex = index * samplingRate;
-      const position = waveformData.length > 1 ? originalIndex / (waveformData.length - 1) : 0;
-      const barInfo = {
-        position,
-        value,
-        index: originalIndex,
-        width: barWidth / displayWidth
-      };
-      if (getBarColor) {
-        const barColorResult = getBarColor(barInfo);
-        if (typeof barColorResult === "string") {
-          ctx.fillStyle = barColorResult;
-        } else if (barColorResult.type === "gradient") {
-          const gradient = ctx.createLinearGradient(
-            x,
-            centerY + barHeight / 2,
-            x,
-            centerY - barHeight / 2
-          );
-          barColorResult.stops.forEach((stop) => {
-            gradient.addColorStop(stop.offset, stop.color);
-          });
-          ctx.fillStyle = gradient;
-        }
-      } else {
-        ctx.fillStyle = barColor;
-      }
-      const effectiveBarWidth = isGapless ? Math.ceil(barWidth) : barWidth;
-      ctx.fillRect(x, centerY - barHeight / 2, effectiveBarWidth, barHeight);
-    });
-  }, [
-    barColor,
-    getBarColor,
-    heightScale,
-    waveformData,
-    barGapRatio,
-    minBarWidth,
-    minBarGapPercent
-  ]);
-  return { canvasRef, drawWaveform };
-};
-
 function useMousePositionRef() {
   const positionRef = React.useRef({
     clientX: null,
@@ -7275,6 +7263,110 @@ function useAudioProgressWaveform(options) {
     positionRef
   };
 }
+
+function calculateMinGapWidth(displayWidth, minGapPercent = 1e-3) {
+  return Math.max(1, displayWidth * minGapPercent);
+}
+function getActualGapWidth(displayWidth, barGapRatio, minGapPercent = 1e-3) {
+  if (barGapRatio === 0 || minGapPercent === 0) {
+    return 0;
+  }
+  const minGapWidth = calculateMinGapWidth(displayWidth, minGapPercent);
+  const desiredGapWidth = displayWidth * barGapRatio;
+  return Math.max(minGapWidth, desiredGapWidth);
+}
+function calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth) {
+  return Math.floor((displayWidth + gapWidth) / (minBarWidth + gapWidth));
+}
+function calculateSamplingRate(dataLength, maxBarsInView) {
+  if (dataLength <= maxBarsInView) {
+    return 1;
+  }
+  return Math.ceil(dataLength / maxBarsInView);
+}
+function sampleWaveformData(waveformData, samplingRate) {
+  if (samplingRate === 1) {
+    return waveformData;
+  }
+  return waveformData.filter((_, i) => i % samplingRate === 0);
+}
+function calculateBarWidth(displayWidth, numBars, gapWidth, minBarWidth) {
+  const totalGapWidth = (numBars - 1) * gapWidth;
+  const availableWidthForBars = displayWidth - totalGapWidth;
+  return Math.max(minBarWidth, availableWidthForBars / numBars);
+}
+
+const useAudioWaveform = (options) => {
+  const {
+    waveformData,
+    barColor = "#9f9fa9",
+    getBarColor,
+    barGapRatio = 35e-4,
+    heightScale = 1,
+    minBarWidth = 1,
+    minBarGapPercent = 1e-3
+  } = options;
+  const canvasRef = React.useRef(null);
+  const drawWaveform = React.useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const displayWidth = canvas.clientWidth;
+    const displayHeight = canvas.clientHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const gapWidth = getActualGapWidth(displayWidth, barGapRatio, minBarGapPercent);
+    const maxBarsInView = calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth);
+    const samplingRate = calculateSamplingRate(waveformData.length, maxBarsInView);
+    const displayData = sampleWaveformData(waveformData, samplingRate);
+    const barWidth = calculateBarWidth(displayWidth, displayData.length, gapWidth, minBarWidth);
+    const centerY = displayHeight / 2;
+    const maxBarHeight = displayHeight * heightScale;
+    displayData.forEach((value, index) => {
+      const isGapless = barGapRatio === 0 || minBarGapPercent === 0;
+      const x = isGapless ? Math.round(index * barWidth) : index * (barWidth + gapWidth);
+      const barHeight = value * maxBarHeight;
+      const originalIndex = index * samplingRate;
+      const position = waveformData.length > 1 ? originalIndex / (waveformData.length - 1) : 0;
+      const barInfo = {
+        position,
+        value,
+        index: originalIndex,
+        width: barWidth / displayWidth
+      };
+      if (getBarColor) {
+        const barColorResult = getBarColor(barInfo);
+        if (typeof barColorResult === "string") {
+          ctx.fillStyle = barColorResult;
+        } else if (barColorResult.type === "gradient") {
+          const gradient = ctx.createLinearGradient(
+            x,
+            centerY + barHeight / 2,
+            x,
+            centerY - barHeight / 2
+          );
+          barColorResult.stops.forEach((stop) => {
+            gradient.addColorStop(stop.offset, stop.color);
+          });
+          ctx.fillStyle = gradient;
+        }
+      } else {
+        ctx.fillStyle = barColor;
+      }
+      const effectiveBarWidth = isGapless ? Math.ceil(barWidth) : barWidth;
+      ctx.fillRect(x, centerY - barHeight / 2, effectiveBarWidth, barHeight);
+    });
+  }, [
+    barColor,
+    getBarColor,
+    heightScale,
+    waveformData,
+    barGapRatio,
+    minBarWidth,
+    minBarGapPercent
+  ]);
+  return { canvasRef, drawWaveform };
+};
 
 function useKeyboardMediaSeek({
   mediaRef,
@@ -7695,6 +7787,10 @@ function AudioPlaylistHeader(props) {
   );
 }
 
+function IconCloseFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$g, ...props });
+}
+
 function AudioPlaylistDismissPrimitive(props) {
   const { className, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -7703,7 +7799,7 @@ function AudioPlaylistDismissPrimitive(props) {
       "aria-label": "Close playlist",
       className: twMerge(clsx("text-2xl", className)),
       ...restProps,
-      children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { name: "close-fill" })
+      children: /* @__PURE__ */ jsxRuntime.jsx(IconCloseFill, {})
     }
   );
 }
@@ -7729,6 +7825,10 @@ function AudioPlaylistDismiss(props) {
   );
 }
 
+function IconPlayList2Fill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$i, ...props });
+}
+
 function AudioPlaylistControlTogglePrimitive(props) {
   const { active = false, ...restProps } = props;
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -7738,7 +7838,7 @@ function AudioPlaylistControlTogglePrimitive(props) {
       "aria-label": active ? "Hide playlist" : "Show playlist",
       "aria-expanded": active,
       ...restProps,
-      children: /* @__PURE__ */ jsxRuntime.jsx(Icon, { name: "play-list-2-fill" })
+      children: /* @__PURE__ */ jsxRuntime.jsx(IconPlayList2Fill, {})
     }
   );
 }
@@ -8507,6 +8607,7 @@ const buttonStyles = cva(
 );
 function Button(props) {
   const {
+    as: Element = "button",
     children,
     disabled,
     variant = "primary",
@@ -8517,16 +8618,161 @@ function Button(props) {
   } = props;
   const isDestructive = variant === "destructive";
   return /* @__PURE__ */ jsxRuntime.jsx(
-    "button",
+    Element,
     {
       className: twMerge(
-        buttonStyles({ variant, size, disabled, iconOnly, isDestructive, className })
+        buttonStyles({ variant, size, disabled, iconOnly, isDestructive }),
+        className
       ),
       disabled,
       ...restProps,
       children
     }
   );
+}
+
+function IconLibrary(props) {
+  const { name, className, ...restProps } = props;
+  const IconComponent = icons[name];
+  if (!IconComponent) {
+    console.error(`IconLibrary: Icon with name "${name}" not found`);
+    return null;
+  }
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    Icon,
+    {
+      as: IconComponent,
+      className: twMerge(clsx("h-[1em] fill-current", className)),
+      ...restProps
+    }
+  );
+}
+
+function useMousePositionState() {
+  const [position, setPosition] = React.useState({
+    clientX: null,
+    clientY: null,
+    offsetX: null,
+    offsetY: null
+  });
+  const handleMouseMove = React.useCallback((e) => {
+    const { clientX, clientY } = e;
+    const { offsetX, offsetY } = e.nativeEvent;
+    setPosition({
+      clientX,
+      clientY,
+      offsetX,
+      offsetY
+    });
+  }, []);
+  const handleMouseLeave = React.useCallback(() => {
+    setPosition({
+      clientX: null,
+      clientY: null,
+      offsetX: null,
+      offsetY: null
+    });
+  }, []);
+  return {
+    position,
+    handleMouseMove,
+    handleMouseLeave,
+    isHovering: position.clientX !== null
+  };
+}
+
+function IconVoiceprintLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$8, ...props });
+}
+
+function IconStopLargeFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$p, ...props });
+}
+
+function IconStarLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$x, ...props });
+}
+
+function IconSpeedUpLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$9, ...props });
+}
+
+function IconSpeedFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$q, ...props });
+}
+
+function IconRhythmLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$a, ...props });
+}
+
+function IconRewindFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$t, ...props });
+}
+
+function IconRepeatFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$l, ...props });
+}
+
+function IconPulseLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$b, ...props });
+}
+
+const SvgPlaylist = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "1em", height: "1em", viewBox: "0 0 16 16", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M2 4h12a1 1 0 0 0 0-2H2a1 1 0 0 0 0 2zm0 5h12a1 1 0 0 0 0-2H2a1 1 0 0 0 0 2zm0 5h12a1 1 0 0 0 0-2H2a1 1 0 0 0 0 2z" }));
+const ForwardRef$1 = React.forwardRef(SvgPlaylist);
+
+function IconPlaylist(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$1, ...props });
+}
+
+const SvgPlaylistClose = (props, ref) => /* @__PURE__ */ React__namespace.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "1em", height: "1em", viewBox: "0 0 16 16", ref, ...props }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" }));
+const ForwardRef = React.forwardRef(SvgPlaylistClose);
+
+function IconPlaylistClose(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef, ...props });
+}
+
+function IconPlayListAddFill(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$h, ...props });
+}
+
+function IconPlayCircleLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$c, ...props });
+}
+
+function IconPaletteLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$d, ...props });
+}
+
+function IconLayoutMasonryLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$3, ...props });
+}
+
+function IconFontSize(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$5, ...props });
+}
+
+function IconExternalLinkLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$2, ...props });
+}
+
+function IconEqualizerLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$e, ...props });
+}
+
+function IconCursorLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$f, ...props });
+}
+
+function IconColorFilterLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$4, ...props });
+}
+
+function IconCodeLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$6, ...props });
+}
+
+function IconAccessibilityLine(props) {
+  return /* @__PURE__ */ jsxRuntime.jsx(Icon, { as: ForwardRef$7, ...props });
 }
 
 exports.AudioPlayer = AudioPlayerCompoundComponent;
@@ -8580,6 +8826,48 @@ exports.Badge = Badge;
 exports.Button = Button;
 exports.CanvasResponsive = CanvasResponsive;
 exports.Icon = Icon;
+exports.IconAccessibilityLine = IconAccessibilityLine;
+exports.IconCloseFill = IconCloseFill;
+exports.IconCodeLine = IconCodeLine;
+exports.IconColorFilterLine = IconColorFilterLine;
+exports.IconCursorLine = IconCursorLine;
+exports.IconDiscFill = IconDiscFill;
+exports.IconEqualizerLine = IconEqualizerLine;
+exports.IconExternalLinkLine = IconExternalLinkLine;
+exports.IconFontSize = IconFontSize;
+exports.IconForwardEndFill = IconForwardEndFill;
+exports.IconLayoutMasonryLine = IconLayoutMasonryLine;
+exports.IconLibrary = IconLibrary;
+exports.IconPaletteLine = IconPaletteLine;
+exports.IconPauseLargeFill = IconPauseLargeFill;
+exports.IconPlayCircleLine = IconPlayCircleLine;
+exports.IconPlayLargeFill = IconPlayLargeFill;
+exports.IconPlayList2Fill = IconPlayList2Fill;
+exports.IconPlayListAddFill = IconPlayListAddFill;
+exports.IconPlaylist = IconPlaylist;
+exports.IconPlaylistClose = IconPlaylistClose;
+exports.IconPulseLine = IconPulseLine;
+exports.IconRepeat2Fill = IconRepeat2Fill;
+exports.IconRepeatFill = IconRepeatFill;
+exports.IconRepeatOneFill = IconRepeatOneFill;
+exports.IconRewindFill = IconRewindFill;
+exports.IconRewindStartFill = IconRewindStartFill;
+exports.IconRhythmLine = IconRhythmLine;
+exports.IconShuffleFill = IconShuffleFill;
+exports.IconSpeedFill = IconSpeedFill;
+exports.IconSpeedUpLine = IconSpeedUpLine;
+exports.IconStarLine = IconStarLine;
+exports.IconStopLargeFill = IconStopLargeFill;
+exports.IconVoiceprintLine = IconVoiceprintLine;
+exports.IconVolumeDownFill = IconVolumeDownFill;
+exports.IconVolumeMuteFill = IconVolumeMuteFill;
+exports.IconVolumeUpFill = IconVolumeUpFill;
+exports.composeRefs = composeRefs;
+exports.getFirstFocusableElement = getFirstFocusableElement;
+exports.useAnalyzerNode = useAnalyzerNode;
+exports.useAnimationFrame = useAnimationFrame;
+exports.useAudioAnalyzer = useAudioAnalyzer;
+exports.useAudioContextWebAPI = useAudioContextWebAPI;
 exports.useAudioPlayerContextPlayback = useAudioPlayerContextPlayback;
 exports.useAudioPlayerContextRefs = useAudioPlayerContextRefs;
 exports.useAudioPlayerContextTime = useAudioPlayerContextTime;
@@ -8589,5 +8877,20 @@ exports.useAudioPlayerTime = useAudioPlayerTime;
 exports.useAudioPlaylistContext = useAudioPlaylistContext;
 exports.useAudioPlaylistExpandableContainer = useAudioPlaylistExpandableContainer;
 exports.useAudioProgressWaveformColor = useAudioProgressWaveformColor;
+exports.useAudioSourceConnection = useAudioSourceConnection;
 exports.useAudioVisualizerWaveform = useAudioVisualizerWaveform;
 exports.useCanvasResponsive = useCanvasResponsive;
+exports.useColorTransition = useColorTransition;
+exports.useComposedRefs = useComposedRefs;
+exports.useDelayedMouseMove = useDelayedMouseMove;
+exports.useElementDimensions = useElementDimensions;
+exports.useFocusElement = useFocusElement;
+exports.useFocusFirstElement = useFocusFirstElement;
+exports.useFocusTrap = useFocusTrap;
+exports.useIntersectionObserver = useIntersectionObserver;
+exports.useKeyboardMediaSeek = useKeyboardMediaSeek;
+exports.useLatest = useLatest;
+exports.useMousePositionRef = useMousePositionRef;
+exports.useMousePositionState = useMousePositionState;
+exports.useRefReady = useRefReady;
+exports.useResizeObserver = useResizeObserver;

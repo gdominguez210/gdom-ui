@@ -5,13 +5,16 @@ import { AudioPlaylistTrackImage as AudioPlaylistTrackImage_2 } from '..';
 import { AudioPlaylistTrackTitle as AudioPlaylistTrackTitle_2 } from '..';
 import { ChangeEventHandler } from 'react';
 import { ComponentPropsWithRef } from 'react';
+import { ComponentType } from 'react';
 import { DependencyList } from 'react';
 import { ElementType } from 'react';
 import { ForwardRefExoticComponent } from 'react';
 import { HTMLAttributes } from 'react';
 import { JSX } from 'react/jsx-runtime';
+import { KeyboardEvent as KeyboardEvent_2 } from 'react';
 import { MouseEventHandler } from 'react';
 import { PropsWithChildren } from 'react';
+import { Ref } from 'react';
 import { RefAttributes } from 'react';
 import { RefCallback } from 'react';
 import { RefObject } from 'react';
@@ -855,31 +858,9 @@ export declare interface BadgeProps extends HTMLAttributes<HTMLElement> {
     size?: 'sm' | 'md' | 'lg';
 }
 
-declare type BarColorResult = string | {
-    type: 'gradient';
-    stops: GradientStop[];
-};
+export declare function Button<T extends ElementType = 'button'>(props: ButtonProps<T>): JSX.Element;
 
-/**
- * Result type for the waveform bar color
- */
-declare type BarColorResult_2 = string | {
-    type: 'gradient';
-    stops: GradientStop_2[];
-};
-
-export declare function Button(props: ButtonProps): JSX.Element;
-
-export declare type ButtonProps = CommonButtonProps & iconButtonAccessibleProps;
-
-export declare function CanvasResponsive(props: CanvasResponsiveProps): JSX.Element;
-
-declare type CanvasResponsiveProps = ComponentPropsWithRef<'canvas'> & {
-    frameRate?: number;
-    onResize?: () => void;
-};
-
-declare interface CommonButtonProps extends ComponentPropsWithRef<'button'> {
+declare type ButtonBaseProps = {
     /**
      * The type of the button.
      * @default primary
@@ -890,7 +871,30 @@ declare interface CommonButtonProps extends ComponentPropsWithRef<'button'> {
      * @default md
      */
     size?: Size;
-}
+};
+
+export declare type ButtonProps<T extends ElementType = 'button'> = ButtonBaseProps & IconButtonAccessibilityProps & Omit<ComponentPropsWithRef<T>, keyof ButtonBaseProps | keyof IconButtonAccessibilityProps> & {
+    as?: T;
+};
+
+export declare function CanvasResponsive(props: CanvasResponsiveProps): JSX.Element;
+
+declare type CanvasResponsiveProps = ComponentPropsWithRef<'canvas'> & {
+    frameRate?: number;
+    onResize?: () => void;
+};
+
+/**
+ * Type representing any valid React ref input that can be composed
+ */
+declare type ComposableRef<T> = Ref<T> | undefined | null;
+
+/**
+ * Composes multiple refs into a single ref callback function.
+ * Returns a function that, when called with an instance, will apply
+ * the instance to all provided refs and return a cleanup function.
+ */
+export declare function composeRefs<T>(...refs: ComposableRef<T>[]): (instance: T | null) => () => void;
 
 declare type ElementDimensions = {
     width: number;
@@ -903,49 +907,89 @@ declare type ElementDimensions = {
     y: number;
 };
 
-declare type GradientStop = {
-    /**
-     * Position of the stop (0-1)
-     */
-    offset: number;
-    /**
-     * Color of the stop as a CSS color string
-     */
-    color: string;
-};
-
-declare type GradientStop_2 = {
-    /**
-     * Position of the stop (0-1)
-     */
-    offset: number;
-    /**
-     * Color of the stop as a CSS color string
-     */
-    color: string;
-};
+/**
+ * Finds the first focusable element within the provided container
+ */
+export declare function getFirstFocusableElement(element: HTMLElement): HTMLElement | null;
 
 declare type HTMLMediaElement_2 = HTMLAudioElement | HTMLVideoElement;
 
 export declare function Icon(props: IconProps): JSX.Element;
 
-declare type iconButtonAccessibleProps = {
-    /**
-     * Switches to use icon button styling
-     * @default false
-     */
+export declare function IconAccessibilityLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+declare type IconButtonAccessibilityProps = {
+    iconOnly?: undefined;
+    'aria-label'?: string;
+} | {
     iconOnly?: false;
     'aria-label'?: string;
 } | {
-    iconOnly?: true;
+    iconOnly: true;
     'aria-label': string;
 };
 
-declare type IconName = keyof typeof icons;
+export declare function IconCloseFill(props: Omit<IconProps, 'as'>): JSX.Element;
 
-export declare interface IconProps extends ComponentPropsWithRef<'svg'> {
+export declare function IconCodeLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconColorFilterLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconCursorLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconDiscFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconEqualizerLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconExternalLinkLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconFontSize(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconForwardEndFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconLayoutMasonryLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconLibrary(props: IconLibraryProps): JSX.Element | null;
+
+export declare interface IconLibraryProps extends ComponentPropsWithRef<'svg'> {
     name: IconName;
 }
+
+export declare type IconName = keyof typeof icons;
+
+export declare function IconPaletteLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconPauseLargeFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconPlayCircleLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconPlayLargeFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconPlaylist(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconPlayList2Fill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconPlayListAddFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconPlaylistClose(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare interface IconProps extends ComponentPropsWithRef<'svg'> {
+    as: ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+export declare function IconPulseLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconRepeat2Fill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconRepeatFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconRepeatOneFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconRewindFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconRewindStartFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconRhythmLine(props: Omit<IconProps, 'as'>): JSX.Element;
 
 declare const icons: {
     readonly 'star-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
@@ -967,20 +1011,83 @@ declare const icons: {
     readonly 'play-list-2-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
     readonly 'play-list-add-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
     readonly 'close-fill': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'cursor-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'equalizer-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'palette-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'play-circle-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'pulse-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'rhythm-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'speed-up-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'voice-print-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'accessibility-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'code-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'font-size': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'color-filter-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'layout-masonry-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
+    readonly 'external-link-line': ForwardRefExoticComponent<SVGProps<SVGSVGElement>>;
 };
 
-declare type MousePosition = {
+export declare function IconShuffleFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconSpeedFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconSpeedUpLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconStarLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconStopLargeFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconVoiceprintLine(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconVolumeDownFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconVolumeMuteFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare function IconVolumeUpFill(props: Omit<IconProps, 'as'>): JSX.Element;
+
+export declare type MousePosition = {
     clientX: number | null;
     clientY: number | null;
     offsetX: number | null;
     offsetY: number | null;
 };
 
+declare type MousePosition_2 = {
+    clientX: number | null;
+    clientY: number | null;
+    offsetX: number | null;
+    offsetY: number | null;
+};
+
+/**
+ * Type representing OKLCH color values
+ */
+declare type OKLCHColor = [number, number, number];
+
+export declare type RefReadyResult<T> = [(node: T | null) => void, boolean, React.RefObject<T | null>];
+
 declare type Size = (typeof sizes)[number];
 
 declare const sizes: readonly ["md", "lg", "xl", "xxl"];
 
-declare type useAnimationFrameOptions = {
+export declare function useAnalyzerNode(options: UseAnalyzerNodeOptions): UseAnalyzerNodeResult;
+
+export declare type UseAnalyzerNodeOptions = Partial<AnalyserOptions> & {
+    audioContextRef: RefObject<AudioContext | null>;
+    isAudioContextReady: boolean;
+    connectToAudioContext?: boolean;
+};
+
+export declare type UseAnalyzerNodeResult = {
+    analyzerRef: RefObject<AnalyserNode | null>;
+    dataArrayRef: RefObject<Uint8Array | null>;
+    previousDataRef: RefObject<Uint8Array | null>;
+    isAnalyzerReady: boolean;
+};
+
+export declare function useAnimationFrame(options: useAnimationFrameOptions): useAnimationFrameReturn;
+
+export declare type useAnimationFrameOptions = {
     /**
      * Whether the animation should be running
      */
@@ -1007,7 +1114,18 @@ declare type useAnimationFrameOptions = {
     autoStart?: boolean;
 };
 
-declare type UseAudioAnalyzerOptions = Partial<AnalyserOptions> & {
+export declare type useAnimationFrameReturn = {
+    start: () => void;
+    stop: () => void;
+    restart: () => void;
+};
+
+/**
+ * Hook for analyzing audio data from an audio element
+ */
+export declare function useAudioAnalyzer(options: UseAudioAnalyzerOptions): UseAudioAnalyzerReturn;
+
+export declare type UseAudioAnalyzerOptions = Partial<AnalyserOptions> & {
     /**
      * Reference to the audio element
      */
@@ -1056,7 +1174,34 @@ declare type UseAudioAnalyzerOptions = Partial<AnalyserOptions> & {
     frameTransitionSmoothing?: number;
 };
 
-declare type UseAudioContextWebAPIReturn = {
+export declare type UseAudioAnalyzerReturn = {
+    /**
+     * The AnalyserNode instance
+     */
+    analyzerNode: AnalyserNode | null;
+    /**
+     * The current audio data array
+     */
+    dataArray: Uint8Array | null;
+    /**
+     * The previous frame's audio data array (for smoothing)
+     */
+    previousDataArray: Uint8Array | null;
+};
+
+export declare function useAudioContextWebAPI(options: UseAudioContextWebAPIOptions): {
+    audioContextRef: RefObject<AudioContext | null>;
+    createAudioSource: (audioElement: HTMLAudioElement) => MediaElementAudioSourceNode | void;
+    deleteAudioSource: (audioElement: HTMLAudioElement) => boolean;
+    sourceNodesRef: RefObject<Map<HTMLAudioElement, MediaElementAudioSourceNode>>;
+    isReady: boolean;
+};
+
+export declare type UseAudioContextWebAPIOptions = {
+    isPlaying: boolean;
+};
+
+export declare type UseAudioContextWebAPIReturn = {
     audioContextRef: RefObject<AudioContext | null>;
     createAudioSource: (audioElement: HTMLAudioElement) => MediaElementAudioSourceNode | void;
     deleteAudioSource: (audioElement: HTMLAudioElement) => boolean;
@@ -1145,11 +1290,12 @@ export declare type useAudioProgressWaveformColorOptions = {
      */
     hoverColor?: string;
     /**
-     * The relative position (0-1) of the mouse on the waveform
+     * The relative position (value between 0 and 1) of the mouse on the waveform
      */
     hoverPositionRef?: useMousePositionRefReturn['positionRef'];
     /**
      * How much to adjust the progress color for hover effect
+     * Only used when hoverColor is not provided
      * @default 0.15
      */
     hoverColorDelta?: number;
@@ -1163,21 +1309,21 @@ export declare type useAudioProgressWaveformColorOptions = {
      */
     colorMode?: AudioProgressColorMode;
     /**
-     * Custom gradient stops for progressed bars when colorMode is GRADIENT
+     * Custom gradient stops for progressed bars when colorMode is 'gradient'
      * If not provided, stops will be generated based on progressColor and gradientLightnessDelta
      */
-    gradientStops?: GradientStop_2[];
+    gradientStops?: WaveformGradientStop[];
     /**
      * How much to adjust the lightness of the progress color for the gradient top
      * Positive values make it lighter, negative values make it darker
-     * Only used when colorMode is GRADIENT and gradientStops are not provided
+     * Only used when colorMode is 'gradient' and gradientStops are not provided
      * @default -0.15
      */
     gradientLightnessDelta?: number;
 };
 
 export declare type useAudioProgressWaveformColorReturn = {
-    getWaveformBarColor: (barInfo: WaveformBarInfo) => BarColorResult_2;
+    getWaveformBarColor: (barInfo: WaveformBarInfo) => WaveformBarColorResult;
 };
 
 declare type useAudioProgressWaveformOptions = {
@@ -1199,6 +1345,30 @@ declare type useAudioProgressWaveformOptions = {
      * @param time The time in seconds to preview
      */
     onPreviewTimeChange?: (time: number | null) => void;
+};
+
+export declare function useAudioSourceConnection(options: UseAudioSourceConnectionOptions): {
+    isConnected: boolean;
+    connect: () => boolean;
+    disconnect: () => boolean;
+    reconnect: () => boolean;
+};
+
+export declare type UseAudioSourceConnectionOptions = {
+    audioRef: React.RefObject<HTMLAudioElement | null>;
+    destinationRef: React.RefObject<AudioNode | null>;
+    createAudioSource: UseAudioContextWebAPIReturn['createAudioSource'];
+    deleteAudioSource: UseAudioContextWebAPIReturn['deleteAudioSource'];
+    isDestinationReady: boolean;
+    deleteOnCleanup?: boolean;
+    autoConnect?: boolean;
+};
+
+export declare type UseAudioSourceConnectionReturn = {
+    isConnected: boolean;
+    connect: () => boolean;
+    disconnect: () => boolean;
+    reconnect: () => boolean;
 };
 
 declare type useAudioVisualizerFrequencyBarOptions = {
@@ -1311,9 +1481,9 @@ declare type useAudioWaveformOptions = {
     /**
      * Function to determine bar color based on state
      */
-    getBarColor?: (barInfo: WaveformBarInfo) => BarColorResult;
+    getBarColor?: (barInfo: WaveformBarInfo) => WaveformBarColorResult;
     /**
-     * Gap between bars as a proportion of canvas width (0-1)
+     * Gap between bars as a percentage of canvas width (value between 0 and 1)
      * For example, 0.005 would make gaps 0.5% of the total width
      * @default 0.003 (0.3% of canvas width)
      */
@@ -1329,7 +1499,7 @@ declare type useAudioWaveformOptions = {
      */
     minBarWidth?: number;
     /**
-     * Height of the waveform as a percentage of canvas height
+     * Height of the waveform as a percentage of canvas height (value between 0 and 1)
      * @default 1 (100% of canvas height)
      */
     heightScale?: number;
@@ -1356,11 +1526,190 @@ declare type UseCanvasResponsiveOptions = {
     frameRate?: number;
 };
 
-declare type UseElementDimensionsReturn = {
+/**
+ * Hook for handling smooth color transitions in OKLCH color space, expected to be used within an animation loop
+ *
+ * @param options Configuration options for the color transition
+ * @returns Object with methods to get the current transitioning color and state
+ */
+export declare function useColorTransition(options: UseColorTransitionOptions): {
+    getCurrentColor: () => OKLCHColor;
+    getColorString: () => string;
+    isTransitioning: () => boolean;
+    updateTransition: () => void;
+};
+
+declare type UseColorTransitionOptions = {
+    /**
+     * The target color as a CSS color string
+     */
+    targetColor: string;
+    /**
+     * Duration in milliseconds for color transitions
+     * @default 500
+     */
+    transitionDuration?: number;
+};
+
+/**
+ * A hook that composes multiple React refs into a single ref callback.
+ * Useful for combining refs like forwarded refs with local refs.
+ *
+ * @example
+ * const MyComponent = forwardRef((props) => {
+ *   const { ref } = props;
+ *   const localRef = useRef(null);
+ *   const composedRef = useComposedRefs(localRef, ref);
+ *   return <div ref={composedRef} />;
+ * });
+ */
+export declare function useComposedRefs<T>(...refs: ComposableRef<T>[]): RefCallback<T>;
+
+/**
+ * Hook that delays processing mouse move events until after an initial delay period
+ * Useful for preventing flickering effects during quick mouse movements
+ */
+export declare function useDelayedMouseMove<T extends HTMLElement>({ initialDelay, onMouseMove, onMouseLeave, }: UseDelayedMouseMoveOptions<T>): {
+    handleMouseEnter: MouseEventHandler<T>;
+    handleMouseMove: MouseEventHandler<T>;
+    handleMouseOut: MouseEventHandler<T>;
+};
+
+/**
+ * Options for the useDelayedMouseMove hook
+ */
+export declare type UseDelayedMouseMoveOptions<T extends HTMLElement> = {
+    /**
+     * Delay in milliseconds before mouse move events are processed
+     */
+    initialDelay?: number;
+    /**
+     * Callback function to execute after the initial delay
+     */
+    onMouseMove: MouseEventHandler<T>;
+    /**
+     * Optional callback for when mouse leaves the element
+     */
+    onMouseLeave?: MouseEventHandler<T>;
+};
+
+export declare function useElementDimensions(): UseElementDimensionsReturn;
+
+export declare type UseElementDimensionsReturn = {
     dimensions: ElementDimensions;
     dimensionsRef: RefObject<ElementDimensions>;
     elementRef: (node: Element | null) => void;
 };
+
+/**
+ * Hook to focus a specific element, waiting for container animations/transitions to complete
+ *
+ * @param containerRef - Reference to the container with potential animations/transitions
+ * @param elementToFocus - Reference to the element that should receive focus
+ * @param shouldFocus - Whether the element should be focused
+ */
+export declare function useFocusElement({ containerRef, elementToFocus, shouldFocus, }: UseFocusElementProps): {
+    focus: () => void;
+};
+
+declare interface UseFocusElementProps {
+    /**
+     * Container element that might have animations/transitions
+     */
+    containerRef: RefObject<HTMLElement | null>;
+    /**
+     * Specific element to focus
+     */
+    elementToFocus: RefObject<HTMLElement | null>;
+    /**
+     * Whether the focus should be activated
+     */
+    shouldFocus: boolean;
+}
+
+/**
+ * Hook to focus the first focusable element within a container
+ * Automatically handles focusing after transitions or animations if the container has them
+ *
+ * @param containerRef - Reference to the container element
+ * @param shouldFocus - Whether the element should be focused
+ */
+export declare function useFocusFirstElement({ containerRef, shouldFocus }: UseFocusFirstElementProps): {
+    focus: () => void;
+    hasFocusableElement: () => boolean;
+};
+
+declare interface UseFocusFirstElementProps {
+    containerRef: RefObject<HTMLElement | null>;
+    shouldFocus: boolean;
+}
+
+/**
+ * Hook that traps keyboard focus within a container element when active
+ * Prevents users from tabbing outside the container, maintaining keyboard accessibility
+ * Also provides escape key handling through the optional onEscape callback
+ * Optionally prevents clicks outside the container when active
+ *
+ * Note: This hook handles tab trapping, escape key and outside clicks. It does NOT handle:
+ * - Initial focusing (use useFocusFirstElement for focusing first element)
+ * - Focus restoration (use useFocusElement for returning focus to trigger elements)
+ * - Waiting for animations/transitions (those hooks handle that)
+ *
+ * @param containerRef - Reference to the element to trap focus within
+ * @param isActive - Whether the focus trap should be active
+ * @param onEscape - Optional callback function triggered when Escape key is pressed
+ * @param onOutsideClick - Optional callback function triggered when clicking outside the container
+ * @param preventOutsideClicks - Whether to prevent clicks outside the container (default: true)
+ */
+export declare function useFocusTrap({ containerRef, isActive, onEscape, onOutsideClick, preventOutsideClicks, }: UseFocusTrapOptions): {
+    isTrapped: boolean;
+    refresh: () => boolean;
+    getFocusableElements: () => HTMLElement[];
+    getFirstElement: () => HTMLElement | null;
+    getLastElement: () => HTMLElement | null;
+};
+
+export declare type UseFocusTrapOptions = {
+    /**
+     * Reference to the container element to trap focus within
+     */
+    containerRef: RefObject<HTMLElement | null>;
+    /**
+     * Whether the focus trap should be active
+     */
+    isActive: boolean;
+    /**
+     * Optional callback function that gets triggered when the Escape key is pressed
+     */
+    onEscape?: () => void;
+    /**
+     * Optional callback function that gets triggered when clicking outside the container
+     * If not provided, outside clicks will be prevented but no callback will be executed
+     */
+    onOutsideClick?: (event: MouseEvent) => void;
+    /**
+     * Whether to prevent clicks outside the container
+     * @default true
+     */
+    preventOutsideClicks?: boolean;
+};
+
+/**
+ * Hook to observe an element's intersection with the viewport
+ *
+ * @param callback Standard IntersectionObserver callback function
+ * @param options IntersectionObserver options
+ * @returns Object with a setRef function to attach to the element you want to observe
+ */
+export declare function useIntersectionObserver(callback: IntersectionObserverCallback, options?: IntersectionObserverInit): {
+    setRef: (node: Element | null) => void;
+};
+
+/**
+ * Hook to handle keyboard-based seeking for audio or video elements.
+ * Provides accelerated seeking when arrow keys are held down.
+ */
+export declare function useKeyboardMediaSeek({ mediaRef, duration, onSeekComplete, seekIncrement, maxSeekIncrement, seekAcceleration, seekAccelerationDelay, ariaLabel, seekInterval, }: UseKeyboardMediaSeekOptions): UseKeyboardMediaSeekReturn;
 
 declare type UseKeyboardMediaSeekOptions = {
     /**
@@ -1408,12 +1757,98 @@ declare type UseKeyboardMediaSeekOptions = {
     seekInterval?: number;
 };
 
-declare type useMousePositionRefReturn = {
+declare type UseKeyboardMediaSeekReturn = {
+    /**
+     * Current seek increment amount (changes while accelerating)
+     */
+    currentSeekIncrement: number;
+    /**
+     * Handler for keydown events
+     */
+    handleKeyDown: (event: KeyboardEvent_2<HTMLElement>) => void;
+    /**
+     * Handler for keyup events
+     */
+    handleKeyUp: (event: KeyboardEvent_2<HTMLElement>) => void;
+    /**
+     * Accessibility attributes to apply to the focusable element
+     */
+    a11yProps: {
+        /**
+         * Make the element keyboard focusable
+         */
+        tabIndex: number;
+        /**
+         * ARIA role for the control
+         */
+        role: string;
+        /**
+         * Description of the control for screen readers
+         */
+        'aria-label': string;
+        /**
+         * Minimum value of the slider
+         */
+        'aria-valuemin': number;
+        /**
+         * Maximum value of the slider
+         */
+        'aria-valuemax': number;
+        /**
+         * Current value of the slider
+         */
+        'aria-valuenow': number;
+        /**
+         * Text representation of the current value
+         */
+        'aria-valuetext'?: string;
+    };
+};
+
+/**
+ * Hook that returns a ref object with the latest value
+ * The ref is updated every time the value changes
+ * Useful for accessing the latest value in callbacks without triggering re-renders
+ *
+ * @param value The value to keep up-to-date in the ref
+ * @returns A ref object that always contains the latest value
+ */
+export declare function useLatest<T>(value: T): RefObject<T>;
+
+export declare function useMousePositionRef(): useMousePositionRefReturn;
+
+export declare type useMousePositionRefReturn = {
     getPosition: () => MousePosition;
     positionRef: RefObject<MousePosition>;
     handleMouseMove: (e: React.MouseEvent) => void;
     handleMouseLeave: (e: React.MouseEvent) => void;
     getIsHovering: () => boolean;
+};
+
+export declare function useMousePositionState(): useMousePositionStateReturn;
+
+export declare type useMousePositionStateReturn = {
+    position: MousePosition_2;
+    handleMouseMove: (e: React.MouseEvent) => void;
+    handleMouseLeave: () => void;
+    isHovering: boolean;
+};
+
+/**
+ * A hook that tracks whether a ref has been set
+ * @param initialValue Optional initial value
+ * @returns [setRef, isReady, ref] - A callback ref function, boolean state, and the actual ref object
+ */
+export declare function useRefReady<T>(initialValue?: T | null): RefReadyResult<T>;
+
+/**
+ * Hook to observe an element's size changes
+ *
+ * @param callback Standard ResizeObserver callback function
+ * @returns Object with a setRef function to attach to the element you want to observe
+ */
+export declare function useResizeObserver(callback: ResizeObserverCallback): {
+    setRef: (node: Element | null) => void;
 };
 
 declare type Variant = (typeof variants)[number];
@@ -1426,6 +1861,11 @@ declare const WAVEFORM_COLOR_MODES: {
     readonly FREQUENCY: "frequency";
     readonly SPECTRUM: "spectrum";
     readonly DYNAMIC: "dynamic";
+};
+
+declare type WaveformBarColorResult = string | {
+    type: 'gradient';
+    stops: WaveformGradientStop[];
 };
 
 declare type WaveformBarInfo = {
@@ -1451,5 +1891,16 @@ declare type WaveformBarInfo = {
  * Types of color modes available for the waveform
  */
 declare type WaveformColorMode = (typeof WAVEFORM_COLOR_MODES)[keyof typeof WAVEFORM_COLOR_MODES];
+
+declare type WaveformGradientStop = {
+    /**
+     * Position of the stop (0-1)
+     */
+    offset: number;
+    /**
+     * Color of the stop as a CSS color string
+     */
+    color: string;
+};
 
 export { }
