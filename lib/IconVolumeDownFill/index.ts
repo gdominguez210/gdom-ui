@@ -1,0 +1,1 @@
+export { IconVolumeDownFill } from './IconVolumeDownFill';
