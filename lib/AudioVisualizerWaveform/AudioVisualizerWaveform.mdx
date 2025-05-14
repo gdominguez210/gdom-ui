@@ -1,14 +1,21 @@
 import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/blocks';
 import * as AudioVisualizerWaveformStories from './AudioVisualizerWaveform.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
 
 <Meta of={AudioVisualizerWaveformStories} />
 
 # AudioVisualizerWaveform
 
+<ViewSource href="AudioVisualizerWaveform" />
+
 A versatile audio waveform visualizer that displays audio time-domain data as a continuous line, with support for various color modes and responsive design.
 
 <DocumentationNav />
+
+<Primary />
+## Props
+<Controls />
 
 ## Features
 
@@ -21,20 +28,16 @@ The AudioVisualizerWaveform component provides several key features:
 - **Performance Optimized**: Uses efficient rendering techniques to maintain smooth animation
 - **AudioPlayer Integration**: Seamlessly works with the AudioPlayer component system for a complete audio experience
 
-<Primary />
-## Props
-<Controls />
+## Examples
 
-## Stories
-
-<div className="rounded-md border border-slate-400 bg-slate-100 p-3 text-slate-700">
+<section className="rounded-md border border-slate-400 bg-slate-100 p-3 text-slate-700 mb-5">
   <div className="mb-1 font-bold">Usage Note</div>
   <div>
     This component requires an audio source to visualize. In these examples, we've used the
     AudioPlayer component system to handle audio playback. Click the play button to see the waveform
     animate.
   </div>
-</div>
+</section>
 
 <Stories
   title=""
