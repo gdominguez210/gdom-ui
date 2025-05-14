@@ -1,7 +1,7 @@
 import { type ComponentPropsWithRef } from 'react';
-import { Icon } from '@lib/Icon';
 import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
-
+import { IconPauseLargeFill } from '@lib/IconPauseLargeFill';
+import { IconPlayLargeFill } from '@lib/IconPlayLargeFill';
 /**
  * Props for the play/pause button primitive component
  */
@@ -22,7 +22,7 @@ export function AudioPlayerControlPlayPrimitive(props: AudioPlayerControlPlayPri
       aria-pressed={active}
       {...restProps}
     >
-      <Icon name={active ? 'pause-large-fill' : 'play-large-fill'} />
+      {active ? <IconPauseLargeFill /> : <IconPlayLargeFill />}
     </AudioPlayerControlButton>
   );
 }
