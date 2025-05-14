@@ -1,0 +1,125 @@
+import { Meta, Source } from '@storybook/blocks';
+
+<Meta title="Core Concepts/Polymorphic Components" />
+
+# Polymorphic Components
+
+To maximize flexibility, GDOM-UI components are implemented as polymorphic components. This means they can render as different HTML elements or custom React components based on the `as` prop.
+
+## The Power of Polymorphism
+
+Polymorphic components allow you to change the underlying HTML element or component without changing the component API:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Render as a button (default)
+<Button>Click me</Button>
+
+// Render as a link
+<Button as="a" href="/destination">Go somewhere</Button>
+
+// Render as a custom component
+<Button as={CustomComponent} customProp={value}>
+  Custom rendering
+</Button>
+`}
+/>
+
+## Benefits of Polymorphic Components
+
+This approach provides several important advantages:
+
+- **Preserves semantic HTML structure**: Use the correct HTML element for your context
+- **Avoids unnecessary DOM nesting**: No need for wrapping elements
+- **Supports different rendering scenarios**: Same component API for different rendering needs
+- **Enables proper prop typing through TypeScript**: Type safety for polymorphic components
+
+## How It Works
+
+GDOM-UI implements polymorphic components using generic TypeScript types to ensure proper type safety. Here's a simplified example of how polymorphic components are implemented:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { type ComponentPropsWithRef, type ElementType } from 'react';
+import { twMerge } from 'tailwind-merge';
+import clsx from 'clsx';
+
+export type PolymorphicComponentProps<T extends ElementType = 'div'> = {
+  as?: T;
+  variant?: 'default' | 'outlined' | 'elevated';
+} & ComponentPropsWithRef<T>;
+
+export function PolymorphicComponent<T extends ElementType = 'div'>(
+  props: PolymorphicComponentProps<T>
+) {
+  const { 
+    as: Element = 'div', 
+    children, 
+    className, 
+    variant = 'default',
+    ...restProps 
+  } = props;
+
+  return (
+    <Element
+      className={twMerge(
+        clsx(
+          'rounded-lg p-4',
+          {
+            'bg-white': variant === 'default',
+            'border border-gray-200': variant === 'outlined',
+            'bg-white shadow-md': variant === 'elevated'
+          }
+        ),
+        className
+      )}
+      {...restProps}
+    >
+      {children}
+    </Element>
+  );
+}
+
+// Usage examples:
+// As a div (default)
+<PolymorphicComponent>
+  Component content goes here
+</PolymorphicComponent>
+
+// As an article with additional HTML attributes
+<PolymorphicComponent 
+  as="article"
+  aria-labelledby="title"
+  variant="elevated"
+>
+  <h2 id="title">Article Title</h2>
+  <p>Content</p>
+</PolymorphicComponent>
+
+// As a custom component
+<PolymorphicComponent
+  as={CustomContainer}
+  customProp="value"
+  variant="outlined"
+>
+  Custom container content
+</PolymorphicComponent>
+`}
+/>
+
+This pattern is used consistently across GDOM-UI components, allowing them to adapt to different UI requirements while maintaining a consistent API.
+
+## Real-World Applications
+
+Polymorphic components are particularly useful in these scenarios:
+
+- **Navigation elements**: The same button can be a `<button>` for in-page actions or an `<a>` for navigation
+- **Layout components**: A card component might render as an `<article>`, `<section>`, or `<div>` depending on its content
+- **Accessibility-focused components**: Choose the most semantically appropriate element for the content
+- **Component composition**: Wrap a component with your own custom component's functionality
+
+By using polymorphic components, GDOM-UI provides flexibility while maintaining a consistent API across different rendering contexts. 
