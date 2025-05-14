@@ -1,7 +1,7 @@
 import { type ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { Icon } from '@lib/Icon/Icon';
+import { IconShuffleFill } from '@lib/IconShuffleFill';
 import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton/AudioPlayerControlButton';
 
 /**
@@ -32,10 +32,7 @@ export function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShuf
       aria-pressed={active}
       {...restProps}
     >
-      <Icon
-        name="shuffle-fill"
-        className="scale-75"
-      />
+      <IconShuffleFill className="scale-75" />
     </AudioPlayerControlButton>
   );
 }
