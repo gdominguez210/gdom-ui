@@ -22,6 +22,7 @@ const preview: Preview = {
           ['Introduction', 'Getting Started', 'Releases'],
           'Core Concepts',
           [
+            'Introduction',
             'Composability Over Configuration',
             'Two-Tier Components',
             'Polymorphic Components',
