@@ -1,0 +1,143 @@
+import { Meta, Source } from '@storybook/blocks';
+
+<Meta title="Core Concepts/Styling Approach" />
+
+# Styling Approach
+
+GDOM-UI uses a consistent approach to styling that leverages Tailwind CSS for utility-based styling while supporting custom styling options. This approach provides flexibility and performance without compromising on developer experience.
+
+## Tailwind CSS Integration
+
+All components accept `className` props for styling with Tailwind:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Using Tailwind utility classes
+<Button className="bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg shadow-md">
+  Custom Button
+</Button>
+
+<AudioPlayer.Title className="text-2xl font-bold text-gray-800" />
+`}
+/>
+
+This approach allows you to:
+- Customize components without writing custom CSS
+- Follow your project's design system
+- Make quick adjustments without changing component internals
+- Benefit from Tailwind's built-in design constraints
+
+## Class Merging with twMerge
+
+Components use `twMerge` internally to intelligently merge Tailwind classes:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Component has default classes like "text-base font-medium"
+// Your classes override specifics without conflicts
+<Button className="text-lg">
+  Larger Text Button
+</Button>
+`}
+/>
+
+The `twMerge` utility handles the complexity of:
+- Resolving conflicting utility classes (latest wins)
+- Preserving non-conflicting classes
+- Handling responsive and variant modifiers correctly
+- Ensuring consistent styling outcomes
+
+## Multiple Styling Options
+
+In addition to Tailwind classes, components support:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Inline styles
+<Button style={{ borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+  Custom Styled Button
+</Button>
+
+// CSS-in-JS solutions
+const StyledButton = styled(Button)\`
+  background: linear-gradient(to right, #6366f1, #8b5cf6);
+  border-radius: 9999px;
+\`;
+`}
+/>
+
+This flexibility enables:
+- Detailed customization beyond Tailwind's utility classes
+- Integration with CSS-in-JS libraries for dynamic styling
+- Migration paths from different styling approaches
+- Proper typing via TypeScript for all styling methods
+
+## Component Styling Patterns
+
+GDOM-UI components follow consistent patterns for styling:
+
+1. **Default styles** provide a good baseline appearance
+2. **Variable-based theming** for consistent color schemes and spacing
+3. **Variant props** for common style variations (e.g., `size`, `variant`, `color`)
+4. **State-based styling** for interactive states (hover, focus, disabled)
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Example of variant props
+<Button variant="primary" size="lg">
+  Primary Large Button
+</Button>
+
+<Button variant="outline" size="sm">
+  Small Outline Button
+</Button>
+
+// Combined with custom styling
+<Button 
+  variant="ghost" 
+  size="md"
+  className="text-amber-500 hover:text-amber-600 hover:bg-amber-50"
+>
+  Custom Ghost Button
+</Button>
+`}
+/>
+
+## Style Customization Best Practices
+
+When customizing GDOM-UI components, follow these best practices:
+
+- **Use Tailwind classes first**: They're the most performant and maintainable approach
+- **Leverage variant props**: Use built-in variants before custom styles
+- **Create component wrappers**: For reusable custom styles, create wrapped components
+- **Use CSS variables**: Customize theming via CSS variables when possible
+- **Inline styles sparingly**: Use only for one-off dynamic styles
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Creating a component wrapper for reusable styling
+function DangerButton({ className, ...props }) {
+  return (
+    <Button 
+      className={twMerge("bg-red-500 hover:bg-red-600 text-white", className)}
+      {...props}
+    />
+  );
+}
+
+// Usage
+<DangerButton>Delete Item</DangerButton>
+`}
+/>
+
+This approach ensures your customizations remain maintainable and consistent with the GDOM-UI design system. 
