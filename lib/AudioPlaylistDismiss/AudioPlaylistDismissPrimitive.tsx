@@ -1,7 +1,7 @@
 import { type ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { Icon } from '@lib/Icon';
+import { IconCloseFill } from '@lib/IconCloseFill';
 import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
 
 /**
@@ -21,7 +21,7 @@ export function AudioPlaylistDismissPrimitive(props: AudioPlaylistDismissPrimiti
       className={twMerge(clsx('text-2xl', className))}
       {...restProps}
     >
-      <Icon name="close-fill" />
+      <IconCloseFill />
     </AudioPlayerControlButton>
   );
 }
