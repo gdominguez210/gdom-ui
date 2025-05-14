@@ -1,0 +1,92 @@
+import { Meta, Source } from '@storybook/blocks';
+
+<Meta title="Core Concepts/Composability Over Configuration" />
+
+# Composability Over Configuration
+
+GDOM-UI is built on a component-first architecture that emphasizes building reusable, focused components that can be composed together to create complex interfaces.
+
+## Component-First Architecture
+
+Rather than creating large, configuration-heavy components, GDOM-UI offers primitive building blocks that can be composed together:
+
+**Instead of a monolithic component with many props:**
+
+<Source
+  language="tsx"
+  dark
+  code={`
+<ComplexAudioPlayer
+  showProgressBar={true}
+  showTitle={true}
+  showArtwork={false}
+  showVolumeControl={true}
+  // Many more configuration props...
+/>
+`}
+/>
+
+**GDOM-UI uses composition:**
+
+<Source
+  language="tsx"
+  dark
+  code={`
+<AudioPlayer.Provider tracks={tracks}>
+  <AudioPlayer.Root>
+    {/* Only include the components you need */}
+    <AudioPlayer.Title />
+    <AudioPlayer.ProgressBar />
+    <AudioPlayer.Controls>
+      <AudioPlayer.ControlPlay />
+      <AudioPlayer.ControlNext />
+    </AudioPlayer.Controls>
+    <AudioPlayer.Volume />
+  </AudioPlayer.Root>
+</AudioPlayer.Provider>
+`}
+/>
+
+This approach offers several benefits:
+
+- **Tree-shakability**: Only the components you use are included in your bundle
+- **Flexibility**: Arrange and style components exactly as needed
+- **Maintainability**: Each component has a single responsibility
+- **Progressive disclosure**: Simple use cases remain simple, while complex scenarios are still possible
+
+## Separation of Concerns
+
+GDOM-UI maintains clear separation between presentation, state management, and business logic:
+
+### Context Providers vs. Presentation Components
+
+Providers handle state management, while presentation components focus on rendering the UI:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+<AudioPlayer.Provider tracks={tracks}>
+  <AudioPlayer.Root>
+    <AudioPlayer.Title />
+    <AudioPlayer.Controls />
+  </AudioPlayer.Root>
+</AudioPlayer.Provider>
+`}
+/>
+
+This separation:
+- Makes testing easier (presentation components can be tested in isolation)
+- Enables greater reusability across different contexts
+- Allows for state management customization without affecting the UI
+
+## Progressive Enhancement
+
+GDOM-UI follows progressive enhancement principles:
+
+- Core functionality works without JavaScript where possible
+- Enhanced features are added when JS is available
+- Server-side rendering friendly
+- Resilient to network or script failures
+
+This approach ensures baseline accessibility and functionality while delivering rich experiences when possible.
