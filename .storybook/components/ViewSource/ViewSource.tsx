@@ -1,5 +1,5 @@
 import { Button, type ButtonProps } from '@lib/Button/Button';
-import { Icon } from '@lib/Icon/Icon';
+import { IconLibrary } from '@lib/IconLibrary/IconLibrary';
 
 const BASE_URL = 'https://github.com/gdominguez210/gdom-ui/tree/main/lib/';
 
@@ -19,7 +19,7 @@ export function ViewSource(props: ViewSourceProps) {
       {...restProps}
     >
       <span>View Source</span>
-      <Icon name="external-link-line" />
+      <IconLibrary name="external-link-line" />
     </Button>
   );
 }
