@@ -1,7 +1,6 @@
 import { type ComponentPropsWithRef } from 'react';
-import { Icon } from '@lib/Icon/Icon';
 import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
-
+import { IconForwardEndFill } from '@lib/IconForwardEndFill';
 /**
  * Props for the next track control button
  */
@@ -16,10 +15,7 @@ export function AudioPlayerControlNextPrimitive(props: AudioPlayerControlNextPri
       aria-label="Next Track"
       {...props}
     >
-      <Icon
-        name="forward-end-fill"
-        className="scale-90"
-      />
+      <IconForwardEndFill className="scale-90" />
     </AudioPlayerControlButton>
   );
 }
