@@ -1,6 +1,6 @@
 import { type ComponentPropsWithRef } from 'react';
-import { Icon } from '@lib/Icon';
 import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
+import { IconPlayList2Fill } from '@lib/IconPlayList2Fill';
 
 /**
  * Props for the playlist toggle button primitive component
@@ -25,7 +25,7 @@ export function AudioPlaylistControlTogglePrimitive(
       aria-expanded={active}
       {...restProps}
     >
-      <Icon name="play-list-2-fill" />
+      <IconPlayList2Fill />
     </AudioPlayerControlButton>
   );
 }
