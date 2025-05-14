@@ -88,7 +88,7 @@
     "glob": "^11.0.2",
     "happy-dom": "^15.11.7",
     "husky": "^9.1.7",
-    "jsdom": "^23.2.0",
+    "jsdom": "^26.1.0",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
