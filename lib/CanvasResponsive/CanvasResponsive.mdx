@@ -1,10 +1,13 @@
 import { Meta, Controls, Story, Source, Canvas, Stories } from '@storybook/blocks';
 import * as CanvasResponsiveStories from './CanvasResponsive.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
 
 <Meta of={CanvasResponsiveStories} />
 
 # CanvasResponsive
+
+<ViewSource href="CanvasResponsive" />
 
 A responsive canvas component that automatically manages canvas resolution and scaling based on container dimensions, device pixel ratio, and window resize events.
 
@@ -15,17 +18,17 @@ A responsive canvas component that automatically manages canvas resolution and s
 The CanvasResponsive component provides several key features:
 
 - **High-DPI Support:** Automatically adjusts canvas resolution based on the device pixel ratio, ensuring crisp rendering on retina and high-DPI displays. This prevents the blurry appearance common with canvas elements on high-resolution screens.
-  <br />
+
 - **Coordinate System Normalization:** Sets up the canvas context with a transformation matrix that maintains a 1:1 coordinate system, regardless of the device pixel ratio. This means you can use the same coordinates in your drawing code regardless of the display density.
-  <br />
+
 - **Responsive Resizing:** Uses ResizeObserver to detect when the canvas's container size changes and automatically adjusts the canvas dimensions accordingly. This ensures the canvas always fills its container properly and maintains the correct aspect ratio.
-  <br />
+
 - **Performance Optimization:** Throttles resize operations to prevent performance issues during continuous resize events, with an optional framerate limit.
-  <br />
 
-## Stories
 
-<div className="p-3 rounded-md border border-slate-400 bg-slate-100 text-slate-400">
+## Examples
+
+<section className="p-3 rounded-md border border-slate-400 bg-slate-100 text-slate-400 mb-5">
 
 <div className="font-bold text-slate-700">Usage Note</div>
 <p>
@@ -34,7 +37,7 @@ The CanvasResponsive component provides several key features:
   demonstrate how the component handles different device pixel ratios and container sizes.
 </p>
 
-</div>
+</section>
 
 {/* Render stories with increased height to ensure text is fully visible */}
 
