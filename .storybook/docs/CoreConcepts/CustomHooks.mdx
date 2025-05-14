@@ -16,11 +16,11 @@ GDOM-UI provides several generic utility hooks that can be used across different
   code={`
 // Using generic utility hooks from GDOM-UI
 import { 
-  useIntersectionObserver, 
-  useResizeObserver,
-  useComposedRefs,
-  useLatest
-} from '@gdominguez210/gdom-ui';
+  useIntersectionObserver
+} from '@gdominguez210/gdom-ui/useIntersectionObserver';
+import { useResizeObserver } from '@gdominguez210/gdom-ui/useResizeObserver';
+import { useComposedRefs } from '@gdominguez210/gdom-ui/useComposedRefs';
+import { useLatest } from '@gdominguez210/gdom-ui/useLatest';
 
 function MyComponent() {
   // Track when an element enters/exits the viewport
@@ -68,8 +68,8 @@ For audio-focused applications, GDOM-UI offers specialized hooks that abstract t
 // Using audio processing hooks
 import { 
   useAudioContextWebAPI, 
-  useAnalyzerNode
-} from '@gdominguez210/gdom-ui';
+} from '@gdominguez210/gdom-ui/useAudioContextWebAPI';
+import { useAnalyzerNode } from '@gdominguez210/gdom-ui/useAnalyzerNode';
 
 function MyCustomVisualizer() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -125,9 +125,9 @@ The library includes hooks for animation and visual effects:
   code={`
 // Using animation and visual effect hooks
 import { 
-  useAnimationFrame,
-  useColorTransition
-} from '@gdominguez210/gdom-ui';
+  useAnimationFrame
+} from '@gdominguez210/gdom-ui/useAnimationFrame';
+import { useColorTransition } from '@gdominguez210/gdom-ui/useColorTransition';
 
 function AnimatedComponent() {
   const [color, setColor] = useState('#ff0000');
@@ -172,9 +172,9 @@ For handling user interactions, GDOM-UI provides specialized hooks:
 // Using interaction hooks
 import { 
   useDelayedMouseMove,
-  useMousePositionRef,
-  useKeyboardMediaSeek
-} from '@gdominguez210/gdom-ui';
+} from '@gdominguez210/gdom-ui/useDelayedMouseMove';
+import { useMousePositionRef } from '@gdominguez210/gdom-ui/useMousePositionRef';
+import { useKeyboardMediaSeek } from '@gdominguez210/gdom-ui/useKeyboardMediaSeek';
 
 function InteractiveComponent() {
   // Advanced mouse position tracking without re-renders
@@ -232,7 +232,7 @@ A key architectural principle in GDOM-UI is extracting component functionality i
   dark
   code={`
 // Accessing the raw functionality of a component
-import { useAudioWaveform } from '@gdominguez210/gdom-ui';
+import { useAudioWaveform } from '@gdominguez210/gdom-ui/AudioWaveform';
 
 function MyCustomWaveform() {
   const waveformData = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.9, 0.8, 0.7, 0.6, 0.5];
@@ -276,11 +276,10 @@ GDOM-UI's hooks are designed to be composable, with clear layering of concerns:
   dark
   code={`
 // Example of hook composition in a custom component
-import { 
-  useResizeObserver, 
-  useAnimationFrame,
-  useLatest
-} from '@gdominguez210/gdom-ui';
+import { useResizeObserver } from '@gdominguez210/gdom-ui/useResizeObserver';
+import { useAnimationFrame } from '@gdominguez210/gdom-ui/useAnimationFrame';
+import { useLatest } from '@gdominguez210/gdom-ui/useLatest';
+import { useComposedRefs } from '@gdominguez210/gdom-ui/useComposedRefs';
 
 function ResponsiveCanvas() {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
@@ -293,10 +292,7 @@ function ResponsiveCanvas() {
   });
   
   // Compose refs
-  const composedRef = useCallback((node) => {
-    canvasRef.current = node;
-    setRef(node);
-  }, [setRef]);
+  const composedRef = useComposedRefs(canvasRef, setRef);
   
   // Get a ref with the latest value for use in animation
   const canvasSizeRef = useLatest(canvasSize);
