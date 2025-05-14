@@ -1,7 +1,6 @@
 import { type ComponentPropsWithRef } from 'react';
-import { Icon } from '@lib/Icon/Icon';
 import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
-
+import { IconRewindStartFill } from '@lib/IconRewindStartFill';
 /**
  * Props for the previous track control button
  */
@@ -18,10 +17,7 @@ export function AudioPlayerControlPreviousPrimitive(
       aria-label="Previous Track"
       {...props}
     >
-      <Icon
-        name="rewind-start-fill"
-        className="scale-90"
-      />
+      <IconRewindStartFill className="scale-90" />
     </AudioPlayerControlButton>
   );
 }
