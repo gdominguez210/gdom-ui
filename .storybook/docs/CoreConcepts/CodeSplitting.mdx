@@ -1,0 +1,59 @@
+import { Meta, Source } from '@storybook/blocks';
+
+<Meta title="Core Concepts/Code Splitting" />
+
+# Code Splitting and Performance Optimization
+
+GDOM-UI is designed with performance as a primary concern. The library incorporates several optimization techniques to ensure components are efficient and can be delivered with minimal bundle size impact.
+
+## Component-Based Code Splitting
+
+The library is architected to support granular imports, allowing you to only include the components you need:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Import only what you need
+import { Button } from '@gdominguez210/gdom-ui/Button';
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+
+// Even more granular imports
+import { AudioPlayerProgressBar } from '@gdominguez210/gdom-ui/AudioPlayer/ProgressBar';
+`}
+/>
+
+This approach:
+- Reduces initial bundle size
+- Enables better tree-shaking by bundlers
+- Allows for route-based code splitting
+- Improves application startup time
+
+## Canvas-Based Visualizations
+
+Components like `AudioWaveform` and `AudioVisualizerFrequencyBars` use canvas for efficient rendering:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Canvas-based visualization with performance optimizations
+<AudioPlayer.Provider tracks={tracks}>
+  <AudioPlayer.AudioContextProvider>
+    <AudioPlayer.Root>
+      {/* Efficient canvas-based visualization */}
+      <AudioPlayer.VisualizerFrequencyBars 
+        colorMode="spectrum"
+        barCount={128} // Balanced for performance and detail
+      />
+    </AudioPlayer.Root>
+  </AudioPlayer.AudioContextProvider>
+</AudioPlayer.Provider>
+`}
+/>
+
+Canvas rendering provides performance advantages:
+- Direct pixel manipulation for optimal performance
+- Throttled render cycles to balance smoothness and CPU usage
+- Resolution scaling based on device capabilities
+- Memory management to prevent leaks during long sessions
