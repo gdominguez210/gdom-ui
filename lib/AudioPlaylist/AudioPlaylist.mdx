@@ -1,143 +1,72 @@
-import { Meta, Controls, Story, Source, Canvas, Stories } from '@storybook/blocks';
+import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/blocks';
 import * as AudioPlaylistStories from './AudioPlaylist.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
 
 <Meta of={AudioPlaylistStories} />
 
 # AudioPlaylist
 
+<ViewSource href="AudioPlaylist" />
+
 The AudioPlaylist is a flexible, composable interface for displaying audio track lists that integrates seamlessly with the AudioPlayer component. Built using a compound component pattern, it allows for maximum customization and flexibility in implementation.
 
 <DocumentationNav />
-<Stories />
 
-## Component Architecture
+<Primary />
+## Props
 
-The AudioPlaylist uses a compound component pattern with a two-tier architecture similar to the AudioPlayer:
+<Controls />
 
-### Context-Connected Components
+## Features
 
-The main `AudioPlaylist` namespace exports all subcomponents that integrate with the audio playlist context:
+The AudioPlaylist component provides several key features:
 
-- These components handle state management and playlist interactions automatically
-- They're accessible through the `AudioPlaylist.ComponentName` pattern
-- These are client components that use React hooks and context
+- **Two-Tier Component Architecture**: Uses the [Two-Tier Component Architecture](/docs/core-concepts-two-tier-components--docs) with context-connected components that handle state and primitive components that focus on presentation. This allows you to use pre-connected components for quick implementation or build custom interfaces with primitive components.
 
-Components that handle events (like AudioPlaylist.ControlToggle, AudioPlaylist.Dismiss, etc.) follow a consistent pattern:
+- **Polymorphic Components**: All AudioPlaylist components are [polymorphic](/docs/core-concepts-polymorphic-components--docs), meaning they can render as different HTML elements or React components using the `as` prop, providing maximum flexibility for integration into various UI structures.
 
-- They accept standard event handlers as props (onClick, onChange, etc.)
-- Internal handlers run first to maintain core functionality
-- Your custom handlers are called afterward with the event object
+- **Consistent Event Handling**: Components that handle events follow a consistent pattern where internal handlers run first to maintain core functionality, then your custom handlers are called afterward with the event object.
+
+- **Hierarchical Component Structure**: Features nested namespaces (like AudioPlaylist.Track.Title) for intuitive organization of related components.
+
+- **AudioPlayer Integration**: Seamlessly connects with the AudioPlayer component when sharing the same context, enabling a cohesive audio interface.
+
+- **Expandable/Collapsible Views**: Includes specialized container components for creating toggleable playlist views that can be shown or hidden.
+
+- **Accessibility-First Design**: Built with proper ARIA attributes, keyboard navigation, and screen reader support for an inclusive user experience.
 
 <Source
   language="tsx"
   dark
   code={`
+// Polymorphic component example
+<AudioPlaylist.Root as="section" className="rounded-lg">
+  Content goes here
+</AudioPlaylist.Root>
+
+// Event handling example
 <AudioPlaylist.ControlToggle
   onClick={(e) => {
     console.log('Playlist toggle clicked');
   }}
 />
 
-<AudioPlaylist.Dismiss
-  onClick={(e) => {
-    console.log('Dismiss button clicked');
-  }}
-/>
+// Nested components example
+<AudioPlaylist.Track.Provider track={track} index={index}>
+  <AudioPlaylist.Track.Root>
+    <AudioPlaylist.Track.Image />
+    <AudioPlaylist.Track.Title />
+  </AudioPlaylist.Track.Root>
+</AudioPlaylist.Track.Provider>
 `} />
 
-This approach allows you to add custom behavior while the components automatically maintain their connection to the playlist context.
+See the [Core Concepts documentation](/docs/core-concepts-two-tier-components--docs) for more details on the architectural patterns used throughout GDOM-UI.
 
-### Primitive Components
-
-Each context-connected component is built on top of a primitive component:
-
-- Primitive components are purely prop-driven with no dependency on context
-- They handle presentation, and some default assignments for accessibility
-- They can be imported directly for custom implementations
-- Since they don't use React hooks or browser APIs, **primitive components can be used as server components** in Next.js
-
-This separation creates a flexible system that enables both quick implementation through the context components and advanced customization through primitives, while also allowing for server-side rendering optimizations.
-
-### Polymorphic Components
-
-All AudioPlaylist components are built as polymorphic components, which means they can render as any HTML element or React component. This provides maximum flexibility for integration into various UI patterns.
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Render as a div (default)
-<AudioPlaylist.Root>
-  Content goes here
-</AudioPlaylist.Root>
-
-// Render as a section
-
-<AudioPlaylist.Root as="section">Content goes here</AudioPlaylist.Root>
-
-// Render as a custom component
-
-<AudioPlaylist.Root as={CustomContainer}>Content goes here</AudioPlaylist.Root>
-`} />
-
-Each component accepts an `as` prop that determines the rendered element, along with all props valid for that element type. This allows you to maintain semantic HTML structure while using AudioPlaylist components.
-
-### Styling Approach
-
-All AudioPlaylist components are designed for flexible styling:
-
-- Use **className props** with Tailwind CSS classes
-- Apply **custom CSS classes**
-- Use **inline style objects**
-- Work with **CSS-in-JS solutions** like styled-components
-
-Components use `twMerge` internally to intelligently merge Tailwind CSS classes, so your classes override defaults rather than conflicting with them:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Override the background color and padding
-<AudioPlaylist.Root className="bg-blue-800 p-6 rounded-xl">
-  <AudioPlaylist.Header className="text-2xl font-bold text-white">
-    Playlist
-  </AudioPlaylist.Header>
-</AudioPlaylist.Root>
-
-// Using inline styles
-
-<AudioPlaylist.Tracks style={{ marginTop: '2rem', opacity: 0.9 }} />
-
-// Combining approaches (Tailwind, style object, custom class)
-
-<AudioPlaylist.Track.Root
-  className="my-custom-class rounded-md p-2 hover:bg-gray-700"
-  style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}
-/>
-`} />
-
-### Accessibility Features
-
-The AudioPlaylist components are built with accessibility as a core principle:
-
-- All controls use semantic HTML elements
-- Proper ARIA attributes for controls and content
-- Keyboard navigation support
-- Focus management for interactive elements
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Example of accessibility attributes automatically applied
-<AudioPlaylist.ControlToggle />
-// Renders with:
-// - aria-label for playlist visibility state
-// - role="button" 
-// - keyboard focus handling
-// - screen reader announcements for state changes
-`}
+## Examples
+<Stories
+  includePrimary={false}
+  title=""
 />
 
 ## Available Subcomponents
@@ -523,7 +452,3 @@ import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
   </AudioPlaylist.Provider>
 </AudioPlayer.Provider>
 `} />
-
-## Props
-
-<Controls />
