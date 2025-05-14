@@ -1,8 +1,8 @@
-import { Icon } from '@lib/Icon';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { type AudioPlayerImageProps } from '@lib/AudioPlayerImage/AudioPlayerImage';
 import { type ElementType } from 'react';
+import { IconDiscFill } from '@lib/IconDiscFill';
 
 export type AudioPlayerImagePrimitiveProps<T extends ElementType = 'div'> =
   AudioPlayerImageProps<T> & {
@@ -47,7 +47,7 @@ export function AudioPlayerImagePrimitive<T extends ElementType>(
       ) : (
         <div className="flex h-full w-full items-center justify-center">
           <span className="text-4xl">
-            <Icon name="disc-fill" />
+            <IconDiscFill />
           </span>
         </div>
       )}
