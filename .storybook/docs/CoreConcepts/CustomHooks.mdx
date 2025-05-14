@@ -1,0 +1,328 @@
+import { Meta, Source } from '@storybook/blocks';
+
+<Meta title="Core Concepts/Custom Hooks" />
+
+# Custom Hooks for Reusable Logic
+
+GDOM-UI leverages custom React hooks as a key architectural pattern for encapsulating reusable logic. The library exposes many of these hooks as part of its public API, allowing developers to use the same underlying functionality in their own custom implementations.
+
+## Generic Utility Hooks
+
+GDOM-UI provides several generic utility hooks that can be used across different types of applications:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Using generic utility hooks from GDOM-UI
+import { 
+  useIntersectionObserver, 
+  useResizeObserver,
+  useComposedRefs,
+  useLatest
+} from '@gdominguez210/gdom-ui';
+
+function MyComponent() {
+  // Track when an element enters/exits the viewport
+  const { setRef: intersectionRef } = useIntersectionObserver(
+    (entries) => {
+      if (entries[0]?.isIntersecting) {
+        console.log('Element is visible!');
+      }
+    }
+  );
+  
+  // Track element dimensions with ResizeObserver
+  const { setRef: resizeRef } = useResizeObserver(
+    (entries) => {
+      const { width, height } = entries[0].contentRect;
+      console.log('Element size changed:', width, height);
+    }
+  );
+  
+  // Compose multiple refs together
+  const elementRef = useComposedRefs(intersectionRef, resizeRef);
+  
+  return <div ref={elementRef}>Observed element</div>;
+}
+`}
+/>
+
+These utility hooks solve common problems in React development:
+
+- **`useIntersectionObserver`**: Abstracts the Intersection Observer API for visibility detection
+- **`useResizeObserver`**: Provides element size tracking with ResizeObserver
+- **`useLatest`**: Creates a ref that always contains the latest value of a variable
+- **`useComposedRefs`**: Combines multiple refs into a single ref callback
+- **`useRefReady`**: Tracks when a ref has been set and is ready to use
+- **`useElementDimensions`**: Provides comprehensive element size and position tracking
+
+## Audio Processing Hooks
+
+For audio-focused applications, GDOM-UI offers specialized hooks that abstract the Web Audio API:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Using audio processing hooks
+import { 
+  useAudioContextWebAPI, 
+  useAnalyzerNode
+} from '@gdominguez210/gdom-ui';
+
+function MyCustomVisualizer() {
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Create and manage an audio context
+  const { 
+    audioContextRef, 
+    createAudioSource,
+    isReady: isAudioContextReady 
+  } = useAudioContextWebAPI({ 
+    isPlaying: true 
+  });
+
+  // Set up an analyzer node for processing audio data
+  const { 
+    analyzerRef,
+    dataArrayRef,
+    isAnalyzerReady
+  } = useAnalyzerNode({
+    audioContextRef,
+    isAudioContextReady,
+    fftSize: 2048,
+    smoothingTimeConstant: 0.8
+  });
+  
+  // Now you can use the analyzer to visualize audio data
+  // without managing the complex Web Audio API setup
+  
+  return (
+    <div>
+      <canvas ref={canvasRef} />
+      <audio ref={audioRef} src="/audio.mp3" controls />
+    </div>
+  );
+}
+`}
+/>
+
+These hooks provide powerful abstractions for audio processing:
+
+- **`useAudioContextWebAPI`**: Creates and manages the core Web Audio API context
+- **`useAnalyzerNode`**: Sets up an analyzer node for audio visualization
+- **`useAudioWaveform`**: Handles drawing waveform visualizations from audio data
+- **`useAudioAnalyzer`**: Combines audio analysis with animation frame handling
+
+## Animation and Visual Effects Hooks
+
+The library includes hooks for animation and visual effects:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Using animation and visual effect hooks
+import { 
+  useAnimationFrame,
+  useColorTransition
+} from '@gdominguez210/gdom-ui';
+
+function AnimatedComponent() {
+  const [color, setColor] = useState('#ff0000');
+  
+  // Efficiently schedule animation frames with frame rate control
+  const { start, stop } = useAnimationFrame({
+    isActive: true,
+    frameRate: 60,
+    callback: (timestamp) => {
+      // Run animation logic on each frame
+    }
+  });
+  
+  // Handle smooth color transitions in perceptually uniform color space
+  const { getColorString, isTransitioning } = useColorTransition({
+    targetColor: color,
+    transitionDuration: 500
+  });
+  
+  return (
+    <div style={{ backgroundColor: getColorString() }}>
+      Animated content
+    </div>
+  );
+}
+`}
+/>
+
+Animation hooks provide efficient rendering techniques:
+
+- **`useAnimationFrame`**: Efficient requestAnimationFrame wrapper with frame rate control
+- **`useColorTransition`**: Smooth color transitions in perceptually uniform color space
+
+## Interaction Hooks
+
+For handling user interactions, GDOM-UI provides specialized hooks:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Using interaction hooks
+import { 
+  useDelayedMouseMove,
+  useMousePositionRef,
+  useKeyboardMediaSeek
+} from '@gdominguez210/gdom-ui';
+
+function InteractiveComponent() {
+  // Advanced mouse position tracking without re-renders
+  const { 
+    handleMouseMove, 
+    handleMouseLeave,
+    getPosition 
+  } = useMousePositionRef();
+  
+  // Delayed mouse move handling to prevent flickering
+  const { 
+    handleMouseEnter,
+    handleMouseMove: handleDelayedMove,
+    handleMouseOut 
+  } = useDelayedMouseMove({
+    initialDelay: 150,
+    onMouseMove: (e) => console.log('Mouse moved after delay')
+  });
+  
+  // Keyboard controls for media seeking with acceleration
+  const { handleKeyDown, handleKeyUp, a11yProps } = useKeyboardMediaSeek({
+    mediaRef,
+    duration: 300,
+    seekIncrement: 5
+  });
+  
+  return (
+    <div 
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
+      {...a11yProps}
+    >
+      Interactive content
+    </div>
+  );
+}
+`}
+/>
+
+Interaction hooks solve specific UI challenges:
+
+- **`useMousePositionRef`**: Tracks mouse position without triggering re-renders
+- **`useMousePositionState`**: State-based version for when re-renders are desired
+- **`useDelayedMouseMove`**: Prevents flickering during quick mouse movements
+- **`useKeyboardMediaSeek`**: Enables accessible keyboard navigation for media playback
+
+## Component Logic Extraction
+
+A key architectural principle in GDOM-UI is extracting component functionality into dedicated hooks. This pattern allows developers to reuse component logic independently from the UI:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Accessing the raw functionality of a component
+import { useAudioWaveform } from '@gdominguez210/gdom-ui';
+
+function MyCustomWaveform() {
+  const waveformData = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 0.9, 0.8, 0.7, 0.6, 0.5];
+  
+  // This hook encapsulates the core functionality of the AudioWaveform component
+  const { canvasRef, drawWaveform } = useAudioWaveform({
+    waveformData,
+    barColor: '#3498db',
+    barGapRatio: 0.005,
+    heightScale: 0.9
+  });
+  
+  useEffect(() => {
+    // Draw the waveform when the component mounts
+    drawWaveform();
+  }, [drawWaveform]);
+  
+  return (
+    <div className="custom-waveform-container">
+      <canvas ref={canvasRef} className="custom-waveform" />
+      {/* Add your own custom controls and UI elements */}
+    </div>
+  );
+}
+`}
+/>
+
+Benefits of this approach:
+
+- **Logic reusability**: Get the core behavior without the default UI
+- **UI flexibility**: Complete control over the rendering while maintaining functionality
+- **Gradual adoption**: Mix custom components with library components
+- **Testing**: Easier to test logic in isolation from UI concerns
+
+## Hook Composition Pattern
+
+GDOM-UI's hooks are designed to be composable, with clear layering of concerns:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Example of hook composition in a custom component
+import { 
+  useResizeObserver, 
+  useAnimationFrame,
+  useLatest
+} from '@gdominguez210/gdom-ui';
+
+function ResponsiveCanvas() {
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const canvasRef = useRef(null);
+  
+  // Track canvas element size changes
+  const { setRef } = useResizeObserver((entries) => {
+    const { width, height } = entries[0].contentRect;
+    setCanvasSize({ width, height });
+  });
+  
+  // Compose refs
+  const composedRef = useCallback((node) => {
+    canvasRef.current = node;
+    setRef(node);
+  }, [setRef]);
+  
+  // Get a ref with the latest value for use in animation
+  const canvasSizeRef = useLatest(canvasSize);
+  
+  // Set up animation loop
+  useAnimationFrame({
+    isActive: true,
+    callback: () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      const { width, height } = canvasSizeRef.current;
+      
+      // Draw to canvas with current dimensions
+      ctx.clearRect(0, 0, width, height);
+      // ... drawing code
+    }
+  });
+  
+  return <canvas ref={composedRef} />;
+}
+`}
+/>
+
+This composability:
+- Creates clear layers of abstraction
+- Makes testing easier by allowing mocking at different levels
+- Enables incremental adoption of functionality 
