@@ -1,7 +1,8 @@
 import { type ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { Icon } from '@lib/Icon';
+import { IconRepeatOneFill } from '@lib/IconRepeatOneFill';
+import { IconRepeat2Fill } from '@lib/IconRepeat2Fill';
 import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
 
 /**
@@ -32,10 +33,11 @@ export function AudioPlayerControlLoopPrimitive(props: AudioPlayerControlLoopPri
       aria-pressed={active}
       {...restProps}
     >
-      <Icon
-        name={active ? 'repeat-one-fill' : 'repeat-2-fill'}
-        className="scale-75"
-      />
+      {active ? (
+        <IconRepeatOneFill className="scale-75" />
+      ) : (
+        <IconRepeat2Fill className="scale-75" />
+      )}
     </AudioPlayerControlButton>
   );
 }
