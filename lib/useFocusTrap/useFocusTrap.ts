@@ -1,6 +1,6 @@
 import { type RefObject, useEffect, useCallback, useRef } from 'react';
 
-interface UseFocusTrapProps {
+export type UseFocusTrapOptions = {
   /**
    * Reference to the container element to trap focus within
    */
@@ -27,7 +27,7 @@ interface UseFocusTrapProps {
    * @default true
    */
   preventOutsideClicks?: boolean;
-}
+};
 
 /**
  * Find all focusable elements within a container
@@ -72,7 +72,7 @@ export function useFocusTrap({
   onEscape,
   onOutsideClick,
   preventOutsideClicks = true,
-}: UseFocusTrapProps) {
+}: UseFocusTrapOptions) {
   const focusableElementsRef = useRef<HTMLElement[]>([]);
   const firstElementRef = useRef<HTMLElement | null>(null);
   const lastElementRef = useRef<HTMLElement | null>(null);
