@@ -1,17 +1,7 @@
 import { type ComponentPropsWithRef, type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { cva } from 'class-variance-authority';
-
-const variants = [
-  'primary',
-  'secondary',
-  'tertiary',
-  'destructive',
-  'linkColor',
-  'linkGray',
-] as const;
-
-const sizes = ['md', 'lg', 'xl', 'xxl'] as const;
+import { variants, sizes } from '@lib/Button/data';
 
 type Variant = (typeof variants)[number];
 
