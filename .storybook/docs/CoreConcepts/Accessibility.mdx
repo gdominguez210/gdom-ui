@@ -1,0 +1,99 @@
+import { Meta, Source } from '@storybook/blocks';
+
+<Meta title="Core Concepts/Accessibility" />
+
+# Accessibility Standards
+
+GDOM-UI prioritizes accessibility throughout the component architecture. This commitment ensures that applications built with GDOM-UI are usable by as many people as possible, including those with disabilities.
+
+## Semantic HTML
+
+Components use appropriate HTML elements for their roles rather than generic `<div>` elements:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Button uses <button> element by default
+<Button>Click me</Button>
+
+// Progress bar uses <input type="range">
+<AudioPlayer.ProgressBar />
+
+// AudioPlayer.Time uses proper time formatting for screen readers
+<AudioPlayer.Time />
+`}
+/>
+
+Using semantic HTML provides:
+- Proper keyboard interaction built into the browser
+- Screen reader announcements without extra attributes
+- Correct event handling for different input devices
+- Improved SEO and compatibility with browser features
+
+## ARIA Attributes
+
+Components automatically apply appropriate ARIA attributes to enhance accessibility:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Generated output includes proper ARIA attributes:
+// <button aria-label="Play" type="button">...</button>
+<AudioPlayer.ControlPlay />
+
+// <input type="range" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="45">
+<AudioPlayer.ProgressBar />
+`}
+/>
+
+The library follows ARIA best practices:
+- Adding descriptive labels for icons and visual controls
+- Communicating state changes (playing/paused, expanded/collapsed)
+- Enhancing semantic HTML with additional context
+- Following established ARIA patterns for complex widgets
+
+## Keyboard Navigation
+
+All interactive components support keyboard navigation:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// AudioPlayer with full keyboard support
+<AudioPlayer.Provider tracks={tracks}>
+  <AudioPlayer.Root>
+    {/* All controls are keyboard accessible */}
+    <AudioPlayer.ProgressBar 
+      // Arrow keys for seeking, Home/End for start/end
+      ariaLabel="Track progress" 
+    />
+    <AudioPlayer.Controls>
+      <AudioPlayer.ControlPlay /> {/* Space or Enter to toggle */}
+      <AudioPlayer.ControlNext /> {/* Enter or arrow keys to activate */}
+    </AudioPlayer.Controls>
+  </AudioPlayer.Root>
+</AudioPlayer.Provider>
+`}
+/>
+
+Key features include:
+- **Focus management** for complex component systems
+- **Tab order** follows logical interaction flow
+- **Keyboard shortcuts** for common actions
+- **Visual focus indicators** that meet WCAG contrast requirements
+- **Focus trapping** for modal interfaces when needed
+
+## Testing and Compliance
+
+GDOM-UI components are developed with accessibility testing as part of the process:
+
+- **Automated testing** with tools like axe-core
+- **Keyboard navigation** testing for all interactive elements
+- **Screen reader testing** with popular screen readers (NVDA, VoiceOver, JAWS)
+- **Color contrast** verification for all UI elements
+- **WCAG 2.1 AA compliance** as a minimum standard
+
+By prioritizing accessibility throughout the component architecture, GDOM-UI helps developers create inclusive applications without additional effort. 
