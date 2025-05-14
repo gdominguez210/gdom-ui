@@ -1,0 +1,168 @@
+import { Meta, Source } from '@storybook/blocks';
+
+<Meta title="Overview/Getting Started" />
+
+# Getting Started with GDOM-UI
+
+A comprehensive guide to installing and using the GDOM-UI component library in your projects.
+
+## Installation
+
+You can install GDOM-UI using your preferred package manager:
+
+  <div className="border rounded-md p-4">
+    <Source
+      language="bash"
+      dark
+      code={`npm install @gdominguez210/gdom-ui`}
+    />
+        <Source
+      language="bash"
+      dark
+      code={`yarn add @gdominguez210/gdom-ui`}
+    />
+        <Source
+      language="bash"
+      dark
+      code={`pnpm add @gdominguez210/gdom-ui`}
+    />
+  </div>
+
+## Basic Usage
+
+After installation, you can start importing and using components from gdom-ui in your application.
+
+### 1. Import components
+
+Each component can be imported directly from the library:
+
+<Source
+  language="tsx"
+  dark
+  code={`import { Button } from '@gdominguez210/gdom-ui/Button';
+
+// Or namespaced compound components
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+
+// Or individual components
+import { AudioPlayerImage } from '@gdominguez210/gdom-ui/AudioPlayerImage';`}
+/>
+
+### 2. Use the components in your application
+
+GDOM-UI components follow a composable, easy-to-implement pattern:
+
+<Source
+  language="tsx"
+  dark
+  code={`import React from 'react';
+import { Button } from '@gdominguez210/gdom-ui/Button';
+
+function App() {
+  return (
+    <div className="p-4">
+      <h1 className="text-xl mb-4">Welcome to my app</h1>
+      
+      <Button variant="primary" onClick={() => console.log('Hello World!')}>Click me</Button>
+    </div>
+  );}`}
+/>
+
+## Example: Using the AudioPlayer Component
+
+The AudioPlayer is a complex, compound component that showcases GDOM-UI's component architecture that favors composability over configuration:
+
+<Source
+  language="tsx"
+  dark
+  code={`import React from 'react';
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+
+// Sample track data
+const tracks = [
+  {
+    id: '1',
+    title: 'Sample Track 1',
+    author: 'Artist Name',
+    source: '/path/to/audio-file-1.mp3',
+    artwork: '/path/to/image-1.jpg',
+  },
+  {
+    id: '2',
+    title: 'Sample Track 2',
+    author: 'Another Artist',
+    source: '/path/to/audio-file-2.mp3',
+    artwork: '/path/to/image-2.jpg',
+  }
+];
+
+function AudioPlayerExample() {
+  return (
+    <AudioPlayer.Provider tracks={tracks}>
+      <AudioPlayer.Root className="p-4 bg-gray-100 rounded-lg">
+        <div className="flex items-center gap-4">
+          <AudioPlayer.Image className="w-16 h-16 rounded" />
+          <div>
+            <AudioPlayer.Title className="font-bold" />
+            <AudioPlayer.Author className="text-gray-600" />
+          </div>
+        </div>
+        
+        <AudioPlayer.ProgressBar className="my-4" />
+        
+        <div className="flex justify-between items-center">
+          <AudioPlayer.Time className="text-sm" />
+          
+          <AudioPlayer.Controls className="flex gap-2">
+            <AudioPlayer.ControlPrevious />
+            <AudioPlayer.ControlPlay />
+            <AudioPlayer.ControlNext />
+          </AudioPlayer.Controls>
+          
+          <AudioPlayer.Volume>
+            <AudioPlayer.VolumeButton />
+            <AudioPlayer.VolumeSlider />
+          </AudioPlayer.Volume>
+        </div>
+      </AudioPlayer.Root>
+    </AudioPlayer.Provider>
+  );
+}`}
+/>
+
+## Integration with Tailwind CSS
+
+GDOM-UI integrates seamlessly with Tailwind CSS. All components accept className props for styling:
+
+<Source
+  language="tsx"
+  dark
+  code={`import { Button } from '@gdominguez210/gdom-ui/Button';
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+
+function StyleExample() {
+  return (
+    <div className="space-y-4">
+      {/* Styling a basic component */}
+      <Button className="mb-4">
+        Custom Button
+      </Button>
+      
+      {/* Styling compound components */}
+      <AudioPlayer.Provider tracks={tracks}>
+        <AudioPlayer.Root className="bg-gray-900 text-white p-6 rounded-xl">
+          <AudioPlayer.Title className="text-xl font-bold" />
+          <AudioPlayer.ProgressBar className="my-4 h-2 bg-gray-700" />
+          <AudioPlayer.Controls className="flex justify-center gap-4">
+            <AudioPlayer.ControlPlay className="text-amber-400 hover:text-amber-300" />
+          </AudioPlayer.Controls>
+        </AudioPlayer.Root>
+      </AudioPlayer.Provider>
+    </div>
+  );
+}`}
+/>
+
+## Getting Help
+
+For additional help, check out the [issues section of the repository](https://github.com/gdominguez210/gdom-ui/issues) or refer to specific component documentation within this Storybook.
