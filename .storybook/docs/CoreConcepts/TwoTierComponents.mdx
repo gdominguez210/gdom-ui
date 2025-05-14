@@ -1,0 +1,79 @@
+import { Meta, Source } from '@storybook/blocks';
+
+<Meta title="Core Concepts/Two-Tier Components" />
+
+# Two-Tier Component Architecture
+
+Many of GDOM-UI's complex components (like AudioPlayer) follow a two-tier architecture that separates stateful and presentational concerns.
+
+## Context-Connected Components
+
+The top-tier components integrate with React context for state management and coordination:
+
+- Accessible via:
+  - namespace pattern 
+  `AudioPlayer.ProgressBar`
+  - direct imports 
+  `import { AudioPlayerProgressBar } from '@gdominguez210/gdom-ui/AudioPlayerProgressBar';`
+- Handle state management and business logic
+- Use React hooks and context to coordinate behavior
+- Run internal handlers first, then call your custom handlers
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Context-connected components connect to shared state
+<AudioPlayer.Provider tracks={tracks}>
+  <AudioPlayer.Root>
+    {/* These components auto-connect to the audio player context */}
+    <AudioPlayer.Title />
+    <AudioPlayer.ProgressBar onChange={(e) => console.log('Progress:', e.target.value)} />
+    <AudioPlayer.ControlPlay />
+  </AudioPlayer.Root>
+</AudioPlayer.Provider>
+`}
+/>
+
+## Primitive Components
+
+At the foundation are primitive components with no dependency on context:
+
+- Purely prop-driven presentation components
+- No hooks or browser APIs (suitable for server components in Next.js)
+- Can be imported directly for custom implementations
+- Handle accessibility concerns at the HTML level
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Primitive components for custom implementations
+import { AudioPlayerProgressBarPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerProgressBarPrimitive';
+
+// Build your own audio player with primitive components
+function CustomAudioPlayer({ currentTime, duration, onSeek }) {
+  return (
+    <div>
+      <AudioPlayerProgressBarPrimitive
+        value={currentTime}
+        max={duration}
+        onChange={onSeek}
+      />
+    </div>
+  );
+}
+`}
+/>
+
+This separation creates a flexible system that enables both quick implementation through context-connected components and advanced customization through primitives.
+
+## Benefits of the Two-Tier Approach
+
+This architectural pattern provides several key advantages:
+
+- **Simplifies common use cases**: The context-connected components work out of the box for standard scenarios
+- **Enables custom implementations**: Primitive components can be used to build completely custom UIs
+- **Supports server-side rendering**: Primitive components can be rendered on the server
+- **Balances flexibility and ease-of-use**: Developers can choose the right level of abstraction for their needs
+- **Consistent API patterns**: All component sets follow the same architectural pattern 
