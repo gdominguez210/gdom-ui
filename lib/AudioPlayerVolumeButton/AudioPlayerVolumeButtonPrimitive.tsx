@@ -1,11 +1,13 @@
 import { type ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { Icon } from '@lib/Icon';
-import { type VolumeIconName } from '@lib/Icon/data';
+import { type VolumeIconName } from '@lib/IconLibrary/data';
 import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
+import { IconVolumeMuteFill } from '@lib/IconVolumeMuteFill';
+import { IconVolumeDownFill } from '@lib/IconVolumeDownFill';
+import { IconVolumeUpFill } from '@lib/IconVolumeUpFill';
 
-/**
+/*
  * Props for the volume button primitive component
  */
 export type AudioPlayerVolumeButtonPrimitiveProps = {
@@ -25,7 +27,9 @@ export function AudioPlayerVolumeButtonPrimitive(props: AudioPlayerVolumeButtonP
       title={title}
       {...restProps}
     >
-      <Icon name={iconName} />
+      {iconName === 'volume-mute-fill' && <IconVolumeMuteFill />}
+      {iconName === 'volume-down-fill' && <IconVolumeDownFill />}
+      {iconName === 'volume-up-fill' && <IconVolumeUpFill />}
     </AudioPlayerControlButton>
   );
 }
