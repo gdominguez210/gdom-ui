@@ -20,44 +20,20 @@ The AudioPlayer is a flexible, composable audio playback interface that provides
 
 ## Features
 
-The AudioPlayer component provides several key features:
 
-- **Two-Tier Component Architecture**: Uses the [Two-Tier Component Architecture](/docs/core-concepts-two-tier-components--docs) with context-connected components that handle state and primitive components that focus on presentation. This allows you to use pre-connected components for quick implementation or build custom interfaces with primitive components.
+- [**Two-Tier Architecture**](docs/core-concepts-two-tier-components--docs): Context-connected components for state management and primitive components for presentation.
 
-- **Polymorphic Components**: Most AudioPlayer components are [polymorphic](/docs/core-concepts-polymorphic-components--docs), meaning they can render as different HTML elements or React components using the `as` prop, providing maximum flexibility for integration into various UI structures.
+- [**Polymorphic Components**](docs/core-concepts-polymorphic-components--docs): Render as different HTML elements or React components using the `as` prop.
 
-- **Consistent Event Handling**: Components that handle events follow a consistent pattern where internal handlers run first to maintain core functionality, then your custom handlers are called afterward with the event object.
+- **Consistent Event Handling**: Internal handlers run first to maintain core functionality, then your custom handlers are called.
 
-- **Comprehensive Media Controls**: Provides a complete set of audio playback controls including play/pause, volume, seek, next/previous track, and loop/shuffle functionality.
+- **Comprehensive Controls**: Complete suite of audio playback controls including play/pause, volume, seek, and track navigation.
 
-- **Flexible Layout Options**: Components can be arranged in any layout and styled to match your application's design system.
+- **Flexible Layout**: Arrange components in any layout and style to match your design system.
 
-- **Accessibility-First Design**: Built with proper ARIA attributes, keyboard navigation, and screen reader support for an inclusive user experience.
+- **Accessibility-First**: Built with proper ARIA attributes, keyboard navigation, and screen reader support.
 
-<Source
-  language="tsx"
-  dark
-  code={`
-// Polymorphic component example
-<AudioPlayer.Root as="section" className="rounded-lg">
-  Content goes here
-</AudioPlayer.Root>
-
-// Event handling example
-<AudioPlayer.ProgressBar
-  onChange={(e) => {
-    console.log('Progress changed:', e.target.value);
-  }}
-/>
-
-<AudioPlayer.ControlNext
-  onClick={(e) => {
-    console.log('Next track clicked');
-  }}
-/>
-`} />
-
-See the [Core Concepts documentation](/docs/core-concepts-two-tier-components--docs) for more details on the architectural patterns used throughout GDOM-UI.
+See the [Core Concepts documentation](/docs/core-concepts-introduction--docs) for more details on the architectural patterns used throughout GDOM-UI.
 
 ## Examples
 <Stories
