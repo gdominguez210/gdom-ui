@@ -22,46 +22,21 @@ The AudioPlaylist is a flexible, composable interface for displaying audio track
 
 The AudioPlaylist component provides several key features:
 
-- **Two-Tier Component Architecture**: Uses the [Two-Tier Component Architecture](/docs/core-concepts-two-tier-components--docs) with context-connected components that handle state and primitive components that focus on presentation. This allows you to use pre-connected components for quick implementation or build custom interfaces with primitive components.
+- [**Two-Tier Architecture**](/docs/core-concepts-two-tier-components--docs): Context-connected components for state management and primitive components for presentation.
 
-- **Polymorphic Components**: All AudioPlaylist components are [polymorphic](/docs/core-concepts-polymorphic-components--docs), meaning they can render as different HTML elements or React components using the `as` prop, providing maximum flexibility for integration into various UI structures.
+- [**Polymorphic Components**](/docs/core-concepts-polymorphic-components--docs): Render as different HTML elements or React components using the `as` prop.
 
-- **Consistent Event Handling**: Components that handle events follow a consistent pattern where internal handlers run first to maintain core functionality, then your custom handlers are called afterward with the event object.
+- **Consistent Event Handling**: Internal handlers run first to maintain core functionality, then your custom handlers are called.
 
-- **Hierarchical Component Structure**: Features nested namespaces (like AudioPlaylist.Track.Title) for intuitive organization of related components.
+- **Hierarchical Structure**: Nested namespaces (like `AudioPlaylist.Track.Title`) for intuitive organization of related components.
 
-- **AudioPlayer Integration**: Seamlessly connects with the AudioPlayer component when sharing the same context, enabling a cohesive audio interface.
+- **AudioPlayer Integration**: Seamlessly connects with AudioPlayer when sharing the same context for a cohesive interface.
 
-- **Expandable/Collapsible Views**: Includes specialized container components for creating toggleable playlist views that can be shown or hidden.
+- **Expandable Views**: Specialized containers for creating toggleable playlist views that can be shown or hidden.
 
-- **Accessibility-First Design**: Built with proper ARIA attributes, keyboard navigation, and screen reader support for an inclusive user experience.
+- **Accessibility-First**: Built with proper ARIA attributes, keyboard navigation, and screen reader support.
 
-<Source
-  language="tsx"
-  dark
-  code={`
-// Polymorphic component example
-<AudioPlaylist.Root as="section" className="rounded-lg">
-  Content goes here
-</AudioPlaylist.Root>
-
-// Event handling example
-<AudioPlaylist.ControlToggle
-  onClick={(e) => {
-    console.log('Playlist toggle clicked');
-  }}
-/>
-
-// Nested components example
-<AudioPlaylist.Track.Provider track={track} index={index}>
-  <AudioPlaylist.Track.Root>
-    <AudioPlaylist.Track.Image />
-    <AudioPlaylist.Track.Title />
-  </AudioPlaylist.Track.Root>
-</AudioPlaylist.Track.Provider>
-`} />
-
-See the [Core Concepts documentation](/docs/core-concepts-two-tier-components--docs) for more details on the architectural patterns used throughout GDOM-UI.
+See [Core Concepts](/docs/core-concepts-introduction--docs) for more details on the architectural patterns used throughout GDOM-UI.
 
 ## Examples
 <Stories
