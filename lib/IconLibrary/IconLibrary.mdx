@@ -9,7 +9,7 @@ import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
 
 <ViewSource href="IconLibrary" />
 
-The IconLibrary component provides a name-based approach to using icons in your UI, built on top of the [Icon component](/docs/components-icon--docs).
+The IconLibrary component provides a name-based approach to using icons in your UI. It's designed for convenience in development and prototyping, but for production applications, the dedicated icon components are recommended for better bundle optimization.
 
 <DocumentationNav />
 <Primary />
@@ -28,14 +28,17 @@ The IconLibrary component offers these key benefits:
 This component is particularly well-suited for:
 - Internal tools and admin panels
 - Documentation sites
+- Prototyping and development
 - Applications where developer convenience is prioritized over bundle size
 
 ## Examples
 <Stories includePrimary={false} />
 
-## Architecture
+## Usage Comparison
 
-The IconLibrary component uses a name-based approach to reference SVG icons and internally leverages the base Icon component for rendering:
+### IconLibrary Component (Development-Friendly)
+
+The IconLibrary component allows referencing icons by name without individual imports:
 
 <Source
   language="tsx"
@@ -45,8 +48,28 @@ import { IconLibrary } from '@gdominguez210/gdom-ui/IconLibrary';
 
 // Reference icons by name
 <IconLibrary name="star-line" />
-<IconLibrary name="play-large-fill" className="w-6 h-6" />
+<IconLibrary name="play-fill" className="w-6 h-6" />
 <IconLibrary name="volume-up-fill" className="text-blue-500" />
+`}
+/>
+
+### Dedicated Icon Components (Production-Optimized)
+
+For production applications, use the dedicated icon components for better tree-shaking:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Import only the icons you need
+import { IconStarLine } from '@gdominguez210/gdom-ui/IconStarLine';
+import { IconPlayFill } from '@gdominguez210/gdom-ui/IconPlayFill';
+import { IconVolumeUpFill } from '@gdominguez210/gdom-ui/IconVolumeUpFill';
+
+// Use them directly
+<IconStarLine />
+<IconPlayFill className="w-6 h-6" />
+<IconVolumeUpFill className="text-blue-500" />
 `}
 />
 
@@ -66,7 +89,7 @@ const iconName: IconName = 'star-line';
 function IconSelector({ selectedIcon, onSelect }) {
   return (
     <div className="flex gap-2">
-      {['star-line', 'play-large-fill', 'volume-up-fill'].map((name) => (
+      {['star-line', 'play-fill', 'volume-up-fill'].map((name) => (
         <button
           key={name}
           onClick={() => onSelect(name)}
@@ -83,33 +106,38 @@ function IconSelector({ selectedIcon, onSelect }) {
 
 ## Bundle Size Considerations
 
-This component includes references to all icons in your bundle, which may impact performance in production applications. For better tree-shaking and bundle optimization, consider using the base [Icon component](/docs/components-icon--docs) instead:
+The IconLibrary component includes references to all icons in your bundle, which impacts application size. For production applications, use the dedicated icon components:
 
 <Source
   language="tsx"
   dark
   code={`
-// Recommended approach for production applications
-import { Icon } from '@gdominguez210/gdom-ui/Icon';
-import { ReactComponent as StarLineSvg } from '@gdominguez210/gdom-ui/assets/svgs/star-line.svg';
-import { ReactComponent as PlayLargeFillSvg } from '@gdominguez210/gdom-ui/assets/svgs/play-large-fill.svg';
+// ❌ Not recommended for production (includes all icons)
+import { IconLibrary } from '@gdominguez210/gdom-ui/IconLibrary';
 
-function OptimizedIcons() {
-  return (
-    <div className="flex gap-4">
-      <Icon as={StarLineSvg} className="text-yellow-400" />
-      <Icon as={PlayLargeFillSvg} className="text-blue-500" />
-    </div>
-  );
-}
+<IconLibrary name="star-line" />
+<IconLibrary name="play-fill" />
+
+// ✅ Recommended for production (only bundles what you use)
+import { IconStarLine } from '@gdominguez210/gdom-ui/IconStarLine';
+import { IconPlayFill } from '@gdominguez210/gdom-ui/IconPlayFill';
+
+<IconStarLine className="text-yellow-400" />
+<IconPlayFill className="text-blue-500" />
 `}
 />
 
+The dedicated icon components:
+- Are automatically tree-shakable by bundlers
+- Include only the specific icons you import
+- Provide a more direct and performant approach
+- Support the same props and styling options
+
 ## Styling and Accessibility
 
-The IconLibrary component inherits all styling capabilities and accessibility features from the base [Icon component](/docs/components-icon--docs). Please refer to the Icon documentation for detailed information about:
+Both the IconLibrary component and dedicated icon components share the same styling capabilities and accessibility features. All icons:
 
-- Text color inheritance
-- Size customization
-- Accessibility best practices
-- Customization options
+- Inherit text color using Tailwind's text utilities
+- Automatically scale with font size (default height is `1em`)
+- Support ARIA attributes for accessibility
+- Can be styled with custom classes
