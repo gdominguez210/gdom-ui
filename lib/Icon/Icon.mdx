@@ -31,24 +31,43 @@ The Icon component offers the following features:
 
 <Stories includePrimary={false} title=""/>
 
-## Architecture
+## Usage Patterns
 
-The Icon component is implemented as a polymorphic component that accepts an SVG component:
+There are two main ways to use icons in your application:
+
+### 1. Dedicated Icon Components (Recommended)
+
+Each icon is available as a dedicated component, which is the most efficient approach for tree-shaking:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Import specific icon components directly (best for tree-shaking)
+import { IconStarLine } from '@gdominguez210/gdom-ui/IconStarLine';
+import { IconPlayFill } from '@gdominguez210/gdom-ui/IconPlayFill';
+
+// Use them directly in your JSX
+<IconStarLine className="text-yellow-400" />
+<IconPlayFill className="text-blue-500" size="large" />
+`}
+/>
+
+### 2. Base Icon Component
+
+The base Icon component can be used with SVG components:
 
 <Source
   language="tsx"
   dark
   code={`
 import { Icon } from '@gdominguez210/gdom-ui/Icon';
-import { StarLine, PlayLargeFill } from '@gdominguez210/gdom-ui/icons';
+import { ReactComponent as StarLineSvg } from '@gdominguez210/gdom-ui/assets/svgs/star-line.svg';
+import { ReactComponent as PlayFillSvg } from '@gdominguez210/gdom-ui/assets/svgs/play-fill.svg';
 
-// Recommended usage with named icon components (tree-shakable)
-<StarLine />
-<PlayLargeFill className="text-blue-500" />
-
-// Alternative usage with base Icon component
-<Icon as={StarLine} />
-<Icon as={PlayLargeFill} className="text-blue-500" />
+// Using the base Icon component
+<Icon as={StarLineSvg} className="text-yellow-400" />
+<Icon as={PlayFillSvg} className="text-blue-500" />
 `}
 />
 
@@ -83,34 +102,42 @@ The Icon component:
   code={`
 // Icons inherit text color
 <div className="text-red-500">
-  <StarLine />
+  <IconStarLine />
 </div>
 
 // Icons inherit text size
 <div className="text-2xl">
-  <PlayLargeFill />
+  <IconPlayFill />
 </div>
 
 // Custom classes can override defaults
-<StarLine className="h-8 w-8 text-blue-500" />
+<IconStarLine className="h-8 w-8 text-blue-500" />
 `}
 />
 
 ### Bundle Size Optimization
 
-The Icon component is designed for optimal bundle size:
+The Icon system is designed for optimal bundle size:
 
 - Each icon is exported as its own component, enabling tree-shaking
 - Only the icons you import are included in your bundle
-- For applications where bundle size is critical, use the direct imports
+- For applications where bundle size is critical, use the dedicated icon components
 
 <Source
   language="tsx"
   dark
   code={`
 // Only these specific icons will be included in your bundle
-import { IconPlayLargeFill } from '@gdominguez210/gdom-ui/IconPlayLargeFill';
-import { IconPauseLargeFill } from '@gdominguez210/gdom-ui/IconPauseLargeFill';
+import { IconPlayFill } from '@gdominguez210/gdom-ui/IconPlayFill';
+import { IconPauseFill } from '@gdominguez210/gdom-ui/IconPauseFill';
+
+function PlayButton({ isPlaying, onToggle }) {
+  return (
+    <button onClick={onToggle}>
+      {isPlaying ? <IconPauseFill /> : <IconPlayFill />}
+    </button>
+  );
+}
 `}
 />
 
