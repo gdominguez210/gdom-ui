@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { useCallback, useEffect, type ComponentPropsWithRef, type MouseEventHandler } from 'react';
+import { useCallback, type ComponentPropsWithRef, type MouseEventHandler } from 'react';
 import {
   useAudioProgressWaveformColor,
   type useAudioProgressWaveformColorOptions,
@@ -133,10 +133,6 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     },
     [handleWaveformMouseMove, isActive],
   );
-
-  useEffect(() => {
-    drawWaveform();
-  }, [drawWaveform]);
 
   useAnimationFrame({
     isActive,
