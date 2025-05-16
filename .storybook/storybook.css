@@ -73,3 +73,8 @@
 .sbdocs.sbdocs-content :where(li:not(.sb-anchor, .sb-unstyled, .sb-unstyled li)) + li {
     margin-top: .5rem;
 }
+.sbdocs {
+    h2 + p, h3 + p, h4 + p {
+        margin-top: 0;
+    }
+}
