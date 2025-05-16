@@ -1,5 +1,5 @@
 import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
-import { useEffect, type ComponentPropsWithRef } from 'react';
+import { type ComponentPropsWithRef } from 'react';
 import { useAudioWaveform, type useAudioWaveformOptions } from './useAudioWaveform';
 import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
 
@@ -29,10 +29,6 @@ export function AudioWaveform(props: AudioWaveformProps) {
   });
 
   const mergedRefs = useComposedRefs(canvasRef, ref);
-
-  useEffect(() => {
-    drawWaveform();
-  }, [drawWaveform]);
 
   return (
     <CanvasResponsive
