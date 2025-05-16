@@ -47,6 +47,12 @@ export type useAudioWaveformOptions = {
    * @default 1 (100% of canvas height)
    */
   heightScale?: number;
+
+  /**
+   * Whether to draw the waveform on when the canvas ref is set
+   * @default true
+   */
+  drawOnCanvasReady?: boolean;
 };
 
 export const useAudioWaveform = (options: useAudioWaveformOptions) => {
@@ -58,83 +64,93 @@ export const useAudioWaveform = (options: useAudioWaveformOptions) => {
     heightScale = 1,
     minBarWidth = 1,
     minBarGapPercent = 0.001,
+    drawOnCanvasReady = true,
   } = options;
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const drawWaveform = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+  const drawWaveform = useCallback(
+    (canvas: HTMLCanvasElement | null) => {
+      if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    const displayWidth = canvas.clientWidth;
-    const displayHeight = canvas.clientHeight;
+      const displayWidth = canvas.clientWidth;
+      const displayHeight = canvas.clientHeight;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const gapWidth = getActualGapWidth(displayWidth, barGapRatio, minBarGapPercent);
+      const gapWidth = getActualGapWidth(displayWidth, barGapRatio, minBarGapPercent);
 
-    const maxBarsInView = calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth);
+      const maxBarsInView = calculateMaxBarsInView(displayWidth, minBarWidth, gapWidth);
 
-    const samplingRate = calculateSamplingRate(waveformData.length, maxBarsInView);
-    const displayData = sampleWaveformData(waveformData, samplingRate);
+      const samplingRate = calculateSamplingRate(waveformData.length, maxBarsInView);
+      const displayData = sampleWaveformData(waveformData, samplingRate);
 
-    const barWidth = calculateBarWidth(displayWidth, displayData.length, gapWidth, minBarWidth);
+      const barWidth = calculateBarWidth(displayWidth, displayData.length, gapWidth, minBarWidth);
 
-    const centerY = displayHeight / 2;
-    const maxBarHeight = displayHeight * heightScale;
+      const centerY = displayHeight / 2;
+      const maxBarHeight = displayHeight * heightScale;
 
-    displayData.forEach((value, index) => {
-      const isGapless = barGapRatio === 0 || minBarGapPercent === 0;
-      const x = isGapless ? Math.round(index * barWidth) : index * (barWidth + gapWidth);
-      const barHeight = value * maxBarHeight;
+      displayData.forEach((value, index) => {
+        const isGapless = barGapRatio === 0 || minBarGapPercent === 0;
+        const x = isGapless ? Math.round(index * barWidth) : index * (barWidth + gapWidth);
+        const barHeight = value * maxBarHeight;
 
-      const originalIndex = index * samplingRate;
-      const position = waveformData.length > 1 ? originalIndex / (waveformData.length - 1) : 0;
+        const originalIndex = index * samplingRate;
+        const position = waveformData.length > 1 ? originalIndex / (waveformData.length - 1) : 0;
 
-      const barInfo: WaveformBarInfo = {
-        position,
-        value,
-        index: originalIndex,
-        width: barWidth / displayWidth,
-      };
+        const barInfo: WaveformBarInfo = {
+          position,
+          value,
+          index: originalIndex,
+          width: barWidth / displayWidth,
+        };
 
-      if (getBarColor) {
-        const barColorResult = getBarColor(barInfo);
+        if (getBarColor) {
+          const barColorResult = getBarColor(barInfo);
 
-        if (typeof barColorResult === 'string') {
-          ctx.fillStyle = barColorResult;
-        } else if (barColorResult.type === 'gradient') {
-          const gradient = ctx.createLinearGradient(
-            x,
-            centerY + barHeight / 2,
-            x,
-            centerY - barHeight / 2,
-          );
+          if (typeof barColorResult === 'string') {
+            ctx.fillStyle = barColorResult;
+          } else if (barColorResult.type === 'gradient') {
+            const gradient = ctx.createLinearGradient(
+              x,
+              centerY + barHeight / 2,
+              x,
+              centerY - barHeight / 2,
+            );
 
-          barColorResult.stops.forEach((stop) => {
-            gradient.addColorStop(stop.offset, stop.color);
-          });
+            barColorResult.stops.forEach((stop) => {
+              gradient.addColorStop(stop.offset, stop.color);
+            });
 
-          ctx.fillStyle = gradient;
+            ctx.fillStyle = gradient;
+          }
+        } else {
+          ctx.fillStyle = barColor;
         }
-      } else {
-        ctx.fillStyle = barColor;
+        const effectiveBarWidth = isGapless ? Math.ceil(barWidth) : barWidth;
+
+        ctx.fillRect(x, centerY - barHeight / 2, effectiveBarWidth, barHeight);
+      });
+    },
+    [barColor, getBarColor, heightScale, waveformData, barGapRatio, minBarWidth, minBarGapPercent],
+  );
+
+  const internalCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = useCallback(
+    (element: HTMLCanvasElement | null) => {
+      internalCanvasRef.current = element;
+
+      if (element && drawOnCanvasReady) {
+        drawWaveform(element);
       }
-      const effectiveBarWidth = isGapless ? Math.ceil(barWidth) : barWidth;
+    },
+    [drawOnCanvasReady, drawWaveform],
+  );
 
-      ctx.fillRect(x, centerY - barHeight / 2, effectiveBarWidth, barHeight);
-    });
-  }, [
-    barColor,
-    getBarColor,
-    heightScale,
-    waveformData,
-    barGapRatio,
-    minBarWidth,
-    minBarGapPercent,
-  ]);
+  const redraw = useCallback(() => {
+    drawWaveform(internalCanvasRef.current);
+  }, [drawWaveform]);
 
-  return { canvasRef, drawWaveform };
+  return { canvasRef, drawWaveform: redraw };
 };
