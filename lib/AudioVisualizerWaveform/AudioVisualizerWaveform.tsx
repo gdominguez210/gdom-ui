@@ -2,8 +2,9 @@ import {
   useAudioVisualizerWaveform,
   type useAudioVisualizerWaveformOptions,
 } from '@lib/AudioVisualizerWaveform/useAudioVisualizerWaveform';
-import { type ComponentPropsWithRef, type RefObject } from 'react';
+import { useEffect, type ComponentPropsWithRef, type RefObject } from 'react';
 import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
+import { useLatest } from '@lib/useLatest/useLatest';
 import {
   useAudioAnalyzer,
   type UseAudioAnalyzerOptions,
@@ -34,12 +35,14 @@ export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
     ...restProps
   } = props;
 
-  const { canvasRef, drawWaveform } = useAudioVisualizerWaveform({
+  const { canvasRef, drawWaveform, clearCanvas } = useAudioVisualizerWaveform({
     colorMode,
     lineColor,
     lineWidth,
     segmentCount,
   });
+
+  const isActiveRef = useLatest(isActive);
 
   const mergedRef = useComposedRefs(ref, canvasRef);
 
@@ -56,6 +59,16 @@ export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
     createAudioSource,
     deleteAudioSource,
   });
+
+  /**
+   * If visualizer is not active,
+   * clear the canvas when the duration changes (new audio is loaded)
+   */
+  useEffect(() => {
+    if (!isActiveRef.current) {
+      clearCanvas();
+    }
+  }, [duration, isActiveRef, clearCanvas]);
 
   return (
     <AudioVisualizerCanvas
