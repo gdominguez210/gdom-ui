@@ -10,14 +10,6 @@ import { AudioPlayerTitlePrimitive } from './AudioPlayerTitlePrimitive';
 export type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
   /** Element to render as @default p */
   as?: T;
-
-  /**
-   * Additional CSS classes to apply to the component
-   * @example
-   * // Apply custom classes
-   * <AudioPlayerTitle className="text-2xl text-blue-500" />
-   */
-  className?: string;
 } & ComponentPropsWithRef<T>;
 
 /**
