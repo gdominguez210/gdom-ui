@@ -1,7 +1,9 @@
-import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/blocks';
+import { Meta, Controls, Story, Source, Stories, Primary, ArgTypes } from '@storybook/blocks';
 import * as AudioPlaylistStories from './AudioPlaylist.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { AudioPlaylistCompoundComponent as AudioPlaylist } from './namespace';
+import { Canvas } from '@storybook-components/Canvas/Canvas';
 
 <Meta of={AudioPlaylistStories} />
 
@@ -14,13 +16,8 @@ The AudioPlaylist is a flexible, composable interface for displaying audio track
 <DocumentationNav />
 
 <Primary />
-## Props
-
-<Controls />
 
 ## Features
-
-The AudioPlaylist component provides several key features:
 
 - [**Two-Tier Architecture**](/docs/core-concepts-two-tier-components--docs): Context-connected components for state management and primitive components for presentation.
 
@@ -48,11 +45,15 @@ See [Core Concepts](/docs/core-concepts-introduction--docs) for more details on 
 
 Each component is available through the main `AudioPlaylist` namespace or can be imported directly. Primitive components are also available for advanced customization.
 
-### Core Components
+<Canvas>
+<>
+### Root Container
 
-#### Root Container
+<ViewSource href="AudioPlaylist/AudioPlaylist" />
 
 The main wrapper component that provides layout and styling for the playlist.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -61,18 +62,42 @@ The main wrapper component that provides layout and styling for the playlist.
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.Root>...</AudioPlaylist.Root>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
+// Direct import
+import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist/AudioPlaylist';
 <AudioPlaylist>...</AudioPlaylist>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylist';
-
 <AudioPlaylistPrimitive>...</AudioPlaylistPrimitive>
 `} />
 
-#### Provider
+#### API Reference
+
+`type ComponentPropsWithRef<T extends ElementType = 'div'>` &
+<ArgTypes of={AudioPlaylist.Root} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Provider
+
+<ViewSource href="AudioPlaylistContextProvider" />
 
 Provides playlist state and context to all child components. Required at the root level.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -81,18 +106,33 @@ Provides playlist state and context to all child components. Required at the roo
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.Provider>...</AudioPlaylist.Provider>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistContextProvider } from '@gdominguez210/gdom-ui/AudioPlaylistContextProvider';
-
 <AudioPlaylistContextProvider>...</AudioPlaylistContextProvider>
 `} />
 
-### Playlist Structure Components
+#### API Reference
 
-#### Header
+`type PropsWithChildren` &
+<ArgTypes of={AudioPlaylist.Provider} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Header
+
+<ViewSource href="AudioPlaylistHeader" />
 
 Container for the playlist header title and dismiss button.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -101,21 +141,42 @@ Container for the playlist header title and dismiss button.
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.Header>Playlist</AudioPlaylist.Header>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistHeader } from '@gdominguez210/gdom-ui/AudioPlaylistHeader';
-
 <AudioPlaylistHeader>Playlist</AudioPlaylistHeader>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistHeaderPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistHeader';
-
 <AudioPlaylistHeaderPrimitive>Playlist</AudioPlaylistHeaderPrimitive>
 `} />
 
-#### Dismiss
+#### API Reference
+
+`type ComponentPropsWithRef<T extends ElementType = 'div'>` &
+<ArgTypes of={AudioPlaylist.Header} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Dismiss
+
+<ViewSource href="AudioPlaylistDismiss" />
 
 Button to close/hide the playlist.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -124,21 +185,41 @@ Button to close/hide the playlist.
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.Dismiss />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistDismiss } from '@gdominguez210/gdom-ui/AudioPlaylistDismiss';
-
 <AudioPlaylistDismiss />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistDismissPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistDismiss';
-
 <AudioPlaylistDismissPrimitive onClick={() => {}} />
 `} />
 
-#### Tracks
+#### API Reference
+
+`type ComponentPropsWithRef<'button'>`
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Tracks
+
+<ViewSource href="AudioPlaylistTracks" />
 
 Container for the list of track components.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -147,25 +228,42 @@ Container for the list of track components.
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.Tracks>...</AudioPlaylist.Tracks>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistTracks } from '@gdominguez210/gdom-ui/AudioPlaylistTracks';
-
 <AudioPlaylistTracks>...</AudioPlaylistTracks>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistTracksPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTracks';
-
 <AudioPlaylistTracksPrimitive>...</AudioPlaylistTracksPrimitive>
 `} />
 
-### Track Components
+#### API Reference
 
-AudioPlaylist includes a nested Track namespace with components for displaying individual track information.
+`type ComponentPropsWithRef<T extends ElementType = 'ul'>` &
+<ArgTypes of={AudioPlaylist.Tracks} />
+</>
+</Canvas>
 
-#### Track Provider
+<Canvas>
+<>
+### Track Provider
+
+<ViewSource href="AudioPlaylistTrackContextProvider" />
 
 Provides individual track data and context to track components.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -176,21 +274,35 @@ import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.Track.Provider track={track} index={index}>
   ...
 </AudioPlaylist.Track.Provider>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistTrackContextProvider } from '@gdominguez210/gdom-ui/AudioPlaylistTrackContextProvider';
-
-<AudioPlaylistTrackContextProvider
-  track={track}
-  index={index}
->
+<AudioPlaylistTrackContextProvider track={track} index={index}>
   ...
 </AudioPlaylistTrackContextProvider>
 `} />
 
-#### Track Root
+#### API Reference
+
+`type PropsWithChildren` &
+<ArgTypes of={AudioPlaylist.Track.Provider} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Track Root
+
+<ViewSource href="AudioPlaylistTrack" />
 
 Container for individual track display components.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -199,21 +311,42 @@ Container for individual track display components.
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.Track.Root>...</AudioPlaylist.Track.Root>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistTrack } from '@gdominguez210/gdom-ui/AudioPlaylistTrack';
-
 <AudioPlaylistTrack>...</AudioPlaylistTrack>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistTrackPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTrack';
-
 <AudioPlaylistTrackPrimitive>...</AudioPlaylistTrackPrimitive>
 `} />
 
-#### Track Image
+#### API Reference
+
+`type ComponentPropsWithRef<T extends ElementType = 'li'>` &
+<ArgTypes of={AudioPlaylist.Track.Root} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Track Image
+
+<ViewSource href="AudioPlaylistTrackImage" />
 
 Displays the track artwork or thumbnail image.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -222,24 +355,44 @@ Displays the track artwork or thumbnail image.
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.Track.Image />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistTrackImage } from '@gdominguez210/gdom-ui/AudioPlaylistTrackImage';
-
 <AudioPlaylistTrackImage />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistTrackImagePrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTrackImage';
-
 <AudioPlaylistTrackImagePrimitive
   src="path/to/image.jpg"
   alt="Album cover"
 />
 `} />
 
-#### Track Title
+#### API Reference
+
+`type ComponentPropsWithRef<'img'>`
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Track Title
+
+<ViewSource href="AudioPlaylistTrackTitle" />
 
 Displays the title of the track.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -248,21 +401,41 @@ Displays the title of the track.
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.Track.Title />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistTrackTitle } from '@gdominguez210/gdom-ui/AudioPlaylistTrackTitle';
-
 <AudioPlaylistTrackTitle />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistTrackTitlePrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTrackTitle';
-
 <AudioPlaylistTrackTitlePrimitive>Song Title</AudioPlaylistTrackTitlePrimitive>
 `} />
 
-#### Track Author
+#### API Reference
+
+`type ComponentPropsWithRef<T extends ElementType = 'div'>`
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Track Author
+
+<ViewSource href="AudioPlaylistTrackAuthor" />
 
 Displays the artist/author of the track.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -271,23 +444,41 @@ Displays the artist/author of the track.
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.Track.Author />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistTrackAuthor } from '@gdominguez210/gdom-ui/AudioPlaylistTrackAuthor';
-
 <AudioPlaylistTrackAuthor />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistTrackAuthorPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTrackAuthor';
-
 <AudioPlaylistTrackAuthorPrimitive>Artist Name</AudioPlaylistTrackAuthorPrimitive>
 `} />
 
-### Container Components
+#### API Reference
 
-#### ExpandableContainer
+`type ComponentPropsWithRef<T extends ElementType = 'div'>`
+</>
+</Canvas>
+
+<Canvas>
+<>
+### ExpandableContainer
+
+<ViewSource href="AudioPlaylistExpandableContainer" />
 
 Creates an expandable/collapsible container for the playlist that can be toggled.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -298,25 +489,45 @@ import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.ExpandableContainer>
   <AudioPlaylist.Root>...</AudioPlaylist.Root>
 </AudioPlaylist.ExpandableContainer>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistExpandableContainer } from '@gdominguez210/gdom-ui/AudioPlaylistExpandableContainer';
-
 <AudioPlaylistExpandableContainer>
   <AudioPlaylist>...</AudioPlaylist>
 </AudioPlaylistExpandableContainer>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistExpandableContainerPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistExpandableContainer';
-
 <AudioPlaylistExpandableContainerPrimitive isVisible={true}>
   <AudioPlaylist>...</AudioPlaylist>
 </AudioPlaylistExpandableContainerPrimitive>
 `} />
 
-#### ScrollableContainer
+#### API Reference
+
+`type ComponentPropsWithRef<T extends ElementType = 'div'>`
+</>
+</Canvas>
+
+<Canvas>
+<>
+### ScrollableContainer
+
+<ViewSource href="AudioPlaylistScrollableContainer" />
 
 Creates a container with customizable height and scrolling behavior.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -327,27 +538,46 @@ import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.ScrollableContainer maxHeight="300px">
   <AudioPlaylist.Tracks>...</AudioPlaylist.Tracks>
 </AudioPlaylist.ScrollableContainer>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistScrollableContainer } from '@gdominguez210/gdom-ui/AudioPlaylistScrollableContainer';
-
 <AudioPlaylistScrollableContainer maxHeight="300px">
   <AudioPlaylistTracks>...</AudioPlaylistTracks>
 </AudioPlaylistScrollableContainer>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistScrollableContainerPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistScrollableContainer';
-
 <AudioPlaylistScrollableContainerPrimitive maxHeight="300px">
   <AudioPlaylistTracks>...</AudioPlaylistTracks>
 </AudioPlaylistScrollableContainerPrimitive>
 `} />
 
-### Control Components
+#### API Reference
 
-#### ControlToggle
+`type ComponentPropsWithRef<T extends ElementType = 'div'>` &
+<ArgTypes of={AudioPlaylist.ScrollableContainer} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### ControlToggle
+
+<ViewSource href="AudioPlaylistControlToggle" />
 
 Button to toggle the visibility of the playlist when using ExpandableContainer.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -356,20 +586,34 @@ Button to toggle the visibility of the playlist when using ExpandableContainer.
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
 <AudioPlaylist.ControlToggle />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlaylistControlToggle } from '@gdominguez210/gdom-ui/AudioPlaylistControlToggle';
-
 <AudioPlaylistControlToggle />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlaylistControlTogglePrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistControlToggle';
-
 <AudioPlaylistControlTogglePrimitive
   isVisible={false}
   onClick={() => {}}
 />
 `} />
+
+#### API Reference
+
+`type ComponentPropsWithRef<'button'>`
+</>
+</Canvas>
 
 ## Integration with AudioPlayer
 
