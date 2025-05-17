@@ -271,7 +271,8 @@ export const WithFrequencyBarsVisualizer: StoryObj<typeof AudioPlayer> = {
   parameters: {
     docs: {
       description: {
-        story: 'A player with a frequency bars visualizer',
+        story:
+          'A player with a frequency bars visualizer. See the [AudioVisualizerFrequencyBars](/docs/components-audiovisualizerfrequencybars--docs) component for more customization options.',
       },
       source: {
         type: 'dynamic',
@@ -320,7 +321,8 @@ export const WithWaveformVisualizer: StoryObj<typeof AudioPlayer> = {
   parameters: {
     docs: {
       description: {
-        story: 'A player with a waveform visualizer',
+        story:
+          'A player with a waveform visualizer. See the [AudioVisualizerWaveform](/docs/components-audiovisualizerwaveform--docs) component for more customization options.',
       },
       source: {
         type: 'dynamic',
@@ -370,7 +372,7 @@ export const WithCollapsiblePlaylistAndVisualizer: StoryObj<typeof AudioPlayer> 
     docs: {
       description: {
         story:
-          'A player with a collapsible playlist that can be toggled with a button or dismissed with the close button in the header',
+          'A player with a collapsible playlist that can be toggled with a button or dismissed with the close button in the header. This example also includes a spectrum-colored frequency bars visualizer - see the [AudioVisualizerFrequencyBars](/docs/components-audiovisualizerfrequencybars--docs) component for more customization options.',
       },
       source: {
         type: 'dynamic',
@@ -452,7 +454,7 @@ export const WithProgressWaveform: StoryObj<typeof AudioPlayer> = {
     docs: {
       description: {
         story:
-          'A player with a pre-rendered waveform visualization that shows playback progress. Users can click anywhere on the waveform to seek to that position in the track. The colored portion of the waveform represents the played section, while interactive hover effects provide visual feedback when navigating through the track.',
+          'A player with a pre-rendered waveform visualization that shows playback progress. Users can click anywhere on the waveform to seek to that position in the track. The colored portion of the waveform represents the played section, while interactive hover effects provide visual feedback when navigating through the track. See the [AudioProgressWaveform](/docs/components-audioprogresswaveform--docs) component for more customization options.',
       },
       source: {
         type: 'dynamic',
