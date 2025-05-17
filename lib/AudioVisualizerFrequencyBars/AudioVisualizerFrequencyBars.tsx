@@ -2,8 +2,9 @@ import {
   useAudioVisualizerFrequencyBars,
   type useAudioVisualizerFrequencyBarOptions,
 } from '@lib/AudioVisualizerFrequencyBars/useAudioVisualizerFrequencyBars';
-import { type ComponentPropsWithRef, type RefObject } from 'react';
+import { useEffect, type ComponentPropsWithRef, type RefObject } from 'react';
 import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
+import { useLatest } from '@lib/useLatest/useLatest';
 import {
   useAudioAnalyzer,
   type UseAudioAnalyzerOptions,
@@ -37,7 +38,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     ...restProps
   } = props;
 
-  const { canvasRef, drawFrequencyBars } = useAudioVisualizerFrequencyBars({
+  const { canvasRef, drawFrequencyBars, clearCanvas } = useAudioVisualizerFrequencyBars({
     barColor,
     barGapRatio,
     barCount,
@@ -45,9 +46,9 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     minBarHeight,
     colorMode,
     colorTransitionDuration,
-    isActive,
-    duration,
   });
+
+  const isActiveRef = useLatest(isActive);
 
   const mergedRef = useComposedRefs(ref, canvasRef);
 
@@ -65,6 +66,12 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     createAudioSource,
     deleteAudioSource,
   });
+
+  useEffect(() => {
+    if (!isActiveRef.current) {
+      clearCanvas();
+    }
+  }, [duration, isActiveRef, clearCanvas]);
 
   return (
     <AudioVisualizerCanvas

@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback } from 'react';
 import {
   calculateLogarithmicDistributionDenominator,
   calculateLogarithmicIndexRatio,
@@ -12,16 +12,6 @@ import {
 } from '@lib/AudioVisualizerFrequencyBars/drawingUtils';
 import { useColorTransition } from '@lib/useColorTransition/useColorTransition';
 export type useAudioVisualizerFrequencyBarOptions = {
-  /**
-   * Whether the frequency bars are active
-   */
-  isActive?: boolean;
-
-  /**
-   * Duration of the audio to visualize
-   */
-  duration?: number;
-
   /**
    * Color of the frequency bars
    * @default '#FFFFFF'
@@ -79,6 +69,7 @@ export type useAudioVisualizerFrequencyBarOptions = {
 export type useAudioVisualizerFrequencyBarsReturn = {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   drawFrequencyBars: (dataArray: Uint8Array) => void;
+  clearCanvas: () => void;
 };
 
 export function useAudioVisualizerFrequencyBars(
@@ -93,23 +84,19 @@ export function useAudioVisualizerFrequencyBars(
     minBarWidth = 1,
     colorMode = FREQUENCY_BARS_COLOR_MODES.STATIC,
     colorTransitionDuration = 1000,
-    isActive,
-    duration,
   } = options || {};
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const previousDuration = useRef<number | null>(duration);
 
-  useEffect(() => {
-    if (duration !== previousDuration.current && !isActive) {
-      const ctx = canvasRef.current?.getContext('2d');
-      if (!ctx) return;
+  const clearCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-      ctx.clearRect(0, 0, canvasRef.current?.width ?? 0, canvasRef.current?.height ?? 0);
-    }
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    previousDuration.current = duration;
-  }, [duration, isActive]);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }, []);
 
   const { getColorString, getCurrentColor } = useColorTransition({
     targetColor: barColor,
@@ -198,5 +185,5 @@ export function useAudioVisualizerFrequencyBars(
     ],
   );
 
-  return { canvasRef, drawFrequencyBars };
+  return { canvasRef, drawFrequencyBars, clearCanvas };
 }
