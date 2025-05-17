@@ -1,7 +1,9 @@
-import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/blocks';
+import { Meta, Controls, Story, Source, Stories, Primary, ArgTypes } from '@storybook/blocks';
 import * as AudioPlayerStories from './AudioPlayer.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { AudioPlayerCompoundComponent as AudioPlayer } from './namespace'
+import { Canvas } from '@storybook-components/Canvas/Canvas';
 
 <Meta of={AudioPlayerStories} />
 
@@ -14,12 +16,8 @@ The AudioPlayer is a flexible, composable audio playback interface that provides
 <DocumentationNav />
 
 <Primary />
-## Props
-
-<Controls />
 
 ## Features
-
 
 - [**Two-Tier Architecture**](docs/core-concepts-two-tier-components--docs): Context-connected components for state management and primitive components for presentation.
 
@@ -45,11 +43,15 @@ See the [Core Concepts](/docs/core-concepts-introduction--docs) for more details
 
 Each component is available through the main `AudioPlayer` namespace or can be imported directly. Primitive components are also available for advanced customization.
 
-### Core Components
+<Canvas>
+<>
+### Root Container
 
-#### Root Container
+<ViewSource href="AudioPlayer/AudioPlayer" />
 
 The main wrapper component that provides layout and styling for the audio player.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -58,21 +60,51 @@ The main wrapper component that provides layout and styling for the audio player
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.Root>...</AudioPlayer.Root>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer/AudioPlayer';
-
 <AudioPlayer>...</AudioPlayer>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerPrimitive } from '@gdominguez210/gdom-ui/AudioPlayer';
-
 <AudioPlayerPrimitive>...</AudioPlayerPrimitive>
 `} />
 
-#### Provider
+#### API Reference
+
+`type ComponentPropsWithRef<'T extends ElementType = 'div'>` &
+<ArgTypes of={AudioPlayer.Root} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Provider
+
+<ViewSource href="AudioPlayerContextProvider" />
 
 Provides audio state and context to all child components. Required at the root level.
+
+The `AudioPlayer.Provider` is a composed component that combines multiple context providers to manage the state of the audio player:
+
+- `AudioPlayerContextRefsProvider` - Manages references to the audio element
+- `AudioPlayerContextTrackProvider` - Handles track selection and management
+- `AudioPlayerContextTimeProvider` - Manages time-related state (current time, duration)
+- `AudioPlayerContextPlaybackProvider` - Controls playback state (playing, volume, loop, shuffle)
+
+These providers are nested in the order listed above to ensure proper dependency management.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -81,18 +113,45 @@ Provides audio state and context to all child components. Required at the root l
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.Provider tracks={tracks}>...</AudioPlayer.Provider>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerContextProvider } from '@gdominguez210/gdom-ui/AudioPlayerContextProvider';
-
 <AudioPlayerContextProvider tracks={tracks}>...</AudioPlayerContextProvider>
 `} />
 
-### Information Display
+#### API Reference
 
-#### Info Container
+`type PropsWithChildren` &
+<ArgTypes of={AudioPlayer.Provider} />
+
+The `tracks` prop required by the Provider accepts an array of objects with the following structure:
+
+**AudioTrackData**
+| Property  | Type     | Required | Description                              |
+|-----------|----------|----------|------------------------------------------|
+| id        | string   | Yes      | Unique identifier for the track          |
+| title     | string   | Yes      | Title of the track                       |
+| src       | string   | Yes      | URL to the audio file                    |
+| author    | string   | Yes      | Name of the artist or author             |
+| thumbnail | string   | No       | URL to a thumbnail image for the track   |
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Info Container
+
+<ViewSource href="AudioPlayerInfo" />
 
 Container for track information such as image, title, and author.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -101,16 +160,33 @@ Container for track information such as image, title, and author.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.Info>...</AudioPlayer.Info>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerInfo } from '@gdominguez210/gdom-ui/AudioPlayerInfo';
-
 <AudioPlayerInfo>...</AudioPlayerInfo>
 `} />
 
-#### Image
+#### API Reference
+
+`type ComponentPropsWithRef<T extends ElementType = 'div'>` &
+<ArgTypes of={AudioPlayer.Info} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Image
+
+<ViewSource href="AudioPlayerImage" />
 
 Displays the album artwork or track thumbnail image.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -119,24 +195,45 @@ Displays the album artwork or track thumbnail image.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.Image />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerImage } from '@gdominguez210/gdom-ui/AudioPlayerImage';
-
 <AudioPlayerImage />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerImagePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerImage';
-
 <AudioPlayerImagePrimitive
   src="path/to/image.jpg"
   alt="Album cover"
 />
 `} />
 
-#### Title
+#### API Reference
+
+`type ComponentPropsWithRef<'img'>` &
+<ArgTypes of={AudioPlayer.Image} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Title
+
+<ViewSource href="AudioPlayerTitle" />
 
 Displays the track title from the current track.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -145,21 +242,42 @@ Displays the track title from the current track.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.Title />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerTitle } from '@gdominguez210/gdom-ui/AudioPlayerTitle';
-
 <AudioPlayerTitle />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerTitlePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerTitle';
-
 <AudioPlayerTitlePrimitive>Song Title</AudioPlayerTitlePrimitive>
 `} />
 
-#### Author
+#### API Reference
+
+`type ComponentPropsWithRef<T extends ElementType = 'div'>` &
+<ArgTypes of={AudioPlayer.Title} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Author
+
+<ViewSource href="AudioPlayerAuthor" />
 
 Displays the track artist/author name from the current track.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -168,21 +286,42 @@ Displays the track artist/author name from the current track.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.Author />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerAuthor } from '@gdominguez210/gdom-ui/AudioPlayerAuthor';
-
 <AudioPlayerAuthor />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerAuthorPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerAuthor';
-
 <AudioPlayerAuthorPrimitive>Artist Name</AudioPlayerAuthorPrimitive>
 `} />
 
-#### Time
+#### API Reference
+
+`type ComponentPropsWithRef<T extends ElementType = 'div'>` &
+<ArgTypes of={AudioPlayer.Author} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Time
+
+<ViewSource href="AudioPlayerTime" />
 
 Displays current playback time and total duration in MM:SS format.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -191,26 +330,45 @@ Displays current playback time and total duration in MM:SS format.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.Time />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerTime } from '@gdominguez210/gdom-ui/AudioPlayerTime';
-
 <AudioPlayerTime />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerTimePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerTime';
-
 <AudioPlayerTimePrimitive
   currentTime={60}
   duration={180}
 />
 `} />
 
-### Controls
+#### API Reference
 
-#### Controls Container
+`type ComponentPropsWithRef<T extends ElementType = 'span'>` &
+<ArgTypes of={AudioPlayer.Time} />
+</>
+</Canvas>
+
+<Canvas>
+<>  
+### Controls Container
+
+<ViewSource href="AudioPlayerControls" />
 
 Flexible container for grouping playback control buttons.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -219,16 +377,33 @@ Flexible container for grouping playback control buttons.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.Controls>...</AudioPlayer.Controls>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerControls } from '@gdominguez210/gdom-ui/AudioPlayerControls';
-
 <AudioPlayerControls>...</AudioPlayerControls>
 `} />
 
-#### Play/Pause Control
+#### API Reference
+
+`type ComponentPropsWithRef<T extends ElementType = 'div'>` &
+<ArgTypes of={AudioPlayer.Controls} />
+</>
+</Canvas>
+
+<Canvas>
+<>  
+### Control Play
+
+<ViewSource href="AudioPlayerControlPlay" />
 
 Toggles playback state with dynamic icon that changes between play and pause.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -237,24 +412,45 @@ Toggles playback state with dynamic icon that changes between play and pause.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.ControlPlay />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerControlPlay } from '@gdominguez210/gdom-ui/AudioPlayerControlPlay';
-
 <AudioPlayerControlPlay />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerControlPlayPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlPlay';
-
 <AudioPlayerControlPlayPrimitive
   isPlaying={true}
   onClick={() => {}}
 />
 `} />
 
-#### Next Track Control
+#### API Reference
+
+`type ComponentPropsWithRef<'button'>`
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Control Next
+
+<ViewSource href="AudioPlayerControlNext" />
 
 Button to skip to the next track in the playlist.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -263,21 +459,42 @@ Button to skip to the next track in the playlist.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.ControlNext />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerControlNext } from '@gdominguez210/gdom-ui/AudioPlayerControlNext';
-
 <AudioPlayerControlNext />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerControlNextPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlNext';
-
 <AudioPlayerControlNextPrimitive onClick={() => {}} />
 `} />
 
-#### Previous Track Control
+#### API Reference
+
+`type ComponentPropsWithRef<'button'>`
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Control Previous
+
+<ViewSource href="AudioPlayerControlPrevious" />
 
 Button to return to the previous track or restart the current track.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -286,21 +503,42 @@ Button to return to the previous track or restart the current track.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.ControlPrevious />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerControlPrevious } from '@gdominguez210/gdom-ui/AudioPlayerControlPrevious';
-
 <AudioPlayerControlPrevious />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerControlPreviousPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlPrevious';
-
 <AudioPlayerControlPreviousPrimitive onClick={() => {}} />
 `} />
 
-#### Loop Control
+#### API Reference
+
+`type ComponentPropsWithRef<'button'>`
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Control Loop
+
+<ViewSource href="AudioPlayerControlLoop" />
 
 Toggles repeat mode for single track or playlist with visual indicator.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -309,24 +547,45 @@ Toggles repeat mode for single track or playlist with visual indicator.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.ControlLoop />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerControlLoop } from '@gdominguez210/gdom-ui/AudioPlayerControlLoop';
-
 <AudioPlayerControlLoop />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerControlLoopPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlLoop';
-
 <AudioPlayerControlLoopPrimitive
   active={true}
   onClick={() => {}}
 />
 `} />
 
-#### Shuffle Control
+#### API Reference
+
+`type ComponentPropsWithRef<'button'>`
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Control Shuffle
+
+<ViewSource href="AudioPlayerControlShuffle" />
 
 Toggles shuffle playback mode with visual indicator for active state.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -335,24 +594,45 @@ Toggles shuffle playback mode with visual indicator for active state.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.ControlShuffle />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerControlShuffle } from '@gdominguez210/gdom-ui/AudioPlayerControlShuffle';
-
 <AudioPlayerControlShuffle />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerControlShufflePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlShuffle';
-
 <AudioPlayerControlShufflePrimitive
   active={true}
   onClick={() => {}}
 />
 `} />
 
-#### Audio Element
+#### API Reference
+
+`type ComponentPropsWithRef<'button'>`
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Control Audio
+
+<ViewSource href="AudioPlayerControlAudio" />
 
 The core HTML audio element that handles actual audio playback (typically hidden).
+
+#### Usage
 
 <Source
   language="tsx"
@@ -361,23 +641,42 @@ The core HTML audio element that handles actual audio playback (typically hidden
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.ControlAudio />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerControlAudio } from '@gdominguez210/gdom-ui/AudioPlayerControlAudio';
-
 <AudioPlayerControlAudio />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerControlAudioPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerControlAudio';
-
 <AudioPlayerControlAudioPrimitive src="path/to/audio.mp3" />
 `} />
 
-### Playback Controls
+#### API Reference
 
-#### Progress Bar
+`type ComponentPropsWithRef<'audio'>`
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Progress Bar
+
+<ViewSource href="AudioPlayerProgressBar" />
 
 Interactive slider that displays and controls playback progress.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -386,15 +685,23 @@ Interactive slider that displays and controls playback progress.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.ProgressBar />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerProgressBar } from '@gdominguez210/gdom-ui/AudioPlayerProgressBar';
-
 <AudioPlayerProgressBar />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerProgressBarPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerProgressBar';
-
 <AudioPlayerProgressBarPrimitive
   value={50}
   max={100}
@@ -402,9 +709,22 @@ import { AudioPlayerProgressBarPrimitive } from '@gdominguez210/gdom-ui/AudioPla
 />
 `} />
 
-#### Progress Waveform
+#### API Reference
+
+`type ComponentPropsWithRef<'input'>`
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Progress Waveform
+
+<ViewSource href="AudioPlayerProgressWaveform" />
 
 An enhanced progress control that displays a waveform visualization of the audio and allows seeking by clicking on different parts of the waveform.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -413,12 +733,21 @@ An enhanced progress control that displays a waveform visualization of the audio
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.ProgressWaveform waveformData={waveformData} />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerProgressWaveform } from '@gdominguez210/gdom-ui/AudioPlayerProgressWaveform';
-
 <AudioPlayerProgressWaveform waveformData={waveformData} />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // With custom styling
 <AudioPlayerProgressWaveform 
   waveformData={waveformData}
@@ -428,9 +757,22 @@ import { AudioPlayerProgressWaveform } from '@gdominguez210/gdom-ui/AudioPlayerP
 />
 `} />
 
-#### Volume Container
+#### API Reference
+
+[AudioProgressWaveform](docs/AudioProgressWaveform--docs)
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Volume Container
+
+<ViewSource href="AudioPlayerVolume" />
 
 Container for volume controls that can be configured to expand/collapse.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -439,21 +781,41 @@ Container for volume controls that can be configured to expand/collapse.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.Volume>...</AudioPlayer.Volume>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerVolume } from '@gdominguez210/gdom-ui/AudioPlayerVolume';
-
 <AudioPlayerVolume>...</AudioPlayerVolume>
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerVolumePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerVolume';
-
 <AudioPlayerVolumePrimitive>...</AudioPlayerVolumePrimitive>
 `} />
 
-#### Volume Button
+#### API Reference
+
+<ArgTypes of={AudioPlayer.Volume} />
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Volume Button
+
+<ViewSource href="AudioPlayerVolumeButton" />
 
 Button that toggles mute state with dynamic icon based on volume level.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -462,24 +824,45 @@ Button that toggles mute state with dynamic icon based on volume level.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.VolumeButton />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerVolumeButton } from '@gdominguez210/gdom-ui/AudioPlayerVolumeButton';
-
 <AudioPlayerVolumeButton />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerVolumeButtonPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerVolumeButton';
-
 <AudioPlayerVolumeButtonPrimitive
   muted={false}
   onClick={() => {}}
 />
 `} />
 
-#### Volume Slider
+#### API Reference
+
+`type ComponentPropsWithRef<'button'>`
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Volume Slider
+
+<ViewSource href="AudioPlayerVolumeSlider" />
 
 Interactive slider that displays and controls audio volume level.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -488,28 +871,45 @@ Interactive slider that displays and controls audio volume level.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.VolumeSlider />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerVolumeSlider } from '@gdominguez210/gdom-ui/AudioPlayerVolumeSlider';
-
 <AudioPlayerVolumeSlider />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Primitive component
 import { AudioPlayerVolumeSliderPrimitive } from '@gdominguez210/gdom-ui/AudioPlayerVolumeSlider';
-
 <AudioPlayerVolumeSliderPrimitive
   value={75}
   onChange={() => {}}
 />
 `} />
 
-### Visualizers
+#### API Reference
 
-AudioPlayer includes several audio visualization components that can be added to enhance the player experience.
+`type ComponentPropsWithRef<'input'>` &
+<ArgTypes of={AudioPlayer.VolumeSlider} />
+</>
+</Canvas>
 
-#### Waveform Visualizer
+<Canvas>
+<>
+### Visualizer Waveform
+
+<ViewSource href="AudioPlayerVisualizerWaveform" />
 
 Displays a real-time waveform visualization of the audio being played.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -518,12 +918,21 @@ Displays a real-time waveform visualization of the audio being played.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.VisualizerWaveform />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerVisualizerWaveform } from '@gdominguez210/gdom-ui/AudioPlayerVisualizerWaveform';
-
 <AudioPlayerVisualizerWaveform />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // With custom styling
 <AudioPlayerVisualizerWaveform 
   lineColor="rgba(59, 130, 246, 1)"
@@ -532,9 +941,22 @@ import { AudioPlayerVisualizerWaveform } from '@gdominguez210/gdom-ui/AudioPlaye
 />
 `} />
 
-#### Frequency Bars Visualizer
+#### API Reference
+
+[AudioVisualizerWaveform](docs/AudioVisualizerWaveform--docs)
+
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Visualizer Frequency Bars
+
+<ViewSource href="AudioPlayerVisualizerFrequencyBars" />
 
 Displays a real-time frequency spectrum visualization as animated vertical bars. Shows different frequency ranges of the audio being played, similar to an equalizer display.
+
+#### Usage
 
 <Source
   language="tsx"
@@ -543,12 +965,21 @@ Displays a real-time frequency spectrum visualization as animated vertical bars.
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 <AudioPlayer.VisualizerFrequencyBars />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // Direct import
 import { AudioPlayerVisualizerFrequencyBars } from '@gdominguez210/gdom-ui/AudioPlayerVisualizerFrequencyBars';
-
 <AudioPlayerVisualizerFrequencyBars />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // With custom styling and options
 <AudioPlayerVisualizerFrequencyBars 
   barColor="rgba(59, 130, 246, 1)"
@@ -559,7 +990,12 @@ import { AudioPlayerVisualizerFrequencyBars } from '@gdominguez210/gdom-ui/Audio
   colorMode="gradient"
   className="h-24 w-full rounded-md bg-gray-100"
 />
+`} />
 
+<Source
+  language="tsx"
+  dark
+  code={`
 // With rainbow color effect
 <AudioPlayerVisualizerFrequencyBars 
   colorMode="rainbow"
@@ -567,3 +1003,10 @@ import { AudioPlayerVisualizerFrequencyBars } from '@gdominguez210/gdom-ui/Audio
   className="h-36 w-full rounded-md"
 />
 `} />
+
+#### API Reference
+
+[AudioVisualizerFrequencyBars](docs/AudioVisualizerFrequencyBars--docs)
+
+</>
+</Canvas>
