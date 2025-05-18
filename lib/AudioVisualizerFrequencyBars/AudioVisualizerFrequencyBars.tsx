@@ -26,6 +26,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     fftSize,
     smoothingTimeConstant,
     frameRate,
+    frameTransitionSmoothing,
     createAudioSource,
     deleteAudioSource,
     barColor,
@@ -63,6 +64,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     fftSize,
     smoothingTimeConstant,
     frameRate,
+    frameTransitionSmoothing,
     createAudioSource,
     deleteAudioSource,
   });
