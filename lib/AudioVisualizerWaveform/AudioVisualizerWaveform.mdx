@@ -14,7 +14,7 @@ A versatile audio waveform visualizer that displays audio time-domain data as a 
 <DocumentationNav />
 
 <Primary />
-## Props
+## API Reference
 <Controls />
 
 ## Features
@@ -44,45 +44,16 @@ The AudioVisualizerWaveform component provides several key features:
   includePrimary={false}
 />
 
-## Component Usage
+## Usage
 
-The AudioVisualizerWaveform component can be used both standalone with a direct audio element reference or as part of the AudioPlayer component system:
+The AudioVisualizerWaveform component can be used in two ways: 
 
-### Standalone Usage
+- [**With the AudioPlayer Component System**](#with-audioplayer-component-system-recommended)
+- [**Standalone**](#standalone-usage)
 
-<Source
-  language="tsx"
-  dark
-  code={`
-import { useRef, useState } from 'react';
-import { AudioVisualizerWaveform } from '@gdominguez210/gdom-ui/AudioVisualizerWaveform';
+### With AudioPlayer Component System (Recommended)
 
-const MyAudioVisualizer = () => {
-const audioRef = useRef<HTMLAudioElement>(null);
-const [isActive, setIsActive] = useState(false);
-
-return (
-
-<div>
-  <AudioVisualizerWaveform
-    audioRef={audioRef}
-    isActive={isActive}
-    colorMode="amplitude"
-    lineColor="#029CFD"
-    lineWidth={2}
-    className="h-[200px] w-full"
-  />
-  <audio
-    ref={audioRef}
-    src="/path/to/audio.mp3"
-    controls
-    onPlay={() => setIsActive(true)}
-    onPause={() => setIsActive(false)}
-  />
-</div>
-); }; `} />
-
-### With AudioPlayer Component System
+The recommended way to use this component is through the AudioPlayer component system, which automatically handles all the required Web Audio API integration props for you:
 
 <Source
   language="tsx"
@@ -90,97 +61,123 @@ return (
   code={`
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 
-const MyAudioVisualizer = () => {
-return (
+const tracks = [
+  {
+    id: '1',
+    title: 'Example Track',
+    author: 'Artist Name',
+    src: '/path/to/audio.mp3',
+    thumbnail: '/path/to/cover.jpg',
+  },
+];
 
-<AudioPlayer.Provider tracks={myTracks}>
-  <AudioPlayer.AudioContextProvider>
-    <AudioPlayer.Root>
-      {/* The visualizer will automatically connect to the audio context */}
-      <AudioPlayer.VisualizerWaveform
-        colorMode="amplitude"
+const IntegratedAudioVisualizer = () => {
+  return (
+    <AudioPlayer.Provider tracks={tracks}>
+      <AudioPlayer.AudioContextProvider>
+        <AudioPlayer.Root className="flex flex-col gap-4">
+          <AudioPlayer.VisualizerWaveform
+            colorMode="amplitude"
+            lineColor="#029CFD"
+            lineWidth={2}
+            className="h-[200px] w-full"
+          />
+          <AudioPlayer.ControlAudio />
+          {/* Other AudioPlayer components like controls, info, etc. would go here */}
+        </AudioPlayer.Root>
+      </AudioPlayer.AudioContextProvider>
+    </AudioPlayer.Provider>
+  );
+};`} />
+
+#### How the AudioPlayer Integration Works
+
+When using `AudioPlayer.VisualizerWaveform`, the component automatically receives all required props through React context:
+
+| Required Prop | Provided By | Description |
+|---------------|-------------|-------------|
+| `audioRef` | `AudioPlayer.Provider` | Reference to the audio element managed by the AudioPlayer |
+| `isActive` | `AudioPlayer.Provider` | Automatically managed based on playback state |
+| `audioContextRef` | `AudioPlayer.AudioContextProvider` | Reference to the shared Web Audio API context |
+| `isAudioContextReady` | `AudioPlayer.AudioContextProvider` | Status flag for the AudioContext |
+| `createAudioSource` | `AudioPlayer.AudioContextProvider` | Function to create and manage audio source nodes |
+| `deleteAudioSource` | `AudioPlayer.AudioContextProvider` | Function to clean up audio source nodes |
+
+The AudioPlayer integration provides several key benefits:
+- **Zero Configuration**: No need to manually set up Web Audio API code
+- **Resource Sharing**: Uses a single shared AudioContext for all audio components
+- **Automatic State Management**: Visualization automatically syncs with playback
+- **Proper Cleanup**: Handles all resource cleanup and disconnection
+
+### Standalone Usage
+
+When used standalone, you need to manually provide all the required Web Audio API integration props. This approach gives you full control but requires more setup code:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { useRef, useState, useEffect } from 'react';
+import { AudioVisualizerWaveform } from '@gdominguez210/gdom-ui/AudioVisualizerWaveform';
+
+const StandaloneAudioVisualizer = () => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const [isActive, setIsActive] = useState(false);
+  const [isAudioContextReady, setIsAudioContextReady] = useState(false);
+
+  useEffect(() => {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    audioContextRef.current = audioContext;
+    setIsAudioContextReady(true);
+
+    return () => {
+      // Clean up source nodes before closing context
+      if (audioSourceRef.current) {
+        audioSourceRef.current.disconnect();
+        audioSourceRef.current = null;
+      }
+      audioContext.close();
+    };
+  }, []);
+
+  const createAudioSource = (audioElement: HTMLAudioElement) => {
+    if (!audioContextRef.current) return null;
+    audioSourceRef.current = audioContextRef.current.createMediaElementSource(audioElement);
+    return audioSourceRef.current;
+  };
+
+  const deleteAudioSource = (audioElement: HTMLAudioElement) => {
+    if (audioSourceRef.current) {
+      audioSourceRef.current.disconnect();
+      audioSourceRef.current = null;
+    }
+    return true;
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <AudioVisualizerWaveform
+        audioRef={audioRef}
+        isActive={isActive}
+        audioContextRef={audioContextRef}
+        isAudioContextReady={isAudioContextReady}
+        createAudioSource={createAudioSource}
+        deleteAudioSource={deleteAudioSource}
         lineColor="#029CFD"
+        colorMode="amplitude"
         lineWidth={2}
         className="h-[200px] w-full"
       />
-      <div className="flex items-center gap-2">
-        <AudioPlayer.ControlPlay />
-        <AudioPlayer.Title />
-      </div>
-    </AudioPlayer.Root>
-  </AudioPlayer.AudioContextProvider>
-</AudioPlayer.Provider>
-); }; `} />
-
-## Color Modes
-
-The AudioVisualizerWaveform component supports five color modes:
-
-- **static**: The entire waveform uses the same color as defined by `lineColor`
-- **amplitude**: Colors vary based on the audio amplitude, with louder parts appearing brighter
-- **frequency**: Colors vary based on the frequency position across the waveform
-- **spectrum**: Full spectrum coloring across the waveform (like a rainbow visualizer)
-- **dynamic**: Colors dynamically adjust based on audio intensity, creating the most vibrant effect
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Examples of different color modes
-<AudioPlayer.VisualizerWaveform
-  lineColor="#029CFD" 
-  colorMode="static"
-/>
-
-<AudioPlayer.VisualizerWaveform
-  lineColor="#03C988"
-  colorMode="amplitude"
-/>
-
-<AudioPlayer.VisualizerWaveform
-  lineColor="#A084DC"
-  colorMode="spectrum"
-/>
-`} />
-
-## Line Customization
-
-The component offers several options to customize the appearance of the waveform:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Bold waveform with thick lines
-<AudioPlayer.VisualizerWaveform
-  lineColor="#FF6C22"
-  lineWidth={4}        // Thicker line for more bold visualization
-  segmentCount={20}    // Fewer segments for smoother color transitions
-/>
-
-// Detailed waveform with more color segments
-
-<AudioPlayer.VisualizerWaveform
-  lineColor="#F875AA"
-  lineWidth={1.5} // Thinner line for more detailed visualization
-  segmentCount={60} // More segments for detailed color variations
-  colorMode="spectrum" // Using spectrum color mode for rainbow effect
-/>
-`} />
-
-## Integration with Audio Context
-
-The AudioVisualizerWaveform automatically manages the Web Audio API setup, but also accepts optional parameters for more control:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Using custom Web Audio API parameters
-<AudioPlayer.VisualizerWaveform
-  lineColor="#029CFD"
-  fftSize={2048}               // Higher FFT size for more detailed waveform
-  smoothingTimeConstant={0.85} // Control how much the visualization smooths between frames
-/>
-`}
-/>
+      <audio
+        ref={audioRef}
+        src="/path/to/audio.mp3"
+        controls
+        onPlay={() => setIsActive(true)}
+        onPause={() => setIsActive(false)}
+        onEnded={() => setIsActive(false)}
+      />
+    </div>
+  );
+};`} />

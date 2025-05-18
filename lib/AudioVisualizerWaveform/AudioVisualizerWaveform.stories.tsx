@@ -2,14 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { AudioVisualizerWaveform } from '@lib/AudioVisualizerWaveform/AudioVisualizerWaveform';
 import { trackData } from '@lib/AudioPlayer/data';
 import { AudioPlayerCompoundComponent as AudioPlayer } from '@lib/AudioPlayer/namespace';
-
-const PREDEFINED_COLORS = {
-  Blue: '#029CFD',
-  Green: '#03C988',
-  Purple: '#A084DC',
-  Orange: '#FF6C22',
-  Pink: '#F875AA',
-} as const;
+import { CollapseCategory } from '../../.storybook/decorators/CollapseCategory/CollapseCategory';
 
 export default {
   title: 'components/AudioVisualizerWaveform',
@@ -22,34 +15,27 @@ export default {
         component:
           'An interactive audio waveform visualizer that displays the audio waveform in real-time.',
       },
+      controls: {
+        sort: 'alpha',
+      },
+      source: {
+        type: 'dynamic',
+      },
+      canvas: {
+        sourceState: 'shown',
+      },
     },
   },
+  decorators: [CollapseCategory('Advanced')],
   argTypes: {
-    lineColor: {
-      control: 'select',
-      options: Object.keys(PREDEFINED_COLORS),
-      mapping: PREDEFINED_COLORS,
-      description: 'Color of waveform line',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: '#FFFFFF' },
-      },
-    },
-    colorMode: {
-      control: 'select',
-      options: ['static', 'amplitude', 'frequency', 'spectrum', 'dynamic'],
-      description: 'How the waveform is colored',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: 'static' },
-      },
-    },
+    // Appearance
     lineWidth: {
       control: { type: 'range', min: 1, max: 10, step: 0.5 },
       description: 'Width of the waveform line',
       table: {
         type: { summary: 'number' },
         defaultValue: { summary: '2' },
+        category: 'Appearance',
       },
     },
     segmentCount: {
@@ -58,15 +44,61 @@ export default {
       table: {
         type: { summary: 'number' },
         defaultValue: { summary: '40' },
+        category: 'Appearance',
       },
     },
+
+    // Color Configuration
+    lineColor: {
+      control: { type: 'color' },
+      description: 'Color of waveform line',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: '#029CFD' },
+        category: 'Color Configuration',
+      },
+    },
+    colorMode: {
+      control: 'select',
+      options: ['static', 'amplitude', 'frequency', 'spectrum', 'dynamic'],
+      description: 'How the waveform is colored',
+      table: {
+        type: { summary: 'static | amplitude | frequency | spectrum | dynamic' },
+        defaultValue: { summary: 'static' },
+        category: 'Color Configuration',
+      },
+    },
+
+    // Performance
+    frameRate: {
+      control: { type: 'range', min: 15, max: 120, step: 5 },
+      description: 'Target frame rate for animation rendering',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '60' },
+        category: 'Performance',
+      },
+    },
+    frameTransitionSmoothing: {
+      control: { type: 'range', min: 0, max: 1, step: 0.01 },
+      description: 'Smoothing factor for transitions between frames (0-1)',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '0.3' },
+        category: 'Performance',
+      },
+    },
+
+    // Audio Analysis
     fftSize: {
       control: 'select',
       options: [256, 512, 1024, 2048, 4096, 8192, 16384, 32768],
-      description: 'FFT size for waveform data resolution',
+      description:
+        'FFT size for waveform data resolution. A higher value will result in more details.',
       table: {
         type: { summary: 'number' },
         defaultValue: { summary: '2048' },
+        category: 'Audio Analysis',
       },
     },
     smoothingTimeConstant: {
@@ -75,15 +107,74 @@ export default {
       table: {
         type: { summary: 'number' },
         defaultValue: { summary: '0.85' },
+        category: 'Audio Analysis',
       },
     },
-    frameRate: {
-      control: { type: 'range', min: 15, max: 120, step: 5 },
-      description: 'Target frame rate for animation rendering',
+
+    // Advanced (Custom Implementation) - Props needed only when using outside AudioPlayer
+    audioRef: {
+      control: false,
+      description: 'Reference to the HTML audio element that will be visualized',
+      table: {
+        type: { summary: 'RefObject<HTMLAudioElement>' },
+        category: 'Advanced',
+      },
+      type: { name: 'other', value: 'RefObject<HTMLAudioElement>', required: true },
+    },
+    isActive: {
+      control: false,
+      description: 'Controls when the visualizer should be actively analyzing and rendering',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+        category: 'Advanced',
+      },
+      type: { name: 'boolean', required: true },
+    },
+    duration: {
+      control: false,
+      description: 'Duration of the audio track in seconds',
       table: {
         type: { summary: 'number' },
-        defaultValue: { summary: '60' },
+        category: 'Advanced',
       },
+    },
+    audioContextRef: {
+      control: false,
+      description: 'Reference to a Web Audio API AudioContext instance',
+      table: {
+        type: { summary: 'RefObject<AudioContext>' },
+        category: 'Advanced',
+      },
+      type: { name: 'other', value: 'RefObject<AudioContext>', required: true },
+    },
+    isAudioContextReady: {
+      control: false,
+      description: 'Indicates if the AudioContext is initialized and ready to use',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+        category: 'Advanced',
+      },
+      type: { name: 'boolean', required: true },
+    },
+    createAudioSource: {
+      control: false,
+      description: 'Function to create an audio source node from an HTML audio element',
+      table: {
+        type: { summary: '(audioElement: HTMLAudioElement) => MediaElementAudioSourceNode' },
+        category: 'Advanced',
+      },
+      type: { name: 'function', required: true },
+    },
+    deleteAudioSource: {
+      control: false,
+      description: 'Function to delete and clean up an audio source node',
+      table: {
+        type: { summary: '(audioElement: HTMLAudioElement) => boolean' },
+        category: 'Advanced',
+      },
+      type: { name: 'function', required: true },
     },
   },
 } as Meta<typeof AudioVisualizerWaveform>;
@@ -135,13 +226,14 @@ const AudioVisualizerWithControls = (props: VisualizerControlProps) => {
 export const Primary: StoryObj<typeof AudioVisualizerWaveform> = {
   render: (args) => <AudioVisualizerWithControls {...args} />,
   args: {
-    lineColor: PREDEFINED_COLORS.Blue,
+    lineColor: '#029CFD',
     colorMode: 'static',
     lineWidth: 2,
     segmentCount: 40,
     fftSize: 2048,
     smoothingTimeConstant: 0.85,
     frameRate: 60,
+    frameTransitionSmoothing: 0.3,
   },
   parameters: {
     docs: {
@@ -156,7 +248,7 @@ export const Primary: StoryObj<typeof AudioVisualizerWaveform> = {
 export const StaticColor: StoryObj<typeof AudioVisualizerWaveform> = {
   render: (args) => <AudioVisualizerWithControls {...args} />,
   args: {
-    lineColor: PREDEFINED_COLORS.Green,
+    lineColor: '#03C988',
     colorMode: 'static',
     lineWidth: 2,
   },
@@ -172,7 +264,7 @@ export const StaticColor: StoryObj<typeof AudioVisualizerWaveform> = {
 export const FrequencyBasedColor: StoryObj<typeof AudioVisualizerWaveform> = {
   render: (args) => <AudioVisualizerWithControls {...args} />,
   args: {
-    lineColor: PREDEFINED_COLORS.Purple,
+    lineColor: '#A084DC',
     colorMode: 'frequency',
     lineWidth: 2,
   },
@@ -189,7 +281,7 @@ export const FrequencyBasedColor: StoryObj<typeof AudioVisualizerWaveform> = {
 export const SpectrumColor: StoryObj<typeof AudioVisualizerWaveform> = {
   render: (args) => <AudioVisualizerWithControls {...args} />,
   args: {
-    lineColor: PREDEFINED_COLORS.Pink,
+    lineColor: '#F875AA',
     colorMode: 'spectrum',
     lineWidth: 2,
   },
@@ -205,7 +297,7 @@ export const SpectrumColor: StoryObj<typeof AudioVisualizerWaveform> = {
 export const DynamicColor: StoryObj<typeof AudioVisualizerWaveform> = {
   render: (args) => <AudioVisualizerWithControls {...args} />,
   args: {
-    lineColor: PREDEFINED_COLORS.Orange,
+    lineColor: '#FF6C22',
     colorMode: 'dynamic',
     lineWidth: 2,
   },
@@ -222,7 +314,7 @@ export const DynamicColor: StoryObj<typeof AudioVisualizerWaveform> = {
 export const BoldWaveform: StoryObj<typeof AudioVisualizerWaveform> = {
   render: (args) => <AudioVisualizerWithControls {...args} />,
   args: {
-    lineColor: PREDEFINED_COLORS.Blue,
+    lineColor: '#029CFD',
     colorMode: 'amplitude',
     lineWidth: 4,
     segmentCount: 20,
@@ -240,7 +332,7 @@ export const BoldWaveform: StoryObj<typeof AudioVisualizerWaveform> = {
 export const DetailedWaveform: StoryObj<typeof AudioVisualizerWaveform> = {
   render: (args) => <AudioVisualizerWithControls {...args} />,
   args: {
-    lineColor: PREDEFINED_COLORS.Pink,
+    lineColor: '#F875AA',
     colorMode: 'spectrum',
     lineWidth: 1.5,
     segmentCount: 60,
