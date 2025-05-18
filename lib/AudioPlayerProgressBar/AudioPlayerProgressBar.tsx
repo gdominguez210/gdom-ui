@@ -1,23 +1,32 @@
 'use client';
 
-import { type ChangeEventHandler, type ComponentPropsWithRef, useCallback } from 'react';
+import {
+  type ChangeEventHandler,
+  type ComponentPropsWithRef,
+  type RefObject,
+  useCallback,
+} from 'react';
 import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
 import { useAudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/useAudioPlayerProgressBar';
 import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
 import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
 import { useComposedRefs } from '@lib/useComposedRefs';
 import { AudioPlayerProgressBarPrimitive } from './AudioPlayerProgressBarPrimitive';
-
+import {
+  useKeyboardMediaSeek,
+  type UseKeyboardMediaSeekOptions,
+} from '@lib/useKeyboardMediaSeek/useKeyboardMediaSeek';
 /**
  * Props for the progress bar component
  */
-export type AudioPlayerProgressBarProps = Omit<ComponentPropsWithRef<'input'>, 'type'>;
+export type AudioPlayerProgressBarProps = Omit<ComponentPropsWithRef<'input'>, 'type'> &
+  Omit<UseKeyboardMediaSeekOptions, 'mediaRef'>;
 
 /**
  * Progress bar that integrates with the audio player context for playback control
  */
 export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
-  const { onChange, ref, ...restProps } = props;
+  const { onChange, ref, seekIncrement, maxSeekIncrement, ...restProps } = props;
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();
 
   const { isPlaying } = useAudioPlayerContextPlayback();
@@ -42,6 +51,14 @@ export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
     [handleProgressChange, onChange],
   );
 
+  const { handleKeyDown, handleKeyUp } = useKeyboardMediaSeek({
+    mediaRef: audioRef as RefObject<HTMLAudioElement>,
+    duration,
+    onSeekComplete: seek,
+    seekIncrement,
+    maxSeekIncrement,
+  });
+
   const composedRef = useComposedRefs(progressBarRef, ref, elementRef);
 
   return (
@@ -52,6 +69,8 @@ export function AudioPlayerProgressBar(props: AudioPlayerProgressBarProps) {
       onMouseEnter={handleMouseEnter}
       onMouseOut={handleMouseOut}
       onMouseMove={handleMouseMove}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
     />
   );
 }
