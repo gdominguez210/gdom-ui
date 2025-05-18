@@ -28,6 +28,7 @@ export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
     fftSize,
     smoothingTimeConstant,
     frameRate,
+    frameTransitionSmoothing,
     colorMode,
     lineColor,
     lineWidth,
@@ -58,6 +59,7 @@ export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
     frameRate,
     createAudioSource,
     deleteAudioSource,
+    frameTransitionSmoothing,
   });
 
   /**
