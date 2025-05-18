@@ -15,12 +15,10 @@ A highly customizable audio frequency visualizer that displays audio spectrum da
 
 
 <Primary />
-## Props
+## API Reference
 <Controls />
 
 ## Features
-
-The AudioVisualizerFrequencyBars component provides several key features:
 
 - **Real-time Frequency Analysis**: Visualizes audio frequency data in real-time using the Web Audio API
 - **Customizable Appearance**: Control bar count, colors, gaps, and height to match your design
@@ -45,44 +43,16 @@ The AudioVisualizerFrequencyBars component provides several key features:
   includePrimary={false}
 />
 
-## Component Usage
+## Usage
 
-The AudioVisualizerFrequencyBars component can be used both standalone with a direct audio element reference or as part of the AudioPlayer component system:
+The AudioVisualizerFrequencyBars component can be used in two ways: 
 
-### Standalone Usage
+- [**With the AudioPlayer Component System**](#with-audioplayer-component-system-recommended)
+- [**Standalone**](#standalone-usage)
 
-<Source
-  language="tsx"
-  dark
-  code={`
-import { useRef, useState } from 'react';
-import { AudioVisualizerFrequencyBars } from '@gdominguez210/gdom-ui/AudioVisualizerFrequencyBars';
+### With AudioPlayer Component System (Recommended)
 
-const MyAudioVisualizer = () => {
-const audioRef = useRef<HTMLAudioElement>(null);
-const [isActive, useState] = useState(false);
-
-return (
-
-<div>
-  <AudioVisualizerFrequencyBars
-    audioRef={audioRef}
-    isActive={isActive}
-    colorMode="intensity"
-    barColor="#029CFD"
-    className="h-[200px] w-full"
-  />
-  <audio
-    ref={audioRef}
-    src="/path/to/audio.mp3"
-    controls
-    onPlay={() => setIsActive(true)}
-    onPause={() => setIsActive(false)}
-  />
-</div>
-); }; `} />
-
-### With AudioPlayer Component System
+The recommended way to use this component is through the AudioPlayer component system, which automatically handles all the required Web Audio API integration props for you:
 
 <Source
   language="tsx"
@@ -90,99 +60,123 @@ return (
   code={`
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 
-const MyAudioVisualizer = () => {
-return (
+const tracks = [
+  {
+    id: '1',
+    title: 'Example Track',
+    author: 'Artist Name',
+    src: '/path/to/audio.mp3',
+    thumbnail: '/path/to/cover.jpg',
+  },
+];
 
-<AudioPlayer.Provider tracks={myTracks}>
-  <AudioPlayer.AudioContextProvider>
-    <AudioPlayer.Root>
-      {/* The visualizer will automatically connect to the audio context */}
-      <AudioPlayer.VisualizerFrequencyBars
-        colorMode="intensity"
+const IntegratedAudioVisualizer = () => {
+  return (
+    <AudioPlayer.Provider tracks={tracks}>
+      <AudioPlayer.AudioContextProvider>
+        <AudioPlayer.Root className="flex flex-col gap-4">
+          <AudioPlayer.VisualizerFrequencyBars
+            colorMode="intensity"
+            barColor="#029CFD"
+            barCount={128}
+            className="h-[200px] w-full"
+          />
+          <AudioPlayer.ControlAudio />
+          {/* Other AudioPlayer components like controls, info, etc. would go here */}
+        </AudioPlayer.Root>
+      </AudioPlayer.AudioContextProvider>
+    </AudioPlayer.Provider>
+  );
+};`} />
+
+#### How the AudioPlayer Integration Works
+
+When using `AudioPlayer.VisualizerFrequencyBars`, the component automatically receives all required props through React context:
+
+| Required Prop | Provided By | Description |
+|---------------|-------------|-------------|
+| `audioRef` | `AudioPlayer.Provider` | Reference to the audio element managed by the AudioPlayer |
+| `isActive` | `AudioPlayer.Provider` | Automatically managed based on playback state |
+| `audioContextRef` | `AudioPlayer.AudioContextProvider` | Reference to the shared Web Audio API context |
+| `isAudioContextReady` | `AudioPlayer.AudioContextProvider` | Status flag for the AudioContext |
+| `createAudioSource` | `AudioPlayer.AudioContextProvider` | Function to create and manage audio source nodes |
+| `deleteAudioSource` | `AudioPlayer.AudioContextProvider` | Function to clean up audio source nodes |
+
+The AudioPlayer integration provides several key benefits:
+- **Zero Configuration**: No need to manually set up Web Audio API code
+- **Resource Sharing**: Uses a single shared AudioContext for all audio components
+- **Automatic State Management**: Visualization automatically syncs with playback
+- **Proper Cleanup**: Handles all resource cleanup and disconnection
+
+### Standalone Usage
+
+When used standalone, you need to manually provide all the required Web Audio API integration props. This approach gives you full control but requires more setup code:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { useRef, useState, useEffect } from 'react';
+import { AudioVisualizerFrequencyBars } from '@gdominguez210/gdom-ui/AudioVisualizerFrequencyBars';
+
+const StandaloneAudioVisualizer = () => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const [isActive, setIsActive] = useState(false);
+  const [isAudioContextReady, setIsAudioContextReady] = useState(false);
+
+  useEffect(() => {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    audioContextRef.current = audioContext;
+    setIsAudioContextReady(true);
+
+    return () => {
+      // Clean up source nodes before closing context
+      if (audioSourceRef.current) {
+        audioSourceRef.current.disconnect();
+        audioSourceRef.current = null;
+      }
+      audioContext.close();
+    };
+  }, []);
+
+  const createAudioSource = (audioElement: HTMLAudioElement) => {
+    if (!audioContextRef.current) return null;
+    audioSourceRef.current = audioContextRef.current.createMediaElementSource(audioElement);
+    return audioSourceRef.current;
+  };
+
+  const deleteAudioSource = (audioElement: HTMLAudioElement) => {
+    if (audioSourceRef.current) {
+      audioSourceRef.current.disconnect();
+      audioSourceRef.current = null;
+    }
+    return true;
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <AudioVisualizerFrequencyBars
+        audioRef={audioRef}
+        isActive={isActive}
+        audioContextRef={audioContextRef}
+        isAudioContextReady={isAudioContextReady}
+        createAudioSource={createAudioSource}
+        deleteAudioSource={deleteAudioSource}
         barColor="#029CFD"
+        colorMode="intensity"
+        barCount={128}
         className="h-[200px] w-full"
       />
-      <div className="flex items-center gap-2">
-        <AudioPlayer.ControlPlay />
-        <AudioPlayer.Title />
-      </div>
-    </AudioPlayer.Root>
-  </AudioPlayer.AudioContextProvider>
-</AudioPlayer.Provider>
-); }; `} />
-
-## Color Modes
-
-The AudioVisualizerFrequencyBars component supports five color modes:
-
-- **static**: All bars use the same color as defined by `barColor`
-- **frequency**: Colors vary based on frequency position, with lower frequencies closer to the base color
-- **intensity**: Colors vary based on amplitude, with louder frequencies appearing brighter
-- **spectrum**: Full spectrum coloring across frequency range (like a rainbow visualizer)
-- **dynamic**: Colors dynamically adjust based on audio intensity, creating the most vibrant effect
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Examples of different color modes
-<AudioPlayer.VisualizerFrequencyBars
-    barColor="#029CFD" 
-    colorMode="static"
-/>
-
-<AudioPlayer.VisualizerFrequencyBars
-  barColor="#03C988"
-  colorMode="intensity"
-/>
-
-<AudioPlayer.VisualizerFrequencyBars
-  barColor="#A084DC"
-  colorMode="spectrum"
-/>
-
-`}
-/>
-
-## Bar Customization
-
-The component offers several options to customize the appearance of the frequency bars:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// High-resolution visualization with many narrow bars
-<AudioPlayer.VisualizerFrequencyBars
-  barColor="#FF6C22"
-  barCount={256}       // More bars for detailed frequency display
-  barGapRatio={0.001}  // Very small gaps between bars
-/>
-
-// Low-resolution visualization with fewer, wider bars
-
-<AudioPlayer.VisualizerFrequencyBars
-  barColor="#F875AA"
-  barCount={32} // Fewer bars for a classic equalizer look
-  barGapRatio={0.015} // Wider gaps between bars
-  heightMultiplier={2} // Taller bars
-  minBarHeight={0.05} // Minimum bar height (as proportion of container)
-/>
-`} />
-
-## Integration with Audio Context
-
-The AudioVisualizerFrequencyBars automatically manages the Web Audio API setup, but also accepts optional parameters for more control:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Using custom Web Audio API parameters
-<AudioPlayer.VisualizerFrequencyBars
-  barColor="#029CFD"
-  fftSize={2048}               // Higher FFT size for more detailed analysis
-  smoothingTimeConstant={0.85} // Control how much the visualization smooths between frames
-/>
-`}
-/>
+      <audio
+        ref={audioRef}
+        src="/path/to/audio.mp3"
+        controls
+        onPlay={() => setIsActive(true)}
+        onPause={() => setIsActive(false)}
+        onEnded={() => setIsActive(false)}
+      />
+    </div>
+  );
+};`} />
