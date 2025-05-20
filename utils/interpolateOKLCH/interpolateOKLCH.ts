@@ -1,4 +1,4 @@
-import { type OKLCHColor } from '@lib/types/colors';
+import type { OKLCHColor } from '@/types/colors';
 
 /**
  * Interpolates between two OKLCH colors

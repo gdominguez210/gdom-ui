@@ -5,7 +5,7 @@ import {
   type Oklab,
   type OKLCH,
   type NormalizedRGB,
-} from '@lib/types/colors';
+} from '@/types/colors';
 
 /**
  * Constants for Oklab to LMS conversion matrices

@@ -1,4 +1,4 @@
-import { OKLCHProperty } from '@lib/types/colors';
+import { OKLCHProperty } from '@/types/colors';
 
 /**
  * Configuration for how a specific OKLCH property should react to audio intensity
