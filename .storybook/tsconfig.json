@@ -9,7 +9,7 @@
     "paths": {
       "@storybook/manager-api": ["./node_modules/@storybook/manager-api"],
       "@storybook/theming/*": ["./node_modules/@storybook/theming/*"],
-      "@lib/*": ["../lib/*"]
+      "@/*": ["../*"]
     }
   },
   "include": [
