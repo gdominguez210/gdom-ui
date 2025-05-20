@@ -4,6 +4,11 @@ import { DocumentationNav } from '@storybook-components/DocumentationNav/Documen
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
 import { AudioPlayerCompoundComponent as AudioPlayer } from './namespace'
 import { Canvas } from '@storybook-components/Canvas/Canvas';
+import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
+import { AudioPlayerContextPlaybackProvider } from '@/lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlaybackProvider';
+import { AudioPlayerContextRefsProvider } from '@/lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
+import { AudioPlayerContextTrackProvider } from '@/lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
+import { AudioPlayerContextTimeProvider } from '@/lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
 
 <Meta of={AudioPlayerStories} />
 
@@ -34,6 +39,13 @@ The AudioPlayer is a flexible, composable audio playback interface that provides
 See the [Core Concepts](/docs/core-concepts-introduction--docs) for more details on the architectural patterns used throughout GDOM-UI.
 
 ## Examples
+
+<UsageNote>
+  The examples below incorporate responsive CSS to ensure optimal display across devices. These responsive styles are **not included by default in the AudioPlayer components**.
+
+  Consumers are responsible for implementing responsive styling within their own applications. This process is straightforward due to the flexible styling methodology outlined on the [Styling Approach](/docs/core-concepts-styling-approach--docs) page.
+</UsageNote>
+
 <Stories
   includePrimary={false}
   title=""
@@ -95,15 +107,6 @@ import { AudioPlayerPrimitive } from '@gdominguez210/gdom-ui/AudioPlayer';
 
 Provides audio state and context to all child components. Required at the root level.
 
-The `AudioPlayer.Provider` is a composed component that combines multiple context providers to manage the state of the audio player:
-
-- `AudioPlayerContextRefsProvider` - Manages references to the audio element
-- `AudioPlayerContextTrackProvider` - Handles track selection and management
-- `AudioPlayerContextTimeProvider` - Manages time-related state (current time, duration)
-- `AudioPlayerContextPlaybackProvider` - Controls playback state (playing, volume, loop, shuffle)
-
-These providers are nested in the order listed above to ensure proper dependency management.
-
 #### Usage
 
 <Source
@@ -124,6 +127,16 @@ import { AudioPlayerContextProvider } from '@gdominguez210/gdom-ui/AudioPlayerCo
 <AudioPlayerContextProvider tracks={tracks}>...</AudioPlayerContextProvider>
 `} />
 
+<UsageNote>
+The `AudioPlayer.Provider` is a composed component that combines multiple context providers to manage the state of the audio player:
+
+- [AudioPlayerContextRefsProvider](#refs-provider) - Manages references to the audio element
+- [AudioPlayerContextTrackProvider](#track-provider) - Handles track selection and management
+- [AudioPlayerContextTimeProvider](#time-provider) - Manages time-related state (current time, duration)
+- [AudioPlayerContextPlaybackProvider](#playback-provider) - Controls playback state (playing, volume, loop, shuffle)
+
+</UsageNote>
+
 #### API Reference
 
 `type PropsWithChildren` &
@@ -132,14 +145,200 @@ import { AudioPlayerContextProvider } from '@gdominguez210/gdom-ui/AudioPlayerCo
 The `tracks` prop required by the Provider accepts an array of objects with the following structure:
 
 **AudioTrackData**
-| Property  | Type     | Required | Description                              |
-|-----------|----------|----------|------------------------------------------|
-| id        | string   | Yes      | Unique identifier for the track          |
-| title     | string   | Yes      | Title of the track                       |
-| src       | string   | Yes      | URL to the audio file                    |
-| author    | string   | Yes      | Name of the artist or author             |
-| thumbnail | string   | No       | URL to a thumbnail image for the track   |
+| Property  | Type     | Required | Default | Description                              |
+|-----------|----------|----------|---------|------------------------------------------|
+| id        | string   | Yes      | -       | Unique identifier for the track          |
+| title     | string   | Yes      | -       | Title of the track                       |
+| src       | string   | Yes      | -       | URL to the audio file                    |
+| author    | string   | Yes      | -       | Name of the artist or author             |
+| thumbnail | string   | No       | -       | URL to a thumbnail image for the track   |
+| `[key]`     | unknown  | No       | -       | Additional properties of any valid type  |
 
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Refs Provider
+
+<ViewSource href="AudioPlayerContextRefsProvider" />
+
+Manages references to the audio element. 
+
+#### Usage
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Direct import
+import { AudioPlayerContextRefsProvider } from '@gdominguez210/gdom-ui/AudioPlayerContextRefsProvider';
+<AudioPlayerContextRefsProvider>...</AudioPlayerContextRefsProvider>
+`} />
+
+<UsageNote>
+This provider is not exposed on the `AudioPlayer` namespace and is primarily available for custom implementations that need direct access to track management functionality.
+</UsageNote>
+
+#### API Reference
+
+`type PropsWithChildren`
+
+#### Related Hooks
+
+- `useAudioPlayerContextRefs` - Hook to access audio element references and progress bar reference
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| audioRef | `RefObject<HTMLAudioElement \| null>` | Reference to the audio element |
+| progressBarRef | `RefObject<HTMLInputElement \| null>` | Reference to the progress bar input element |
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Track Provider
+
+<ViewSource href="AudioPlayerContextTrackProvider" />
+
+Handles track selection and management. 
+
+#### Usage
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Direct import
+import { AudioPlayerContextTrackProvider } from '@gdominguez210/gdom-ui/AudioPlayerContextTrackProvider';
+<AudioPlayerContextTrackProvider tracks={tracks}>...</AudioPlayerContextTrackProvider>
+`} />
+
+<UsageNote>
+This provider is not exposed on the `AudioPlayer` namespace and is primarily available for custom implementations that need direct access to track management functionality.
+</UsageNote>
+
+#### API Reference
+
+`type PropsWithChildren` &
+<ArgTypes of={AudioPlayerContextTrackProvider} />
+
+#### AudioTrackData
+
+| Property   | Type     | Required | Default | Description                                 |
+|------------|----------|----------|---------|---------------------------------------------|
+| id         | string   | Yes      | -       | Unique identifier for the track             |
+| title      | string   | Yes      | -       | Title of the track                          |
+| src        | string   | Yes      | -       | Source URL for the audio file               |
+| author     | string   | Yes      | -       | Name of the track's author                  |
+| thumbnail  | string   | Yes      | -       | URL for the track's thumbnail image         |
+| `[key]`        | unknown  | No       | -       | Additional properties of any type are valid |
+
+#### Related Hooks
+
+- `useAudioPlayerContextTrack` - Hook to access track-related state and functions (current track, track index, track list)
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| currentTrack | `AudioTrackData \| undefined` | The currently playing track |
+| currentTrackIndex | `number` | Index of the current track in the playlist |
+| tracks | `AudioTrackData[]` | Array of all available tracks |
+| setTrackIndex | `(index: number) => void` | Function to change the current track |
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Time Provider
+
+<ViewSource href="AudioPlayerContextTimeProvider" />
+
+Manages time-related state (current time, duration). 
+
+#### Usage
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Direct import
+import { AudioPlayerContextTimeProvider } from '@gdominguez210/gdom-ui/AudioPlayerContextTimeProvider';
+<AudioPlayerContextTimeProvider>...</AudioPlayerContextTimeProvider>
+`} />
+
+<UsageNote>
+This provider is not exposed on the `AudioPlayer` namespace and is primarily available for custom implementations that need direct access to track management functionality.
+</UsageNote>
+
+#### API Reference
+
+`type PropsWithChildren` &
+<ArgTypes of={AudioPlayerContextTimeProvider} />
+
+#### Related Hooks
+
+- `useAudioPlayerContextTime` - Hook to access time-related state and functions (current time, duration, seek, preview time)
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| currentTime | `number` | Current playback time in seconds |
+| duration | `number` | Total duration of the track in seconds |
+| previewTime | `number \| null` | Time value when hovering over progress bar |
+| seek | `(time: number) => void` | Function to seek to a specific time |
+| setDuration | `(duration: number) => void` | Function to update the total duration |
+| setPreviewTime | `(time: number \| null) => void` | Function to update preview time |
+</>
+</Canvas>
+
+<Canvas>
+<>
+### Playback Provider
+
+<ViewSource href="AudioPlayerContextPlaybackProvider" />
+
+Controls playback state (playing, volume, loop, shuffle). 
+
+#### Usage
+
+<Source
+  language="tsx"
+  dark
+  code={`
+// Direct import
+import { AudioPlayerContextPlaybackProvider } from '@gdominguez210/gdom-ui/AudioPlayerContextPlaybackProvider';
+<AudioPlayerContextPlaybackProvider>...</AudioPlayerContextPlaybackProvider>
+`} />
+
+<UsageNote>
+This provider is not exposed on the `AudioPlayer` namespace and is primarily available for custom implementations that need direct access to track management functionality.
+</UsageNote>
+
+#### API Reference
+
+`type PropsWithChildren` &
+<ArgTypes of={AudioPlayerContextPlaybackProvider} />
+
+#### Related Hooks
+
+- `useAudioPlayerContextPlayback` - Hook to access playback-related state and functions (playing, volume, loop, shuffle)
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| isPlaying | `boolean` | Whether the audio is currently playing |
+| volume | `number` | Current volume level (0-1) |
+| mute | `boolean` | Whether the audio is muted |
+| shuffle | `boolean` | Whether shuffle mode is enabled |
+| loop | `boolean` | Whether loop mode is enabled |
+| play | `() => void` | Function to start playback |
+| pause | `() => void` | Function to pause playback |
+| togglePlay | `() => void` | Function to toggle play/pause |
+| setVolume | `(volume: number) => void` | Function to set volume level |
+| setMute | `(mute: boolean) => void` | Function to set mute state |
+| toggleMute | `() => void` | Function to toggle mute |
+| setShuffle | `(shuffle: boolean) => void` | Function to set shuffle state |
+| toggleShuffle | `() => void` | Function to toggle shuffle |
+| setLoop | `(loop: boolean) => void` | Function to set loop state |
+| toggleLoop | `() => void` | Function to toggle loop |
 </>
 </Canvas>
 
@@ -357,11 +556,20 @@ import { AudioPlayerTimePrimitive } from '@gdominguez210/gdom-ui/AudioPlayerTime
 
 `type ComponentPropsWithRef<T extends ElementType = 'span'>` &
 <ArgTypes of={AudioPlayer.Time} />
+
+#### Related Hooks
+
+- `useAudioPlayerTime` - Hook to format and manage time display (current time and duration)
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| currentTimeDisplay | `string` | Current time formatted as MM:SS |
+| durationDisplay | `string` | Duration formatted as MM:SS |
 </>
 </Canvas>
 
 <Canvas>
-<>  
+<>
 ### Controls Container
 
 <ViewSource href="AudioPlayerControls" />
@@ -396,7 +604,7 @@ import { AudioPlayerControls } from '@gdominguez210/gdom-ui/AudioPlayerControls'
 </Canvas>
 
 <Canvas>
-<>  
+<>
 ### Control Play
 
 <ViewSource href="AudioPlayerControlPlay" />
@@ -439,6 +647,14 @@ import { AudioPlayerControlPlayPrimitive } from '@gdominguez210/gdom-ui/AudioPla
 
 `type ComponentPropsWithRef<'button'>`
 
+#### Related Hooks
+
+- `useAudioPlayerControlPlay` - Hook to manage play/pause state and handle click events
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| isPlaying | `boolean` | Whether the audio is currently playing |
+| handleClick | `(event: React.MouseEvent) => void` | Click handler for play/pause toggle |
 </>
 </Canvas>
 
@@ -483,6 +699,14 @@ import { AudioPlayerControlNextPrimitive } from '@gdominguez210/gdom-ui/AudioPla
 
 `type ComponentPropsWithRef<'button'>`
 
+#### Related Hooks
+
+- `useAudioPlayerNextTrack` - Hook to handle next track navigation and click events
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| handleClick | `(event: React.MouseEvent) => void` | Click handler for next track navigation |
+| isLastTrack | `boolean` | Whether the current track is the last in the playlist |
 </>
 </Canvas>
 
@@ -527,6 +751,14 @@ import { AudioPlayerControlPreviousPrimitive } from '@gdominguez210/gdom-ui/Audi
 
 `type ComponentPropsWithRef<'button'>`
 
+#### Related Hooks
+
+- `useAudioPlayerPreviousTrack` - Hook to handle previous track navigation and click events
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| handleClick | `(event: React.MouseEvent) => void` | Click handler for previous track navigation |
+| isFirstTrack | `boolean` | Whether the current track is the first in the playlist |
 </>
 </Canvas>
 
@@ -665,6 +897,14 @@ import { AudioPlayerControlAudioPrimitive } from '@gdominguez210/gdom-ui/AudioPl
 
 `type ComponentPropsWithRef<'audio'>`
 
+#### Related Hooks
+
+- `useAudioPlayerMetadata` - Hook to access and manage audio metadata
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| metadata | `AudioMetadata` | Object containing audio metadata (duration, title, etc.) |
+| updateMetadata | `(metadata: Partial<AudioMetadata>) => void` | Function to update metadata |
 </>
 </Canvas>
 
@@ -713,6 +953,17 @@ import { AudioPlayerProgressBarPrimitive } from '@gdominguez210/gdom-ui/AudioPla
 
 `type ComponentPropsWithRef<'input'>`
 
+#### Related Hooks
+
+- `useAudioPlayerProgressBar` - Hook to manage progress bar state and interactions
+
+| Return Value | Type | Description |
+|--------------|------|-------------|
+| handleProgressChange | `(event: React.ChangeEvent<HTMLInputElement>) => void` | Handler for progress bar value changes |
+| handleMouseEnter | `(event: React.MouseEvent<HTMLInputElement>) => void` | Handler for mouse enter events |
+| handleMouseMove | `(event: React.MouseEvent<HTMLInputElement>) => void` | Handler for mouse move events |
+| handleMouseOut | `(event: React.MouseEvent<HTMLInputElement>) => void` | Handler for mouse out events |
+| elementRef | `RefObject<HTMLInputElement>` | Reference to the progress bar input element |
 </>
 </Canvas>
 
@@ -943,7 +1194,7 @@ import { AudioPlayerVisualizerWaveform } from '@gdominguez210/gdom-ui/AudioPlaye
 
 #### API Reference
 
-[AudioVisualizerWaveform](/docs/AudioVisualizerWaveform--docs)
+[AudioVisualizerWaveform](/docs/components-AudioVisualizerWaveform--docs)
 
 </>
 </Canvas>
@@ -1006,7 +1257,7 @@ import { AudioPlayerVisualizerFrequencyBars } from '@gdominguez210/gdom-ui/Audio
 
 #### API Reference
 
-[AudioVisualizerFrequencyBars](/docs/AudioVisualizerFrequencyBars--docs)
+[AudioVisualizerFrequencyBars](/docs/components-AudioVisualizerFrequencyBars--docs)
 
 </>
 </Canvas>
