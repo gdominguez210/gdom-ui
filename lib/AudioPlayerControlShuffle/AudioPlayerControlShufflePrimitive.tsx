@@ -1,8 +1,8 @@
-import { type ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { IconShuffleFill } from '@lib/IconShuffleFill';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton/AudioPlayerControlButton';
+import { IconShuffleFill } from '@/lib/IconShuffleFill';
+import { AudioPlayerControlButton } from '@/lib/AudioPlayerControlButton/AudioPlayerControlButton';
 
 /**
  * Props for the shuffle button primitive component

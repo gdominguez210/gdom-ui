@@ -1,5 +1,5 @@
 import { useEffect, useRef, type RefObject } from 'react';
-import { useRefReady } from '@lib/useRefReady/useRefReady';
+import { useRefReady } from '@/lib/useRefReady/useRefReady';
 
 export type UseAnalyzerNodeOptions = Partial<AnalyserOptions> & {
   audioContextRef: RefObject<AudioContext | null>;

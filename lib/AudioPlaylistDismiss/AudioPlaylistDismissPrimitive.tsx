@@ -1,8 +1,8 @@
-import { type ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { IconCloseFill } from '@lib/IconCloseFill';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
+import { IconCloseFill } from '@/lib/IconCloseFill';
+import { AudioPlayerControlButton } from '@/lib/AudioPlayerControlButton';
 
 /**
  * Props for the audio playlist dismiss button primitive component

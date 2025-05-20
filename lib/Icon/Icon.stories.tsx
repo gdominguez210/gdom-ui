@@ -1,11 +1,11 @@
 import type { StoryObj, Meta } from '@storybook/react';
-import { Icon } from '@lib/Icon';
-import { ReactComponent as StarLineSvg } from '@lib/assets/svgs/star-line.svg';
-import { ReactComponent as PlayLargeFillSvg } from '@lib/assets/svgs/play-large-fill.svg';
-import { ReactComponent as VolumeUpFillSvg } from '@lib/assets/svgs/volume-up-fill.svg';
-import { ReactComponent as CloseFillSvg } from '@lib/assets/svgs/close-fill.svg';
-import { ReactComponent as Playlist2FillSvg } from '@lib/assets/svgs/play-list-2-fill.svg';
-import { Button } from '@lib/Button';
+import { Icon } from '@/lib/Icon';
+import { ReactComponent as StarLineSvg } from '@/assets/svgs/star-line.svg';
+import { ReactComponent as PlayLargeFillSvg } from '@/assets/svgs/play-large-fill.svg';
+import { ReactComponent as VolumeUpFillSvg } from '@/assets/svgs/volume-up-fill.svg';
+import { ReactComponent as CloseFillSvg } from '@/assets/svgs/close-fill.svg';
+import { ReactComponent as Playlist2FillSvg } from '@/assets/svgs/play-list-2-fill.svg';
+import { Button } from '@/lib/Button';
 
 function CustomSvg(props: React.SVGProps<SVGSVGElement>) {
   return (

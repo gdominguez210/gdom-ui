@@ -1,1 +1,1 @@
-export { useLatest } from '@lib/useLatest/useLatest';
+export { useLatest } from '@/lib/useLatest/useLatest';

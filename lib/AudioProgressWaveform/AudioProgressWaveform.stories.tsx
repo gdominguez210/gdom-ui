@@ -1,13 +1,13 @@
-import { type StoryObj, type Meta } from '@storybook/react';
-import { AudioProgressWaveform } from '@lib/AudioProgressWaveform/AudioProgressWaveform';
-import { AUDIO_PROGRESS_COLOR_MODES } from '@lib/AudioProgressWaveform/types';
-import { waveformData, trackData } from '@lib/AudioPlayer/data';
-import { AudioPlayerCompoundComponent as AudioPlayer } from '@lib/AudioPlayer/namespace';
+import type { StoryObj, Meta } from '@storybook/react';
+import { AudioProgressWaveform } from '@/lib/AudioProgressWaveform/AudioProgressWaveform';
+import { AUDIO_PROGRESS_COLOR_MODES } from '@/lib/AudioProgressWaveform/types';
+import { waveformData, trackData } from '@/lib/AudioPlayer/data';
+import { AudioPlayerCompoundComponent as AudioPlayer } from '@/lib/AudioPlayer/namespace';
 import {
   AudioPlayerProgressWaveform,
   type AudioPlayerProgressWaveformProps,
-} from '@lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+} from '@/lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
+import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 import { DeferredRender } from '@storybook-components/DeferredRender/DeferredRender';
 
 function AudioPlayerProgressWaveformWithWaveformData(

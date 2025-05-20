@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
+import { CanvasResponsive } from '@/lib/CanvasResponsive/CanvasResponsive';
 
 describe('CanvasResponsive should...', () => {
   test('render the canvas element with default classes', () => {

@@ -1,6 +1,6 @@
 import type { StoryObj, Meta } from '@storybook/react';
 import { useCallback, useEffect, useRef } from 'react';
-import { CanvasResponsive as CanvasResponsiveComponent } from '@lib/CanvasResponsive/CanvasResponsive';
+import { CanvasResponsive as CanvasResponsiveComponent } from '@/lib/CanvasResponsive/CanvasResponsive';
 
 export default {
   title: 'components/CanvasResponsive',

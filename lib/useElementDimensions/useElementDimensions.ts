@@ -1,8 +1,8 @@
 import { useRef, useCallback, useEffect, type RefObject } from 'react';
-import { useIntersectionObserver } from '@lib/useIntersectionObserver';
-import { useResizeObserver } from '@lib/useResizeObserver';
-import { useComposedRefs } from '@lib/useComposedRefs';
-import { rafThrottle } from '@lib/utils/rafThrottle/rafThrottle';
+import { useIntersectionObserver } from '@/lib/useIntersectionObserver';
+import { useResizeObserver } from '@/lib/useResizeObserver';
+import { useComposedRefs } from '@/lib/useComposedRefs';
+import { rafThrottle } from '@/utils/rafThrottle/rafThrottle';
 
 export type ElementDimensions = {
   width: number;

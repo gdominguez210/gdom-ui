@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerControlLoop } from '@lib/AudioPlayerControlLoop/AudioPlayerControlLoop';
-import { AudioPlayerControlLoopPrimitive } from '@lib/AudioPlayerControlLoop/AudioPlayerControlLoopPrimitive';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR } from '@lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlayback';
-import { trackData } from '@lib/AudioPlayer/data';
+import { AudioPlayerControlLoop } from '@/lib/AudioPlayerControlLoop/AudioPlayerControlLoop';
+import { AudioPlayerControlLoopPrimitive } from '@/lib/AudioPlayerControlLoop/AudioPlayerControlLoopPrimitive';
+import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR } from '@/lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlayback';
+import { trackData } from '@/lib/AudioPlayer/data';
 
 describe('AudioPlayerControlLoop', () => {
   describe('without context', () => {

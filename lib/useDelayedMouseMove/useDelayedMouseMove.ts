@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, type MouseEventHandler } from 'react';
-import { useLatest } from '@lib/useLatest/useLatest';
+import { useLatest } from '@/lib/useLatest/useLatest';
 
 /**
  * Options for the useDelayedMouseMove hook

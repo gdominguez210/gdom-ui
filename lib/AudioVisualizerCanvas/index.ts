@@ -1,4 +1,4 @@
 export {
   AudioVisualizerCanvas,
   type AudioVisualizerCanvasProps,
-} from '@lib/AudioVisualizerCanvas/AudioVisualizerCanvas';
+} from '@/lib/AudioVisualizerCanvas/AudioVisualizerCanvas';

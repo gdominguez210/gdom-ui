@@ -1,6 +1,6 @@
-import { type ComponentPropsWithRef } from 'react';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
-import { IconPlayList2Fill } from '@lib/IconPlayList2Fill';
+import type { ComponentPropsWithRef } from 'react';
+import { AudioPlayerControlButton } from '@/lib/AudioPlayerControlButton';
+import { IconPlayList2Fill } from '@/lib/IconPlayList2Fill';
 
 /**
  * Props for the playlist toggle button primitive component

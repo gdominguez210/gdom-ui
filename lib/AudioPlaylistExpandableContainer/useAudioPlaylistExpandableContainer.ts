@@ -1,7 +1,7 @@
-import { type RefObject } from 'react';
-import { useFocusFirstElement } from '@lib/useFocusFirstElement/useFocusFirstElement';
-import { useFocusElement } from '@lib/useFocusElement/useFocusElement';
-import { useFocusTrap } from '@lib/useFocusTrap/useFocusTrap';
+import type { RefObject } from 'react';
+import { useFocusFirstElement } from '@/lib/useFocusFirstElement/useFocusFirstElement';
+import { useFocusElement } from '@/lib/useFocusElement/useFocusElement';
+import { useFocusTrap } from '@/lib/useFocusTrap/useFocusTrap';
 
 export type useAudioPlayerExpandableContainer = {
   isPlaylistVisible: boolean;

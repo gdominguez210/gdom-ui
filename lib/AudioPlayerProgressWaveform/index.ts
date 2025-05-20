@@ -1,4 +1,4 @@
 export {
   AudioPlayerProgressWaveform,
   type AudioPlayerProgressWaveformProps,
-} from '@lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
+} from '@/lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';

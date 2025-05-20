@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 import { AudioPlaylistControlToggle } from './AudioPlaylistControlToggle';
-import { AudioPlaylistContextProvider } from '@lib/AudioPlaylistContextProvider/AudioPlaylistContextProvider';
+import { AudioPlaylistContextProvider } from '@/lib/AudioPlaylistContextProvider/AudioPlaylistContextProvider';
 
 describe('AudioPlaylistControlToggle', () => {
   test('should render with default props', () => {

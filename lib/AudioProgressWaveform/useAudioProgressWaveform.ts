@@ -2,11 +2,11 @@ import { useCallback, type MouseEventHandler, type RefObject } from 'react';
 import {
   useElementDimensions,
   type UseElementDimensionsReturn,
-} from '@lib/useElementDimensions/useElementDimensions';
+} from '@/lib/useElementDimensions/useElementDimensions';
 import {
   type useMousePositionRefReturn,
   useMousePositionRef,
-} from '@lib/useMousePositionRef/useMousePositionRef';
+} from '@/lib/useMousePositionRef/useMousePositionRef';
 
 export type useAudioProgressWaveformOptions = {
   /**

@@ -4,26 +4,26 @@ import { useCallback, type ComponentPropsWithRef, type MouseEventHandler } from 
 import {
   useAudioProgressWaveformColor,
   type useAudioProgressWaveformColorOptions,
-} from '@lib/AudioProgressWaveform/useAudioProgressWaveformColor';
+} from '@/lib/AudioProgressWaveform/useAudioProgressWaveformColor';
 import {
   useAudioProgressWaveform,
   type useAudioProgressWaveformOptions,
-} from '@lib/AudioProgressWaveform/useAudioProgressWaveform';
+} from '@/lib/AudioProgressWaveform/useAudioProgressWaveform';
 import {
   type useAudioWaveformOptions,
   useAudioWaveform,
-} from '@lib/AudioWaveform/useAudioWaveform';
+} from '@/lib/AudioWaveform/useAudioWaveform';
 import {
   useAnimationFrame,
   type useAnimationFrameOptions,
-} from '@lib/useAnimationFrame/useAnimationFrame';
-import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
-import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
+} from '@/lib/useAnimationFrame/useAnimationFrame';
+import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
+import { CanvasResponsive } from '@/lib/CanvasResponsive/CanvasResponsive';
 import {
   useKeyboardMediaSeek,
   type UseKeyboardMediaSeekOptions,
-} from '@lib/useKeyboardMediaSeek/useKeyboardMediaSeek';
-import { useDelayedMouseMove } from '@lib/useDelayedMouseMove/useDelayedMouseMove';
+} from '@/lib/useKeyboardMediaSeek/useKeyboardMediaSeek';
+import { useDelayedMouseMove } from '@/lib/useDelayedMouseMove/useDelayedMouseMove';
 export type AudioProgressWaveformProps = Omit<useAudioWaveformOptions, 'getBarColor'> &
   Omit<
     useAudioProgressWaveformColorOptions,

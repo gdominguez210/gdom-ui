@@ -1,11 +1,11 @@
-import { type ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
+import type { VolumeIconName } from '@/lib/IconLibrary/data';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { type VolumeIconName } from '@lib/IconLibrary/data';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
-import { IconVolumeMuteFill } from '@lib/IconVolumeMuteFill';
-import { IconVolumeDownFill } from '@lib/IconVolumeDownFill';
-import { IconVolumeUpFill } from '@lib/IconVolumeUpFill';
+import { AudioPlayerControlButton } from '@/lib/AudioPlayerControlButton';
+import { IconVolumeMuteFill } from '@/lib/IconVolumeMuteFill';
+import { IconVolumeDownFill } from '@/lib/IconVolumeDownFill';
+import { IconVolumeUpFill } from '@/lib/IconVolumeUpFill';
 
 /*
  * Props for the volume button primitive component

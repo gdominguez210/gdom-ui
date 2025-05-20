@@ -1,7 +1,7 @@
-import { type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { type AudioPlayerAuthorProps } from '@lib/AudioPlayerAuthor/AudioPlayerAuthor';
+import type { ElementType } from 'react';
+import type { AudioPlayerAuthorProps } from '@/lib/AudioPlayerAuthor/AudioPlayerAuthor';
 
 /**
  * Props for the AudioPlayerAuthorPrimitive component

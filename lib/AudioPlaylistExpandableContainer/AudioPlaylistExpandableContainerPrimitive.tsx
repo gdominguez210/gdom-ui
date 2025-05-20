@@ -1,7 +1,7 @@
-import { type ElementType } from 'react';
+import type { ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { type AudioPlaylistExpandableContainerProps } from './AudioPlaylistExpandableContainer';
+import type { AudioPlaylistExpandableContainerProps } from './AudioPlaylistExpandableContainer';
 /**
  * Props for the expandable container primitive component
  */

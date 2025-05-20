@@ -6,10 +6,10 @@ import {
   type ComponentPropsWithRef,
   useCallback,
 } from 'react';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
-import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider';
+import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider';
+import { useAudioPlayerContextTime } from '@/lib/AudioPlayerContextTimeProvider';
+import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider';
 import { useAudioPlayerNextTrack } from './useAudioPlayerNextTrack';
 import { AudioPlayerControlNextPrimitive } from './AudioPlayerControlNextPrimitive';
 

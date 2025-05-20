@@ -1,37 +1,37 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { AudioPlayer } from '@lib/AudioPlayer/AudioPlayer';
-import { AudioPlayerCompoundComponent } from '@lib/AudioPlayer/namespace';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { AudioPlayer } from '@/lib/AudioPlayer/AudioPlayer';
+import { AudioPlayerCompoundComponent } from '@/lib/AudioPlayer/namespace';
+import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 import { trackData } from './data';
-import { AudioPlayerControlPlay } from '@lib/AudioPlayerControlPlay/AudioPlayerControlPlay';
-import { AudioPlayerControlNext } from '@lib/AudioPlayerControlNext/AudioPlayerControlNext';
-import { AudioPlayerControlPrevious } from '@lib/AudioPlayerControlPrevious/AudioPlayerControlPrevious';
-import { AudioPlayerControlShuffle } from '@lib/AudioPlayerControlShuffle/AudioPlayerControlShuffle';
-import { AudioPlayerControlLoop } from '@lib/AudioPlayerControlLoop/AudioPlayerControlLoop';
-import { AudioPlayerControlAudio } from '@lib/AudioPlayerControlAudio/AudioPlayerControlAudio';
-import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
-import { AudioPlayerVolumeButton } from '@lib/AudioPlayerVolumeButton/AudioPlayerVolumeButton';
-import { AudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/AudioPlayerProgressBar';
-import { AudioPlayerTime } from '@lib/AudioPlayerTime/AudioPlayerTime';
-import { AudioPlayerTitle } from '@lib/AudioPlayerTitle/AudioPlayerTitle';
-import { AudioPlayerAuthor } from '@lib/AudioPlayerAuthor/AudioPlayerAuthor';
-import { AudioPlayerImage } from '@lib/AudioPlayerImage/AudioPlayerImage';
-import { AudioPlayerInfo } from '@lib/AudioPlayerInfo/AudioPlayerInfo';
-import { AudioPlayerControls } from '@lib/AudioPlayerControls/AudioPlayerControls';
-import { AudioPlayerVolume } from '@lib/AudioPlayerVolume/AudioPlayerVolume';
-import { AudioPlayerContextPlaybackProvider } from '@lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlaybackProvider';
-import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
-import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
-import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
-import { AudioPlaylistCompoundComponent } from '@lib/AudioPlaylist/namespace';
-import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
-import { AudioPlayerVisualizerWaveform } from '@lib/AudioPlayerVisualizerWaveform/AudioPlayerVisualizerWaveform';
+import { AudioPlayerControlPlay } from '@/lib/AudioPlayerControlPlay/AudioPlayerControlPlay';
+import { AudioPlayerControlNext } from '@/lib/AudioPlayerControlNext/AudioPlayerControlNext';
+import { AudioPlayerControlPrevious } from '@/lib/AudioPlayerControlPrevious/AudioPlayerControlPrevious';
+import { AudioPlayerControlShuffle } from '@/lib/AudioPlayerControlShuffle/AudioPlayerControlShuffle';
+import { AudioPlayerControlLoop } from '@/lib/AudioPlayerControlLoop/AudioPlayerControlLoop';
+import { AudioPlayerControlAudio } from '@/lib/AudioPlayerControlAudio/AudioPlayerControlAudio';
+import { AudioPlayerVolumeSlider } from '@/lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
+import { AudioPlayerVolumeButton } from '@/lib/AudioPlayerVolumeButton/AudioPlayerVolumeButton';
+import { AudioPlayerProgressBar } from '@/lib/AudioPlayerProgressBar/AudioPlayerProgressBar';
+import { AudioPlayerTime } from '@/lib/AudioPlayerTime/AudioPlayerTime';
+import { AudioPlayerTitle } from '@/lib/AudioPlayerTitle/AudioPlayerTitle';
+import { AudioPlayerAuthor } from '@/lib/AudioPlayerAuthor/AudioPlayerAuthor';
+import { AudioPlayerImage } from '@/lib/AudioPlayerImage/AudioPlayerImage';
+import { AudioPlayerInfo } from '@/lib/AudioPlayerInfo/AudioPlayerInfo';
+import { AudioPlayerControls } from '@/lib/AudioPlayerControls/AudioPlayerControls';
+import { AudioPlayerVolume } from '@/lib/AudioPlayerVolume/AudioPlayerVolume';
+import { AudioPlayerContextPlaybackProvider } from '@/lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlaybackProvider';
+import { AudioPlayerContextTimeProvider } from '@/lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
+import { AudioPlayerContextRefsProvider } from '@/lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
+import { AudioPlayerContextTrackProvider } from '@/lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
+import { AudioPlaylistCompoundComponent } from '@/lib/AudioPlaylist/namespace';
+import { AudioPlayerContextAudioProvider } from '@/lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
+import { AudioPlayerVisualizerWaveform } from '@/lib/AudioPlayerVisualizerWaveform/AudioPlayerVisualizerWaveform';
 import {
   AudioPlayerProgressWaveform,
   type AudioPlayerProgressWaveformProps,
-} from '@lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
-import { waveformData } from '@lib/AudioPlayer/data';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+} from '@/lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
+import { waveformData } from '@/lib/AudioPlayer/data';
+import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 
 function AudioPlayerProgressWaveformWithWaveformData(
   props: Omit<AudioPlayerProgressWaveformProps, 'waveformData'>,

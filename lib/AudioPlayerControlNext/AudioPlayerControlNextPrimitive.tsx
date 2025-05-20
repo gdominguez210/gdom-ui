@@ -1,6 +1,6 @@
-import { type ComponentPropsWithRef } from 'react';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
-import { IconForwardEndFill } from '@lib/IconForwardEndFill';
+import type { ComponentPropsWithRef } from 'react';
+import { AudioPlayerControlButton } from '@/lib/AudioPlayerControlButton';
+import { IconForwardEndFill } from '@/lib/IconForwardEndFill';
 /**
  * Props for the next track control button
  */

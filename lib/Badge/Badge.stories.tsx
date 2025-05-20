@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-props-no-spreading */
 import type { StoryObj, Meta } from '@storybook/react';
-import { Badge as BadgeComponent } from '@lib/Badge';
+import { Badge as BadgeComponent } from '@/lib/Badge';
 
 export default {
   title: 'components/Badge',

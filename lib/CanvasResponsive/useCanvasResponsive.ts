@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { rafThrottle } from '@lib/utils/rafThrottle/rafThrottle';
-import { useResizeObserver } from '@lib/useResizeObserver/useResizeObserver';
-import { useRefReady } from '@lib/useRefReady/useRefReady';
-import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
+import { rafThrottle } from '@/utils/rafThrottle/rafThrottle';
+import { useResizeObserver } from '@/lib/useResizeObserver/useResizeObserver';
+import { useRefReady } from '@/lib/useRefReady/useRefReady';
+import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
 
 /**
  * Options for the useCanvasResponsive hook

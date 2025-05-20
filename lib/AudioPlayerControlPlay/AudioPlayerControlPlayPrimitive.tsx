@@ -1,7 +1,7 @@
-import { type ComponentPropsWithRef } from 'react';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
-import { IconPauseLargeFill } from '@lib/IconPauseLargeFill';
-import { IconPlayLargeFill } from '@lib/IconPlayLargeFill';
+import type { ComponentPropsWithRef } from 'react';
+import { AudioPlayerControlButton } from '@/lib/AudioPlayerControlButton';
+import { IconPauseLargeFill } from '@/lib/IconPauseLargeFill';
+import { IconPlayLargeFill } from '@/lib/IconPlayLargeFill';
 /**
  * Props for the play/pause button primitive component
  */

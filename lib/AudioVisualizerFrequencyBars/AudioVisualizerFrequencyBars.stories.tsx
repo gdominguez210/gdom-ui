@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { AudioVisualizerFrequencyBars } from '@lib/AudioVisualizerFrequencyBars/AudioVisualizerFrequencyBars';
-import { trackData } from '@lib/AudioPlayer/data';
-import { AudioPlayerCompoundComponent as AudioPlayer } from '@lib/AudioPlayer/namespace';
+import { AudioVisualizerFrequencyBars } from '@/lib/AudioVisualizerFrequencyBars/AudioVisualizerFrequencyBars';
+import { trackData } from '@/lib/AudioPlayer/data';
+import { AudioPlayerCompoundComponent as AudioPlayer } from '@/lib/AudioPlayer/namespace';
 import { CollapseCategory } from '@storybook-decorators/CollapseCategory/CollapseCategory';
 
 export default {

@@ -3,23 +3,23 @@ import {
   type WaveformBarInfo,
   type WaveformBarColorResult,
   type WaveformGradientStop,
-} from '@lib/AudioWaveform/types';
-import { type useMousePositionRefReturn } from '@lib/useMousePositionRef/useMousePositionRef';
-import { type UseElementDimensionsReturn } from '@lib/useElementDimensions/useElementDimensions';
-import { type OKLCHColor } from '@lib/types/colors';
+} from '@/lib/AudioWaveform/types';
+import type { useMousePositionRefReturn } from '@/lib/useMousePositionRef/useMousePositionRef';
+import type { UseElementDimensionsReturn } from '@/lib/useElementDimensions/useElementDimensions';
+import type { OKLCHColor } from 'types/colors';
 import {
   type AudioProgressColorMode,
   AUDIO_PROGRESS_COLOR_MODES,
-} from '@lib/AudioProgressWaveform/types';
-import { convertColorToOKLCH } from '@lib/utils/convertColorToOKLCH';
-import { OKLCHToCSS } from '@lib/utils/OKLCHToCSS';
+} from '@/lib/AudioProgressWaveform/types';
+import { convertColorToOKLCH } from '@/utils/convertColorToOKLCH';
+import { OKLCHToCSS } from '@/utils/OKLCHToCSS';
 import {
   getInterpolatedColorString,
   generateGradientStops,
   calculateBarCoverage,
   shouldApplyHoverEffect,
   getNormalizedHoverPosition,
-} from '@lib/AudioProgressWaveform/drawingUtils';
+} from '@/lib/AudioProgressWaveform/drawingUtils';
 
 export type useAudioProgressWaveformColorOptions = {
   /**

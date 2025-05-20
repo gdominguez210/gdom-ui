@@ -1,11 +1,11 @@
 'use client';
 
 import { type MouseEventHandler, useCallback } from 'react';
-import { useAudioPlaylistContext } from '@lib/AudioPlaylistContextProvider';
+import { useAudioPlaylistContext } from '@/lib/AudioPlaylistContextProvider';
 import {
   AudioPlaylistDismissPrimitive,
   type AudioPlaylistDismissPrimitiveProps,
-} from '@lib/AudioPlaylistDismiss/AudioPlaylistDismissPrimitive';
+} from '@/lib/AudioPlaylistDismiss/AudioPlaylistDismissPrimitive';
 
 /**
  * Props for the playlist dismiss component

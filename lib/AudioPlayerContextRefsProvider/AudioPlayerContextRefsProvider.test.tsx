@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider';
+import { AudioPlayerContextRefsProvider } from '@/lib/AudioPlayerContextRefsProvider';
 import { useAudioPlayerContextRefs } from './useAudioPlayerContextRefs';
 
 describe('AudioPlayerContextRefsProvider', () => {

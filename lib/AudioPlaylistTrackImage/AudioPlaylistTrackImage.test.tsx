@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 import { AudioPlaylistTrackImage } from './AudioPlaylistTrackImage';
-import { AudioPlaylistTrackContextProvider } from '@lib/AudioPlaylistTrackContextProvider';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { trackData } from '@lib/AudioPlayer/data';
+import { AudioPlaylistTrackContextProvider } from '@/lib/AudioPlaylistTrackContextProvider';
+import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { trackData } from '@/lib/AudioPlayer/data';
 
 describe('AudioPlaylistTrackImage', () => {
   test('should render with track data from context', () => {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
-import { useLatest } from '@lib/useLatest/useLatest';
+import { useLatest } from '@/lib/useLatest/useLatest';
 
 /**
  * Hook to observe an element's size changes

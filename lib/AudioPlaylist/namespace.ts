@@ -1,12 +1,12 @@
-import { AudioPlaylistContextProvider } from '@lib/AudioPlaylistContextProvider';
+import { AudioPlaylistContextProvider } from '@/lib/AudioPlaylistContextProvider';
 import { AudioPlaylist } from './AudioPlaylist';
-import { AudioPlaylistTracks } from '@lib/AudioPlaylistTracks/AudioPlaylistTracks';
-import { AudioPlaylistHeader } from '@lib/AudioPlaylistHeader/AudioPlaylistHeader';
-import { AudioPlaylistDismiss } from '@lib/AudioPlaylistDismiss/AudioPlaylistDismiss';
-import { AudioPlaylistControlToggle } from '@lib/AudioPlaylistControlToggle/AudioPlaylistControlToggle';
-import { AudioPlaylistExpandableContainer } from '@lib/AudioPlaylistExpandableContainer';
-import { AudioPlaylistScrollableContainer } from '@lib/AudioPlaylistScrollableContainer';
-import { AudioPlaylistTrackCompoundComponent } from '@lib/AudioPlaylistTrack/namespace';
+import { AudioPlaylistTracks } from '@/lib/AudioPlaylistTracks/AudioPlaylistTracks';
+import { AudioPlaylistHeader } from '@/lib/AudioPlaylistHeader/AudioPlaylistHeader';
+import { AudioPlaylistDismiss } from '@/lib/AudioPlaylistDismiss/AudioPlaylistDismiss';
+import { AudioPlaylistControlToggle } from '@/lib/AudioPlaylistControlToggle/AudioPlaylistControlToggle';
+import { AudioPlaylistExpandableContainer } from '@/lib/AudioPlaylistExpandableContainer';
+import { AudioPlaylistScrollableContainer } from '@/lib/AudioPlaylistScrollableContainer';
+import { AudioPlaylistTrackCompoundComponent } from '@/lib/AudioPlaylistTrack/namespace';
 
 export const AudioPlaylistCompoundComponent = {
   Root: Object.assign(AudioPlaylist, { displayName: 'AudioPlaylist.Root' }),

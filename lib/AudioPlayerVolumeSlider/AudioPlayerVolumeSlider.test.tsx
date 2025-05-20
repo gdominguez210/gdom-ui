@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
-import { AudioPlayerVolumeSliderPrimitive } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSliderPrimitive';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { trackData } from '@lib/AudioPlayer/data';
+import { AudioPlayerVolumeSlider } from '@/lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
+import { AudioPlayerVolumeSliderPrimitive } from '@/lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSliderPrimitive';
+import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { trackData } from '@/lib/AudioPlayer/data';
 
 describe('AudioPlayerVolumeSliderPrimitive', () => {
   test('should render with default props', () => {

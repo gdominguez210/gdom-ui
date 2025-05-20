@@ -1,4 +1,4 @@
 export {
   AudioVisualizerFrequencyBars,
   type AudioVisualizerFrequencyBarsProps,
-} from '@lib/AudioVisualizerFrequencyBars/AudioVisualizerFrequencyBars';
+} from '@/lib/AudioVisualizerFrequencyBars/AudioVisualizerFrequencyBars';

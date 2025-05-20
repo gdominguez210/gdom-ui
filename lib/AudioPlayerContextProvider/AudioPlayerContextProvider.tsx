@@ -1,11 +1,11 @@
 'use client';
 
-import { type PropsWithChildren } from 'react';
-import { type AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
-import { AudioPlayerContextRefsProvider } from '@lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
-import { AudioPlayerContextTrackProvider } from '@lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
-import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
-import { AudioPlayerContextPlaybackProvider } from '@lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlaybackProvider';
+import type { PropsWithChildren } from 'react';
+import type { AudioTrackData } from '@/lib/AudioPlayerContextTrackProvider/reducer';
+import { AudioPlayerContextRefsProvider } from '@/lib/AudioPlayerContextRefsProvider/AudioPlayerContextRefsProvider';
+import { AudioPlayerContextTrackProvider } from '@/lib/AudioPlayerContextTrackProvider/AudioPlayerContextTrackProvider';
+import { AudioPlayerContextTimeProvider } from '@/lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
+import { AudioPlayerContextPlaybackProvider } from '@/lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlaybackProvider';
 
 /**
  * Props for the main audio player context provider

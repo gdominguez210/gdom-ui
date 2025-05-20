@@ -4,8 +4,8 @@ import type { ElementType } from 'react';
 import {
   AudioPlaylistTrackAuthorPrimitive,
   type AudioPlaylistTrackAuthorPrimitiveProps,
-} from '@lib/AudioPlaylistTrackAuthor/AudioPlaylistTrackAuthorPrimitive';
-import { useAudioPlaylistTrackContext } from '@lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
+} from '@/lib/AudioPlaylistTrackAuthor/AudioPlaylistTrackAuthorPrimitive';
+import { useAudioPlaylistTrackContext } from '@/lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
 
 /**
  * Props for the audio playlist track author component

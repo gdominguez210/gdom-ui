@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { type UseAudioContextWebAPIReturn } from '@lib/useAudioContextWebAPI/useAudioContextWebAPI';
+import type { UseAudioContextWebAPIReturn } from '@/lib/useAudioContextWebAPI/useAudioContextWebAPI';
 
 export type AudioContextType = UseAudioContextWebAPIReturn;
 

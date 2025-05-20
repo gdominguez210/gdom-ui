@@ -1,8 +1,8 @@
-import { AudioPlaylistTrack } from '@lib/AudioPlaylistTrack/AudioPlaylistTrack';
-import { AudioPlaylistTrackContextProvider } from '@lib/AudioPlaylistTrackContextProvider';
-import { AudioPlaylistTrackImage } from '@lib/AudioPlaylistTrackImage';
-import { AudioPlaylistTrackTitle } from '@lib/AudioPlaylistTrackTitle';
-import { AudioPlaylistTrackAuthor } from '@lib/AudioPlaylistTrackAuthor';
+import { AudioPlaylistTrack } from '@/lib/AudioPlaylistTrack/AudioPlaylistTrack';
+import { AudioPlaylistTrackContextProvider } from '@/lib/AudioPlaylistTrackContextProvider';
+import { AudioPlaylistTrackImage } from '@/lib/AudioPlaylistTrackImage';
+import { AudioPlaylistTrackTitle } from '@/lib/AudioPlaylistTrackTitle';
+import { AudioPlaylistTrackAuthor } from '@/lib/AudioPlaylistTrackAuthor';
 
 export const AudioPlaylistTrackCompoundComponent = {
   Provider: Object.assign(AudioPlaylistTrackContextProvider, {

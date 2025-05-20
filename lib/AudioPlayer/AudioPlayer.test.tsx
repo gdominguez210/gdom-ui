@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlayerCompoundComponent as AudioPlayer } from '@lib/AudioPlayer/namespace';
-import { AudioPlayer as AudioPlayerPrimitive } from '@lib/AudioPlayer/AudioPlayer';
+import { AudioPlayerCompoundComponent as AudioPlayer } from '@/lib/AudioPlayer/namespace';
+import { AudioPlayer as AudioPlayerPrimitive } from '@/lib/AudioPlayer/AudioPlayer';
 import { trackData } from './data';
 
 describe('AudioPlayer', () => {

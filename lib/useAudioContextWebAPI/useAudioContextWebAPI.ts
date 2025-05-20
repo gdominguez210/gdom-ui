@@ -1,6 +1,6 @@
 import { useMemo, useRef, useCallback, type RefObject } from 'react';
 import { useEffect } from 'react';
-import { useRefReady } from '@lib/useRefReady/useRefReady';
+import { useRefReady } from '@/lib/useRefReady/useRefReady';
 
 async function resumeAudioContext(audioContext: AudioContext): Promise<boolean> {
   try {

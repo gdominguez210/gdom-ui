@@ -6,7 +6,7 @@ import {
   WAVEFORM_COLOR_MODES,
   type DynamicColorMode,
 } from './drawingUtils';
-import type { OKLCHColor } from '@lib/types/colors';
+import type { OKLCHColor } from 'types/colors';
 
 describe('AudioVisualizerWaveform drawingUtils', () => {
   const createCanvasMock = () => {

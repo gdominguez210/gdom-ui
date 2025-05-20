@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useMemo } from 'react';
-import { useLatest } from '@lib/useLatest/useLatest';
+import { useLatest } from '@/lib/useLatest/useLatest';
 const DEFAULT_OPTIONS: IntersectionObserverInit = {
   rootMargin: '0px',
   threshold: 0,

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useRef, type PropsWithChildren } from 'react';
-import { AudioPlaylistContext } from './AudioPlaylistContext';
+import { AudioPlaylistContext } from '@/lib/AudioPlaylistContextProvider/AudioPlaylistContext';
 
 /**
  * Props for the audio playlist context provider

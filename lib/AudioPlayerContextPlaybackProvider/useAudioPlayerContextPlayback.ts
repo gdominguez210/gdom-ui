@@ -3,7 +3,7 @@ import {
   AudioPlayerContextPlayback,
   type AudioPlayerContextPlaybackType,
   AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR,
-} from './AudioPlayerContextPlayback';
+} from '@/lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlayback';
 
 export function useAudioPlayerContextPlayback(): AudioPlayerContextPlaybackType {
   const context = useContext(AudioPlayerContextPlayback);

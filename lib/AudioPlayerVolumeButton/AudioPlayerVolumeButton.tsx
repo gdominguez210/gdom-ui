@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, type ComponentPropsWithRef, type MouseEventHandler } from 'react';
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
 import { AudioPlayerVolumeButtonPrimitive } from './AudioPlayerVolumeButtonPrimitive';
 
 const VOLUME_ICON_PROPERTIES = {

@@ -1,8 +1,8 @@
 'use client';
 import type { ElementType } from 'react';
-import { useAudioPlaylistTrackContext } from '@lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
-import { AudioPlaylistTrackImagePrimitive } from '@lib/AudioPlaylistTrackImage/AudioPlaylistTrackImagePrimitive';
-import { type AudioPlayerImageProps } from '@lib/AudioPlayerImage/AudioPlayerImage';
+import { useAudioPlaylistTrackContext } from '@/lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
+import { AudioPlaylistTrackImagePrimitive } from '@/lib/AudioPlaylistTrackImage/AudioPlaylistTrackImagePrimitive';
+import type { AudioPlayerImageProps } from '@/lib/AudioPlayerImage/AudioPlayerImage';
 
 export type AudioPlaylistTrackImageProps<T extends ElementType = 'div'> = AudioPlayerImageProps<T>;
 

@@ -1,12 +1,12 @@
 'use client';
 
 import { type MouseEventHandler, useCallback } from 'react';
-import { useComposedRefs } from '@lib/useComposedRefs';
-import { useAudioPlaylistContext } from '@lib/AudioPlaylistContextProvider';
+import { useComposedRefs } from '@/lib/useComposedRefs';
+import { useAudioPlaylistContext } from '@/lib/AudioPlaylistContextProvider';
 import {
   AudioPlaylistControlTogglePrimitive,
   type AudioPlaylistControlTogglePrimitiveProps,
-} from '@lib/AudioPlaylistControlToggle/AudioPlaylistControlTogglePrimitive';
+} from '@/lib/AudioPlaylistControlToggle/AudioPlaylistControlTogglePrimitive';
 
 /**
  * Props for the playlist toggle component

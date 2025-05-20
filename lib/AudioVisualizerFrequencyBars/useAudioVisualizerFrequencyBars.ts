@@ -5,12 +5,12 @@ import {
   calculateLogarithmicIndex,
   calculateAmplifiedValue,
   calculateFrequencyBandAverage,
-} from '@lib/AudioVisualizerFrequencyBars/frequencyDistribution';
+} from '@/lib/AudioVisualizerFrequencyBars/frequencyDistribution';
 import {
   FREQUENCY_BARS_COLOR_MODES,
   getBarColor,
-} from '@lib/AudioVisualizerFrequencyBars/drawingUtils';
-import { useColorTransition } from '@lib/useColorTransition/useColorTransition';
+} from '@/lib/AudioVisualizerFrequencyBars/drawingUtils';
+import { useColorTransition } from '@/lib/useColorTransition/useColorTransition';
 export type useAudioVisualizerFrequencyBarOptions = {
   /**
    * Color of the frequency bars

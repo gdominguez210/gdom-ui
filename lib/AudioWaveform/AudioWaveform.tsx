@@ -1,7 +1,7 @@
-import { CanvasResponsive } from '@lib/CanvasResponsive/CanvasResponsive';
-import { type ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
+import { CanvasResponsive } from '@/lib/CanvasResponsive/CanvasResponsive';
 import { useAudioWaveform, type useAudioWaveformOptions } from './useAudioWaveform';
-import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
+import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
 
 export type AudioWaveformProps = ComponentPropsWithRef<'canvas'> & useAudioWaveformOptions;
 

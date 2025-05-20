@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent, RefObject } from 'react';
-import { formatDurationForDisplay } from '@lib/utils/formatDurationForDisplay/formatDurationForDisplay';
+import { formatDurationForDisplay } from '@/utils/formatDurationForDisplay/formatDurationForDisplay';
 
 type HTMLMediaElement = HTMLAudioElement | HTMLVideoElement;
 

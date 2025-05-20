@@ -1,11 +1,11 @@
-import { useAudioContext } from '@lib/AudioContextProvider/useAudioContext';
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
-import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
+import { useAudioContext } from '@/lib/AudioContextProvider/useAudioContext';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
+import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
+import { useAudioPlayerContextTime } from '@/lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
 import {
   AudioVisualizerFrequencyBars,
   type AudioVisualizerFrequencyBarsProps,
-} from '@lib/AudioVisualizerFrequencyBars/AudioVisualizerFrequencyBars';
+} from '@/lib/AudioVisualizerFrequencyBars/AudioVisualizerFrequencyBars';
 
 export type AudioPlayerVisualizerFrequencyBarsProps = Omit<
   AudioVisualizerFrequencyBarsProps,

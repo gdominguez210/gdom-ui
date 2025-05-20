@@ -1,8 +1,8 @@
-import { type IconName, icons } from '@lib/IconLibrary/data';
+import type { ComponentPropsWithRef } from 'react';
 import clsx from 'clsx';
-import { type ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Icon } from '@lib/Icon/Icon';
+import { Icon } from '@/lib/Icon/Icon';
+import { type IconName, icons } from '@/lib/IconLibrary/data';
 
 export interface IconLibraryProps extends ComponentPropsWithRef<'svg'> {
   name: IconName;

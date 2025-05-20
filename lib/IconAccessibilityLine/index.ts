@@ -1,1 +1,1 @@
-export { IconAccessibilityLine } from '@lib/IconAccessibilityLine/IconAccessibilityLine';
+export { IconAccessibilityLine } from '@/lib/IconAccessibilityLine/IconAccessibilityLine';

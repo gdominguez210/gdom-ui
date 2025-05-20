@@ -1,10 +1,10 @@
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
-import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
+import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
+import { useAudioPlayerContextTime } from '@/lib/AudioPlayerContextTimeProvider';
 import {
   AudioProgressWaveform,
   type AudioProgressWaveformProps,
-} from '@lib/AudioProgressWaveform/AudioProgressWaveform';
+} from '@/lib/AudioProgressWaveform/AudioProgressWaveform';
 import { type MouseEventHandler, type RefObject, useCallback } from 'react';
 
 export type AudioPlayerProgressWaveformProps = Omit<

@@ -1,1 +1,1 @@
-export { useIntersectionObserver } from '@lib/useIntersectionObserver/useIntersectionObserver';
+export { useIntersectionObserver } from '@/lib/useIntersectionObserver/useIntersectionObserver';

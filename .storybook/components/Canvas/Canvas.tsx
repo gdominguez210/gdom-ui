@@ -1,4 +1,4 @@
-import { type ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 type CanvasProps = ComponentPropsWithRef<'div'>;

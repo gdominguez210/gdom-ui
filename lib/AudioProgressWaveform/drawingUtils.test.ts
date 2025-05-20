@@ -4,8 +4,8 @@ import {
   shouldApplyHoverEffect,
   getNormalizedHoverPosition,
 } from './drawingUtils';
-import type { MousePosition } from '@lib/useMousePositionRef/useMousePositionRef';
-import type { ElementDimensions } from '@lib/useElementDimensions/useElementDimensions';
+import type { MousePosition } from '@/lib/useMousePositionRef/useMousePositionRef';
+import type { ElementDimensions } from '@/lib/useElementDimensions/useElementDimensions';
 
 describe('AudioProgressWaveform drawingUtils', () => {
   describe('calculateBarCoverage should...', () => {

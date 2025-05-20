@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlayerControls } from '@lib/AudioPlayerControls/AudioPlayerControls';
+import { AudioPlayerControls } from '@/lib/AudioPlayerControls/AudioPlayerControls';
 
 describe('AudioPlayerControls', () => {
   test('should render children', () => {

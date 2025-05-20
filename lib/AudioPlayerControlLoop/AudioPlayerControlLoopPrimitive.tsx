@@ -1,9 +1,9 @@
-import { type ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
-import { IconRepeatOneFill } from '@lib/IconRepeatOneFill';
-import { IconRepeat2Fill } from '@lib/IconRepeat2Fill';
-import { AudioPlayerControlButton } from '@lib/AudioPlayerControlButton';
+import { IconRepeatOneFill } from '@/lib/IconRepeatOneFill';
+import { IconRepeat2Fill } from '@/lib/IconRepeat2Fill';
+import { AudioPlayerControlButton } from '@/lib/AudioPlayerControlButton';
 
 /**
  * Props for the loop button primitive component

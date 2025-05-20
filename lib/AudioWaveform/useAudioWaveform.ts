@@ -5,8 +5,8 @@ import {
   calculateSamplingRate,
   sampleWaveformData,
   calculateBarWidth,
-} from '@lib/AudioWaveform/drawingUtils';
-import { type WaveformBarInfo, type WaveformBarColorResult } from '@lib/AudioWaveform/types';
+} from '@/lib/AudioWaveform/drawingUtils';
+import type { WaveformBarInfo, WaveformBarColorResult } from '@/lib/AudioWaveform/types';
 
 export type useAudioWaveformOptions = {
   /**

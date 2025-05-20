@@ -1,4 +1,4 @@
 export {
   AudioPlaylistTracks,
   type AudioPlaylistTracksProps,
-} from '@lib/AudioPlaylistTracks/AudioPlaylistTracks';
+} from '@/lib/AudioPlaylistTracks/AudioPlaylistTracks';

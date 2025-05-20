@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlaylistContextProvider } from './AudioPlaylistContextProvider';
-import { useAudioPlaylistContext } from './useAudioPlaylistContext';
+import { AudioPlaylistContextProvider } from '@/lib/AudioPlaylistContextProvider/AudioPlaylistContextProvider';
+import { useAudioPlaylistContext } from '@/lib/AudioPlaylistContextProvider/useAudioPlaylistContext';
 import type { ComponentPropsWithRef } from 'react';
 
 function TestComponent(props: ComponentPropsWithRef<'div'>) {

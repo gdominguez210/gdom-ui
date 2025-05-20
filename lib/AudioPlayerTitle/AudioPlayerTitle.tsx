@@ -1,7 +1,7 @@
 'use client';
 
-import { type ComponentPropsWithRef, type ElementType } from 'react';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+import type { ComponentPropsWithRef, ElementType } from 'react';
+import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 import { AudioPlayerTitlePrimitive } from './AudioPlayerTitlePrimitive';
 
 /**
