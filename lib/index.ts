@@ -1,3 +1,4 @@
+import './global.css';
 export * from './AudioPlayer';
 export * from './AudioPlayerAuthor';
 export * from './AudioPlayerContextPlaybackProvider';
