@@ -1,4 +1,8 @@
 @import 'tailwindcss';
+@source './**/*.{ts,tsx}';
+@source not './**/*.stories.*';
+@source not './**/*.mdx';
+@source not '../.storybook/**';
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
