@@ -2,6 +2,7 @@ import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storyb
 import * as AudioWaveformStories from './AudioWaveform.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
 
 <Meta of={AudioWaveformStories} />
 
@@ -30,19 +31,15 @@ The AudioWaveform component provides several key features:
 
 ## Examples
 
-<section className="rounded-md border border-slate-400 bg-slate-100 p-3 text-slate-700 mb-5">
-  <div className="mb-1 font-bold">Usage Note</div>
-  <div className="mb-2">
+<UsageNote>
     This component expects pre-processed waveform data (an array of normalized amplitude values
     between 0-1). It does not convert audio files to waveform data, as that conversion process
     depends on specific application requirements and is left to the consumer.
-  </div>
-  <div className="mb-2">
-    <strong>Data Resolution:</strong> For optimal performance, a waveform data array of 100-1000
+
+    **Data Resolution:** For optimal performance, a waveform data array of 100-1000
     entries is recommended. While the component can handle larger datasets providing pre-sampled
     data when possible will improve initial rendering performance.
-  </div>
-</section>
+</UsageNote>
 
 <Stories
   title=""
