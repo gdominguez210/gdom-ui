@@ -1,9 +1,9 @@
 'use client';
 
 import { type MouseEventHandler, type RefObject, useCallback } from 'react';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider';
+import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider';
+import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider';
 import { useAudioPlayerControlPlay } from './useAudioPlayerControlPlay';
 import {
   AudioPlayerControlPlayPrimitive,

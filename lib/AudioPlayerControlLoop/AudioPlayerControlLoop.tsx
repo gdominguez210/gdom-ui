@@ -1,7 +1,7 @@
 'use client';
 
 import { type MouseEventHandler, useCallback } from 'react';
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider';
 import {
   AudioPlayerControlLoopPrimitive,
   type AudioPlayerControlLoopPrimitiveProps,

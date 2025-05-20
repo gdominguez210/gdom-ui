@@ -4,8 +4,8 @@ import {
   drawStaticWaveform,
   drawSegmentedWaveform,
   WAVEFORM_COLOR_MODES,
-} from '@lib/AudioVisualizerWaveform/drawingUtils';
-import { useColorTransition } from '@lib/useColorTransition/useColorTransition';
+} from '@/lib/AudioVisualizerWaveform/drawingUtils';
+import { useColorTransition } from '@/lib/useColorTransition/useColorTransition';
 
 export type useAudioVisualizerWaveformOptions = {
   /**

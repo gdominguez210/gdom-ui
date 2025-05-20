@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
-import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
-import { trackData } from '@lib/AudioPlayer/data';
+import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
+import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+import { useAudioPlayerContextTime } from '@/lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
+import { trackData } from '@/lib/AudioPlayer/data';
 
 function RefsConsumer() {
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();

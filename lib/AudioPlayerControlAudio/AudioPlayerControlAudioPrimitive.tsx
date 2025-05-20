@@ -1,4 +1,4 @@
-import { type AudioPlayerControlAudioProps } from '@lib/AudioPlayerControlAudio/AudioPlayerControlAudio';
+import type { AudioPlayerControlAudioProps } from '@/lib/AudioPlayerControlAudio/AudioPlayerControlAudio';
 
 /**
  * Props for the audio element component

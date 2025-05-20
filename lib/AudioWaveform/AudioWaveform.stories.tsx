@@ -1,6 +1,6 @@
 import type { StoryObj, Meta } from '@storybook/react';
-import { AudioWaveform, type AudioWaveformProps } from '@lib/AudioWaveform/AudioWaveform';
-import { waveformData } from '@lib/AudioPlayer/data';
+import { AudioWaveform, type AudioWaveformProps } from '@/lib/AudioWaveform/AudioWaveform';
+import { waveformData } from '@/lib/AudioPlayer/data';
 import { DeferredRender } from '@storybook-components/DeferredRender/DeferredRender';
 
 const sampleWaveformData = waveformData['58730401-c910-4a77-935e-83d71d5d1a52'] || [];

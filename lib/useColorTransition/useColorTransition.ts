@@ -1,8 +1,8 @@
 import { useRef, useCallback, useEffect } from 'react';
-import { convertColorToOKLCH } from '@lib/utils/convertColorToOKLCH/convertColorToOKLCH';
-import { OKLCHToCSS } from '@lib/utils/OKLCHToCSS/OKLCHtoCSS';
-import { type OKLCHColor } from '@lib/types/colors';
-import { interpolateOKLCH } from '@lib/utils/interpolateOKLCH/interpolateOKLCH';
+import { convertColorToOKLCH } from '@/utils/convertColorToOKLCH/convertColorToOKLCH';
+import { OKLCHToCSS } from '@/utils/OKLCHToCSS/OKLCHtoCSS';
+import type { OKLCHColor } from '@/types/colors';
+import { interpolateOKLCH } from '@/utils/interpolateOKLCH/interpolateOKLCH';
 
 export type UseColorTransitionOptions = {
   /**

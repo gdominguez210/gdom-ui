@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, type DependencyList } from 'react';
-import { useLatest } from '@lib/useLatest/useLatest';
+import { useLatest } from '@/lib/useLatest/useLatest';
 export type useAnimationFrameOptions = {
   /**
    * Whether the animation should be running

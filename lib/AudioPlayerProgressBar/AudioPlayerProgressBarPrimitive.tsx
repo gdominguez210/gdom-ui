@@ -1,6 +1,6 @@
+import type { AudioPlayerProgressBarProps } from '@/lib/AudioPlayerProgressBar/AudioPlayerProgressBar';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { type AudioPlayerProgressBarProps } from '@lib/AudioPlayerProgressBar/AudioPlayerProgressBar';
 
 /**
  * Props for the progress bar component

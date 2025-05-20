@@ -1,15 +1,15 @@
 import {
   useAudioVisualizerFrequencyBars,
   type useAudioVisualizerFrequencyBarOptions,
-} from '@lib/AudioVisualizerFrequencyBars/useAudioVisualizerFrequencyBars';
+} from '@/lib/AudioVisualizerFrequencyBars/useAudioVisualizerFrequencyBars';
 import { useEffect, type ComponentPropsWithRef, type RefObject } from 'react';
-import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
-import { useLatest } from '@lib/useLatest/useLatest';
+import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
+import { useLatest } from '@/lib/useLatest/useLatest';
 import {
   useAudioAnalyzer,
   type UseAudioAnalyzerOptions,
-} from '@lib/useAudioAnalyzer/useAudioAnalyzer';
-import { AudioVisualizerCanvas } from '@lib/AudioVisualizerCanvas/AudioVisualizerCanvas';
+} from '@/lib/useAudioAnalyzer/useAudioAnalyzer';
+import { AudioVisualizerCanvas } from '@/lib/AudioVisualizerCanvas/AudioVisualizerCanvas';
 
 export type AudioVisualizerFrequencyBarsProps = Omit<ComponentPropsWithRef<'canvas'>, 'onResize'> &
   Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> &

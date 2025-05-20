@@ -1,4 +1,4 @@
-import { formatDurationForDisplay } from '@lib/utils/formatDurationForDisplay/formatDurationForDisplay';
+import { formatDurationForDisplay } from '@/utils/formatDurationForDisplay/formatDurationForDisplay';
 
 export function useAudioPlayerTime(props: { currentTime: number; duration: number }) {
   const { currentTime, duration } = props;

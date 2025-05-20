@@ -3,7 +3,7 @@ import {
   AUDIO_PLAYER_CONTEXT_TIME_ERROR,
   AudioPlayerContextTime,
   type AudioPlayerContextTimeType,
-} from './AudioPlayerContextTime';
+} from '@/lib/AudioPlayerContextTimeProvider/AudioPlayerContextTime';
 
 export function useAudioPlayerContextTime(): AudioPlayerContextTimeType {
   const context = useContext(AudioPlayerContextTime);

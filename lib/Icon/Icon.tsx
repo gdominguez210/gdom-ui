@@ -1,5 +1,5 @@
+import type { ComponentPropsWithRef, ComponentType } from 'react';
 import clsx from 'clsx';
-import { type ComponentPropsWithRef, type ComponentType } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export interface IconProps extends ComponentPropsWithRef<'svg'> {

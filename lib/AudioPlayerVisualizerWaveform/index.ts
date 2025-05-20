@@ -1,4 +1,4 @@
 export {
   AudioPlayerVisualizerWaveform,
   type AudioPlayerVisualizerWaveformProps,
-} from '@lib/AudioPlayerVisualizerWaveform/AudioPlayerVisualizerWaveform';
+} from '@/lib/AudioPlayerVisualizerWaveform/AudioPlayerVisualizerWaveform';

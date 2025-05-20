@@ -1,9 +1,9 @@
 'use client';
 
-import { type ElementType, type ComponentPropsWithRef } from 'react';
-import { useAudioPlaylistContext } from '@lib/AudioPlaylistContextProvider';
+import type { ElementType, ComponentPropsWithRef } from 'react';
+import { useAudioPlaylistContext } from '@/lib/AudioPlaylistContextProvider';
 import { AudioPlaylistExpandableContainerPrimitive } from './AudioPlaylistExpandableContainerPrimitive';
-import { useComposedRefs } from '@lib/useComposedRefs';
+import { useComposedRefs } from '@/lib/useComposedRefs';
 import { useAudioPlaylistExpandableContainer } from './useAudioPlaylistExpandableContainer';
 
 /**

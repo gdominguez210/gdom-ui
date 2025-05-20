@@ -1,6 +1,6 @@
 'use client';
 
-import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
+import { useAudioPlayerContextTime } from '@/lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
 import { useAudioPlayerTime } from './useAudioPlayerTime';
 import {
   AudioPlayerTimePrimitive,

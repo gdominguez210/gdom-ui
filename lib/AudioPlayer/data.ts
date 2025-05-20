@@ -1,5 +1,5 @@
-import type { AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
-import type { WaveformData } from '@lib/utils/processAudioFile/processAudioFile';
+import type { AudioTrackData } from '@/lib/AudioPlayerContextTrackProvider/reducer';
+import type { WaveformData } from '@/utils/processAudioFile/processAudioFile';
 
 export const trackData: AudioTrackData[] = [
   {

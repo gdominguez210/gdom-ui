@@ -6,12 +6,12 @@ import {
   type RefObject,
   useCallback,
 } from 'react';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
-import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
-import { useAudioPlayerMetadata } from '@lib/AudioPlayerControlAudio/useAudioPlayerMetadata';
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider';
-import { useComposedRefs } from '@lib/useComposedRefs';
+import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider';
+import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider';
+import { useAudioPlayerContextTime } from '@/lib/AudioPlayerContextTimeProvider';
+import { useAudioPlayerMetadata } from '@/lib/AudioPlayerControlAudio/useAudioPlayerMetadata';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider';
+import { useComposedRefs } from '@/lib/useComposedRefs';
 import { AudioPlayerControlAudioPrimitive } from './AudioPlayerControlAudioPrimitive';
 
 /**

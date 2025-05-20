@@ -1,11 +1,11 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { AudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/AudioPlayerProgressBar';
-import { AudioPlayerProgressBarPrimitive } from '@lib/AudioPlayerProgressBar/AudioPlayerProgressBarPrimitive';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { trackData } from '@lib/AudioPlayer/data';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
-import { AudioPlayerContextTimeProvider } from '@lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
+import { AudioPlayerProgressBar } from '@/lib/AudioPlayerProgressBar/AudioPlayerProgressBar';
+import { AudioPlayerProgressBarPrimitive } from '@/lib/AudioPlayerProgressBar/AudioPlayerProgressBarPrimitive';
+import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { trackData } from '@/lib/AudioPlayer/data';
+import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
+import { AudioPlayerContextTimeProvider } from '@/lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
 
 function AudioElement() {
   const { audioRef } = useAudioPlayerContextRefs();

@@ -1,6 +1,6 @@
 import type { ComponentPropsWithRef } from 'react';
 import { useCanvasResponsive } from './useCanvasResponsive';
-import { useComposedRefs } from '@lib/useComposedRefs/useComposedRefs';
+import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 

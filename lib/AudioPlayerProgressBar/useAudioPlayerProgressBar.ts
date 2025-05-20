@@ -5,9 +5,9 @@ import {
   type MouseEventHandler,
   type RefObject,
 } from 'react';
-import { useAnimationFrame } from '@lib/useAnimationFrame/useAnimationFrame';
-import { useElementDimensions } from '@lib/useElementDimensions/useElementDimensions';
-import { useDelayedMouseMove } from '@lib/useDelayedMouseMove/useDelayedMouseMove';
+import { useAnimationFrame } from '@/lib/useAnimationFrame/useAnimationFrame';
+import { useElementDimensions } from '@/lib/useElementDimensions/useElementDimensions';
+import { useDelayedMouseMove } from '@/lib/useDelayedMouseMove/useDelayedMouseMove';
 interface UseAudioPlayerProgressBarProps {
   audioRef: RefObject<HTMLAudioElement | null>;
   progressCssVariableName?: string;

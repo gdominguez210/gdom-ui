@@ -1,7 +1,7 @@
+import type { ElementType } from 'react';
+import type { AudioPlayerTitleProps } from '@/lib/AudioPlayerTitle/AudioPlayerTitle';
 import clsx from 'clsx';
-import { type ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { type AudioPlayerTitleProps } from '@lib/AudioPlayerTitle/AudioPlayerTitle';
 
 export type AudioPlayerTitlePrimitiveProps<T extends ElementType = 'p'> = AudioPlayerTitleProps<T>;
 

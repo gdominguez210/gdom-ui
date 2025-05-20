@@ -1,8 +1,11 @@
 'use client';
 
 import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
-import { AudioPlayerContextPlayback } from './AudioPlayerContextPlayback';
-import { playbackReducer, PLAYBACK_ACTIONS } from './reducer';
+import { AudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlayback';
+import {
+  playbackReducer,
+  PLAYBACK_ACTIONS,
+} from '@/lib/AudioPlayerContextPlaybackProvider/reducer';
 
 /**
  * Props for the audio playback context provider

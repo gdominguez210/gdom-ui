@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { type ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export type AudioPlayerControlButtonProps = ComponentPropsWithRef<'button'> & {

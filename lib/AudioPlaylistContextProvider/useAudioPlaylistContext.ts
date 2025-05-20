@@ -3,7 +3,7 @@ import {
   AUDIO_PLAYLIST_CONTEXT_ERROR,
   AudioPlaylistContext,
   type AudioPlaylistContextType,
-} from './AudioPlaylistContext';
+} from '@/lib/AudioPlaylistContextProvider/AudioPlaylistContext';
 
 /**
  * Hook to access playlist context for managing visibility and references

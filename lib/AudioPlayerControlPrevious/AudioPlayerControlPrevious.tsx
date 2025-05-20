@@ -6,11 +6,11 @@ import {
   type RefObject,
   useCallback,
 } from 'react';
-import { useAudioPlayerContextTime } from '@lib/AudioPlayerContextTimeProvider';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider';
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider';
+import { useAudioPlayerContextTime } from '@/lib/AudioPlayerContextTimeProvider';
+import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider';
 import { useAudioPlayerPreviousTrack } from './useAudioPlayerPreviousTrack';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
+import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider';
 import { AudioPlayerControlPreviousPrimitive } from './AudioPlayerControlPreviousPrimitive';
 
 export type AudioPlayerControlPreviousProps = ComponentPropsWithRef<'button'>;

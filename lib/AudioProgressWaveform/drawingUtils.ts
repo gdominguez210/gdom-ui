@@ -1,9 +1,9 @@
-import { interpolateOKLCH } from '@lib/utils/interpolateOKLCH/interpolateOKLCH';
-import { OKLCHToCSS } from '@lib/utils/OKLCHToCSS';
-import type { OKLCHColor } from '@lib/types/colors';
-import type { WaveformGradientStop } from '@lib/AudioWaveform/types';
-import type { MousePosition } from '@lib/useMousePositionRef/useMousePositionRef';
-import type { ElementDimensions } from '@lib/useElementDimensions/useElementDimensions';
+import { interpolateOKLCH } from '@/utils/interpolateOKLCH/interpolateOKLCH';
+import { OKLCHToCSS } from '@/utils/OKLCHToCSS';
+import type { OKLCHColor } from 'types/colors';
+import type { WaveformGradientStop } from '@/lib/AudioWaveform/types';
+import type { MousePosition } from '@/lib/useMousePositionRef/useMousePositionRef';
+import type { ElementDimensions } from '@/lib/useElementDimensions/useElementDimensions';
 
 /**
  * Interpolates between two colors based on a ratio

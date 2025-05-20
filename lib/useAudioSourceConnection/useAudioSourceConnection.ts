@@ -1,5 +1,5 @@
-import { useRefReady } from '@lib/useRefReady/useRefReady';
-import { type UseAudioContextWebAPIReturn } from '@lib/useAudioContextWebAPI/useAudioContextWebAPI';
+import { useRefReady } from '@/lib/useRefReady/useRefReady';
+import type { UseAudioContextWebAPIReturn } from '@/lib/useAudioContextWebAPI/useAudioContextWebAPI';
 import { useCallback, useEffect, useRef } from 'react';
 
 export type UseAudioSourceConnectionOptions = {

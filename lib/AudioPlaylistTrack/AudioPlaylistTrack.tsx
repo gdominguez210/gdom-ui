@@ -4,14 +4,14 @@ import {
   type ElementType,
   type MouseEvent as ReactMouseEvent,
   type KeyboardEvent,
+  type ComponentPropsWithRef,
   useCallback,
 } from 'react';
-import { type ComponentPropsWithRef } from 'react';
 import {
   AudioPlaylistTrackPrimitive,
   type AudioPlaylistTrackPrimitiveProps,
-} from '@lib/AudioPlaylistTrack/AudioPlaylistTrackPrimitive';
-import { useAudioPlaylistTrackContext } from '@lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
+} from '@/lib/AudioPlaylistTrack/AudioPlaylistTrackPrimitive';
+import { useAudioPlaylistTrackContext } from '@/lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
 
 /**
  * Props for the audio playlist track component

@@ -1,10 +1,10 @@
-import { AudioPlayerControlPlayPrimitive } from '@lib/AudioPlayerControlPlay/AudioPlayerControlPlayPrimitive';
+import { AudioPlayerControlPlayPrimitive } from '@/lib/AudioPlayerControlPlay/AudioPlayerControlPlayPrimitive';
 import {
   AudioPlayerImagePrimitive,
   type AudioPlayerImagePrimitiveProps,
-} from '@lib/AudioPlayerImage/AudioPlayerImagePrimitive';
+} from '@/lib/AudioPlayerImage/AudioPlayerImagePrimitive';
 import clsx from 'clsx';
-import { type ElementType } from 'react';
+import type { ElementType } from 'react';
 
 /**
  * Props for the audio playlist track image component

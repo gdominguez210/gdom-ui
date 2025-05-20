@@ -1,5 +1,5 @@
 import { useCallback, type RefObject } from 'react';
-import { getNextIndex, getRandomNumber } from '@lib/AudioPlayerControls/utils';
+import { getNextIndex, getRandomNumber } from '@/lib/AudioPlayerControls/utils';
 
 interface UseAudioPlayerPreviousTrackProps {
   loop: boolean;

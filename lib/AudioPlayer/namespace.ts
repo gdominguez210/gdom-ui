@@ -1,25 +1,25 @@
-import { AudioPlayerAuthor } from '@lib/AudioPlayerAuthor/AudioPlayerAuthor';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { AudioPlayerControls } from '@lib/AudioPlayerControls/AudioPlayerControls';
-import { AudioPlayerImage } from '@lib/AudioPlayerImage/AudioPlayerImage';
-import { AudioPlayerInfo } from '@lib/AudioPlayerInfo/AudioPlayerInfo';
-import { AudioPlayerProgressBar } from '@lib/AudioPlayerProgressBar/AudioPlayerProgressBar';
-import { AudioPlayerTime } from '@lib/AudioPlayerTime/AudioPlayerTime';
-import { AudioPlayerTitle } from '@lib/AudioPlayerTitle/AudioPlayerTitle';
-import { AudioPlayerVolume } from '@lib/AudioPlayerVolume/AudioPlayerVolume';
-import { AudioPlayerVolumeButton } from '@lib/AudioPlayerVolumeButton/AudioPlayerVolumeButton';
-import { AudioPlayerVolumeSlider } from '@lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
-import { AudioPlayerControlAudio } from '@lib/AudioPlayerControlAudio/AudioPlayerControlAudio';
-import { AudioPlayerControlPlay } from '@lib/AudioPlayerControlPlay/AudioPlayerControlPlay';
-import { AudioPlayerControlPrevious } from '@lib/AudioPlayerControlPrevious/AudioPlayerControlPrevious';
-import { AudioPlayerControlNext } from '@lib/AudioPlayerControlNext/AudioPlayerControlNext';
-import { AudioPlayerControlShuffle } from '@lib/AudioPlayerControlShuffle/AudioPlayerControlShuffle';
-import { AudioPlayerControlLoop } from '@lib/AudioPlayerControlLoop/AudioPlayerControlLoop';
-import { AudioPlayer } from '@lib/AudioPlayer/AudioPlayer';
-import { AudioPlayerContextAudioProvider } from '@lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
-import { AudioPlayerVisualizerWaveform } from '@lib/AudioPlayerVisualizerWaveform/AudioPlayerVisualizerWaveform';
-import { AudioPlayerVisualizerFrequencyBars } from '@lib/AudioPlayerVisualizerFrequencyBars/AudioPlayerVisualizerFrequencyBars';
-import { AudioPlayerProgressWaveform } from '@lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
+import { AudioPlayerAuthor } from '@/lib/AudioPlayerAuthor/AudioPlayerAuthor';
+import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { AudioPlayerControls } from '@/lib/AudioPlayerControls/AudioPlayerControls';
+import { AudioPlayerImage } from '@/lib/AudioPlayerImage/AudioPlayerImage';
+import { AudioPlayerInfo } from '@/lib/AudioPlayerInfo/AudioPlayerInfo';
+import { AudioPlayerProgressBar } from '@/lib/AudioPlayerProgressBar/AudioPlayerProgressBar';
+import { AudioPlayerTime } from '@/lib/AudioPlayerTime/AudioPlayerTime';
+import { AudioPlayerTitle } from '@/lib/AudioPlayerTitle/AudioPlayerTitle';
+import { AudioPlayerVolume } from '@/lib/AudioPlayerVolume/AudioPlayerVolume';
+import { AudioPlayerVolumeButton } from '@/lib/AudioPlayerVolumeButton/AudioPlayerVolumeButton';
+import { AudioPlayerVolumeSlider } from '@/lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
+import { AudioPlayerControlAudio } from '@/lib/AudioPlayerControlAudio/AudioPlayerControlAudio';
+import { AudioPlayerControlPlay } from '@/lib/AudioPlayerControlPlay/AudioPlayerControlPlay';
+import { AudioPlayerControlPrevious } from '@/lib/AudioPlayerControlPrevious/AudioPlayerControlPrevious';
+import { AudioPlayerControlNext } from '@/lib/AudioPlayerControlNext/AudioPlayerControlNext';
+import { AudioPlayerControlShuffle } from '@/lib/AudioPlayerControlShuffle/AudioPlayerControlShuffle';
+import { AudioPlayerControlLoop } from '@/lib/AudioPlayerControlLoop/AudioPlayerControlLoop';
+import { AudioPlayer } from '@/lib/AudioPlayer/AudioPlayer';
+import { AudioPlayerContextAudioProvider } from '@/lib/AudioPlayerContextAudioProvider/AudioPlayerContextAudioProvider';
+import { AudioPlayerVisualizerWaveform } from '@/lib/AudioPlayerVisualizerWaveform/AudioPlayerVisualizerWaveform';
+import { AudioPlayerVisualizerFrequencyBars } from '@/lib/AudioPlayerVisualizerFrequencyBars/AudioPlayerVisualizerFrequencyBars';
+import { AudioPlayerProgressWaveform } from '@/lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
 
 // Create the namespace with Object.assign inline for each component
 export const AudioPlayerCompoundComponent = {

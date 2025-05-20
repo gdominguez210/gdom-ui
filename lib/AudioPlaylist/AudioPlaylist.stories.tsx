@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { AudioPlaylist } from '@lib/AudioPlaylist/AudioPlaylist';
-import { AudioPlaylistCompoundComponent } from '@lib/AudioPlaylist/namespace';
-import { AudioPlayerCompoundComponent } from '@lib/AudioPlayer/namespace';
-import { AudioPlayerContextProvider } from '@lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { AudioPlaylistContextProvider } from '@lib/AudioPlaylistContextProvider';
-import { AudioPlaylistTracks } from '@lib/AudioPlaylistTracks/AudioPlaylistTracks';
-import { AudioPlaylistHeader } from '@lib/AudioPlaylistHeader/AudioPlaylistHeader';
-import { AudioPlaylistDismiss } from '@lib/AudioPlaylistDismiss/AudioPlaylistDismiss';
-import { AudioPlaylistControlToggle } from '@lib/AudioPlaylistControlToggle/AudioPlaylistControlToggle';
-import { AudioPlaylistExpandableContainer } from '@lib/AudioPlaylistExpandableContainer';
-import { AudioPlaylistScrollableContainer } from '@lib/AudioPlaylistScrollableContainer';
-import { AudioPlaylistTrack } from '@lib/AudioPlaylistTrack/AudioPlaylistTrack';
-import { AudioPlaylistTrackContextProvider } from '@lib/AudioPlaylistTrackContextProvider';
-import { AudioPlaylistTrackImage } from '@lib/AudioPlaylistTrackImage';
-import { AudioPlaylistTrackTitle } from '@lib/AudioPlaylistTrackTitle';
-import { AudioPlaylistTrackAuthor } from '@lib/AudioPlaylistTrackAuthor';
-import { trackData } from '@lib/AudioPlayer/data';
+import { AudioPlaylist } from '@/lib/AudioPlaylist/AudioPlaylist';
+import { AudioPlaylistCompoundComponent } from '@/lib/AudioPlaylist/namespace';
+import { AudioPlayerCompoundComponent } from '@/lib/AudioPlayer/namespace';
+import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
+import { AudioPlaylistContextProvider } from '@/lib/AudioPlaylistContextProvider';
+import { AudioPlaylistTracks } from '@/lib/AudioPlaylistTracks/AudioPlaylistTracks';
+import { AudioPlaylistHeader } from '@/lib/AudioPlaylistHeader/AudioPlaylistHeader';
+import { AudioPlaylistDismiss } from '@/lib/AudioPlaylistDismiss/AudioPlaylistDismiss';
+import { AudioPlaylistControlToggle } from '@/lib/AudioPlaylistControlToggle/AudioPlaylistControlToggle';
+import { AudioPlaylistExpandableContainer } from '@/lib/AudioPlaylistExpandableContainer';
+import { AudioPlaylistScrollableContainer } from '@/lib/AudioPlaylistScrollableContainer';
+import { AudioPlaylistTrack } from '@/lib/AudioPlaylistTrack/AudioPlaylistTrack';
+import { AudioPlaylistTrackContextProvider } from '@/lib/AudioPlaylistTrackContextProvider';
+import { AudioPlaylistTrackImage } from '@/lib/AudioPlaylistTrackImage';
+import { AudioPlaylistTrackTitle } from '@/lib/AudioPlaylistTrackTitle';
+import { AudioPlaylistTrackAuthor } from '@/lib/AudioPlaylistTrackAuthor';
+import { trackData } from '@/lib/AudioPlayer/data';
 
 const simplifiedExampleSource = `
 <AudioPlayerContextProvider tracks={trackData}>

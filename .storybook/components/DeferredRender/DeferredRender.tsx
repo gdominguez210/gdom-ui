@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, type ComponentPropsWithRef } from 'react';
-import { useIntersectionObserver } from '@lib/useIntersectionObserver/useIntersectionObserver';
+import { useIntersectionObserver } from '@/lib/useIntersectionObserver/useIntersectionObserver';
 
 type DeferredRenderProps = ComponentPropsWithRef<'div'> & {
   height?: number;

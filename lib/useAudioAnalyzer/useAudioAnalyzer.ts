@@ -1,8 +1,9 @@
-import { useAnimationFrame } from '@lib/useAnimationFrame/useAnimationFrame';
+import { useAnimationFrame } from '@/lib/useAnimationFrame/useAnimationFrame';
 import { useCallback } from 'react';
-import { useAnalyzerNode } from '@lib/useAnalyzerNode/useAnalyzerNode';
-import { useAudioSourceConnection } from '@lib/useAudioSourceConnection/useAudioSourceConnection';
-import { type UseAudioContextWebAPIReturn } from '@lib/useAudioContextWebAPI/useAudioContextWebAPI';
+import { useAnalyzerNode } from '@/lib/useAnalyzerNode/useAnalyzerNode';
+import { useAudioSourceConnection } from '@/lib/useAudioSourceConnection/useAudioSourceConnection';
+import type { UseAudioContextWebAPIReturn } from '@/lib/useAudioContextWebAPI/useAudioContextWebAPI';
+
 /**
  * Smooths the data between frames
  * @param current - The current frame's data

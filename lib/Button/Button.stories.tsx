@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import type { ReactElement } from 'react';
 import { Button as ButtonComponent, type ButtonProps } from './Button';
-import { IconLibrary } from '@lib/IconLibrary/IconLibrary';
-import { sizes } from '@lib/Button/data';
+import { IconLibrary } from '@/lib/IconLibrary/IconLibrary';
+import { sizes } from '@/lib/Button/data';
 import { type HTMLAttributes, Fragment } from 'react';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { getBarColor, FREQUENCY_BARS_COLOR_MODES, type DynamicColorMode } from './drawingUtils';
-import type { OKLCHColor } from '@lib/types/colors';
+import type { OKLCHColor } from 'types/colors';
 
 describe('AudioVisualizerFrequencyBars drawingUtils', () => {
   describe('getBarColor should...', () => {

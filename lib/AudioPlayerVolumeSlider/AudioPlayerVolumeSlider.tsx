@@ -1,8 +1,8 @@
 'use client';
 
 import { useCallback, type ChangeEventHandler } from 'react';
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
-import { useAudioPlayerContextRefs } from '@lib/AudioPlayerContextRefsProvider';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
+import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider';
 import {
   AudioPlayerVolumeSliderPrimitive,
   type AudioPlayerVolumeSliderPrimitiveProps,

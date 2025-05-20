@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 import { AudioPlaylistExpandableContainer } from './AudioPlaylistExpandableContainer';
-import { AudioPlaylistContextProvider } from '@lib/AudioPlaylistContextProvider/AudioPlaylistContextProvider';
+import { AudioPlaylistContextProvider } from '@/lib/AudioPlaylistContextProvider/AudioPlaylistContextProvider';
 
 describe('AudioPlaylistExpandableContainer', () => {
   test('should render with default props when visible', () => {

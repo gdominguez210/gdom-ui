@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { trackReducer, type TrackState, TRACK_ACTIONS } from './reducer';
-import { trackData } from '@lib/AudioPlayer/data';
+import { trackData } from '@/lib/AudioPlayer/data';
 
 describe('trackReducer', () => {
   const initialState: TrackState = {

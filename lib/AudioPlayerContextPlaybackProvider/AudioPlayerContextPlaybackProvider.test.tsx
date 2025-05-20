@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { AudioPlayerContextPlaybackProvider } from './AudioPlayerContextPlaybackProvider';
-import { useAudioPlayerContextPlayback } from './useAudioPlayerContextPlayback';
+import { AudioPlayerContextPlaybackProvider } from '@/lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlaybackProvider';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
 
 describe('AudioPlayerContextPlaybackProvider', () => {
   test('should initialize with default values when no props provided', () => {

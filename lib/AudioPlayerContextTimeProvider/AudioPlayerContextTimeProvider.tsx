@@ -1,8 +1,8 @@
 'use client';
 
 import { type PropsWithChildren, useReducer, useMemo, useCallback } from 'react';
-import { AudioPlayerContextTime } from './AudioPlayerContextTime';
-import { timeReducer, TIME_ACTIONS } from './reducer';
+import { AudioPlayerContextTime } from '@/lib/AudioPlayerContextTimeProvider/AudioPlayerContextTime';
+import { timeReducer, TIME_ACTIONS } from '@/lib/AudioPlayerContextTimeProvider/reducer';
 
 /**
  * Props for the time tracking context provider

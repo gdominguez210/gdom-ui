@@ -2,9 +2,9 @@
 
 import { type PropsWithChildren, useMemo, useCallback } from 'react';
 import { AudioPlaylistTrackContext } from './AudioPlaylistTrackContext';
-import { useAudioPlayerContextPlayback } from '@lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
-import { useAudioPlayerContextTrack } from '@lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
-import type { AudioTrackData } from '@lib/AudioPlayerContextTrackProvider/reducer';
+import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
+import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
+import type { AudioTrackData } from '@/lib/AudioPlayerContextTrackProvider/reducer';
 /**
  * Props for the AudioPlaylistTrack context provider
  */

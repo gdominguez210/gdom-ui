@@ -1,6 +1,6 @@
 import type { StoryObj, Meta } from '@storybook/react';
-import { IconLibrary } from '@lib/IconLibrary/IconLibrary';
-import { icons, type IconName } from '@lib/IconLibrary/data';
+import { IconLibrary } from '@/lib/IconLibrary/IconLibrary';
+import { icons, type IconName } from '@/lib/IconLibrary/data';
 
 const iconNames = Object.keys(icons) as IconName[];
 

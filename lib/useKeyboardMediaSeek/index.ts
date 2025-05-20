@@ -1,1 +1,1 @@
-export { useKeyboardMediaSeek } from '@lib/useKeyboardMediaSeek/useKeyboardMediaSeek';
+export { useKeyboardMediaSeek } from '@/lib/useKeyboardMediaSeek/useKeyboardMediaSeek';

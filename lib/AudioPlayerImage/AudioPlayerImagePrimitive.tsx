@@ -1,8 +1,8 @@
+import type { ElementType } from 'react';
+import type { AudioPlayerImageProps } from '@/lib/AudioPlayerImage/AudioPlayerImage';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { type AudioPlayerImageProps } from '@lib/AudioPlayerImage/AudioPlayerImage';
-import { type ElementType } from 'react';
-import { IconDiscFill } from '@lib/IconDiscFill';
+import { IconDiscFill } from '@/lib/IconDiscFill';
 
 export type AudioPlayerImagePrimitiveProps<T extends ElementType = 'div'> =
   AudioPlayerImageProps<T> & {

@@ -1,7 +1,7 @@
 import {
   CanvasResponsive,
   type CanvasResponsiveProps,
-} from '@lib/CanvasResponsive/CanvasResponsive';
+} from '@/lib/CanvasResponsive/CanvasResponsive';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 export type AudioVisualizerCanvasProps = CanvasResponsiveProps;
