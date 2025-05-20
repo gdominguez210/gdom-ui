@@ -3,4 +3,8 @@ export {
   AudioPlayerProgressBarPrimitive,
   type AudioPlayerProgressBarPrimitiveProps,
 } from './AudioPlayerProgressBarPrimitive';
-export { useAudioPlayerProgressBar } from './useAudioPlayerProgressBar';
+export {
+  useAudioPlayerProgressBar,
+  type UseAudioPlayerProgressBarReturn,
+  type UseAudioPlayerProgressBarProps,
+} from './useAudioPlayerProgressBar';

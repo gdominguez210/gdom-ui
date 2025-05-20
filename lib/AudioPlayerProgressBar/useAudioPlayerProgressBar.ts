@@ -6,9 +6,13 @@ import {
   type RefObject,
 } from 'react';
 import { useAnimationFrame } from '@/lib/useAnimationFrame/useAnimationFrame';
-import { useElementDimensions } from '@/lib/useElementDimensions/useElementDimensions';
+import {
+  useElementDimensions,
+  type UseElementDimensionsReturn,
+} from '@/lib/useElementDimensions/useElementDimensions';
 import { useDelayedMouseMove } from '@/lib/useDelayedMouseMove/useDelayedMouseMove';
-interface UseAudioPlayerProgressBarProps {
+
+export type UseAudioPlayerProgressBarProps = {
   audioRef: RefObject<HTMLAudioElement | null>;
   progressCssVariableName?: string;
   previewCssVariableName?: string;
@@ -17,7 +21,7 @@ interface UseAudioPlayerProgressBarProps {
   onProgressChange: (time: number) => void;
   onPreviewTimeChange?: (time: number | null) => void;
   progressBarRef: RefObject<HTMLInputElement | null>;
-}
+};
 
 /**
  * Updates an HTML input range element's value
@@ -37,6 +41,14 @@ function updateAudioCurrentTime(audio: HTMLAudioElement | null, time: number): v
   audio.currentTime = time;
 }
 
+export type UseAudioPlayerProgressBarReturn = {
+  handleProgressChange: ChangeEventHandler<HTMLInputElement>;
+  handleMouseEnter: MouseEventHandler<HTMLInputElement>;
+  handleMouseMove: MouseEventHandler<HTMLInputElement>;
+  handleMouseOut: MouseEventHandler<HTMLInputElement>;
+  elementRef: UseElementDimensionsReturn['elementRef'];
+};
+
 /**
  * Custom hook for managing audio player progress bar
  * Handles progress bar value updates and animation
@@ -50,7 +62,7 @@ export function useAudioPlayerProgressBar({
   onProgressChange,
   onPreviewTimeChange,
   progressBarRef,
-}: UseAudioPlayerProgressBarProps) {
+}: UseAudioPlayerProgressBarProps): useAudioPlayerProgressBarReturn {
   const { dimensionsRef, elementRef } = useElementDimensions();
 
   const _handleMouseMove: MouseEventHandler<HTMLInputElement> = useCallback(
