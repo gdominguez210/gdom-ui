@@ -1,10 +1,9 @@
-import { StoryFn } from '@storybook/react';
-import { Decorator } from '@storybook/types';
+import type { StoryFn, Decorator } from '@storybook/react';
 import { useEffect } from 'react';
 
 export const CollapseCategory =
   (...categoryNames: string[]): Decorator =>
-  (Story: StoryFn) => {
+  (Story: StoryFn, context) => {
     useEffect(() => {
       setTimeout(() => {
         // Process each category
@@ -24,5 +23,5 @@ export const CollapseCategory =
       }, 0);
     }, []);
 
-    return Story();
+    return Story(context.args, context);
   };
