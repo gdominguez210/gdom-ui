@@ -3,3 +3,4 @@ dist
 storybook-static
 coverage
 .generate-component/**/*.js
+.DS_Store
