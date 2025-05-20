@@ -1,18 +1,21 @@
-import type { StoryObj, Meta } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 import { AudioWaveform, type AudioWaveformProps } from '@/lib/AudioWaveform/AudioWaveform';
 import { waveformData } from '@/lib/AudioPlayer/data';
-import { DeferredRender } from '@storybook-components/DeferredRender/DeferredRender';
+import { CollapseCategory } from '@storybook-decorators/CollapseCategory/CollapseCategory';
+import { DeferredRender } from '@/.storybook/components/DeferredRender/DeferredRender';
 
 const sampleWaveformData = waveformData['58730401-c910-4a77-935e-83d71d5d1a52'] || [];
 
 function AudioWaveformWrapper(props: AudioWaveformProps) {
   return (
     <DeferredRender height={150}>
-      <AudioWaveform {...props} />
+      <AudioWaveform
+        className="max-h-[150px]"
+        {...props}
+      />
     </DeferredRender>
   );
 }
-
 AudioWaveformWrapper.displayName = 'AudioWaveform';
 
 export default {
@@ -25,6 +28,7 @@ export default {
           'A customizable audio waveform visualization component that renders amplitude data as vertical bars.',
       },
       source: {
+        type: 'dynamic',
         transform: (code: string) => {
           // Replace array literal with placeholder
           return code.replace(
@@ -33,59 +37,108 @@ export default {
           );
         },
       },
-    },
-  },
-  argTypes: {
-    waveformData: {
-      control: 'object',
-      description: 'Array of normalized amplitude values between 0-1',
-      table: {
-        disable: true, // Hide from controls table due to large size
+      controls: {
+        sort: 'alpha',
+      },
+      canvas: {
+        sourceState: 'shown',
       },
     },
-    barColor: {
-      control: 'color',
-      description: 'Color of the waveform bars',
-      defaultValue: { summary: '#9f9fa9' },
+  },
+  decorators: [CollapseCategory('Advanced')],
+  argTypes: {
+    // Appearance
+    heightScale: {
+      control: { type: 'range', min: 0.1, max: 1, step: 0.1 },
+      description: 'Height of waveform as a proportion of canvas height',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '1' },
+        category: 'Appearance',
+      },
     },
     barGapRatio: {
       control: { type: 'range', min: 0, max: 0.02, step: 0.001 },
       description: 'Gap between bars as a proportion of canvas width',
-      defaultValue: { summary: 0.0035 },
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '0.0035' },
+        category: 'Appearance',
+      },
     },
     minBarWidth: {
       control: { type: 'range', min: 1, max: 10, step: 1 },
       description: 'Minimum width for each bar in pixels',
-      defaultValue: { summary: 1 },
-    },
-    heightScale: {
-      control: { type: 'range', min: 0.1, max: 1, step: 0.1 },
-      description: 'Height of waveform as a proportion of canvas height',
-      defaultValue: { summary: 1 },
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '1' },
+        category: 'Appearance',
+      },
     },
     minBarGapPercent: {
       control: { type: 'range', min: 0, max: 0.02, step: 0.001 },
       description: 'Minimum gap between bars as a percentage of canvas width',
-      defaultValue: { summary: 0.001 },
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '0.001' },
+        category: 'Appearance',
+      },
     },
+
+    // Color Configuration
+    barColor: {
+      control: 'color',
+      description: 'Color of the waveform bars',
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: '#9f9fa9' },
+        category: 'Color Configuration',
+      },
+    },
+    getBarColor: {
+      control: false,
+      description: 'Function to determine bar color based on state',
+      table: {
+        type: { summary: '(barInfo: WaveformBarInfo) => string' },
+        category: 'Color Configuration',
+      },
+    },
+
+    // Advanced
+    waveformData: {
+      control: false,
+      description: 'Array of normalized amplitude values between 0-1',
+      table: {
+        type: { summary: 'number[]' },
+        category: 'Advanced',
+      },
+    },
+    drawOnCanvasReady: {
+      control: 'boolean',
+      description: 'Whether to draw the waveform when the canvas ref is set',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+        category: 'Advanced',
+      },
+    },
+
     className: {
       table: {
         disable: true,
       },
     },
   },
-  tags: ['autodocs'],
 } as Meta<typeof AudioWaveform>;
 
 export const Basic: StoryObj<typeof AudioWaveform> = {
   args: {
-    waveformData: sampleWaveformData,
     barColor: '#9f9fa9',
     barGapRatio: 0.0035,
-    minBarWidth: 1,
-    minBarGapPercent: 0.001,
     heightScale: 0.8,
-    className: 'max-h-[150px]',
+    minBarGapPercent: 0.001,
+    minBarWidth: 1,
+    waveformData: sampleWaveformData,
   },
   parameters: {
     layout: 'fullscreen',
@@ -94,103 +147,85 @@ export const Basic: StoryObj<typeof AudioWaveform> = {
         story:
           'Basic waveform visualization with default settings. Uses a blue color scheme and balanced bar width/spacing.',
       },
-      source: {
-        type: 'dynamic',
-      },
-      canvas: {
-        sourceState: 'shown',
-      },
     },
   },
   render: (args) => <AudioWaveformWrapper {...args} />,
 };
 
-export const DenseWaveform: StoryObj<typeof AudioWaveform> = {
+export const CustomColors: StoryObj<typeof AudioWaveform> = {
   args: {
-    waveformData: sampleWaveformData,
-    barColor: '#333333',
-    barGapRatio: 0, // No gap
-    heightScale: 0.8,
-    minBarGapPercent: 0,
-    className: 'max-h-[150px]',
-  },
-  parameters: {
-    layout: 'fullscreen',
-    docs: {
-      description: {
-        story:
-          'Dense waveform with thinner bars and minimal gaps, creating a more compact visualization with higher detail.',
-      },
-    },
-  },
-  render: (args) => <AudioWaveformWrapper {...args} />,
-};
-
-export const SparseWaveform: StoryObj<typeof AudioWaveform> = {
-  args: {
-    waveformData: sampleWaveformData,
-    barColor: '#990000',
-    barGapRatio: 0.01, // Wider gaps
-    minBarWidth: 4, // Thicker bars
-    heightScale: 0.8,
-    minBarGapPercent: 0.001,
-    className: 'max-h-[150px]',
-  },
-  parameters: {
-    layout: 'fullscreen',
-    docs: {
-      description: {
-        story:
-          'Sparse waveform with thicker bars and wider gaps, providing a more spaced-out, less detailed visualization.',
-      },
-    },
-  },
-  render: (args) => <AudioWaveformWrapper {...args} />,
-};
-
-export const CustomHeightScale: StoryObj<typeof AudioWaveform> = {
-  args: {
-    waveformData: sampleWaveformData,
-    barColor: '#009966',
+    barColor: '#03C988',
     barGapRatio: 0.0035,
-    minBarWidth: 2,
-    heightScale: 0.5, // Only 50% of container height
-    minBarGapPercent: 0.001,
-    className: 'max-h-[150px]',
+    heightScale: 0.8,
+    minBarWidth: 1,
+    waveformData: sampleWaveformData,
   },
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
-        story:
-          'Waveform with reduced height scale (50% of container), demonstrating how the visualization can be vertically constrained.',
+        story: 'Waveform with custom color scheme.',
       },
     },
   },
   render: (args) => <AudioWaveformWrapper {...args} />,
 };
 
-export const CustomColorFunction: StoryObj<typeof AudioWaveform> = {
+export const DynamicColors: StoryObj<typeof AudioWaveform> = {
   args: {
-    waveformData: sampleWaveformData,
     barGapRatio: 0.0035,
-    minBarWidth: 2,
-    heightScale: 0.8,
-    minBarGapPercent: 0.001,
-    className: 'max-h-[150px]',
     getBarColor: (barInfo) => {
-      // Color based on amplitude
-      if (barInfo.value > 0.7) return '#ff3300'; // Loud parts
-      if (barInfo.value > 0.4) return '#ff9900'; // Medium parts
-      return '#cccccc'; // Quiet parts
+      if (barInfo.value > 0.7) return '#ff3300'; // Loud sections
+      if (barInfo.value > 0.4) return '#ff9900'; // Medium sections
+      return '#cccccc'; // Quiet sections
     },
+    heightScale: 0.8,
+    minBarWidth: 1,
+    waveformData: sampleWaveformData,
   },
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
-        story:
-          'Waveform with dynamic coloring based on amplitude values. Loud sections appear red, medium sections in orange, and quiet sections in light gray.',
+        story: 'Waveform with dynamic colors based on amplitude values.',
+      },
+    },
+  },
+  render: (args) => <AudioWaveformWrapper {...args} />,
+};
+
+export const HighResolution: StoryObj<typeof AudioWaveform> = {
+  args: {
+    barColor: '#9f9fa9',
+    barGapRatio: 0.001,
+    heightScale: 0.8,
+    minBarWidth: 1,
+    waveformData: sampleWaveformData,
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story: 'High-resolution waveform with minimal gaps between bars.',
+      },
+    },
+  },
+  render: (args) => <AudioWaveformWrapper {...args} />,
+};
+
+export const LowResolution: StoryObj<typeof AudioWaveform> = {
+  args: {
+    barColor: '#9f9fa9',
+    barGapRatio: 0.015,
+    heightScale: 0.8,
+    minBarWidth: 3,
+    waveformData: sampleWaveformData,
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story: 'Low-resolution waveform with wider bars and larger gaps.',
       },
     },
   },
