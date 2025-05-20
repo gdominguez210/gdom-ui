@@ -1,5 +1,5 @@
-import { Button, type ButtonProps } from '@lib/Button/Button';
-import { IconLibrary } from '@lib/IconLibrary/IconLibrary';
+import { Button, type ButtonProps } from '@/lib/Button/Button';
+import { IconLibrary } from '@/lib/IconLibrary/IconLibrary';
 
 const BASE_URL = 'https://github.com/gdominguez210/gdom-ui/tree/main/lib/';
 
@@ -16,6 +16,7 @@ export function ViewSource(props: ViewSourceProps) {
       href={composedUrl}
       variant="secondary"
       target="_blank"
+      className="text-sky-500"
       {...restProps}
     >
       <span>View Source</span>
