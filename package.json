@@ -28,8 +28,8 @@
     },
     "./*": {
       "import": {
-        "default": "./dist/*/index.es.js",
-        "types": "./dist/*/index.d.ts"
+        "types": "./dist/*/index.d.ts",
+        "default": "./dist/*/index.es.js"
       },
       "require": {
         "types": "./dist/*/index.d.ts",
