@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { interpolateOKLCH } from './interpolateOKLCH';
-import type { OKLCHColor } from '@lib/types/colors';
+import type { OKLCHColor } from '@/types/colors';
 
 describe('interpolateOKLCH', () => {
   it('should return colorA when progress is 0', () => {

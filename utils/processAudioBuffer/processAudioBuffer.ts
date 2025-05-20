@@ -1,6 +1,6 @@
-import type { WaveformGenerationOptions } from '@lib/utils/getWaveformData/getWaveformData';
-import { generateWaveformPoints } from '@lib/utils/getWaveformData/getWaveformData';
-import type { WaveformData } from '@lib/utils/processAudioFile/processAudioFile';
+import type { WaveformGenerationOptions } from '@/utils/getWaveformData/getWaveformData';
+import { generateWaveformPoints } from '@/utils/getWaveformData/getWaveformData';
+import type { WaveformData } from '@/utils/processAudioFile/processAudioFile';
 
 /**
  * Process an AudioBuffer to generate waveform data

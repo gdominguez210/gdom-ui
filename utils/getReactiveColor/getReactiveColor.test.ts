@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { getReactiveColor, type ReactivePropertyConfig } from './getReactiveColor';
-import { OKLCHProperty } from '@lib/types/colors';
+import { OKLCHProperty } from '@/types/colors';
 
 describe('getReactiveColor should...', () => {
   const baseColor: [number, number, number] = [0.5, 0.2, 180];

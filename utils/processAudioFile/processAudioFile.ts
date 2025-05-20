@@ -1,5 +1,6 @@
-import { type WaveformGenerationOptions } from '@lib/utils/getWaveformData/getWaveformData';
-import { processAudioBuffer } from '@lib/utils/processAudioBuffer/processAudioBuffer';
+import type { WaveformGenerationOptions } from '@/utils/getWaveformData/getWaveformData';
+import { processAudioBuffer } from '@/utils/processAudioBuffer/processAudioBuffer';
+
 /**
  * Interface for waveform data
  */
