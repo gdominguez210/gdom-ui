@@ -26,7 +26,7 @@ const args = process.argv.slice(2);
 const forceRegeneration = args.includes('--force');
 
 // Configuration
-const SVG_DIR = path.resolve(__dirname, '../lib/assets/svgs');
+const SVG_DIR = path.resolve(__dirname, '../assets/svgs');
 const OUTPUT_DIR = path.resolve(__dirname, '../lib');
 const INDEX_FILE = path.resolve(__dirname, '../lib/index.ts');
 
@@ -72,8 +72,8 @@ svgFiles.forEach((svgFile) => {
   }
 
   // Create component file content
-  const componentContent = `import { ReactComponent as ${pascalCaseName}Svg } from '@lib/assets/svgs/${filename}.svg';
-import { Icon, type IconProps } from '@lib/Icon/Icon';
+  const componentContent = `import { ReactComponent as ${pascalCaseName}Svg } from '@/assets/svgs/${filename}.svg';
+import { Icon, type IconProps } from '@/lib/Icon/Icon';
 
 export function ${componentName}(props: Omit<IconProps, 'as'>) {
   return <Icon as={${pascalCaseName}Svg} {...props} />;
