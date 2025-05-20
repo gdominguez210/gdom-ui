@@ -40,6 +40,7 @@ const config: StorybookConfig = {
           '@storybook-components': join(__dirname, './components'),
           '@storybook-decorators': join(__dirname, './decorators'),
           '@lib': join(__dirname, '../lib'),
+          '@': join(__dirname, '../'),
         },
       },
     };
