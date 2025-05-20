@@ -1,0 +1,1 @@
+export { IconForwardEndFill } from './IconForwardEndFill';

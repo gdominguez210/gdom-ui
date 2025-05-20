@@ -1,0 +1,1 @@
+export { IconSpeedFill } from './IconSpeedFill';

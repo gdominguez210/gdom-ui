@@ -1,3 +1,17 @@
+# [1.38.0](https://github.com/gdominguez210/gdom-ui/compare/v1.37.0...v1.38.0) (2025-05-20)
+
+
+### Bug Fixes
+
+* **lib/AudioVisualizerFrequencyBars:** pass frameTransitionSmoothing prop to useAudioAnalyzer ([b25cb57](https://github.com/gdominguez210/gdom-ui/commit/b25cb5780ceca4ca82f37a47ce1434466298c644))
+* **lib/AudioVisualizerWaveform:** pass frameTransitionSmoothing prop to useAudioAnalyzer ([508a363](https://github.com/gdominguez210/gdom-ui/commit/508a363540edde28b59bed863e8baf5ce16966f4))
+
+
+### Features
+
+* **lib/AudioPlayerProgressBar:** add exponential seek keyboard controls ([90dcec6](https://github.com/gdominguez210/gdom-ui/commit/90dcec680f8f1685920a2bf48e155b955eb1f7f2))
+* use multiple entry-points for library bundle, so each component has their own barrel file for code-splitting ([73238f9](https://github.com/gdominguez210/gdom-ui/commit/73238f919e51a8f5d1c8ec9373d87ffb33b9636e))
+
 # [1.37.0](https://github.com/gdominguez210/gdom-ui/compare/v1.36.0...v1.37.0) (2025-05-14)
 
 

@@ -1,0 +1,1 @@
+export { useColorTransition } from './useColorTransition';
