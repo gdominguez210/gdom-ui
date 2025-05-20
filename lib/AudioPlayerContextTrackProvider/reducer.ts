@@ -4,6 +4,7 @@ export type AudioTrackData = {
   src: string;
   author: string;
   thumbnail?: string;
+  [key: string]: unknown;
 };
 
 export type TrackState = {
