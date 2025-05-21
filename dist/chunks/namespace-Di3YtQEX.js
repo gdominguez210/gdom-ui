@@ -22,7 +22,7 @@ const bundleMjs = require('./bundle-mjs-BaFtyl1I.js');
 const AudioPlayerContextAudioProvider = require('./AudioPlayerContextAudioProvider-BCCY-JlP.js');
 const AudioPlayerVisualizerWaveform = require('./AudioPlayerVisualizerWaveform-DUOb_Lsu.js');
 const AudioPlayerVisualizerFrequencyBars = require('./AudioPlayerVisualizerFrequencyBars-ioRL8bnE.js');
-const AudioPlayerProgressWaveform = require('./AudioPlayerProgressWaveform-B0VifpUb.js');
+const AudioPlayerProgressWaveform = require('./AudioPlayerProgressWaveform-BiqN33IN.js');
 
 function AudioPlayer(props) {
   const { as: Element = "div", children, className, ...restProps } = props;

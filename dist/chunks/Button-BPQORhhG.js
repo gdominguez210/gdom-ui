@@ -1,19 +1,17 @@
-'use strict';
+import { jsx } from 'react/jsx-runtime';
+import { t as twMerge } from './bundle-mjs-Cl353mOg.js';
+import { c as cva } from './index-B6DrbSSM.js';
 
-const jsxRuntime = require('react/jsx-runtime');
-const bundleMjs = require('./bundle-mjs-BaFtyl1I.js');
-const index = require('./index-DO6P1IFO.js');
-
-const buttonStyles = index.cva(
+const buttonStyles = cva(
   ["inline-flex justify-center items-center rounded-sm font-medium focus-visible:outline-hidden"],
   {
     variants: {
       variant: {
-        primary: "bg-indigo-700 hover:bg-indigo-800 focus:bg-indigo-800 active:bg-indigo-800 text-white",
+        primary: "bg-sky-500 hover:bg-sky-700 focus:bg-sky-700 active:bg-sky-700 text-white",
         secondary: "bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border active:border border-solid border-neutral-200",
-        tertiary: "text-indigo-700 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50",
+        tertiary: "text-sky-500 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50",
         destructive: "text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 focus:shadow-red-700/12",
-        linkColor: "text-indigo-700 hover:text-indigo-800 focus:text-indigo-800 active:text-indigo-800",
+        linkColor: "text-sky-500 hover:text-sky-700 focus:text-sky-700 active:text-sky-700",
         linkGray: "text-neutral-600 hover:text-neutral-900 focus:text-neutral-900 active:text-neutral-900"
       },
       size: {
@@ -104,10 +102,10 @@ function Button(props) {
     ...restProps
   } = props;
   const isDestructive = variant === "destructive";
-  return /* @__PURE__ */ jsxRuntime.jsx(
+  return /* @__PURE__ */ jsx(
     Element,
     {
-      className: bundleMjs.twMerge(
+      className: twMerge(
         buttonStyles({ variant, size, disabled, iconOnly, isDestructive }),
         className
       ),
@@ -118,4 +116,4 @@ function Button(props) {
   );
 }
 
-exports.Button = Button;
+export { Button as B };

@@ -1,15 +1,17 @@
-import { jsx } from 'react/jsx-runtime';
-import { t as twMerge, c as clsx } from './bundle-mjs-Cl353mOg.js';
-import { useMemo, useCallback } from 'react';
-import { O as OKLCHToCSS, i as interpolateOKLCH, c as convertColorToOKLCH } from './interpolateOKLCH-C_xAKj2b.js';
-import { u as useElementDimensions } from './useElementDimensions-ycOHs4C9.js';
-import { u as useMousePositionRef } from './useMousePositionRef-CDLDoHd4.js';
-import { u as useAudioWaveform } from './useAudioWaveform-D_1DFgvt.js';
-import { u as useAnimationFrame } from './useAnimationFrame-1lZDWPZz.js';
-import { u as useComposedRefs } from './useComposedRefs-DMyoGc1Z.js';
-import { C as CanvasResponsive } from './CanvasResponsive-BfkC1yQR.js';
-import { u as useKeyboardMediaSeek } from './useKeyboardMediaSeek-Cq9elt5v.js';
-import { u as useDelayedMouseMove } from './useDelayedMouseMove-DQT8JCh0.js';
+'use strict';
+
+const jsxRuntime = require('react/jsx-runtime');
+const bundleMjs = require('./bundle-mjs-BaFtyl1I.js');
+const React = require('react');
+const interpolateOKLCH = require('./interpolateOKLCH-rIzq_qNl.js');
+const useElementDimensions = require('./useElementDimensions-DeYYmJ_A.js');
+const useMousePositionRef = require('./useMousePositionRef-DTS2m3L1.js');
+const useAudioWaveform = require('./useAudioWaveform-B2XCEiuu.js');
+const useAnimationFrame = require('./useAnimationFrame-CpulgwJu.js');
+const useComposedRefs = require('./useComposedRefs-CewP366o.js');
+const CanvasResponsive = require('./CanvasResponsive-Cm3QMDC_.js');
+const useKeyboardMediaSeek = require('./useKeyboardMediaSeek-CiZqxsyu.js');
+const useDelayedMouseMove = require('./useDelayedMouseMove-C5F20XFY.js');
 
 const AUDIO_PROGRESS_COLOR_MODES = {
   /**
@@ -19,13 +21,13 @@ const AUDIO_PROGRESS_COLOR_MODES = {
 };
 
 function getInterpolatedColorString(barColor, progressColor, ratio) {
-  const interpolatedColor = interpolateOKLCH(barColor, progressColor, ratio);
-  return OKLCHToCSS(...interpolatedColor);
+  const interpolatedColor = interpolateOKLCH.interpolateOKLCH(barColor, progressColor, ratio);
+  return interpolateOKLCH.OKLCHToCSS(...interpolatedColor);
 }
 function generateGradientStops(progressColorOKLCH, progressColorCSS, lightnessDelta = -0.1) {
   const [l, c, h] = progressColorOKLCH;
   const adjustedLightness = lightnessDelta > 0 ? Math.min(l + lightnessDelta, 1) : Math.max(l + lightnessDelta, 0);
-  const adjustedColor = OKLCHToCSS(adjustedLightness, c, h);
+  const adjustedColor = interpolateOKLCH.OKLCHToCSS(adjustedLightness, c, h);
   return [
     { offset: 0, color: adjustedColor },
     { offset: 0.4, color: progressColorCSS },
@@ -77,26 +79,26 @@ function useAudioProgressWaveformColor(options) {
     gradientStops,
     gradientLightnessDelta = -0.1
   } = options;
-  const progressColorOKLCH = useMemo(() => convertColorToOKLCH(progressColor), [progressColor]);
-  const barColorOKLCH = useMemo(() => convertColorToOKLCH(barColor), [barColor]);
-  const progressColorCSS = useMemo(() => OKLCHToCSS(...progressColorOKLCH), [progressColorOKLCH]);
-  const barColorCSS = useMemo(() => OKLCHToCSS(...barColorOKLCH), [barColorOKLCH]);
-  const hoverColorOKLCH = useMemo(() => {
+  const progressColorOKLCH = React.useMemo(() => interpolateOKLCH.convertColorToOKLCH(progressColor), [progressColor]);
+  const barColorOKLCH = React.useMemo(() => interpolateOKLCH.convertColorToOKLCH(barColor), [barColor]);
+  const progressColorCSS = React.useMemo(() => interpolateOKLCH.OKLCHToCSS(...progressColorOKLCH), [progressColorOKLCH]);
+  const barColorCSS = React.useMemo(() => interpolateOKLCH.OKLCHToCSS(...barColorOKLCH), [barColorOKLCH]);
+  const hoverColorOKLCH = React.useMemo(() => {
     if (hoverColor) {
-      return convertColorToOKLCH(hoverColor);
+      return interpolateOKLCH.convertColorToOKLCH(hoverColor);
     }
     const [l, c, h] = progressColorOKLCH;
     return [Math.min(1, l + hoverColorDelta), Math.max(0, c - c / 2), h];
   }, [hoverColor, progressColorOKLCH, hoverColorDelta]);
-  const hoverColorCSS = useMemo(() => OKLCHToCSS(...hoverColorOKLCH), [hoverColorOKLCH]);
-  const effectiveGradientStops = useMemo(() => {
+  const hoverColorCSS = React.useMemo(() => interpolateOKLCH.OKLCHToCSS(...hoverColorOKLCH), [hoverColorOKLCH]);
+  const effectiveGradientStops = React.useMemo(() => {
     if (colorMode !== AUDIO_PROGRESS_COLOR_MODES.GRADIENT) {
       return [];
     }
     if (gradientStops) {
       return gradientStops.map((stop) => ({
         ...stop,
-        colorOKLCH: convertColorToOKLCH(stop.color)
+        colorOKLCH: interpolateOKLCH.convertColorToOKLCH(stop.color)
       }));
     }
     const generatedStops = generateGradientStops(
@@ -106,10 +108,10 @@ function useAudioProgressWaveformColor(options) {
     );
     return generatedStops.map((stop) => ({
       ...stop,
-      colorOKLCH: convertColorToOKLCH(stop.color)
+      colorOKLCH: interpolateOKLCH.convertColorToOKLCH(stop.color)
     }));
   }, [colorMode, gradientStops, gradientLightnessDelta, progressColorOKLCH, progressColorCSS]);
-  const getWaveformBarColor = useCallback(
+  const getWaveformBarColor = React.useCallback(
     (barInfo) => {
       const progress = audioRef.current?.currentTime ? audioRef.current.currentTime / duration : 0;
       const coverage = calculateBarCoverage(barInfo, progress);
@@ -176,9 +178,9 @@ function useAudioProgressWaveformColor(options) {
 
 function useAudioProgressWaveform(options) {
   const { onProgressChange, onPreviewTimeChange, audioRef, duration } = options;
-  const { dimensionsRef, elementRef: canvasRef } = useElementDimensions();
-  const { getPosition, getIsHovering, positionRef, handleMouseMove, handleMouseLeave } = useMousePositionRef();
-  const seekToPosition = useCallback(
+  const { dimensionsRef, elementRef: canvasRef } = useElementDimensions.useElementDimensions();
+  const { getPosition, getIsHovering, positionRef, handleMouseMove, handleMouseLeave } = useMousePositionRef.useMousePositionRef();
+  const seekToPosition = React.useCallback(
     (position) => {
       if (!audioRef.current) return;
       const normalizedPosition = Math.max(0, Math.min(1, position));
@@ -188,7 +190,7 @@ function useAudioProgressWaveform(options) {
     },
     [audioRef, duration, onProgressChange]
   );
-  const updatePreviewFromPosition = useCallback(
+  const updatePreviewFromPosition = React.useCallback(
     (position) => {
       if (position === null) {
         onPreviewTimeChange?.(null);
@@ -200,7 +202,7 @@ function useAudioProgressWaveform(options) {
     },
     [duration, onPreviewTimeChange]
   );
-  const handleWaveformClick = useCallback(
+  const handleWaveformClick = React.useCallback(
     (e) => {
       const { width, left } = dimensionsRef.current;
       if (width === 0) return;
@@ -210,7 +212,7 @@ function useAudioProgressWaveform(options) {
     },
     [dimensionsRef, seekToPosition]
   );
-  const handleWaveformMouseMove = useCallback(
+  const handleWaveformMouseMove = React.useCallback(
     (e) => {
       handleMouseMove(e);
       const { width, left } = dimensionsRef.current;
@@ -221,7 +223,7 @@ function useAudioProgressWaveform(options) {
     },
     [dimensionsRef, handleMouseMove, updatePreviewFromPosition]
   );
-  const handleWaveformMouseLeave = useCallback(
+  const handleWaveformMouseLeave = React.useCallback(
     (e) => {
       handleMouseLeave(e);
       updatePreviewFromPosition(null);
@@ -271,6 +273,9 @@ function AudioProgressWaveform(props) {
     // useKeyboardSeek props
     seekIncrement,
     maxSeekIncrement,
+    seekAcceleration,
+    seekAccelerationDelay,
+    seekInterval,
     // html canvas props
     ...restProps
   } = props;
@@ -302,7 +307,7 @@ function AudioProgressWaveform(props) {
     gradientStops,
     gradientLightnessDelta
   });
-  const { canvasRef: audioWaveformCanvasRef, drawWaveform } = useAudioWaveform({
+  const { canvasRef: audioWaveformCanvasRef, drawWaveform } = useAudioWaveform.useAudioWaveform({
     waveformData,
     barColor,
     getBarColor: getWaveformBarColor,
@@ -311,12 +316,12 @@ function AudioProgressWaveform(props) {
     heightScale,
     minBarGapPercent
   });
-  const mergedRef = useComposedRefs(ref, audioWaveformCanvasRef, audioProgressWaveformCanvasRef);
-  const handleProgressChange = useCallback(() => {
+  const mergedRef = useComposedRefs.useComposedRefs(ref, audioWaveformCanvasRef, audioProgressWaveformCanvasRef);
+  const handleProgressChange = React.useCallback(() => {
     drawWaveform();
     onProgressChange?.(audioRef.current?.currentTime ?? 0);
   }, [drawWaveform, audioRef, onProgressChange]);
-  const handleCanvasClick = useCallback(
+  const handleCanvasClick = React.useCallback(
     (event) => {
       handleWaveformClick(event);
       drawWaveform();
@@ -324,7 +329,7 @@ function AudioProgressWaveform(props) {
     },
     [handleWaveformClick, drawWaveform, onClick]
   );
-  const _handleMouseMove = useCallback(
+  const _handleMouseMove = React.useCallback(
     (event) => {
       if (isActive) {
         handleWaveformMouseMove(event);
@@ -332,25 +337,28 @@ function AudioProgressWaveform(props) {
     },
     [handleWaveformMouseMove, isActive]
   );
-  useAnimationFrame({
+  useAnimationFrame.useAnimationFrame({
     isActive,
     callback: handleProgressChange,
     frameRate,
     dependencies: animationDependencies
   });
-  const { handleKeyDown, handleKeyUp, a11yProps } = useKeyboardMediaSeek({
+  const { handleKeyDown, handleKeyUp, a11yProps } = useKeyboardMediaSeek.useKeyboardMediaSeek({
     mediaRef: audioRef,
     duration,
     onSeekComplete: onProgressChange,
     seekIncrement,
-    maxSeekIncrement
+    maxSeekIncrement,
+    seekAcceleration,
+    seekAccelerationDelay,
+    seekInterval
   });
-  const { handleMouseEnter, handleMouseMove, handleMouseOut } = useDelayedMouseMove({
+  const { handleMouseEnter, handleMouseMove, handleMouseOut } = useDelayedMouseMove.useDelayedMouseMove({
     onMouseMove: _handleMouseMove,
     onMouseLeave: handleWaveformMouseLeave
   });
-  return /* @__PURE__ */ jsx(
-    CanvasResponsive,
+  return /* @__PURE__ */ jsxRuntime.jsx(
+    CanvasResponsive.CanvasResponsive,
     {
       ...restProps,
       ...a11yProps,
@@ -362,8 +370,8 @@ function AudioProgressWaveform(props) {
       onMouseMove: handleMouseMove,
       onMouseLeave: handleMouseOut,
       onMouseEnter: handleMouseEnter,
-      className: twMerge(
-        clsx(
+      className: bundleMjs.twMerge(
+        bundleMjs.clsx(
           'relative cursor-pointer bg-radial from-neutral-50 from-0% to-neutral-100 to-90% before:absolute before:inset-0 before:bg-radial before:from-white before:to-transparent before:bg-[size:1px_1px] before:content-[""]',
           className
         )
@@ -372,4 +380,5 @@ function AudioProgressWaveform(props) {
   );
 }
 
-export { AudioProgressWaveform as A, useAudioProgressWaveformColor as u };
+exports.AudioProgressWaveform = AudioProgressWaveform;
+exports.useAudioProgressWaveformColor = useAudioProgressWaveformColor;

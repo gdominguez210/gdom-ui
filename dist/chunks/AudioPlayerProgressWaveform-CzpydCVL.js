@@ -2,7 +2,7 @@ import { jsx } from 'react/jsx-runtime';
 import { u as useAudioPlayerContextPlayback } from './useAudioPlayerContextPlayback-1tEUh5id.js';
 import { u as useAudioPlayerContextRefs } from './useAudioPlayerContextRefs-BnfUt_UB.js';
 import { u as useAudioPlayerContextTime } from './useAudioPlayerContextTime-BOJ7zmrG.js';
-import { A as AudioProgressWaveform } from './AudioProgressWaveform-BupkDLuW.js';
+import { A as AudioProgressWaveform } from './AudioProgressWaveform-BEYSL3JT.js';
 import { useCallback } from 'react';
 
 function AudioPlayerProgressWaveform(props) {

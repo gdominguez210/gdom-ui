@@ -4,7 +4,7 @@ const jsxRuntime = require('react/jsx-runtime');
 const useAudioPlayerContextPlayback = require('./useAudioPlayerContextPlayback-lQhY1vk1.js');
 const useAudioPlayerContextRefs = require('./useAudioPlayerContextRefs-c-7Q5bUc.js');
 const useAudioPlayerContextTime = require('./useAudioPlayerContextTime-BhBAi2PV.js');
-const AudioProgressWaveform = require('./AudioProgressWaveform-Bo0O0GOi.js');
+const AudioProgressWaveform = require('./AudioProgressWaveform-NjYuCfoA.js');
 const React = require('react');
 
 function AudioPlayerProgressWaveform(props) {

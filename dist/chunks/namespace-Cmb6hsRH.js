@@ -20,7 +20,7 @@ import { t as twMerge, c as clsx } from './bundle-mjs-Cl353mOg.js';
 import { A as AudioPlayerContextAudioProvider } from './AudioPlayerContextAudioProvider-aiIvYh96.js';
 import { A as AudioPlayerVisualizerWaveform } from './AudioPlayerVisualizerWaveform-tlBB1yVi.js';
 import { A as AudioPlayerVisualizerFrequencyBars } from './AudioPlayerVisualizerFrequencyBars-Cb03lqzA.js';
-import { A as AudioPlayerProgressWaveform } from './AudioPlayerProgressWaveform-BFzuZwZ6.js';
+import { A as AudioPlayerProgressWaveform } from './AudioPlayerProgressWaveform-CzpydCVL.js';
 
 function AudioPlayer(props) {
   const { as: Element = "div", children, className, ...restProps } = props;

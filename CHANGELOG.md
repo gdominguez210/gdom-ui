@@ -1,3 +1,10 @@
+# [1.39.0](https://github.com/gdominguez210/gdom-ui/compare/v1.38.0...v1.39.0) (2025-05-21)
+
+
+### Features
+
+* **AudioTrackData:** accept any valid additional properties on track data ([42ceaab](https://github.com/gdominguez210/gdom-ui/commit/42ceaabed78cee371bc6aa59407fa8b0a5f36460))
+
 # [1.38.0](https://github.com/gdominguez210/gdom-ui/compare/v1.37.0...v1.38.0) (2025-05-20)
 
 
