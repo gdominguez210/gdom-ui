@@ -2,6 +2,7 @@ import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storyb
 import * as AudioProgressWaveformStories from './AudioProgressWaveform.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
 
 <Meta of={AudioProgressWaveformStories} />
 
@@ -9,173 +10,47 @@ import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
 
 <ViewSource href="AudioProgressWaveform" />
 
-A sophisticated and interactive audio waveform visualization component that displays audio amplitude data with playback progress indication and hover effects.
+An interactive audio waveform visualization component that displays playback progress and allows seeking. It provides a visual representation of the audio waveform with customizable appearance and color options.
 
 <DocumentationNav />
 
-
 <Primary />
-## Props
+## API Reference
 <Controls />
 
 ## Features
 
-The AudioProgressWaveform component provides several key features:
-
-- **Interactive Playback Progress**: Visualizes audio playback progress with distinct colors for played and unplayed regions
-- **Hover Effects**: Visual feedback when hovering over the waveform with customizable hover colors
-- **Click-to-Seek**: Users can click anywhere on the waveform to seek to that position in the audio
-- **Multiple Color Modes**: Support for solid colors or gradient effects for a more polished look
-- **Responsive Design**: Automatically scales to fit its container while maintaining visual proportions
-- **Performance Optimized**: Uses efficient canvas rendering with animation frame timing for smooth visuals
-- **AudioPlayer Integration**: Seamlessly integrates with the AudioPlayer component system
+- **Interactive Seeking**: Click anywhere on the waveform to seek to that position in the audio
+- **Visual Progress**: Shows played and unplayed sections with distinct colors
+- **Customizable Appearance**: Control bar width, gaps, and height to match your design
+- **Multiple Color Modes**: Choose from solid or gradient coloring with hover effects
+- **Responsive Design**: Automatically scales to fit its container
+- **Keyboard Navigation**: Support for keyboard-based seeking with acceleration
+- **AudioPlayer Integration**: Seamlessly works with the AudioPlayer component system
 
 ## Examples
 
-<div className="rounded-md border border-slate-400 bg-slate-100 p-3 text-slate-700">
-  <div className="mb-1 font-bold">Usage Note</div>
-  <div>
-    This component requires an audio element reference and waveform data (an array of normalized
-    amplitude values between 0-1) to function properly. The component connects to the audio element
-    to track playback progress.
-  </div>
-  <div className="mt-2">
-    <strong>Interactivity:</strong> Unlike the static AudioWaveform component, AudioProgressWaveform
-    provides interactive playback control by clicking on the waveform to seek to different positions
-    in the audio.
-  </div>
-</div>
+<UsageNote>
+  This component requires an audio source to visualize. In these examples, we've used the
+  AudioPlayer component system to handle audio playback. Click the play button to see the
+  waveform in action.
+</UsageNote>
 
 <Stories
   title=""
   includePrimary={false}
 />
 
-## Component Usage
+## Usage
 
-The AudioProgressWaveform component can be used standalone with a direct audio element reference or integrated with the AudioPlayer system:
+The AudioProgressWaveform component can be used in two ways: 
 
-### Basic Usage
+- [**With the AudioPlayer Component System**](#with-audioplayer-component-system-recommended)
+- [**Standalone**](#standalone-usage)
 
-<Source
-  language="tsx"
-  dark
-  code={`
-import { useRef } from 'react';
-import { AudioProgressWaveform } from '@gdominguez210/gdom-ui/AudioProgressWaveform';
+### With AudioPlayer Component System (Recommended)
 
-const MyProgressWaveform = () => {
-const audioRef = useRef<HTMLAudioElement>(null);
-
-    // Array of normalized amplitude values (0-1)
-    const waveformData = [0.5, 0.6, 0.8, 0.4, 0.7, 0.3, 0.9, ...];
-
-    // Get audio duration once metadata is loaded
-    const [duration, setDuration] = useState(0);
-    const handleLoadedMetadata = () => {
-        if (audioRef.current) {
-            setDuration(audioRef.current.duration);
-        }
-    };
-
-    return (
-        <div>
-            <AudioProgressWaveform
-                waveformData={waveformData}
-                audioRef={audioRef}
-                duration={duration}
-                progressColor="#ff0000"
-                barColor="#cccccc"
-                barGapRatio={0.003}
-                minBarWidth={2}
-                heightScale={0.8}
-                isActive={true}
-            />
-
-            <audio
-                ref={audioRef}
-                src="/path/to/audio.mp3"
-                onLoadedMetadata={handleLoadedMetadata}
-                controls
-            />
-        </div>
-    );
-
-}; `} />
-
-## Color Modes
-
-The AudioProgressWaveform component supports different color modes for the progress visualization:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Solid color mode
-<AudioProgressWaveform
-  colorMode="solid"
-  progressColor="#ff0000"  // Red for played sections
-  barColor="#cccccc"       // Gray for unplayed sections
-/>
-
-// Gradient color mode - Automatic gradient calculation
-// The simplest way to add a gradient effect
-
-<AudioProgressWaveform
-  {...otherProps}
-  colorMode="gradient"
-  progressColor="#3366ff" // Base color for gradient
-  gradientLightnessDelta={-0.15} // Make the bottom of the gradient darker
-/>
-
-// Gradient color mode - Custom gradient stops
-// For complete control over gradient appearance
-
-<AudioProgressWaveform
-  {...otherProps}
-  colorMode="gradient"
-  gradientStops={[
-    { offset: 0, color: '#ff0000' }, // Bottom of the bar - red
-    { offset: 0.5, color: '#ff9900' }, // Middle of the bar - orange
-    { offset: 1, color: '#ffff00' }, // Top of the bar - yellow
-  ]}
-/>
-`} />
-
-## Hover Effects
-
-The component includes hover effects that provide visual feedback when users hover over the waveform:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Without hoverColor specified, the hover color will be automatically generated
-// by adjusting the progress color based on hoverColorDelta
-<AudioProgressWaveform
- {...otherProps}
-  progressColor="#ff0000"
-  hoverColorDelta={0.3}      // Creates a hover color that's 30% lighter than the progress color
-/>
-
-// Using a negative hoverColorDelta will darken the color instead
-
-<AudioProgressWaveform
-  {...otherProps}
-  hoverColorDelta={-0.2} // Creates a hover color that's 20% darker than the progress color
-/>
-
-// For complete control, specify a custom hover color
-
-<AudioProgressWaveform
-  {...otherProps}
-  hoverColor="#0066cc" // Custom color when hovering over a position (overrides the automatic hover color)
-/>
-`} />
-
-## Integration with AudioPlayer
-
-For a complete audio experience, the AudioProgressWaveform is best integrated with the AudioPlayer component system. The library provides an `AudioPlayerProgressWaveform` component that automatically connects to the AudioPlayer context:
+The recommended way to use this component is through the AudioPlayer component system, which automatically handles all the required audio integration props for you:
 
 <Source
   language="tsx"
@@ -183,56 +58,98 @@ For a complete audio experience, the AudioProgressWaveform is best integrated wi
   code={`
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
 
-const MyAudioPlayer = () => {
-// Tracks with waveform data
 const tracks = [
-{
-id: '58730401-c910-4a77-935e-83d71d5d1a52',
-title: 'Audio Track Title',
-author: 'Artist Name',
-src: '/path/to/audio.mp3',
-// Other track properties
-}
+  {
+    id: '1',
+    title: 'Example Track',
+    author: 'Artist Name',
+    src: '/path/to/audio.mp3',
+    thumbnail: '/path/to/cover.jpg',
+  },
 ];
 
-    // Waveform data (amplitude values between 0-1)
-    const waveformData = [0.5, 0.6, 0.8, 0.4, 0.7, 0.3, 0.9, ...];
+const IntegratedAudioWaveform = () => {
+  return (
+    <AudioPlayer.Provider tracks={tracks}>
+      <AudioPlayer.Root className="flex flex-col gap-4">
+        <AudioPlayer.ProgressWaveform
+          colorMode="solid"
+          progressColor="#0066cc"
+          barColor="#cccccc"
+          className="h-[150px] w-full"
+        />
+        <AudioPlayer.ControlAudio />
+        {/* Other AudioPlayer components like controls, info, etc. would go here */}
+      </AudioPlayer.Root>
+    </AudioPlayer.Provider>
+  );
+};`} />
 
-    return (
-        <AudioPlayer.Provider tracks={tracks}>
-            <AudioPlayer.Root>
-                {/* The ProgressWaveform automatically connects to the audio context */}
-                <AudioPlayer.ProgressWaveform
-                    waveformData={waveformData}
-                    progressColor="#ff0000"
-                    barColor="#cccccc"
-                    hoverColor="#0066cc"
-                    barGapRatio={0.003}
-                    minBarWidth={2}
-                    heightScale={0.8}
-                    className="h-[100px] w-full"
-                />
+#### How the AudioPlayer Integration Works
 
-                <div className="flex items-center gap-2 mt-2">
-                    <AudioPlayer.ControlPlay />
-                    <AudioPlayer.ControlVolume />
-                    <AudioPlayer.Title />
-                    <AudioPlayer.TimeInfo />
-                </div>
-            </AudioPlayer.Root>
-        </AudioPlayer.Provider>
-    );
+When using `AudioPlayer.ProgressWaveform`, the component automatically receives all required props through React context:
 
-};
-`}
-/>
+| Required Prop | Provided By | Description |
+|---------------|-------------|-------------|
+| `audioRef` | `AudioPlayer.Provider` | Reference to the audio element managed by the AudioPlayer |
+| `isActive` | `AudioPlayer.Provider` | Automatically managed based on playback state |
+| `duration` | `AudioPlayer.Provider` | Total duration of the current track |
+| `onProgressChange` | `AudioPlayer.Provider` | Function to handle seeking operations |
+| `onPreviewTimeChange` | `AudioPlayer.Provider` | Function to handle hover preview time updates |
 
-The `AudioPlayerProgressWaveform` component handles all the wiring to:
+The AudioPlayer integration provides several key benefits:
+- **Zero Configuration**: No need to manually set up audio integration code
+- **Automatic State Management**: Waveform automatically syncs with playback
+- **Proper Event Handling**: All seek and preview events are properly managed
 
-- Connect to the audio element reference
-- Get the current audio duration
-- Update as the audio plays
-- Seek to a new position when the user clicks
-- Automatically play when a user seeks while paused
+### Standalone Usage
 
-This is much simpler than manually handling all these behaviors when using `AudioProgressWaveform` directly.
+When used standalone, you need to manually provide all the required audio integration props. This approach gives you full control but requires more setup code:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { useRef, useState } from 'react';
+import { AudioProgressWaveform } from '@gdominguez210/gdom-ui/AudioProgressWaveform';
+
+const StandaloneAudioWaveform = () => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isActive, setIsActive] = useState(false);
+  const [duration, setDuration] = useState(0);
+
+  const handleProgressChange = (time: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+    }
+  };
+
+  const handlePreviewTimeChange = (time: number | null) => {
+    // Handle preview time changes (e.g., show tooltip with time)
+    console.log('Preview time:', time);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <AudioProgressWaveform
+        audioRef={audioRef}
+        isActive={isActive}
+        duration={duration}
+        onProgressChange={handleProgressChange}
+        onPreviewTimeChange={handlePreviewTimeChange}
+        progressColor="#0066cc"
+        barColor="#cccccc"
+        className="h-[150px] w-full"
+      />
+      <audio
+        ref={audioRef}
+        src="/path/to/audio.mp3"
+        controls
+        onPlay={() => setIsActive(true)}
+        onPause={() => setIsActive(false)}
+        onEnded={() => setIsActive(false)}
+        onDurationChange={(e) => setDuration(e.currentTarget.duration)}
+      />
+    </div>
+  );
+};`} />

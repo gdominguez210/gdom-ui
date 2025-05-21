@@ -65,6 +65,9 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     // useKeyboardSeek props
     seekIncrement,
     maxSeekIncrement,
+    seekAcceleration,
+    seekAccelerationDelay,
+    seekInterval,
     // html canvas props
     ...restProps
   } = props;
@@ -147,6 +150,9 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     onSeekComplete: onProgressChange,
     seekIncrement,
     maxSeekIncrement,
+    seekAcceleration,
+    seekAccelerationDelay,
+    seekInterval,
   });
 
   const { handleMouseEnter, handleMouseMove, handleMouseOut } =
