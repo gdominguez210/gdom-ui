@@ -62,7 +62,7 @@ export function useAudioPlayerProgressBar({
   onProgressChange,
   onPreviewTimeChange,
   progressBarRef,
-}: UseAudioPlayerProgressBarProps): useAudioPlayerProgressBarReturn {
+}: UseAudioPlayerProgressBarProps): UseAudioPlayerProgressBarReturn {
   const { dimensionsRef, elementRef } = useElementDimensions();
 
   const _handleMouseMove: MouseEventHandler<HTMLInputElement> = useCallback(
