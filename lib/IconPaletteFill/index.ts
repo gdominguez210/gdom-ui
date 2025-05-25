@@ -1,0 +1,1 @@
+export { IconPaletteFill } from './IconPaletteFill';
