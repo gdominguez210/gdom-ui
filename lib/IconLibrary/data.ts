@@ -20,6 +20,7 @@ import { ReactComponent as CloseFill } from '@/assets/svgs/close-fill.svg';
 import { ReactComponent as CursorLine } from '@/assets/svgs/cursor-line.svg';
 import { ReactComponent as EqualizerLine } from '@/assets/svgs/equalizer-line.svg';
 import { ReactComponent as PaletteLine } from '@/assets/svgs/palette-line.svg';
+import { ReactComponent as PaletteFill } from '@/assets/svgs/palette-fill.svg';
 import { ReactComponent as PlayCircleLine } from '@/assets/svgs/play-circle-line.svg';
 import { ReactComponent as PulseLine } from '@/assets/svgs/pulse-line.svg';
 import { ReactComponent as RhythmLine } from '@/assets/svgs/rhythm-line.svg';
@@ -31,6 +32,17 @@ import { ReactComponent as FontSize } from '@/assets/svgs/font-size.svg';
 import { ReactComponent as ColorFilterLine } from '@/assets/svgs/color-filter-line.svg';
 import { ReactComponent as LayoutMasonryLine } from '@/assets/svgs/layout-masonry-line.svg';
 import { ReactComponent as ExternalLinkLine } from '@/assets/svgs/external-link-line.svg';
+import { ReactComponent as ArrowRightLongFill } from '@/assets/svgs/arrow-right-long-fill.svg';
+import { ReactComponent as Sparkling2Line } from '@/assets/svgs/sparkling-2-line.svg';
+import { ReactComponent as Sparkling2Fill } from '@/assets/svgs/sparkling-2-fill.svg';
+import { ReactComponent as CommandFill } from '@/assets/svgs/command-fill.svg';
+import { ReactComponent as NodeTree } from '@/assets/svgs/node-tree.svg';
+import { ReactComponent as PuzzleFill } from '@/assets/svgs/puzzle-fill.svg';
+import { ReactComponent as Puzzle2Fill } from '@/assets/svgs/puzzle-2-fill.svg';
+import { ReactComponent as GithubFill } from '@/assets/svgs/github-fill.svg';
+import { ReactComponent as LinkedinBoxFill } from '@/assets/svgs/linkedin-box-fill.svg';
+import { ReactComponent as ArrowRightSLine } from '@/assets/svgs/arrow-right-s-line.svg';
+import { ReactComponent as ArrowLeftSLine } from '@/assets/svgs/arrow-left-s-line.svg';
 
 export const icons = {
   'star-line': StarLine,
@@ -55,6 +67,7 @@ export const icons = {
   'cursor-line': CursorLine,
   'equalizer-line': EqualizerLine,
   'palette-line': PaletteLine,
+  'palette-fill': PaletteFill,
   'play-circle-line': PlayCircleLine,
   'pulse-line': PulseLine,
   'rhythm-line': RhythmLine,
@@ -66,6 +79,17 @@ export const icons = {
   'color-filter-line': ColorFilterLine,
   'layout-masonry-line': LayoutMasonryLine,
   'external-link-line': ExternalLinkLine,
+  'arrow-right-long-fill': ArrowRightLongFill,
+  'sparkling-2-line': Sparkling2Line,
+  'sparkling-2-fill': Sparkling2Fill,
+  'command-fill': CommandFill,
+  'node-tree': NodeTree,
+  'puzzle-fill': PuzzleFill,
+  'puzzle-2-fill': Puzzle2Fill,
+  'github-fill': GithubFill,
+  'linkedin-box-fill': LinkedinBoxFill,
+  'arrow-right-s-line': ArrowRightSLine,
+  'arrow-left-s-line': ArrowLeftSLine,
 } as const;
 
 export type IconName = keyof typeof icons;
