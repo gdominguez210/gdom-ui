@@ -9,12 +9,12 @@ export function Footer(props: FooterProps) {
 
   return (
     <footer
-      className={twMerge(
-        clsx('flex items-center justify-between gap-4 border-t border-gray-200 p-4', className),
-      )}
+      className={twMerge(clsx('@container/footer border-t border-gray-200', className))}
       {...rest}
     >
-      {children}
+      <div className="flex flex-col justify-between gap-4 p-4 @min-[400px]/footer:flex-row @min-[400px]/footer:items-center">
+        {children}
+      </div>
     </footer>
   );
 }
