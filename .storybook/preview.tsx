@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react';
-import { DocsContainer } from '@storybook/blocks';
+import { DocsContainer } from '@storybook/addon-docs/blocks';
 import './storybook.css';
 import { Copyright } from '@/.storybook/components/Copyright/Copyright';
 import { Footer } from '@/.storybook/components/Footer/Footer';
