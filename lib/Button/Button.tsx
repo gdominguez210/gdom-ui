@@ -37,13 +37,13 @@ const buttonStyles = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-sky-500 hover:bg-sky-700 focus:bg-sky-700 active:bg-sky-700 text-white',
+        primary: 'bg-blue-500 hover:bg-blue-600 focus:bg-blue-600 active:bg-blue-600 text-white',
         secondary:
           'bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border active:border border-solid border-neutral-200',
-        tertiary: 'text-sky-500 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50',
+        tertiary: 'text-blue-500 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50',
         destructive:
           'text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 focus:shadow-red-700/12',
-        linkColor: 'text-sky-500 hover:text-sky-700 focus:text-sky-700 active:text-sky-700',
+        linkColor: 'text-blue-500 hover:text-blue-600 focus:text-blue-600 active:text-blue-600',
         linkGray:
           'text-neutral-600 hover:text-neutral-900 focus:text-neutral-900 active:text-neutral-900',
       },
