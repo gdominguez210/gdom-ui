@@ -100,7 +100,7 @@ export function useAudioProgressWaveformColor(
     duration,
     audioRef,
     dimensionsRef,
-    progressColor = '#000000',
+    progressColor = '#4a5565',
     barColor = '#9f9fa9',
     getIsHovering,
     hoverPositionRef,
