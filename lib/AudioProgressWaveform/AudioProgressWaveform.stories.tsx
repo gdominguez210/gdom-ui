@@ -1,7 +1,8 @@
 import type { StoryObj, Meta } from '@storybook/react';
 import { AudioProgressWaveform } from '@/lib/AudioProgressWaveform/AudioProgressWaveform';
 import { AUDIO_PROGRESS_COLOR_MODES } from '@/lib/AudioProgressWaveform/types';
-import { waveformData, trackData } from '@/lib/AudioPlayer/data';
+import { waveformData } from '@/data/waveformData';
+import { trackData } from '@/data/trackData';
 import { AudioPlayerCompoundComponent as AudioPlayer } from '@/lib/AudioPlayer/namespace';
 import {
   AudioPlayerProgressWaveform,
