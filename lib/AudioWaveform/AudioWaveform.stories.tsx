@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { AudioWaveform, type AudioWaveformProps } from '@/lib/AudioWaveform/AudioWaveform';
-import { waveformData } from '@/lib/AudioPlayer/data';
+import { waveformData } from '@/data/waveformData';
 import { CollapseCategory } from '@storybook-decorators/CollapseCategory/CollapseCategory';
 import { DeferredRender } from '@/.storybook/components/DeferredRender/DeferredRender';
 
@@ -85,22 +85,38 @@ export default {
       },
     },
 
-    // Color Configuration
+    // Color
     barColor: {
       control: 'color',
       description: 'Color of the waveform bars',
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: '#9f9fa9' },
-        category: 'Color Configuration',
+        category: 'Color',
       },
     },
     getBarColor: {
       control: false,
       description: 'Function to determine bar color based on state',
       table: {
-        type: { summary: '(barInfo: WaveformBarInfo) => string' },
-        category: 'Color Configuration',
+        type: {
+          summary: '(barInfo: WaveformBarInfo) => string | WaveformBarColorResult',
+          detail: `type WaveformBarInfo = {
+  position: number;  // Position in the waveform (0-1)
+  value: number;     // Amplitude value (0-1)
+  index: number;     // Index in the waveform data array
+  width: number;     // Width of this specific bar as a percentage of total width (0-1)
+}
+
+type WaveformBarColorResult = string | {
+  type: 'gradient';
+  stops: Array<{
+    offset: number;  // Value between 0 and 1
+    color: string;   // CSS color value
+  }>;
+}`,
+        },
+        category: 'Color',
       },
     },
 
