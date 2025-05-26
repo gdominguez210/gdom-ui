@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { rafThrottle } from '@/utils/rafThrottle/rafThrottle';
 import { useResizeObserver } from '@/lib/useResizeObserver/useResizeObserver';
-import { useRefReady } from '@/lib/useRefReady/useRefReady';
 import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
 
 /**
@@ -23,39 +22,39 @@ export type UseCanvasResponsiveOptions = {
  */
 export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
   const { frameRate, onResize } = options ?? {};
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const [setCanvasRef, isReady, canvasRef] = useRefReady<HTMLCanvasElement | null>(null);
-
-  const resizeCanvas = useCallback(
-    (canvas: HTMLCanvasElement) => {
-      if (!canvas) return;
+  const resizeCanvasDimensions = useCallback(
+    (canvas: HTMLCanvasElement, width: number, height: number, scale: number) => {
       const context = canvas.getContext('2d');
       if (!context) return;
 
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
-      const scale = window.devicePixelRatio;
-
       if (canvas.width !== width * scale || canvas.height !== height * scale) {
-        requestAnimationFrame(() => {
-          canvas.width = width * scale;
-          canvas.height = height * scale;
-          context.setTransform(scale, 0, 0, scale, 0, 0);
-          onResize?.();
-        });
+        canvas.width = width * scale;
+        canvas.height = height * scale;
+        context.setTransform(scale, 0, 0, scale, 0, 0);
+        onResize?.();
       }
     },
     [onResize],
   );
 
   const throttledResize = useMemo(() => {
-    return rafThrottle(resizeCanvas, frameRate);
-  }, [frameRate, resizeCanvas]);
+    return rafThrottle((canvas: HTMLCanvasElement) => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      const scale = window.devicePixelRatio;
+
+      // set canvas dimensions on new animation frame to prevent layout thrashing
+      requestAnimationFrame(() => {
+        resizeCanvasDimensions(canvas, width, height, scale);
+      });
+    }, frameRate);
+  }, [frameRate, resizeCanvasDimensions]);
 
   const handleResize = useCallback(
     (entries: ResizeObserverEntry[]) => {
       if (!entries?.length) return;
-
       const canvas = entries[0]!.target as HTMLCanvasElement;
       throttledResize(canvas);
     },
@@ -64,13 +63,21 @@ export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
 
   const { setRef: setResizeObserverRef } = useResizeObserver(handleResize);
 
-  const mergedRef = useComposedRefs(setResizeObserverRef, setCanvasRef);
+  const setCanvasRef = useCallback(
+    (node: HTMLCanvasElement | null) => {
+      canvasRef.current = node;
+      if (node) {
+        // For initial setup, it's safe to read/write immediately
+        const width = node.clientWidth;
+        const height = node.clientHeight;
+        const scale = window.devicePixelRatio;
+        resizeCanvasDimensions(node, width, height, scale);
+      }
+    },
+    [resizeCanvasDimensions],
+  );
 
-  useEffect(() => {
-    if (isReady && canvasRef.current) {
-      resizeCanvas(canvasRef.current);
-    }
-  }, [isReady, canvasRef, resizeCanvas]);
+  const mergedRef = useComposedRefs(setResizeObserverRef, setCanvasRef);
 
   return { canvasRef: mergedRef };
 }
