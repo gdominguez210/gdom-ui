@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   getActualGapWidth,
   calculateMaxBarsInView,
@@ -6,6 +6,7 @@ import {
   sampleWaveformData,
   calculateBarWidth,
 } from '@/lib/AudioWaveform/drawingUtils';
+import { useRefReady } from '@/lib/useRefReady/useRefReady';
 import type { WaveformBarInfo, WaveformBarColorResult } from '@/lib/AudioWaveform/types';
 
 export type useAudioWaveformOptions = {
@@ -136,21 +137,19 @@ export const useAudioWaveform = (options: useAudioWaveformOptions) => {
     [barColor, getBarColor, heightScale, waveformData, barGapRatio, minBarWidth, minBarGapPercent],
   );
 
-  const internalCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const canvasRef = useCallback(
-    (element: HTMLCanvasElement | null) => {
-      internalCanvasRef.current = element;
-
-      if (element && drawOnCanvasReady) {
-        drawWaveform(element);
-      }
-    },
-    [drawOnCanvasReady, drawWaveform],
-  );
+  const [setCanvasRef, isReady, canvasRef] = useRefReady<HTMLCanvasElement | null>(null);
 
   const redraw = useCallback(() => {
-    drawWaveform(internalCanvasRef.current);
-  }, [drawWaveform]);
+    if (canvasRef.current) {
+      drawWaveform(canvasRef.current);
+    }
+  }, [drawWaveform, canvasRef]);
 
-  return { canvasRef, drawWaveform: redraw };
+  useEffect(() => {
+    if (isReady && canvasRef.current && drawOnCanvasReady) {
+      redraw();
+    }
+  }, [isReady, canvasRef, redraw, drawOnCanvasReady]);
+
+  return { canvasRef: setCanvasRef, drawWaveform: redraw };
 };
