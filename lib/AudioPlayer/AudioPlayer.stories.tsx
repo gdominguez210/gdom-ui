@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AudioPlayer } from '@/lib/AudioPlayer/AudioPlayer';
 import { AudioPlayerCompoundComponent } from '@/lib/AudioPlayer/namespace';
 import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
