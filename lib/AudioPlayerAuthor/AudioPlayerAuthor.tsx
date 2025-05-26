@@ -7,8 +7,8 @@ import { AudioPlayerAuthorPrimitive } from './AudioPlayerAuthorPrimitive';
 /**
  * Props for the track author component
  */
-export type AudioPlayerAuthorProps<T extends ElementType = 'p'> = {
-  /** Element to render as @default p */
+export type AudioPlayerAuthorProps<T extends ElementType = 'span'> = {
+  /** Element to render as @default span */
   as?: T;
 } & ComponentPropsWithRef<T>;
 

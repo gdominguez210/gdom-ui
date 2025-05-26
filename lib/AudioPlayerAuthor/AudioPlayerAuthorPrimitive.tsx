@@ -6,16 +6,16 @@ import type { AudioPlayerAuthorProps } from '@/lib/AudioPlayerAuthor/AudioPlayer
 /**
  * Props for the AudioPlayerAuthorPrimitive component
  */
-export type AudioPlayerAuthorPrimitiveProps<T extends ElementType = 'p'> =
+export type AudioPlayerAuthorPrimitiveProps<T extends ElementType = 'span'> =
   AudioPlayerAuthorProps<T>;
 
 /**
  * Base component for displaying author information with appropriate styling
  */
-export function AudioPlayerAuthorPrimitive<T extends ElementType = 'p'>(
+export function AudioPlayerAuthorPrimitive<T extends ElementType = 'span'>(
   props: AudioPlayerAuthorPrimitiveProps<T>,
 ) {
-  const { as: Element = 'p', children, className, ...restProps } = props;
+  const { as: Element = 'span', children, className, ...restProps } = props;
 
   return (
     <Element
