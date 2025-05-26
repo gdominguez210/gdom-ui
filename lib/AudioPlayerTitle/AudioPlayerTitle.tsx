@@ -7,8 +7,8 @@ import { AudioPlayerTitlePrimitive } from './AudioPlayerTitlePrimitive';
 /**
  * Props for the track title component
  */
-export type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
-  /** Element to render as @default p */
+export type AudioPlayerTitleProps<T extends ElementType = 'span'> = {
+  /** Element to render as @default span */
   as?: T;
 } & ComponentPropsWithRef<T>;
 
@@ -16,7 +16,7 @@ export type AudioPlayerTitleProps<T extends ElementType = 'p'> = {
  * Displays the title of the current audio track
  * Returns null if no title is available
  */
-export function AudioPlayerTitle<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
+export function AudioPlayerTitle<T extends ElementType = 'span'>(props: AudioPlayerTitleProps<T>) {
   const { currentTrack: { title } = {} } = useAudioPlayerContextTrack();
 
   if (!title) return null;

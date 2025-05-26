@@ -3,13 +3,16 @@ import type { AudioPlayerTitleProps } from '@/lib/AudioPlayerTitle/AudioPlayerTi
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-export type AudioPlayerTitlePrimitiveProps<T extends ElementType = 'p'> = AudioPlayerTitleProps<T>;
+export type AudioPlayerTitlePrimitiveProps<T extends ElementType = 'span'> =
+  AudioPlayerTitleProps<T>;
 
 /**
  * Base component for displaying track title with appropriate styling
  */
-export function AudioPlayerTitlePrimitive<T extends ElementType>(props: AudioPlayerTitleProps<T>) {
-  const { as: Element = 'p', children, className, ...restProps } = props;
+export function AudioPlayerTitlePrimitive<T extends ElementType = 'span'>(
+  props: AudioPlayerTitlePrimitiveProps<T>,
+) {
+  const { as: Element = 'span', children, className, ...restProps } = props;
 
   return (
     <Element
