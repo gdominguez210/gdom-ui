@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { AudioPlayer } from '@/lib/AudioPlayer/AudioPlayer';
 import { AudioPlayerCompoundComponent } from '@/lib/AudioPlayer/namespace';
 import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { trackData } from './data';
 import { AudioPlayerControlPlay } from '@/lib/AudioPlayerControlPlay/AudioPlayerControlPlay';
 import { AudioPlayerControlNext } from '@/lib/AudioPlayerControlNext/AudioPlayerControlNext';
 import { AudioPlayerControlPrevious } from '@/lib/AudioPlayerControlPrevious/AudioPlayerControlPrevious';
@@ -30,7 +29,8 @@ import {
   AudioPlayerProgressWaveform,
   type AudioPlayerProgressWaveformProps,
 } from '@/lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
-import { waveformData } from '@/lib/AudioPlayer/data';
+import { waveformData } from '@/data/waveformData';
+import { trackData } from '@/data/trackData';
 import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 
 function AudioPlayerProgressWaveformWithWaveformData(
