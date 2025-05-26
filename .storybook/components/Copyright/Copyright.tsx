@@ -15,13 +15,15 @@ export function Copyright(props: CopyrightProps) {
 
   return (
     <div
-      className={clsx('flex items-center gap-2 text-sm text-slate-500', className)}
+      className={clsx(
+        'flex flex-wrap items-center gap-2 text-sm text-balance text-slate-500',
+        className,
+      )}
       {...rest}
     >
       <span>
         © {year} {AUTHOR}
       </span>
-      |
       <Button
         variant="linkColor"
         as="a"
