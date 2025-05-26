@@ -21,7 +21,10 @@ export function AudioPlayerTimePrimitive<T extends ElementType>(
   return (
     <Element
       className={twMerge(
-        clsx('inline-block font-mono text-sm tabular-nums', 'min-w-[6ch]', 'text-right', className),
+        clsx(
+          'line-clamp-1 inline-block min-w-[6ch] truncate font-mono text-sm tabular-nums',
+          className,
+        ),
       )}
       {...restProps}
     >
