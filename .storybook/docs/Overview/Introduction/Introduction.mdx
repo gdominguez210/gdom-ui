@@ -1,0 +1,60 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Button } from '@/lib/Button/Button';
+import { IconLibrary } from '@/lib/IconLibrary/IconLibrary';
+import { Card } from '@/.storybook/components/Card/Card';
+import { FeatureCardContainer } from './components/FeatureCardContainer';
+import { featureCards } from './data';
+import { FeaturedAudioProgressWaveform } from './components/FeaturedComponents';
+import { FeaturesGridContainer } from './components/FeaturesGridContainer';
+import { Hero } from './components/Hero';
+import { MissionStatement } from './components/MissionStatement';
+
+<style>{`
+  #storybook-docs {
+    container-type: inline-size;
+  }
+  .sbdocs.sbdocs-wrapper {
+    position: relative;
+  }
+
+  .sbdocs.sbdocs-content {
+      position: relative;
+      z-index: 1;
+  }
+`}</style>
+
+<Meta title="Overview/Introduction" />
+
+<div className="@container/introduction">
+  <Hero className="mb-28 before:-top-16 before:-bottom-48" />
+  <FeaturesGridContainer className="mb-20">
+    {featureCards.map((card) => (
+      <Card.Root key={card.title}>
+        <FeatureCardContainer>
+          <Card.Icon name={card.icon} />
+          <Card.Header>
+            {card.title}
+          </Card.Header>
+          <Card.Content className="flex flex-col gap-6">
+            {card.description}
+            <Card.Button className="font-bold" as="a" size="xl" variant="tertiary" href={card.link}>{card.buttonText} <IconLibrary name="arrow-right-long-fill" /></Card.Button>
+          </Card.Content>
+        </FeatureCardContainer>
+      </Card.Root>
+    ))}
+  </FeaturesGridContainer>
+  <MissionStatement className="mb-8">
+    ### Mission Statement
+
+    GDOM-UI was born from a personal journey to create a more intuitive and flexible way to work with audio in web applications. As a developer passionate about audio experiences, I found myself repeatedly building audio components that needed to interface with the Web Audio API while maintaining clean, maintainable code.
+
+    This library represents my vision for how audio components should work in React applications:
+    - **Audio-First Development:** Built with a deep understanding of the Web Audio API, providing components that make audio visualization and interactive experiences accessible to all developers
+    - **Developer Experience:** Following React best practices and patterns inspired by libraries like Radix UI and ShadCN, while incorporating personal preferences and learnings from real-world implementations
+    - **Flexible Architecture:** Components designed to be adaptable to various use cases, whether you're building a simple audio player or complex interactive audio experiences
+    - **Composable Design:** Embracing a component-first architecture that prioritizes composition over configuration, allowing developers to build exactly what they need
+    - **User-Centric Approach:** Balancing technical capabilities with end-user experience, respecting user preferences and system settings while providing sensible defaults
+
+    *While GDOM-UI started as a personal toolkit, it has evolved into a comprehensive UI library that extends beyond audio components. It represents my commitment to creating tools that make web development more enjoyable and accessible, while maintaining high standards for code quality and user experience.*
+  </MissionStatement>
+</div>
