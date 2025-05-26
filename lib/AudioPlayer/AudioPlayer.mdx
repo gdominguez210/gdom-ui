@@ -1,4 +1,4 @@
-import { Meta, Controls, Story, Source, Stories, Primary, ArgTypes } from '@storybook/blocks';
+import { Meta, Controls, Canvas as StorybookCanvas, Source, Stories, Primary, ArgTypes } from '@storybook/addon-docs/blocks';
 import * as AudioPlayerStories from './AudioPlayer.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
@@ -19,8 +19,7 @@ import { AudioPlayerContextTimeProvider } from '@/lib/AudioPlayerContextTimeProv
 The AudioPlayer is a flexible, composable audio playback interface that provides a comprehensive set of controls and display elements for audio content. Built using a compound component pattern, it allows for maximum customization and flexibility in implementation.
 
 <DocumentationNav />
-
-<Primary />
+<StorybookCanvas of={AudioPlayerStories.Base} />
 
 ## Features
 
