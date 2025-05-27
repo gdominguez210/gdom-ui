@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ComponentPropsWithRef, ElementType } from 'react';
 import { Polymorphic, type PolymorphicProps } from './Polymorphic';
 import { Button } from '@/lib/Button/Button';
-import { Source } from '@storybook/addon-docs/blocks';
+
 function Text<T extends ElementType = 'p'>(props: PolymorphicProps<T>) {
   const { as = 'p', className, children, ...restProps } = props;
 
