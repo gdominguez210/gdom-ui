@@ -1,0 +1,32 @@
+import { Meta, Canvas, Stories, Controls, Primary } from '@storybook/addon-docs/blocks';
+import * as PolymorphicStories from './Polymorphic.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
+
+<Meta of={PolymorphicStories} />
+
+# Polymorphic
+
+<ViewSource href="Polymorphic" />
+
+The Polymorphic component is a foundational building block in GDOM-UI that enables flexible rendering of components as different HTML elements or custom React components. This pattern is used throughout the library to maximize component flexibility and reusability.
+
+<DocumentationNav />
+
+
+<Primary />
+
+## API Reference
+`type ComponentPropsWithRef<T>` &
+<Controls />
+
+## Examples
+<UsageNote>
+  The Polymorphic component is designed to be a low-level building block. Consider creating higher-level components that use Polymorphic internally for specific use cases in your application.
+</UsageNote>
+
+<Stories
+  includePrimary={false}
+  title=""
+/> 
