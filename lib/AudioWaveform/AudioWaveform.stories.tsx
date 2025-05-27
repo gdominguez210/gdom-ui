@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { StoryObj, Meta } from '@storybook/react-vite';
 import { AudioWaveform, type AudioWaveformProps } from '@/lib/AudioWaveform/AudioWaveform';
 import { waveformData } from '@/data/waveformData';
 import { CollapseCategory } from '@storybook-decorators/CollapseCategory/CollapseCategory';
