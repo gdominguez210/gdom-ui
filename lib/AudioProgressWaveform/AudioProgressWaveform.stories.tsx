@@ -1,4 +1,4 @@
-import type { StoryObj, Meta } from '@storybook/react';
+import type { StoryObj, Meta } from '@storybook/react-vite';
 import { AudioProgressWaveform } from '@/lib/AudioProgressWaveform/AudioProgressWaveform';
 import { AUDIO_PROGRESS_COLOR_MODES } from '@/lib/AudioProgressWaveform/types';
 import { waveformData } from '@/data/waveformData';
