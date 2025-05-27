@@ -1,4 +1,4 @@
-import type { StoryObj, Meta } from '@storybook/react';
+import type { StoryObj, Meta } from '@storybook/react-vite';
 import { IconLibrary } from '@/lib/IconLibrary/IconLibrary';
 import { icons, type IconName } from '@/lib/IconLibrary/data';
 
