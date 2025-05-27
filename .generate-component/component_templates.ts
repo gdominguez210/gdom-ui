@@ -9,7 +9,7 @@ export function ${name}(props: ${name}Props){
 };
 
 // component.stories.jsx
-export const story = (name: string) => `import type { StoryObj, Meta } from '@storybook/react';
+export const story = (name: string) => `import type { StoryObj, Meta } from '@storybook/react-vite';
 import { ${name} as ${name}Component } from  '@lib/${name}/${name}';
 
 export default {
