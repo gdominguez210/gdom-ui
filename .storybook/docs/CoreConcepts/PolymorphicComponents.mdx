@@ -38,7 +38,7 @@ This approach provides several important advantages:
 
 ## How It Works
 
-GDOM-UI implements polymorphic components using generic TypeScript types to ensure proper type safety. Here's a simplified example of how polymorphic components are implemented:
+GDOM-UI implements polymorphic components using a base `Polymorphic` component that handles the core polymorphic functionality. Here's how it works:
 
 <Source
   language="tsx"
@@ -46,72 +46,52 @@ GDOM-UI implements polymorphic components using generic TypeScript types to ensu
   code={`
 import type { ComponentPropsWithRef, ElementType } from 'react';
 import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
 
-export type PolymorphicComponentProps<T extends ElementType = 'div'> = {
+// The base Polymorphic component
+export type PolymorphicProps<T extends ElementType = 'div> = ComponentPropsWithRef<T> & {
   as?: T;
-  variant?: 'default' | 'outlined' | 'elevated';
-} & ComponentPropsWithRef<T>;
+};
 
-export function PolymorphicComponent<T extends ElementType = 'div'>(
-  props: PolymorphicComponentProps<T>
-) {
-  const { 
-    as: Element = 'div', 
-    children, 
-    className, 
-    variant = 'default',
-    ...restProps 
-  } = props;
+export function Polymorphic<T extends ElementType = 'div'>(props: PolymorphicProps<T>) {
+  const { as: Element = 'div', children, className, ...rest } = props;
 
   return (
     <Element
-      className={twMerge(
-        clsx(
-          'rounded-lg p-4',
-          {
-            'bg-white': variant === 'default',
-            'border border-gray-200': variant === 'outlined',
-            'bg-white shadow-md': variant === 'elevated'
-          }
-        ),
-        className
-      )}
-      {...restProps}
+      className={twMerge(className)}
+      {...rest}
     >
       {children}
     </Element>
   );
 }
 
-// Usage examples:
-// As a div (default)
-<PolymorphicComponent>
-  Component content goes here
-</PolymorphicComponent>
+// Example of a component using Polymorphic
+export type ButtonProps<T extends ElementType = 'button'> = PolymorphicProps<T> & {
+  variant?: 'primary' | 'secondary';
+};
 
-// As an article with additional HTML attributes
-<PolymorphicComponent 
-  as="article"
-  aria-labelledby="title"
-  variant="elevated"
->
-  <h2 id="title">Article Title</h2>
-  <p>Content</p>
-</PolymorphicComponent>
+export function Button<T extends ElementType = 'button'>(props: ButtonProps<T>) {
+  const { as = 'button', className, variant = 'primary', ...rest } = props;
 
-// As a custom component
-<PolymorphicComponent
-  as={CustomContainer}
-  customProp="value"
-  variant="outlined"
->
-  Custom container content
-</PolymorphicComponent>
+  return (
+    <Polymorphic
+      as={as}
+      className={twMerge(
+        'rounded-lg px-4 py-2',
+        {
+          'bg-blue-500 text-white': variant === 'primary',
+          'bg-gray-200 text-gray-800': variant === 'secondary'
+        },
+        className
+      )}
+      {...rest}
+    />
+  );
+}
 `}
 />
 
-This pattern is used consistently across GDOM-UI components, allowing them to adapt to different UI requirements while maintaining a consistent API.
+For more detailed information about the `Polymorphic` component and its implementation, see the [Polymorphic component documentation](/docs/components-polymorphic--docs).
 
 ## Real-World Applications
 
