@@ -1,1 +1,0 @@
-export { useColorTransition } from './useColorTransition';

@@ -1,1 +1,0 @@
-export { IconColorFilterLine } from './IconColorFilterLine';

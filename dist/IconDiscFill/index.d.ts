@@ -1,1 +1,0 @@
-export { IconDiscFill } from './IconDiscFill';

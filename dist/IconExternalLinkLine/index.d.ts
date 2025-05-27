@@ -1,1 +1,0 @@
-export { IconExternalLinkLine } from './IconExternalLinkLine';
