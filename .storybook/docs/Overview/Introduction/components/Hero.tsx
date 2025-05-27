@@ -34,7 +34,7 @@ export function Hero(props: CanvasProps) {
             <div className="flex flex-col gap-4 @min-[480px]/introduction:flex-row">
               <Button
                 as="a"
-                href="/?path=/docs/overview-getting-started--docs"
+                href="./?path=/docs/overview-getting-started--docs"
                 variant="primary"
                 size="xxl"
               >
@@ -42,7 +42,7 @@ export function Hero(props: CanvasProps) {
               </Button>
               <Button
                 as="a"
-                href="/?path=/docs/overview-releases--docs"
+                href="./?path=/docs/overview-releases--docs"
                 variant="secondary"
                 size="xxl"
                 className="text-blue-500"
@@ -54,7 +54,7 @@ export function Hero(props: CanvasProps) {
           </div>
           <div className="hidden @min-[610px]/introduction:basis-1/3 @min-[610px]/introduction:items-center @min-[610px]/introduction:justify-center @min-[712px]/introduction:flex">
             <img
-              src="/logo-symbol.svg"
+              src="logo-symbol.svg"
               alt="GDOM-UI Logo"
               className="h-42 w-42"
             />
