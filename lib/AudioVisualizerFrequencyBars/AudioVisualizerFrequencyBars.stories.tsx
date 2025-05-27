@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { StoryObj, Meta } from '@storybook/react-vite';
 import { AudioVisualizerFrequencyBars } from '@/lib/AudioVisualizerFrequencyBars/AudioVisualizerFrequencyBars';
 import { trackData } from '@/lib/AudioPlayer/data';
 import { AudioPlayerCompoundComponent as AudioPlayer } from '@/lib/AudioPlayer/namespace';
