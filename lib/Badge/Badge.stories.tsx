@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-props-no-spreading */
-import type { StoryObj, Meta } from '@storybook/react';
+import type { StoryObj, Meta } from '@storybook/react-vite';
 import { Badge as BadgeComponent } from '@/lib/Badge';
 
 export default {
