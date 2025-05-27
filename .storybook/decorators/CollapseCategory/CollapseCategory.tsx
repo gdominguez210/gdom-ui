@@ -1,4 +1,4 @@
-import type { StoryFn, Decorator } from '@storybook/react';
+import type { StoryFn, Decorator } from '@storybook/react-vite';
 import { useEffect } from 'react';
 
 export const CollapseCategory =
