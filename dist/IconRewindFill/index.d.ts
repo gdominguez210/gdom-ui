@@ -1,0 +1,1 @@
+export { IconRewindFill } from './IconRewindFill';

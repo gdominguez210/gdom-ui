@@ -1,3 +1,33 @@
+# [1.40.0](https://github.com/gdominguez210/gdom-ui/compare/v1.39.0...v1.40.0) (2025-05-27)
+
+
+### Features
+
+* **assets/svgs/arrow-left-s-line:** add arrow-left-s-line ([0aef632](https://github.com/gdominguez210/gdom-ui/commit/0aef63215567710de4a550e612cb2f29c9f0b69b))
+* **assets/svgs/arrow-right-long-fill:** add arrow-right-long-fill svg ([9326b8a](https://github.com/gdominguez210/gdom-ui/commit/9326b8accb405715073c52d823a3807c42ed52e4))
+* **assets/svgs/arrow-right-s-line:** add arrow-right-s-line ([12c5fdb](https://github.com/gdominguez210/gdom-ui/commit/12c5fdb10c2d4beb4be008e7536e46a66ecc14ce))
+* **assets/svgs/command-fill:** add command-fill svg ([6aef1c8](https://github.com/gdominguez210/gdom-ui/commit/6aef1c821715797667eb769d0b9d52178272839e))
+* **assets/svgs/github-fill:** add github-fill svg ([6f97dcd](https://github.com/gdominguez210/gdom-ui/commit/6f97dcd9586db9522ad3aaf02578b48afa3c9cd0))
+* **assets/svgs/linkedin-box-fill:** add linkedin-box-fill ([924d49b](https://github.com/gdominguez210/gdom-ui/commit/924d49b02741feacf897e46380b756406dab9061))
+* **assets/svgs/node-tree:** add node-tree svg ([39ce4e1](https://github.com/gdominguez210/gdom-ui/commit/39ce4e18e265e6fce131b71cd41d5ae558333648))
+* **assets/svgs/palette-fill:** add palette-fill ([88707fe](https://github.com/gdominguez210/gdom-ui/commit/88707fed681c431d0d4b8f6e2cfc5dca390000a5))
+* **assets/svgs/puzzle-2-fill:** add puzzle-2-fill svg ([510de44](https://github.com/gdominguez210/gdom-ui/commit/510de44425e4e348a83fcd7a09ad113c7864ab15))
+* **assets/svgs/puzzle-fill:** add puzzle-fill svg ([352f641](https://github.com/gdominguez210/gdom-ui/commit/352f64165579bf0c5b938da386f460e952e96673))
+* **assets/svgs/sparking-2-fill:** add arrow-right-long-fill svg ([680a28f](https://github.com/gdominguez210/gdom-ui/commit/680a28f5363f41e27fe11961500fc3d7bcd0dae8))
+* **assets/svgs/sparking-2-line:** add sparking-2-line svg ([5c8954b](https://github.com/gdominguez210/gdom-ui/commit/5c8954bf813139e145872af2de6f3e4648373d75))
+* **lib/IconArrowRightLongFill:** add IconArrowRightLongFill ([4302847](https://github.com/gdominguez210/gdom-ui/commit/4302847fcc9d401ff72516317647f1ff22c579c0))
+* **lib/IconCommandFill:** add IconCommandFill ([16539ba](https://github.com/gdominguez210/gdom-ui/commit/16539bae6ff5f7bae7088e9a2e4569ad48a93aa7))
+* **lib/IconGithubFill:** add IconGithubFill ([5635961](https://github.com/gdominguez210/gdom-ui/commit/56359611a73f6e219a3eb08cbdaa47061b2d7fd5))
+* **lib/IconLibrary:** add palette-fill, arrow-right-long-fill, sparkling-2-line, sparkling-2-fill, command-fill, node-tree, puzzle-fill, puzzle-2-fill, github-fill, linkedin-box-fill, arrow-right-s-line, arrow-left-s-line ([805e77d](https://github.com/gdominguez210/gdom-ui/commit/805e77d96a5a52e9748a5729622ef831e9640c71))
+* **lib/IconLinkedinBoxFill:** add IconLinkedinBoxFill ([92fcc3b](https://github.com/gdominguez210/gdom-ui/commit/92fcc3bd79f528c0b0fa0d26065d214a2b0cb114))
+* **lib/IconNodeTree:** add IconNodeTree ([a5e0882](https://github.com/gdominguez210/gdom-ui/commit/a5e08823dbf834e279bf4b15d7a658845a44273a))
+* **lib/IconPaletteFill:** add IconPaletteFill ([b423030](https://github.com/gdominguez210/gdom-ui/commit/b423030f8ba727cedc823aa34412bdc3ec65a383))
+* **lib/IconPuzzle2Fill:** add IconPuzzle2Fill ([2174847](https://github.com/gdominguez210/gdom-ui/commit/21748479f90bf61512ccf8c7192ffb4f69e602e0))
+* **lib/IconPuzzleFill:** add IconPuzzleFill ([3199e6a](https://github.com/gdominguez210/gdom-ui/commit/3199e6a6950f184f64a4f01128dcc8cdf61ca038))
+* **lib/IconSparkling2Fill:** add IconSparkling2Fill ([0292cb0](https://github.com/gdominguez210/gdom-ui/commit/0292cb0c3dfcf36440632182bb843d817ae2ff85))
+* **lib/IconSparkling2Line:** add IconSparkling2Line ([d674d2d](https://github.com/gdominguez210/gdom-ui/commit/d674d2d8ebcda80912ff11e8a03f1946b0da2bc8))
+* **lib/Polymorphic:** add Polymorphic component ([8f55681](https://github.com/gdominguez210/gdom-ui/commit/8f55681b1804effa9397ab1326c2c1cf37ee15c8))
+
 # [1.39.0](https://github.com/gdominguez210/gdom-ui/compare/v1.38.0...v1.39.0) (2025-05-21)
 
 

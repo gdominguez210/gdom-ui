@@ -1,0 +1,239 @@
+import { jsx } from 'react/jsx-runtime';
+import { useRef, useCallback, useEffect } from 'react';
+import { g as getColorByDynamicIntensity, a as getColorBySpectrum, c as getColorByAudioIntensity, b as getColorByFrequencyPosition } from './getColorByDynamicIntensity-C9KD8CkF.js';
+import { u as useColorTransition } from './useColorTransition-f6SBILwZ.js';
+import { u as useComposedRefs } from './useComposedRefs-DMyoGc1Z.js';
+import { u as useLatest } from './useLatest-CIF2WkZQ.js';
+import { u as useAudioAnalyzer } from './useAudioAnalyzer-UJCiycqx.js';
+import { A as AudioVisualizerCanvas } from './AudioVisualizerCanvas-DPnl9DGu.js';
+
+const MAX_AUDIO_VALUE = 255;
+const MAX_NORMALIZED_VALUE = 1;
+const FREQUENCY_DISTRIBUTION = {
+  /**
+   * Base value for logarithmic scale (higher = steeper curve)
+   */
+  LOG_BASE: 1.1,
+  /**
+   * Exponent multiplier controlling distribution shape
+   * Higher values give more emphasis to lower frequencies
+   */
+  EXPONENT_MULTIPLIER: 19,
+  /**
+   * Offset value to shift the logarithmic curve to start at zero.
+   * Since Math.pow(base, 0) = 1, we subtract 1 to make the curve start at 0.
+   */
+  ZERO_POINT_OFFSET: 1
+};
+function calculateLogarithmicDistributionDenominator() {
+  return Math.pow(FREQUENCY_DISTRIBUTION.LOG_BASE, FREQUENCY_DISTRIBUTION.EXPONENT_MULTIPLIER) - FREQUENCY_DISTRIBUTION.ZERO_POINT_OFFSET;
+}
+function calculateLogarithmicIndexRatio(index, barCount) {
+  return index / barCount;
+}
+function calculateLogarithmicIndex(ratio, dataArrayLength, denominator) {
+  if (dataArrayLength <= 0) return 0;
+  const clampedRatio = Math.max(0, Math.min(1, ratio));
+  return Math.round(
+    (Math.pow(
+      FREQUENCY_DISTRIBUTION.LOG_BASE,
+      FREQUENCY_DISTRIBUTION.EXPONENT_MULTIPLIER * clampedRatio
+    ) - FREQUENCY_DISTRIBUTION.ZERO_POINT_OFFSET) / denominator * (dataArrayLength - 1)
+  );
+}
+function calculateAmplifiedValue(normalizedValue, minHeight) {
+  const clampedValue = Math.max(0, Math.min(1, normalizedValue));
+  if (minHeight >= 1) return 1;
+  const result = minHeight + clampedValue * (MAX_NORMALIZED_VALUE - minHeight);
+  return Math.round(result * 100) / 100;
+}
+function calculateFrequencyBandAverage(dataArray, startIndex, endIndex, maxValue = MAX_AUDIO_VALUE) {
+  let sum = 0;
+  let sampleCount = 0;
+  for (let j = startIndex; j <= endIndex; j++) {
+    if (j < dataArray.length) {
+      sum += dataArray[j] ?? 0;
+      sampleCount++;
+    }
+  }
+  const rawAverage = sampleCount > 0 ? sum / sampleCount : 0;
+  const normalizedValue = rawAverage / maxValue;
+  return { normalizedValue, rawAverage };
+}
+
+const FREQUENCY_BARS_COLOR_MODES = {
+  STATIC: "static",
+  FREQUENCY: "frequency",
+  INTENSITY: "intensity",
+  SPECTRUM: "spectrum",
+  DYNAMIC: "dynamic"
+};
+function getBarColor(currentColor, colorMode, positionRatio, intensityRatio) {
+  switch (colorMode) {
+    case FREQUENCY_BARS_COLOR_MODES.FREQUENCY:
+      return getColorByFrequencyPosition(currentColor, positionRatio);
+    case FREQUENCY_BARS_COLOR_MODES.INTENSITY:
+      return getColorByAudioIntensity(currentColor, intensityRatio);
+    case FREQUENCY_BARS_COLOR_MODES.SPECTRUM:
+      return getColorBySpectrum(currentColor, positionRatio);
+    case FREQUENCY_BARS_COLOR_MODES.DYNAMIC:
+      return getColorByDynamicIntensity(currentColor, intensityRatio);
+  }
+}
+
+function useAudioVisualizerFrequencyBars(options) {
+  const {
+    barColor = "#FFFFFF",
+    barGapRatio = 4e-3,
+    barCount = 128,
+    heightMultiplier = 1,
+    minBarHeight = 0,
+    minBarWidth = 1,
+    colorMode = FREQUENCY_BARS_COLOR_MODES.STATIC,
+    colorTransitionDuration = 1e3
+  } = options || {};
+  const canvasRef = useRef(null);
+  const clearCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }, []);
+  const { getColorString, getCurrentColor } = useColorTransition({
+    targetColor: barColor,
+    transitionDuration: colorTransitionDuration
+  });
+  const drawFrequencyBars = useCallback(
+    (dataArray) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      const displayWidth = canvas.clientWidth;
+      const displayHeight = canvas.clientHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (colorMode === FREQUENCY_BARS_COLOR_MODES.STATIC) {
+        ctx.fillStyle = getColorString();
+      }
+      const gapWidth = displayWidth * barGapRatio;
+      const totalGapWidth = (barCount - 1) * gapWidth;
+      const barWidth = Math.max(minBarWidth, (displayWidth - totalGapWidth) / barCount);
+      const logDistributionDenominator = calculateLogarithmicDistributionDenominator();
+      for (let i = 0; i < barCount; i++) {
+        const ratio = calculateLogarithmicIndexRatio(i, barCount);
+        const logIndex = calculateLogarithmicIndex(
+          ratio,
+          dataArray.length,
+          logDistributionDenominator
+        );
+        const nextRatio = calculateLogarithmicIndexRatio(i + 1, barCount);
+        const nextLogIndex = calculateLogarithmicIndex(
+          nextRatio,
+          dataArray.length,
+          logDistributionDenominator
+        );
+        const { normalizedValue } = calculateFrequencyBandAverage(
+          dataArray,
+          logIndex,
+          nextLogIndex
+        );
+        const amplifiedValue = calculateAmplifiedValue(normalizedValue, minBarHeight);
+        const barHeight = Math.min(
+          displayHeight,
+          amplifiedValue * displayHeight * heightMultiplier
+        );
+        const x = i * (barWidth + gapWidth);
+        const positionRatio = i / barCount;
+        const intensityRatio = normalizedValue;
+        if (colorMode !== FREQUENCY_BARS_COLOR_MODES.STATIC) {
+          const dynamicColor = getBarColor(
+            getCurrentColor(),
+            colorMode,
+            positionRatio,
+            intensityRatio
+          );
+          ctx.fillStyle = dynamicColor;
+        }
+        ctx.fillRect(x, displayHeight - barHeight, barWidth, barHeight);
+      }
+    },
+    [
+      barCount,
+      heightMultiplier,
+      minBarHeight,
+      colorMode,
+      barGapRatio,
+      getColorString,
+      getCurrentColor,
+      minBarWidth
+    ]
+  );
+  return { canvasRef, drawFrequencyBars, clearCanvas };
+}
+
+function AudioVisualizerFrequencyBars(props) {
+  const {
+    ref,
+    isActive,
+    audioRef,
+    duration,
+    audioContextRef,
+    isAudioContextReady,
+    fftSize,
+    smoothingTimeConstant,
+    frameRate,
+    frameTransitionSmoothing,
+    createAudioSource,
+    deleteAudioSource,
+    barColor,
+    barGapRatio,
+    barCount,
+    heightMultiplier,
+    minBarHeight,
+    colorMode,
+    colorTransitionDuration,
+    ...restProps
+  } = props;
+  const { canvasRef, drawFrequencyBars, clearCanvas } = useAudioVisualizerFrequencyBars({
+    barColor,
+    barGapRatio,
+    barCount,
+    heightMultiplier,
+    minBarHeight,
+    colorMode,
+    colorTransitionDuration
+  });
+  const isActiveRef = useLatest(isActive);
+  const mergedRef = useComposedRefs(ref, canvasRef);
+  useAudioAnalyzer({
+    audioRef,
+    audioContextRef,
+    isAudioContextReady,
+    isActive,
+    duration,
+    onAnalyze: drawFrequencyBars,
+    dataType: "frequency",
+    fftSize,
+    smoothingTimeConstant,
+    frameRate,
+    frameTransitionSmoothing,
+    createAudioSource,
+    deleteAudioSource
+  });
+  useEffect(() => {
+    if (!isActiveRef.current) {
+      clearCanvas();
+    }
+  }, [duration, isActiveRef, clearCanvas]);
+  return /* @__PURE__ */ jsx(
+    AudioVisualizerCanvas,
+    {
+      ref: mergedRef,
+      frameRate,
+      ...restProps
+    }
+  );
+}
+
+export { AudioVisualizerFrequencyBars as A };

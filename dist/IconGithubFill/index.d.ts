@@ -1,0 +1,1 @@
+export { IconGithubFill } from './IconGithubFill';

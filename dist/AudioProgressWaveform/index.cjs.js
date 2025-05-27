@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const AudioProgressWaveform = require('../chunks/AudioProgressWaveform-NjYuCfoA.js');
+const AudioProgressWaveform = require('../chunks/AudioProgressWaveform-D75QhkH0.js');
 
 
 

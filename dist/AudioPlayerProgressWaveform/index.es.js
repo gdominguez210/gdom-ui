@@ -1,1 +1,1 @@
-export { A as AudioPlayerProgressWaveform } from '../chunks/AudioPlayerProgressWaveform-CzpydCVL.js';
+export { A as AudioPlayerProgressWaveform } from '../chunks/AudioPlayerProgressWaveform-DaCBeq0x.js';

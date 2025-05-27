@@ -1,0 +1,1 @@
+export { IconLinkedinBoxFill } from './IconLinkedinBoxFill';
