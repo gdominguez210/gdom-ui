@@ -1,4 +1,4 @@
-import type { StoryObj, Meta } from '@storybook/react';
+import type { StoryObj, Meta } from '@storybook/react-vite';
 import { Icon } from '@/lib/Icon';
 import { ReactComponent as StarLineSvg } from '@/assets/svgs/star-line.svg';
 import { ReactComponent as PlayLargeFillSvg } from '@/assets/svgs/play-large-fill.svg';
