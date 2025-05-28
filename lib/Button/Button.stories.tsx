@@ -100,6 +100,12 @@ const buttonVariantArgTypes = {
   iconOnly: {
     table: { disable: true },
   },
+  'aria-label': {
+    table: { disable: true },
+  },
+  as: {
+    table: { disable: true },
+  },
 };
 
 interface GridProps extends HTMLAttributes<HTMLElement> {}
@@ -158,12 +164,40 @@ export const ButtonSandbox: StoryObj<typeof ButtonComponent> = {
   argTypes: {
     children: {
       control: false,
+      table: { disable: true },
+    },
+    'aria-label': {
+      description: 'The label for the button, required for icon-only buttons',
+      control: 'text',
+      if: { arg: 'iconOnly', eq: true },
+      table: {
+        type: { summary: 'string' },
+      },
+      type: { name: 'string', required: true },
+    },
+    variant: {
+      control: 'select',
+      options: ['primary', 'secondary', 'tertiary', 'destructive', 'linkColor', 'linkGray'],
+    },
+    size: {
+      control: 'select',
+      options: sizes,
     },
   },
   args: {
     variant: 'primary',
     size: 'md',
-    children: <>Button CTA</>,
+    children: 'Button CTA',
+  },
+  parameters: {
+    docs: {
+      source: {
+        type: 'dynamic',
+      },
+      canvas: {
+        sourceState: 'shown',
+      },
+    },
   },
 };
 
