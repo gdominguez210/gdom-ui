@@ -1,7 +1,8 @@
-import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Source, Canvas, Stories, Primary } from '@storybook/addon-docs/blocks';
 import * as AudioVisualizerFrequencyBarsStories from './AudioVisualizerFrequencyBars.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
 
 <Meta of={AudioVisualizerFrequencyBarsStories} />
 
@@ -14,7 +15,8 @@ A highly customizable audio frequency visualizer that displays audio spectrum da
 <DocumentationNav />
 
 
-<Primary />
+<Canvas of={AudioVisualizerFrequencyBarsStories.Primary} />
+
 ## API Reference
 <Controls />
 
@@ -29,14 +31,11 @@ A highly customizable audio frequency visualizer that displays audio spectrum da
 
 ## Examples
 
-<section className="rounded-md border border-slate-400 bg-slate-100 p-3 text-slate-700 mb-5">
-  <div className="mb-1 font-bold">Usage Note</div>
-  <div>
-    This component requires an audio source to visualize. In these examples, we've used the
-    AudioPlayer component system to handle audio playback. Click the play button to see the
-    frequency bars animate.
-  </div>
-</section>
+<UsageNote>
+  This component requires an audio source to visualize. In these examples, we've used the
+  AudioPlayer component system to handle audio playback. Click the play button to see the
+  frequency bars animate.
+</UsageNote>
 
 <Stories
   title=""
