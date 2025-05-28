@@ -1,4 +1,4 @@
-import { Meta, Controls, Story, Source, Stories, Primary, ArgTypes } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Canvas as StorybookCanvas, Source, Stories, Primary, ArgTypes } from '@storybook/addon-docs/blocks';
 import * as AudioPlaylistStories from './AudioPlaylist.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
@@ -15,13 +15,13 @@ The AudioPlaylist is a flexible, composable interface for displaying audio track
 
 <DocumentationNav />
 
-<Primary />
+<StorybookCanvas of={AudioPlaylistStories.Example} />
 
 ## Features
 
-- [**Two-Tier Architecture**](/docs/core-concepts-two-tier-components--docs): Context-connected components for state management and primitive components for presentation.
+- [**Two-Tier Architecture**](./?path=/docs/core-concepts-two-tier-components--docs): Context-connected components for state management and primitive components for presentation.
 
-- [**Polymorphic Components**](/docs/core-concepts-polymorphic-components--docs): Render as different HTML elements or React components using the `as` prop.
+- [**Polymorphic Components**](./?path=/docs/core-concepts-polymorphic-components--docs): Render as different HTML elements or React components using the `as` prop.
 
 - **Consistent Event Handling**: Internal handlers run first to maintain core functionality, then your custom handlers are called.
 
@@ -33,7 +33,7 @@ The AudioPlaylist is a flexible, composable interface for displaying audio track
 
 - **Accessibility-First**: Built with proper ARIA attributes, keyboard navigation, and screen reader support.
 
-See [Core Concepts](/docs/core-concepts-introduction--docs) for more details on the architectural patterns used throughout GDOM-UI.
+See [Core Concepts](./?path=/docs/core-concepts-introduction--docs) for more details on the architectural patterns used throughout GDOM-UI.
 
 ## Examples
 <Stories
