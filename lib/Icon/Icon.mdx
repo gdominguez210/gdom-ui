@@ -9,15 +9,17 @@ import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
 
 <ViewSource href="Icon" />
 
-The Icon component is a polymorphic, tree-shakable SVG icon system that provides a consistent way to include icons in your UI.
+The Icon component is a polymorphic, tree-shakable SVG icon system that provides a consistent way to include icons in your UI. All icons are sourced from [Remix Icon](https://remixicon.com/), providing a comprehensive set of consistent and customizable icons.
 
 <DocumentationNav />
-<Primary />
+
+<Canvas of={IconStories.IconSandbox} />
+
+## API Reference
+
 <Controls />
 
 ## Features
-
-The Icon component offers the following features:
 
 - **Tree-shakable architecture** for optimized bundle size
 - **Consistent sizing** relative to text using `em` units
