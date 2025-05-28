@@ -13,139 +13,27 @@ The Button component is a versatile, customizable element for user interactions.
 
 <DocumentationNav />
 
-<Primary />
-## Props
+<Canvas of={ButtonStories.ButtonSandbox} />
 
+## API Reference
 <Controls />
 
 ## Features
-
-The Button component provides several key features:
 
 - **Multiple Variants**: Offers a range of visual styles including primary, secondary, tertiary, destructive, and link variants to support different UX contexts and hierarchies of importance.
 
 - **Flexible Sizing**: Provides consistent sizing options (small, medium, large) for creating clear visual hierarchies and accommodating different UI density requirements.
 
-- **Icon Integration**: Supports icons before, after, or as standalone elements within buttons to enhance visual communication and provide clearer action indicators.
+- **Customizable Styling**: Intelligently merges Tailwind classes and accepts custom CSS classes for extended customization, allowing for precise control over button appearance.
+
+- **Icon Integration**: Supports icons before, after, or as standalone elements within buttons to enhance visual communication and provide clearer action indicators. Icons are sourced from [Remix Icon](https://remixicon.com/), providing a comprehensive set of consistent and customizable icons.
 
 - **Polymorphic Implementation**: Can render as different HTML elements or React components using the `as` prop, allowing the button to behave as a link, button, or custom component.
 
-- **Loading States**: Includes support for loading spinners and disabled states during asynchronous operations to provide visual feedback to users.
-
 - **Accessibility-First Design**: Built with proper ARIA attributes, keyboard navigation, and focus management for an inclusive user experience.
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Standard usage
-<Button>Click Me</Button>
-
-// Variant examples
-<Button variant="primary">Primary Action</Button>
-<Button variant="secondary">Secondary Action</Button>
-<Button variant="tertiary">Tertiary Action</Button>
-<Button variant="destructive">Delete Item</Button>
-
-// With icons
-<Button>
-  <Icon name="plus" /> Add Item
-</Button>
-
-// Icon-only button
-<Button
-  iconOnly
-  aria-label="Add to favorites"
->
-  <Icon name="heart" />
-</Button>
-
-// As a link
-<Button as="a" href="/about">
-  About Page
-</Button>
-
-// Loading state
-<Button loading>Processing...</Button>
-`} />
 
 ## Examples
 <Stories
   includePrimary={false}
   title=""
-/>
-
-## Usage Guidelines
-
-Choose different variants based on the importance and impact of the action:
-
-- **Primary**: Main call-to-action, high-visibility actions
-- **Secondary**: Alternative or supporting actions
-- **Tertiary**: Less prominent actions
-- **Destructive**: Actions with permanent consequences (delete, remove)
-- **Link variants**: For navigation or light-weight actions that look like links
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Primary for main call-to-action
-<Button variant="primary">Save Changes</Button>
-
-// Secondary for alternative actions
-<Button variant="secondary">Cancel</Button>
-
-// Tertiary for less prominent actions
-<Button variant="tertiary">View Details</Button>
-
-// Destructive for permanent actions
-<Button variant="destructive">Delete Account</Button>
-
-// Link variant for navigation
-<Button variant="link">View Documentation</Button>
-`} />
-
-## Component Architecture
-
-The Button uses a utility-first approach with Tailwind CSS, leveraging Class Variance Authority (CVA) for style variants. This approach provides consistent styling across variants while allowing for customization:
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Adding custom classes
-<Button className="my-custom-class">
-  Custom Button
-</Button>
-
-// The component handles class merging intelligently
-<Button
-  variant="primary"
-  className="rounded-full"
->
-  Rounded Button
-</Button>
-`} />
-
-### Accessibility Features
-
-The Button component is built with accessibility as a priority:
-
-- Standard buttons use semantic `<button>` elements
-- Focus states are visually distinct
-- Disabled states prevent interaction
-- Icon-only buttons require `aria-label` attributes for screen readers
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Icon-only buttons require aria-label
-<Button 
-  iconOnly 
-  aria-label="Add to favorites"
->
-  <Icon name="heart" />
-</Button>
-`}
 />
