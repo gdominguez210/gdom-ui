@@ -1,4 +1,4 @@
-import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Source, Canvas, Stories, Primary } from '@storybook/addon-docs/blocks';
 import * as AudioWaveformStories from './AudioWaveform.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
@@ -14,15 +14,14 @@ A highly customizable audio waveform visualization component that displays audio
 
 <DocumentationNav />
 
-<Primary />
+<Canvas of={AudioWaveformStories.Basic} />
+
 ## API Reference
 
 `type ComponentPropsWithRef<'canvas'>` &
 <Controls />
 
 ## Features
-
-The AudioWaveform component provides several key features:
 
 - **Clean Waveform Visualization**: Displays audio amplitude data as vertical bars
 - **Customizable Appearance**: Control bar width, gap ratio, colors, and height to match your design
