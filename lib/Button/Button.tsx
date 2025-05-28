@@ -29,6 +29,10 @@ type IconButtonAccessibilityProps =
 export type ButtonProps<T extends ElementType = 'button'> = ButtonBaseProps &
   IconButtonAccessibilityProps &
   Omit<ComponentPropsWithRef<T>, keyof ButtonBaseProps | keyof IconButtonAccessibilityProps> & {
+    /**
+     * The element to render the button as.
+     * @default button
+     */
     as?: T;
   };
 
@@ -37,15 +41,18 @@ const buttonStyles = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-blue-500 hover:bg-blue-600 focus:bg-blue-600 active:bg-blue-600 text-white',
+        primary:
+          'bg-blue-500 hover:bg-blue-600 focus:bg-blue-600 active:bg-blue-600 text-white ring-blue-600/30 focus:ring-4',
         secondary:
-          'bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border active:border border-solid border-neutral-200',
-        tertiary: 'text-blue-500 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50',
+          'bg-white hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 border active:border border-solid border-neutral-200 ring-neutral-500/30 focus:ring-4',
+        tertiary:
+          'text-blue-500 hover:bg-neutral-50 focus:bg-neutral-50 active:bg-neutral-50 ring-neutral-500/30 focus:ring-4',
         destructive:
-          'text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 focus:shadow-red-700/12',
-        linkColor: 'text-blue-500 hover:text-blue-600 focus:text-blue-600 active:text-blue-600',
+          'text-white bg-red-600 hover:bg-red-700 focus:bg-red-700 active:bg-red-700 ring-red-700/30 focus:ring-4',
+        linkColor:
+          'text-blue-500 hover:text-blue-600 focus:text-blue-600 active:text-blue-600 ring-blue-600/30 focus:ring-4',
         linkGray:
-          'text-neutral-600 hover:text-neutral-900 focus:text-neutral-900 active:text-neutral-900',
+          'text-neutral-600 hover:text-neutral-900 focus:text-neutral-900 active:text-neutral-900 ring-neutral-900/30 focus:ring-4',
       },
       size: {
         md: 'gap-1 text-sm',
@@ -60,11 +67,6 @@ const buttonStyles = cva(
       iconOnly: {
         true: 'gap-2',
         false: '',
-      },
-      isDestructive: {
-        true: 'focus:shadow-[0px_0px_0px_4px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,0.12),0px_0px_0px_1px_rgba(0.8509804010391235,0.1764705926179886,0.125490203499794,1.00)]',
-        false:
-          'focus:shadow-[0px_0px_0px_4px_rgba(0.2666666805744171,0.2980392277240753,0.9058823585510254,0.12)]',
       },
     },
     compoundVariants: [
@@ -87,6 +89,11 @@ const buttonStyles = cva(
         variant: ['primary', 'secondary', 'tertiary', 'destructive'],
         size: 'xxl',
         className: 'px-6 py-4',
+      },
+      {
+        variant: ['linkColor', 'linkGray'],
+        size: ['md', 'lg', 'xl', 'xxl'],
+        className: 'px-1',
       },
       {
         variant: ['primary', 'secondary', 'tertiary', 'destructive'],
@@ -137,14 +144,9 @@ export function Button<T extends ElementType = 'button'>(props: ButtonProps<T>) 
     ...restProps
   } = props;
 
-  const isDestructive = variant === 'destructive';
-
   return (
     <Element
-      className={twMerge(
-        buttonStyles({ variant, size, disabled, iconOnly, isDestructive }),
-        className,
-      )}
+      className={twMerge(buttonStyles({ variant, size, disabled, iconOnly }), className)}
       disabled={disabled}
       {...restProps}
     >
