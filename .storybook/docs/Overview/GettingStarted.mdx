@@ -1,10 +1,13 @@
 import { Meta, Source } from '@storybook/addon-docs/blocks';
+import { DocumentationNav } from '@/.storybook/components/DocumentationNav/DocumentationNav';
 
 <Meta title="Overview/Getting Started" />
 
 # Getting Started with GDOM-UI
 
 A comprehensive guide to installing and using the GDOM-UI component library in your projects.
+
+<DocumentationNav />
 
 ## Installation
 
@@ -68,7 +71,7 @@ function App() {
   );}`}
 />
 
-## Example: Using the AudioPlayer Component
+### Example: Using the AudioPlayer Component
 
 The AudioPlayer is a complex, compound component that showcases GDOM-UI's component architecture that favors composability over configuration:
 
@@ -130,38 +133,65 @@ function AudioPlayerExample() {
 }`}
 />
 
-## Integration with Tailwind CSS
+## CSS Integration
 
-GDOM-UI integrates seamlessly with Tailwind CSS. All components accept className props for styling:
+GDOM-UI provides a compiled CSS stylesheet that includes all necessary styles for the components. To use it in your application, you need to import it in your main application file:
 
 <Source
   language="tsx"
   dark
-  code={`import { Button } from '@gdominguez210/gdom-ui/Button';
-import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+  code={`// In your main application file (e.g., App.tsx, main.tsx, etc.)
+import '@gdominguez210/gdom-ui/styles.css';`}
+/>
 
-function StyleExample() {
-  return (
-    <div className="space-y-4">
-      {/* Styling a basic component */}
-      <Button className="mb-4">
-        Custom Button
-      </Button>
-      
-      {/* Styling compound components */}
-      <AudioPlayer.Provider tracks={tracks}>
-        <AudioPlayer.Root className="bg-gray-900 text-white p-6 rounded-xl">
-          <AudioPlayer.Title className="text-xl font-bold" />
-          <AudioPlayer.ProgressBar className="my-4 h-2 bg-gray-700" />
-          <AudioPlayer.Controls className="flex justify-center gap-4">
-            <AudioPlayer.ControlPlay className="text-amber-400 hover:text-amber-300" />
-          </AudioPlayer.Controls>
-        </AudioPlayer.Root>
-      </AudioPlayer.Provider>
-    </div>
-  );
+## Tailwind Configuration
+
+If you want to customize or extend GDOM-UI's styles using Tailwind, you'll need to configure your Tailwind setup to include the library's components. This step is only necessary if you plan to:
+- Override or extend the library's default styles
+- Use Tailwind's utility classes directly on GDOM-UI components
+- Create custom variants or utilities that interact with GDOM-UI components
+
+If you're only using the library's components with their default styles, you can skip this section and just use the CSS stylesheet provided above.
+
+### Tailwind 4 Configuration
+
+Tailwind 4 introduces automatic content detection and a CSS-first configuration approach. To include GDOM-UI in your project, add the following to your CSS file:
+
+<Source
+  language="css"
+  dark
+  code={`@import "tailwindcss";
+@source "../node_modules/@gdominguez210/gdom-ui";`}
+/>
+
+This will automatically detect and include all Tailwind classes used in GDOM-UI components. Tailwind 4's new high-performance engine will handle this efficiently, with builds up to 5x faster than previous versions.
+
+### Tailwind 3 Configuration
+
+If you're using Tailwind 3, you'll need to use the traditional configuration approach. Add the following to your `tailwind.config.js`:
+
+<Source
+  language="js"
+  dark
+  code={`/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    // ... your existing content configuration
+    './node_modules/@gdominguez210/gdom-ui/**/*.{js,ts,jsx,tsx}',
+  ],
+  // ... rest of your configuration
 }`}
 />
+
+> **Note**: GDOM-UI is built with Tailwind 4, which includes several modern features that might not be fully backwards compatible with Tailwind 3:
+> - New high-performance engine
+> - CSS-first configuration
+> - Automatic content detection
+> - Modern CSS features like cascade layers and registered custom properties
+> - New color palette optimized for modern displays
+> - Container queries and 3D transform utilities
+> 
+> While most components will work fine in Tailwind 3, you might encounter some styling differences or limitations.
 
 ## Getting Help
 
