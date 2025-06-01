@@ -1,7 +1,7 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
+import type { ElementType } from 'react';
 import { cva } from 'class-variance-authority';
 import { variants, sizes } from '@/lib/Button/data';
+import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
 
 type Variant = (typeof variants)[number];
 
@@ -28,13 +28,7 @@ type IconButtonAccessibilityProps =
 
 export type ButtonProps<T extends ElementType = 'button'> = ButtonBaseProps &
   IconButtonAccessibilityProps &
-  Omit<ComponentPropsWithRef<T>, keyof ButtonBaseProps | keyof IconButtonAccessibilityProps> & {
-    /**
-     * The element to render the button as.
-     * @default button
-     */
-    as?: T;
-  };
+  Omit<PolymorphicProps<T>, keyof ButtonBaseProps | keyof IconButtonAccessibilityProps>;
 
 const buttonStyles = cva(
   ['inline-flex justify-center items-center rounded-sm font-medium focus-visible:outline-hidden'],
@@ -134,7 +128,7 @@ const buttonStyles = cva(
 
 export function Button<T extends ElementType = 'button'>(props: ButtonProps<T>) {
   const {
-    as: Element = 'button',
+    as = 'button',
     children,
     disabled,
     variant = 'primary',
@@ -145,12 +139,13 @@ export function Button<T extends ElementType = 'button'>(props: ButtonProps<T>) 
   } = props;
 
   return (
-    <Element
-      className={twMerge(buttonStyles({ variant, size, disabled, iconOnly }), className)}
+    <Polymorphic
+      as={as}
+      className={buttonStyles({ variant, size, disabled, iconOnly, className })}
       disabled={disabled}
       {...restProps}
     >
       {children}
-    </Element>
+    </Polymorphic>
   );
 }
