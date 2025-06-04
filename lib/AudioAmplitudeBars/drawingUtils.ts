@@ -30,48 +30,6 @@ export function getActualGapWidth(
 }
 
 /**
- * Calculates how many bars can be displayed given the available width and minimum sizes
- * @param displayWidth - The width of the canvas in pixels
- * @param minBarWidth - The minimum width for each bar in pixels
- * @param gapWidth - The width of gaps between bars in pixels
- * @returns The maximum number of bars that can fit in the display width
- */
-export function calculateMaxBarsInView(
-  displayWidth: number,
-  minBarWidth: number,
-  gapWidth: number,
-): number {
-  // Calculate max bars accounting for n-1 gaps between n bars
-  return Math.floor((displayWidth + gapWidth) / (minBarWidth + gapWidth));
-}
-
-/**
- * Determines if data sampling is needed and calculates the sampling rate
- * @param dataLength - The length of the original waveform data array
- * @param maxBarsInView - The maximum number of bars that can fit in the display
- * @returns The sampling rate to use (1 means use all data points)
- */
-export function calculateSamplingRate(dataLength: number, maxBarsInView: number): number {
-  if (dataLength <= maxBarsInView) {
-    return 1; // No sampling needed
-  }
-  return Math.ceil(dataLength / maxBarsInView);
-}
-
-/**
- * Samples the waveform data to fit within the available display width
- * @param waveformData - The original waveform amplitude data
- * @param samplingRate - The rate at which to sample the data (e.g., 2 means take every other point)
- * @returns Sampled waveform data array
- */
-export function sampleWaveformData(waveformData: number[], samplingRate: number): number[] {
-  if (samplingRate === 1) {
-    return waveformData; // No sampling needed
-  }
-  return waveformData.filter((_, i) => i % samplingRate === 0);
-}
-
-/**
  * Calculates the optimal bar width based on available space and number of bars
  * @param displayWidth - The width of the canvas in pixels
  * @param numBars - The number of bars to display

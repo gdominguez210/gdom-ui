@@ -1,30 +1,34 @@
 import type { ComponentPropsWithRef } from 'react';
 import { CanvasResponsive } from '@/lib/CanvasResponsive/CanvasResponsive';
-import { useAudioWaveform, type useAudioWaveformOptions } from './useAudioWaveform';
+import {
+  useAudioAmplitudeBars,
+  type UseAudioAmplitudeBarsOptions,
+} from '@/lib/AudioAmplitudeBars/useAudioAmplitudeBars';
 import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
 
-export type AudioWaveformProps = ComponentPropsWithRef<'canvas'> & useAudioWaveformOptions;
+export type AudioAmplitudeBarsProps = ComponentPropsWithRef<'canvas'> &
+  UseAudioAmplitudeBarsOptions;
 
-export function AudioWaveform(props: AudioWaveformProps) {
+export function AudioAmplitudeBars(props: AudioAmplitudeBarsProps) {
   const {
     ref,
-    barColor,
-    getBarColor,
+    color,
+    getColor,
     barGapRatio,
     minBarWidth,
     heightScale,
-    waveformData,
+    amplitudeData,
     minBarGapPercent,
     ...restProps
   } = props;
 
-  const { canvasRef, drawWaveform } = useAudioWaveform({
-    barColor,
-    getBarColor,
+  const { canvasRef, drawWaveform } = useAudioAmplitudeBars({
+    color,
+    getColor,
     barGapRatio,
     minBarWidth,
     heightScale,
-    waveformData,
+    amplitudeData,
     minBarGapPercent,
   });
 

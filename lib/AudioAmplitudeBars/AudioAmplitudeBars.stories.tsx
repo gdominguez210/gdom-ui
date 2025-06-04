@@ -1,39 +1,42 @@
 import type { StoryObj, Meta } from '@storybook/react-vite';
-import { AudioWaveform, type AudioWaveformProps } from '@/lib/AudioWaveform/AudioWaveform';
-import { waveformData } from '@/data/waveformData';
+import {
+  AudioAmplitudeBars,
+  type AudioAmplitudeBarsProps,
+} from '@/lib/AudioAmplitudeBars/AudioAmplitudeBars';
+import { amplitudeData } from '@/data/amplitudeData';
 import { CollapseCategory } from '@storybook-decorators/CollapseCategory/CollapseCategory';
 import { DeferredRender } from '@/.storybook/components/DeferredRender/DeferredRender';
 
-const sampleWaveformData = waveformData['58730401-c910-4a77-935e-83d71d5d1a52'] || [];
+const sampleAmplitudeData = amplitudeData['58730401-c910-4a77-935e-83d71d5d1a52'] || [];
 
-function AudioWaveformWrapper(props: AudioWaveformProps) {
+function AudioAmplitudeBarsWrapper(props: AudioAmplitudeBarsProps) {
   return (
     <DeferredRender height={150}>
-      <AudioWaveform
+      <AudioAmplitudeBars
         className="max-h-[150px]"
         {...props}
       />
     </DeferredRender>
   );
 }
-AudioWaveformWrapper.displayName = 'AudioWaveform';
+AudioAmplitudeBarsWrapper.displayName = 'AudioAmplitudeBars';
 
 export default {
-  title: 'components/AudioWaveform',
-  component: AudioWaveform,
+  title: 'components/AudioAmplitudeBars',
+  component: AudioAmplitudeBars,
   parameters: {
     docs: {
       description: {
         component:
-          'A customizable audio waveform visualization component that renders amplitude data as vertical bars.',
+          'A customizable audio amplitude visualization component that renders amplitude data as vertical bars.',
       },
       source: {
         type: 'dynamic',
         transform: (code: string) => {
           // Replace array literal with placeholder
           return code.replace(
-            /waveformData=\{[^}]+\}/,
-            'waveformData={[/* Array of amplitude values */]}',
+            /amplitudeData=\{[^}]+\}/,
+            'amplitudeData={[/* Array of amplitude values (normalized between 0-1) */]}',
           );
         },
       },
@@ -50,7 +53,7 @@ export default {
     // Appearance
     heightScale: {
       control: { type: 'range', min: 0.1, max: 1, step: 0.1 },
-      description: 'Height of waveform as a proportion of canvas height',
+      description: 'Height of amplitude bars as a proportion of canvas height',
       table: {
         type: { summary: 'number' },
         defaultValue: { summary: '1' },
@@ -86,29 +89,29 @@ export default {
     },
 
     // Color
-    barColor: {
+    color: {
       control: 'color',
-      description: 'Color of the waveform bars',
+      description: 'Color of the amplitude bars',
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: '#9f9fa9' },
         category: 'Color',
       },
     },
-    getBarColor: {
+    getColor: {
       control: false,
       description: 'Function to determine bar color based on state',
       table: {
         type: {
-          summary: '(barInfo: WaveformBarInfo) => string | WaveformBarColorResult',
-          detail: `type WaveformBarInfo = {
+          summary: '(barInfo: AmplitudeBarInfo) => string | ColorResult',
+          detail: `type AmplitudeBarInfo = {
   position: number;  // Position in the waveform (0-1)
   value: number;     // Amplitude value (0-1)
   index: number;     // Index in the waveform data array
   width: number;     // Width of this specific bar as a percentage of total width (0-1)
 }
 
-type WaveformBarColorResult = string | {
+type ColorResult = string | {
   type: 'gradient';
   stops: Array<{
     offset: number;  // Value between 0 and 1
@@ -121,7 +124,7 @@ type WaveformBarColorResult = string | {
     },
 
     // Advanced
-    waveformData: {
+    amplitudeData: {
       control: false,
       description: 'Array of normalized amplitude values between 0-1',
       table: {
@@ -131,7 +134,7 @@ type WaveformBarColorResult = string | {
     },
     drawOnCanvasReady: {
       control: 'boolean',
-      description: 'Whether to draw the waveform when the canvas ref is set',
+      description: 'Whether to draw the amplitude bars when the canvas ref is set',
       table: {
         type: { summary: 'boolean' },
         defaultValue: { summary: 'true' },
@@ -145,105 +148,105 @@ type WaveformBarColorResult = string | {
       },
     },
   },
-} as Meta<typeof AudioWaveform>;
+} as Meta<typeof AudioAmplitudeBars>;
 
-export const Basic: StoryObj<typeof AudioWaveform> = {
+export const Basic: StoryObj<typeof AudioAmplitudeBars> = {
   args: {
-    barColor: '#9f9fa9',
+    color: '#9f9fa9',
     barGapRatio: 0.0035,
     heightScale: 0.8,
     minBarGapPercent: 0.001,
     minBarWidth: 1,
-    waveformData: sampleWaveformData,
+    amplitudeData: sampleAmplitudeData,
   },
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         story:
-          'Basic waveform visualization with default settings. Uses a blue color scheme and balanced bar width/spacing.',
+          'Basic amplitude bars visualization with default settings. Uses a blue color scheme and balanced bar width/spacing.',
       },
     },
   },
-  render: (args) => <AudioWaveformWrapper {...args} />,
+  render: (args) => <AudioAmplitudeBarsWrapper {...args} />,
 };
 
-export const CustomColors: StoryObj<typeof AudioWaveform> = {
+export const CustomColors: StoryObj<typeof AudioAmplitudeBars> = {
   args: {
-    barColor: '#03C988',
+    color: '#03C988',
     barGapRatio: 0.0035,
     heightScale: 0.8,
     minBarWidth: 1,
-    waveformData: sampleWaveformData,
+    amplitudeData: sampleAmplitudeData,
   },
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
-        story: 'Waveform with custom color scheme.',
+        story: 'Amplitude bars with custom color scheme.',
       },
     },
   },
-  render: (args) => <AudioWaveformWrapper {...args} />,
+  render: (args) => <AudioAmplitudeBarsWrapper {...args} />,
 };
 
-export const DynamicColors: StoryObj<typeof AudioWaveform> = {
+export const DynamicColors: StoryObj<typeof AudioAmplitudeBars> = {
   args: {
     barGapRatio: 0.0035,
-    getBarColor: (barInfo) => {
+    getColor: (barInfo) => {
       if (barInfo.value > 0.7) return '#ff3300'; // Loud sections
       if (barInfo.value > 0.4) return '#ff9900'; // Medium sections
       return '#cccccc'; // Quiet sections
     },
     heightScale: 0.8,
     minBarWidth: 1,
-    waveformData: sampleWaveformData,
+    amplitudeData: sampleAmplitudeData,
   },
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
-        story: 'Waveform with dynamic colors based on amplitude values.',
+        story: 'Amplitude bars with dynamic colors based on amplitude values.',
       },
     },
   },
-  render: (args) => <AudioWaveformWrapper {...args} />,
+  render: (args) => <AudioAmplitudeBarsWrapper {...args} />,
 };
 
-export const HighResolution: StoryObj<typeof AudioWaveform> = {
+export const HighResolution: StoryObj<typeof AudioAmplitudeBars> = {
   args: {
-    barColor: '#9f9fa9',
+    color: '#9f9fa9',
     barGapRatio: 0.001,
     heightScale: 0.8,
     minBarWidth: 1,
-    waveformData: sampleWaveformData,
+    amplitudeData: sampleAmplitudeData,
   },
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
-        story: 'High-resolution waveform with minimal gaps between bars.',
+        story: 'High-resolution amplitude bars with minimal gaps between bars.',
       },
     },
   },
-  render: (args) => <AudioWaveformWrapper {...args} />,
+  render: (args) => <AudioAmplitudeBarsWrapper {...args} />,
 };
 
-export const LowResolution: StoryObj<typeof AudioWaveform> = {
+export const LowResolution: StoryObj<typeof AudioAmplitudeBars> = {
   args: {
-    barColor: '#9f9fa9',
+    color: '#9f9fa9',
     barGapRatio: 0.015,
     heightScale: 0.8,
     minBarWidth: 3,
-    waveformData: sampleWaveformData,
+    amplitudeData: sampleAmplitudeData,
   },
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
-        story: 'Low-resolution waveform with wider bars and larger gaps.',
+        story: 'Low-resolution amplitude bars with wider bars and larger gaps.',
       },
     },
   },
-  render: (args) => <AudioWaveformWrapper {...args} />,
+  render: (args) => <AudioAmplitudeBarsWrapper {...args} />,
 };
