@@ -65,3 +65,15 @@ export type OKLCH = {
   C: number;
   h: number;
 };
+
+export type GradientStop = {
+  offset: number;
+  color: string;
+};
+
+export type ColorResult =
+  | string
+  | {
+      type: 'gradient';
+      stops: GradientStop[];
+    };
