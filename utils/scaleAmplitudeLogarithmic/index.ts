@@ -1,0 +1,1 @@
+export { scaleAmplitudeLogarithmic } from './scaleAmplitudeLogarithmic';
