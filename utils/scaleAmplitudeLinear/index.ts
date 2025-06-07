@@ -1,0 +1,1 @@
+export { scaleAmplitudeLinear } from './scaleAmplitudeLinear';
