@@ -1,7 +1,4 @@
-export type PeakSegment = {
-  min: number;
-  max: number;
-};
+import type { PeakSegment } from '@/types/audio';
 
 /**
  * Samples waveform data using peak detection over a window size
