@@ -1,5 +1,5 @@
 import type { PeakSegment, PeakSampleOptions } from '@/types/audio';
-import { interpolateLinear } from '@/utils/interpolateLinear';
+import { getInterpolatedValueLinear } from '@/utils/getInterpolatedValueLinear';
 
 /**
  * Gets interpolated peak value using linear interpolation
@@ -28,11 +28,7 @@ export function getInterpolatedPeakLinear(
     const t = i / numSteps;
     const pos = startSample + t * (endSample - startSample);
 
-    const y1 = data[Math.floor(pos)] ?? 0;
-    const y2 = data[Math.min(data.length - 1, Math.floor(pos) + 1)] ?? 0;
-
-    const fraction = pos - Math.floor(pos);
-    const value = interpolateLinear(y1, y2, fraction);
+    const value = getInterpolatedValueLinear(data, pos);
 
     min = Math.min(min, value);
     max = Math.max(max, value);
