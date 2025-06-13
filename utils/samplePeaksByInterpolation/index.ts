@@ -14,14 +14,20 @@ export type InterpolationFn = (
  * @param options - The options for the interpolation function
  * @returns The sampled waveform data
  */
-export function samplePeaksByInterpolation(
+export function samplePeaksByInterpolation<T>(
   data: number[],
   numSegments: number,
   interpolationFn: InterpolationFn,
-  options?: PeakSampleOptions,
-): PeakSegment[] {
-  return Array.from({ length: numSegments }, (_, i) => {
+  options?: PeakSampleOptions & { transformFn?: (peakSegment: PeakSegment) => T },
+): PeakSegment[] | T[] {
+  const { transformFn, ...restOptions } = options ?? {};
+
+  const result = Array.from({ length: numSegments }, (_, i) => {
     const exactIndex = (i * data.length) / numSegments;
-    return interpolationFn(data, exactIndex, options);
+    const peakSegment = interpolationFn(data, exactIndex, restOptions);
+
+    return transformFn ? transformFn(peakSegment) : peakSegment;
   });
+
+  return transformFn ? (result as T[]) : (result as PeakSegment[]);
 }
