@@ -4,14 +4,14 @@ import type { PeakSegment } from '@/types/audio';
  * Samples waveform data using peak detection over a window size
  * Used when we have more samples than segments (sampleSize > 1)
  */
-export function samplePeaksByWindow(
+
+export function samplePeaksByWindow<T>(
   data: number[],
   numSegments: number,
   sampleSize: number,
-): PeakSegment[] {
-  const result: PeakSegment[] = [];
-
-  for (let i = 0; i < numSegments; i++) {
+  transformFn?: (peakSegment: PeakSegment) => T,
+): PeakSegment[] | T[] {
+  const result = Array.from({ length: numSegments }, (_, i) => {
     const start = Math.floor(i * sampleSize);
     const end = Math.floor((i + 1) * sampleSize);
 
@@ -24,8 +24,8 @@ export function samplePeaksByWindow(
       max = Math.max(max, value);
     }
 
-    result.push({ min, max });
-  }
+    return transformFn ? (transformFn({ min, max }) as T) : ({ min, max } as PeakSegment);
+  });
 
-  return result;
+  return transformFn ? (result as T[]) : (result as PeakSegment[]);
 }
