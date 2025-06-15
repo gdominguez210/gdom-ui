@@ -1,0 +1,36 @@
+{
+    "extends": [],
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["../*"]
+      },
+      "target": "ESNext",
+      "lib": ["DOM", "DOM.Iterable", "ESNext", "ES2021.String"],
+      "module": "ESNext",
+      "types": ["node"],
+      "noEmit": false,
+      "moduleResolution": "Bundler",
+      "resolveJsonModule": true,
+      "allowJs": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "forceConsistentCasingInFileNames": true,
+      "isolatedModules": true,
+      "allowImportingTsExtensions": false,
+      "verbatimModuleSyntax": true,
+      "useDefineForClassFields": true,
+      "strict": true,
+      "noFallthroughCasesInSwitch": true,
+      "noImplicitOverride": true,
+      "noImplicitReturns": true,
+      "noImplicitThis": true,
+      "noPropertyAccessFromIndexSignature": true,
+      "noUncheckedIndexedAccess": true,
+      "noUnusedLocals": false,
+      "noUnusedParameters": true
+    },
+    "include": ["index.ts", "getInterpolatedPeakCubic.ts"],
+    "exclude": []
+  }
+  
