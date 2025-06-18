@@ -6,7 +6,10 @@ import { interpolateLinear } from '../interpolateLinear';
  * @param exactIndex - Exact index/position to interpolate (can be fractional)
  * @returns Single interpolated value at the exact position
  */
-export function getInterpolatedValueLinear(data: number[], exactIndex: number): number {
+export function getInterpolatedValueLinear(
+  data: number[] | Float32Array,
+  exactIndex: number,
+): number {
   const y1 = data[Math.floor(exactIndex)] ?? 0;
   const y2 = data[Math.min(data.length - 1, Math.floor(exactIndex) + 1)] ?? 0;
 
