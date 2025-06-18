@@ -1,9 +1,4 @@
-import type { EnvelopeSegment } from '@/types/audio';
-
-export type EnvelopeSegmentInterpolationFn = (
-  data: EnvelopeSegment[],
-  exactIndex: number,
-) => EnvelopeSegment;
+import type { EnvelopeSegment, EnvelopeSegmentInterpolationFn } from '@/types/audio';
 
 /**
  * Samples envelope segment data using interpolation
