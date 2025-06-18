@@ -6,7 +6,10 @@ import { interpolateCubic } from '../interpolateCubic';
  * @param exactIndex - Exact index/position to interpolate (can be fractional)
  * @returns Single interpolated value at the exact position
  */
-export function getInterpolatedValueCubic(data: number[], exactIndex: number): number {
+export function getInterpolatedValueCubic(
+  data: number[] | Float32Array,
+  exactIndex: number,
+): number {
   const y0 = data[Math.max(0, Math.floor(exactIndex) - 1)] ?? 0;
   const y1 = data[Math.floor(exactIndex)] ?? 0;
   const y2 = data[Math.min(data.length - 1, Math.floor(exactIndex) + 1)] ?? 0;
