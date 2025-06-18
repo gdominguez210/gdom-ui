@@ -3,13 +3,13 @@ import { findEnvelopeInSampleRange } from '@/utils/findEnvelopeInSampleRange';
 
 /**
  * Samples raw audio data using window-based envelope detection
- * @param data - Raw audio data (number array)
+ * @param data - Raw audio data (number or Float32 array)
  * @param numSegments - Number of segments to create
  * @param sampleSize - Size of each sampling window
  * @param transformFn - Optional transform function for each segment
  */
 export function sampleRawAudioByWindow<T>(
-  data: number[],
+  data: number[] | Float32Array,
   numSegments: number,
   sampleSize: number,
   transformFn?: (envelope: EnvelopeSegment) => T,
