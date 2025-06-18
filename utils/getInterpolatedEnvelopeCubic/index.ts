@@ -9,7 +9,7 @@ import { findEnvelopeInSampleRange } from '@/utils/findEnvelopeInSampleRange';
  * @param options - Sampling options
  */
 export function getInterpolatedEnvelopeCubic(
-  data: number[],
+  data: number[] | Float32Array,
   exactIndex: number,
   options?: EnvelopeSampleOptions,
 ): EnvelopeSegment {
