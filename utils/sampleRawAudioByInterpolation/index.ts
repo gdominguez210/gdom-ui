@@ -1,10 +1,8 @@
-import type { EnvelopeSegment, EnvelopeSampleOptions } from '@/types/audio';
-
-export type EnvelopeInterpolationFn = (
-  data: number[],
-  exactIndex: number,
-  options?: EnvelopeSampleOptions,
-) => EnvelopeSegment;
+import type {
+  EnvelopeSegment,
+  EnvelopeSampleOptions,
+  RawAudioInterpolationFn,
+} from '@/types/audio';
 
 /**
  * Samples raw audio data using interpolation
@@ -14,9 +12,9 @@ export type EnvelopeInterpolationFn = (
  * @param options - Options for interpolation
  */
 export function sampleRawAudioByInterpolation<T>(
-  data: number[],
+  data: number[] | Float32Array,
   numSegments: number,
-  interpolationFn: EnvelopeInterpolationFn,
+  interpolationFn: RawAudioInterpolationFn,
   options?: EnvelopeSampleOptions & { transformFn?: (envelope: EnvelopeSegment) => T },
 ): EnvelopeSegment[] | T[] {
   const { transformFn, ...restOptions } = options ?? {};
