@@ -12,7 +12,7 @@ export function calculateGapWidth(
   minGapWidth = 1,
   maxGapWidth?: number,
 ): number {
-  if (gapPercent < 0 || gapPercent > 100 || gapPercent === 0) {
+  if (minGapWidth <= 0 || gapPercent <= 0 || gapPercent > 100) {
     return 0;
   }
 
