@@ -66,6 +66,13 @@ export type OKLCH = {
   h: number;
 };
 
+export const GRADIENT_MODE = {
+  GLOBAL: 'global',
+  LOCAL: 'local',
+} as const;
+
+export type GradientMode = (typeof GRADIENT_MODE)[keyof typeof GRADIENT_MODE];
+
 export type GradientStop = {
   offset: number;
   color: string;
@@ -75,5 +82,6 @@ export type ColorResult =
   | string
   | {
       type: 'gradient';
+      mode?: GradientMode;
       stops: GradientStop[];
     };
