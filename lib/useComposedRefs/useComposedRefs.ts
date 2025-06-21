@@ -48,14 +48,6 @@ export function composeRefs<T>(...refs: ComposableRef<T>[]) {
 /**
  * A hook that composes multiple React refs into a single ref callback.
  * Useful for combining refs like forwarded refs with local refs.
- *
- * @example
- * const MyComponent = forwardRef((props) => {
- *   const { ref } = props;
- *   const localRef = useRef(null);
- *   const composedRef = useComposedRefs(localRef, ref);
- *   return <div ref={composedRef} />;
- * });
  */
 export function useComposedRefs<T>(...refs: ComposableRef<T>[]): RefCallback<T> {
   // eslint-disable-next-line react-hooks/exhaustive-deps
