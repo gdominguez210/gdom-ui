@@ -7,12 +7,12 @@ import { CanvasResponsive } from '@/lib/CanvasResponsive/CanvasResponsive';
 import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
 
 export type AudioWaveformEnvelopeRectanglesProps = UseAudioWaveformEnvelopeRectanglesOptions &
-  ComponentPropsWithRef<'canvas'>;
+  Omit<ComponentPropsWithRef<'canvas'>, 'color'>;
 
 export function AudioWaveformEnvelopeRectangles(props: AudioWaveformEnvelopeRectanglesProps) {
   const {
     ref,
-    envelopeColor,
+    color,
     drawOnCanvasReady,
     heightScale,
     data,
@@ -25,7 +25,7 @@ export function AudioWaveformEnvelopeRectangles(props: AudioWaveformEnvelopeRect
   } = props;
 
   const { canvasRef, handleResize } = useAudioWaveformEnvelopeRectangles({
-    envelopeColor,
+    color,
     drawOnCanvasReady,
     heightScale,
     data,

@@ -6,61 +6,22 @@ import {
   type UseAudioResponsiveSamplingOptions,
   type UseAudioResponsiveSamplingReturn,
 } from '@/lib/useAudioResponsiveSampling/useAudioResponsiveSampling';
-
-export type EnvelopeSegmentInfo = {
-  /**
-   * Position in the waveform (0-1)
-   */
-  position: number;
-
-  /**
-   * Minimum value of the envelope segment
-   */
-  min: number;
-
-  /**
-   * Maximum value of the envelope segment
-   */
-  max: number;
-
-  /**
-   * Index in the segments array
-   */
-  index: number;
-
-  /**
-   * Width of this specific segment as a percentage of total width (0-1)
-   */
-  widthPercentage: number;
-
-  /**
-   * Width of this specific segment in pixels
-   */
-  widthPixels: number;
-
-  /**
-   * Amplitude range of the segment (Math.abs(max - min))
-   * Represents the dynamic range between min and max values
-   */
-  amplitudeRange: number;
-
-  /**
-   * Actual rendered height in pixels
-   */
-  heightPixels: number;
-};
+import type { EnvelopeSegmentInfo } from '@/types/audio';
 
 export type UseAudioWaveformEnvelopeRectanglesOptions = {
   /**
    * Height scale factor for the waveform
    */
   heightScale?: number;
-  envelopeColor?: string | ((segmentInfo: EnvelopeSegmentInfo) => ColorResult);
+  /**
+   * Color of the envelope, can be a string or a function that returns a ColorResult
+   */
+  color?: string | ((segmentInfo: EnvelopeSegmentInfo) => ColorResult);
   /**
    * Whether to draw the waveform on when the canvas ref is set
    * @default true
    */
-  drawOnCanvasReady: boolean;
+  drawOnCanvasReady?: boolean;
 } & UseAudioResponsiveSamplingOptions;
 
 export type UseAudioWaveformEnvelopeRectanglesReturn = {
@@ -81,7 +42,7 @@ export function useAudioWaveformEnvelopeRectangles(
 ): UseAudioWaveformEnvelopeRectanglesReturn {
   const {
     data,
-    envelopeColor = '#9f9fa9',
+    color = '#9f9fa9',
     heightScale = 1,
     drawOnCanvasReady = true,
     segmentMinWidth = 1,
@@ -135,7 +96,7 @@ export function useAudioWaveformEnvelopeRectangles(
         min,
         max,
         index: i,
-        widthPercentage: segmentWidth / displayWidth,
+        widthPercent: segmentWidth / displayWidth,
         widthPixels: segmentWidth,
         amplitudeRange,
         heightPixels: barHeight,
@@ -145,13 +106,13 @@ export function useAudioWaveformEnvelopeRectangles(
         ctx.fillRect(x, Math.min(minY, maxY), segmentWidth, barHeight);
       };
 
-      if (typeof envelopeColor !== 'function') {
-        ctx.fillStyle = envelopeColor;
+      if (typeof color !== 'function') {
+        ctx.fillStyle = color;
         fillRect();
         return;
       }
 
-      const colorResult = envelopeColor(segmentInfo);
+      const colorResult = color(segmentInfo);
 
       if (typeof colorResult === 'string') {
         ctx.fillStyle = colorResult;
@@ -162,13 +123,17 @@ export function useAudioWaveformEnvelopeRectangles(
       if (colorResult.type === 'gradient') {
         const gradientMode = colorResult.mode ?? GRADIENT_MODE.GLOBAL;
 
+        const addColorStops = (gradient: CanvasGradient) => {
+          colorResult.stops.forEach((stop) => {
+            gradient.addColorStop(stop.offset, stop.color);
+          });
+        };
+
         if (gradientMode === GRADIENT_MODE.GLOBAL) {
           if (globalGradient === null) {
             globalGradient = ctx.createLinearGradient(0, 0, 0, displayHeight);
 
-            colorResult.stops.forEach((stop) => {
-              globalGradient!.addColorStop(stop.offset, stop.color);
-            });
+            addColorStops(globalGradient);
           }
 
           ctx.fillStyle = globalGradient;
@@ -183,16 +148,14 @@ export function useAudioWaveformEnvelopeRectangles(
           Math.min(minY, maxY) + barHeight,
         );
 
-        colorResult.stops.forEach((stop) => {
-          gradient.addColorStop(stop.offset, stop.color);
-        });
+        addColorStops(gradient);
 
         ctx.fillStyle = gradient;
         fillRect();
         return;
       }
     });
-  }, [canvasRef, data, envelopeColor, heightScale, segmentsRef, segmentWidthRef, gapWidthRef]);
+  }, [canvasRef, data, color, heightScale, segmentsRef, segmentWidthRef, gapWidthRef]);
 
   const init = useCallback(() => {
     const canvas = canvasRef.current;

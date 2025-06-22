@@ -93,16 +93,37 @@ export default {
       description: 'Maximum gap width in pixels',
       table: {
         type: { summary: 'number' },
-        defaultValue: { summary: 'undefined' },
         category: 'Appearance',
       },
     },
 
-    envelopeColor: {
+    // Color
+    color: {
       control: 'color',
       description: 'Color of the envelope segments (used if function is not provided)',
       table: {
-        type: { summary: 'string | ((segmentInfo: EnvelopeSegmentInfo) => ColorResult)' },
+        type: {
+          summary: 'string | ((segmentInfo: EnvelopeSegmentInfo) => ColorResult)',
+          detail: `type EnvelopeSegmentInfo = {
+  position: number;        // Position in the waveform (0-1)
+  min: number;            // Minimum value of the envelope segment
+  max: number;            // Maximum value of the envelope segment
+  index: number;          // Index in the segments array
+  widthPercentage: number; // Width of this segment as a percentage of total width (0-1)
+  widthPixels: number;    // Width of this segment in pixels
+  amplitudeRange: number; // Amplitude range (Math.abs(max - min))
+  heightPixels: number;   // Actual rendered height in pixels
+}
+
+type ColorResult = string | {
+  type: 'gradient';
+  mode?: 'global' | 'local';  // Default: 'global'
+  stops: Array<{
+    offset: number;  // Value between 0 and 1
+    color: string;   // CSS color value
+  }>;
+}`,
+        },
         defaultValue: { summary: '#9f9fa9' },
         category: 'Appearance',
       },
@@ -145,7 +166,7 @@ export default {
 
 export const Basic: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: '#9f9fa9',
+    color: '#9f9fa9',
     heightScale: 0.8,
     gapWidthPercent: 0,
     segmentMinWidth: 1,
@@ -164,7 +185,7 @@ export const Basic: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const CustomColors: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: '#03C988',
+    color: '#03C988',
   },
   parameters: {
     layout: 'fullscreen',
@@ -179,7 +200,7 @@ export const CustomColors: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const SmallGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: '#2b7fff',
+    color: '#2b7fff',
     gapWidthPercent: 0.1,
     gapMinWidth: 1,
   },
@@ -196,7 +217,7 @@ export const SmallGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const MediumGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: '#2b7fff',
+    color: '#2b7fff',
     gapWidthPercent: 0.35,
     gapMinWidth: 1,
   },
@@ -213,7 +234,7 @@ export const MediumGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const LargeGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: '#2b7fff',
+    color: '#2b7fff',
     gapWidthPercent: 0.75,
     gapMinWidth: 1,
   },
@@ -230,7 +251,7 @@ export const LargeGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const DynamicColors: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: ({ amplitudeRange }) => {
+    color: ({ amplitudeRange }) => {
       if (amplitudeRange > 0.9) return '#ff3300'; // High dynamic range
       if (amplitudeRange > 0.5) return '#ff9900'; // Medium dynamic range
       return '#cccccc'; // Low dynamic range
@@ -244,7 +265,7 @@ export const DynamicColors: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
       },
       source: {
         code: `<AudioWaveformEnvelopeRectangles
-  envelopeColor={({ amplitudeRange }) => {
+  color={({ amplitudeRange }) => {
     if (amplitudeRange > 0.9) return '#ff3300'; // High dynamic range
     if (amplitudeRange > 0.5) return '#ff9900'; // Medium dynamic range
     return '#cccccc'; // Low dynamic range
@@ -258,7 +279,7 @@ export const DynamicColors: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const GradientFill: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: () => ({
+    color: () => ({
       type: 'gradient' as const,
       mode: GRADIENT_MODE.GLOBAL,
       stops: [
@@ -276,7 +297,7 @@ export const GradientFill: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
       },
       source: {
         code: `<AudioWaveformEnvelopeRectangles
-  envelopeColor={() => ({
+  color={() => ({
     type: 'gradient',
     mode: 'global',
     stops: [
@@ -293,7 +314,7 @@ export const GradientFill: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const GlobalGradientWithGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: () => ({
+    color: () => ({
       type: 'gradient' as const,
       mode: GRADIENT_MODE.GLOBAL,
       stops: [
@@ -313,7 +334,7 @@ export const GlobalGradientWithGaps: StoryObj<typeof AudioWaveformEnvelopeRectan
       },
       source: {
         code: `<AudioWaveformEnvelopeRectangles
-  envelopeColor={() => ({
+  color={() => ({
     type: 'gradient',
     mode: 'global',
     stops: [
@@ -332,7 +353,7 @@ export const GlobalGradientWithGaps: StoryObj<typeof AudioWaveformEnvelopeRectan
 
 export const LocalGradientIndividualBars: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: ({ amplitudeRange }) => ({
+    color: ({ amplitudeRange }) => ({
       type: 'gradient' as const,
       mode: GRADIENT_MODE.LOCAL,
       stops: [
@@ -352,7 +373,7 @@ export const LocalGradientIndividualBars: StoryObj<typeof AudioWaveformEnvelopeR
       },
       source: {
         code: `<AudioWaveformEnvelopeRectangles
-  envelopeColor={({ amplitudeRange }) => ({
+  color={({ amplitudeRange }) => ({
     type: 'gradient',
     mode: 'local',
     stops: [
@@ -371,7 +392,7 @@ export const LocalGradientIndividualBars: StoryObj<typeof AudioWaveformEnvelopeR
 
 export const MinWidth1px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: '#2b7fff',
+    color: '#2b7fff',
     segmentMinWidth: 1,
     gapWidthPercent: 0.05,
   },
@@ -389,7 +410,7 @@ export const MinWidth1px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const MinWidth3px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: '#2b7fff',
+    color: '#2b7fff',
     segmentMinWidth: 3,
     gapWidthPercent: 0.1,
   },
@@ -407,7 +428,7 @@ export const MinWidth3px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const MinWidth8px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: '#2b7fff',
+    color: '#2b7fff',
     segmentMinWidth: 8,
     gapWidthPercent: 0.15,
   },
@@ -425,7 +446,7 @@ export const MinWidth8px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const MinWidthComparison: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    envelopeColor: ({ index }) => {
+    color: ({ index }) => {
       const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'];
       return colors[index % colors.length] || '#9f9fa9';
     },
@@ -441,7 +462,7 @@ export const MinWidthComparison: StoryObj<typeof AudioWaveformEnvelopeRectangles
       },
       source: {
         code: `<AudioWaveformEnvelopeRectangles
-  envelopeColor={({ index }) => {
+  color={({ index }) => {
     const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'];
     return colors[index % colors.length] || '#9f9fa9';
   }}
