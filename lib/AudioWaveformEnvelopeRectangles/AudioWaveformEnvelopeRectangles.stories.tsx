@@ -71,7 +71,7 @@ export default {
       },
     },
     gapWidthPercent: {
-      control: { type: 'range', min: 0, max: 0.2, step: 0.01 },
+      control: { type: 'range', min: 0, max: 1, step: 0.01 },
       description: 'Gap width as a percentage of the display width',
       table: {
         type: { summary: 'number' },
@@ -106,12 +106,12 @@ export default {
           summary: 'string | ((segmentInfo: EnvelopeSegmentInfo) => ColorResult)',
           detail: `type EnvelopeSegmentInfo = {
   position: number;        // Position in the waveform (0-1)
-  min: number;            // Minimum value of the envelope segment
-  max: number;            // Maximum value of the envelope segment
+  min: number;            // Minimum value of the envelope segment (-1 to 1)
+  max: number;            // Maximum value of the envelope segment (-1 to 1)
   index: number;          // Index in the segments array
   widthPercentage: number; // Width of this segment as a percentage of total width (0-1)
   widthPixels: number;    // Width of this segment in pixels
-  amplitudeRange: number; // Amplitude range (Math.abs(max - min))
+  amplitudeRange: number; // Amplitude range of envelope segment (0 to 2)
   heightPixels: number;   // Actual rendered height in pixels
 }
 
@@ -134,15 +134,42 @@ type ColorResult = string | {
       control: false,
       description: 'Audio data from the Web Audio API or pre-processed envelope segments',
       table: {
-        type: { summary: 'AudioData' },
-        category: 'Advanced',
+        type: {
+          summary: 'AudioData',
+          detail: `type AudioData = number[] | Float32Array | EnvelopeSegment[];
+
+type EnvelopeSegment = {
+  min: number;  // Minimum amplitude value in the segment (-1 to 1)
+  max: number;  // Maximum amplitude value in the segment (-1 to 1)
+};
+
+// Raw audio data (number[] | Float32Array) should be in the range from -1 to 1`,
+        },
       },
+      type: { name: 'other', value: 'data', required: true },
     },
     interpolationFn: {
       control: false,
       description: 'Function to interpolate values when upsampling with raw audio data',
       table: {
-        type: { summary: 'RawAudioInterpolationFn' },
+        type: {
+          summary: 'RawAudioInterpolationFn',
+          detail: `type RawAudioInterpolationFn = (
+  data: number[] | Float32Array,
+  exactIndex: number,
+  options?: EnvelopeSampleOptions,
+) => EnvelopeSegment;
+
+type EnvelopeSampleOptions = {
+  numSamples?: number;      // Number of samples to use for interpolation window (default: 4)
+  oversampleRate?: number;  // Number of interpolated points per sample interval (default: 4)
+};
+
+type EnvelopeSegment = {
+  min: number;  // Minimum amplitude value (-1 to 1)
+  max: number;  // Maximum amplitude value (-1 to 1)
+};`,
+        },
         category: 'Advanced',
       },
     },
@@ -167,8 +194,10 @@ type ColorResult = string | {
 export const Basic: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
     color: '#9f9fa9',
-    heightScale: 0.8,
+    heightScale: 1,
     gapWidthPercent: 0,
+    gapMinWidth: 0,
+    gapMaxWidth: undefined,
     segmentMinWidth: 1,
   },
   parameters: {
@@ -252,9 +281,10 @@ export const LargeGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 export const DynamicColors: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
     color: ({ amplitudeRange }) => {
-      if (amplitudeRange > 0.9) return '#ff3300'; // High dynamic range
-      if (amplitudeRange > 0.5) return '#ff9900'; // Medium dynamic range
-      return '#cccccc'; // Low dynamic range
+      if (amplitudeRange > 1.5) return '#ff3300'; // High dynamic range
+      if (amplitudeRange > 1) return '#ff9900'; // Medium dynamic range
+      if (amplitudeRange > 0.5) return '#ffcc00'; // Low dynamic range
+      return '#cccccc'; // Very low dynamic range
     },
   },
   parameters: {
@@ -266,9 +296,10 @@ export const DynamicColors: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
       source: {
         code: `<AudioWaveformEnvelopeRectangles
   color={({ amplitudeRange }) => {
-    if (amplitudeRange > 0.9) return '#ff3300'; // High dynamic range
-    if (amplitudeRange > 0.5) return '#ff9900'; // Medium dynamic range
-    return '#cccccc'; // Low dynamic range
+      if (amplitudeRange > 1.5) return '#ff3300'; // High dynamic range
+      if (amplitudeRange > 1) return '#ff9900'; // Medium dynamic range
+      if (amplitudeRange > 0.5) return '#ffcc00'; // Low dynamic range
+      return '#cccccc'; // Very low dynamic range
   }}
 />`,
       },
@@ -312,53 +343,14 @@ export const GradientFill: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   render: (args) => <AudioWaveformEnvelopeRectanglesWrapper {...args} />,
 };
 
-export const GlobalGradientWithGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
-  args: {
-    color: () => ({
-      type: 'gradient' as const,
-      mode: GRADIENT_MODE.GLOBAL,
-      stops: [
-        { offset: 0, color: '#ff8c42' },
-        { offset: 1, color: '#d45500' },
-      ],
-    }),
-    gapWidthPercent: 0.15,
-    gapMinWidth: 1,
-  },
-  parameters: {
-    layout: 'fullscreen',
-    docs: {
-      description: {
-        story:
-          'Global gradient mode with segmented bars. Uses the same canvas-height gradient approach but with gaps between segments, maintaining visual cohesion while showing distinct bars.',
-      },
-      source: {
-        code: `<AudioWaveformEnvelopeRectangles
-  color={() => ({
-    type: 'gradient',
-    mode: 'global',
-    stops: [
-      { offset: 0, color: '#ff8c42' },
-      { offset: 1, color: '#d45500' },
-    ],
-  })}
-  gapWidthPercent={0.15}
-  gapMinWidth={1}
-/>`,
-      },
-    },
-  },
-  render: (args) => <AudioWaveformEnvelopeRectanglesWrapper {...args} />,
-};
-
 export const LocalGradientIndividualBars: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
     color: ({ amplitudeRange }) => ({
       type: 'gradient' as const,
       mode: GRADIENT_MODE.LOCAL,
       stops: [
-        { offset: 0, color: amplitudeRange > 0.7 ? '#ff6b6b' : '#4ecdc4' },
-        { offset: 1, color: amplitudeRange > 0.7 ? '#c92a2a' : '#26a69a' },
+        { offset: 0, color: amplitudeRange > 1.2 ? '#ff6b6b' : '#4ecdc4' },
+        { offset: 1, color: amplitudeRange > 1.2 ? '#c92a2a' : '#26a69a' },
       ],
     }),
     gapWidthPercent: 0.2,
@@ -377,9 +369,9 @@ export const LocalGradientIndividualBars: StoryObj<typeof AudioWaveformEnvelopeR
     type: 'gradient',
     mode: 'local',
     stops: [
-      { offset: 0, color: amplitudeRange > 0.7 ? '#ff6b6b' : '#4ecdc4' },
-      { offset: 1, color: amplitudeRange > 0.7 ? '#c92a2a' : '#26a69a' },
-    ],
+        { offset: 0, color: amplitudeRange > 1.2 ? '#ff6b6b' : '#4ecdc4' },
+        { offset: 1, color: amplitudeRange > 1.2 ? '#c92a2a' : '#26a69a' },
+      ],
   })}
   gapWidthPercent={0.2}
   gapMinWidth={1}
@@ -390,25 +382,7 @@ export const LocalGradientIndividualBars: StoryObj<typeof AudioWaveformEnvelopeR
   render: (args) => <AudioWaveformEnvelopeRectanglesWrapper {...args} />,
 };
 
-export const MinWidth1px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
-  args: {
-    color: '#2b7fff',
-    segmentMinWidth: 1,
-    gapWidthPercent: 0.05,
-  },
-  parameters: {
-    layout: 'fullscreen',
-    docs: {
-      description: {
-        story:
-          'High-resolution waveform with minimum 1px segment width. Provides maximum detail but may appear dense on wide displays.',
-      },
-    },
-  },
-  render: (args) => <AudioWaveformEnvelopeRectanglesWrapper {...args} />,
-};
-
-export const MinWidth3px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
+export const WithSegmentMinWidth3Pixels: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
     color: '#2b7fff',
     segmentMinWidth: 3,
@@ -426,7 +400,7 @@ export const MinWidth3px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   render: (args) => <AudioWaveformEnvelopeRectanglesWrapper {...args} />,
 };
 
-export const MinWidth8px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
+export const WithSegmentMinWidth8Pixels: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
     color: '#2b7fff',
     segmentMinWidth: 8,
@@ -438,37 +412,6 @@ export const MinWidth8px: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
       description: {
         story:
           'Bold waveform with minimum 8px segment width. Creates chunky, bold visualization suitable for large displays or when fewer segments are preferred.',
-      },
-    },
-  },
-  render: (args) => <AudioWaveformEnvelopeRectanglesWrapper {...args} />,
-};
-
-export const MinWidthComparison: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
-  args: {
-    color: ({ index }) => {
-      const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'];
-      return colors[index % colors.length] || '#9f9fa9';
-    },
-    segmentMinWidth: 5,
-    gapWidthPercent: 0.1,
-  },
-  parameters: {
-    layout: 'fullscreen',
-    docs: {
-      description: {
-        story:
-          'Demonstration of different segment minimum widths with colors cycling through segments to show individual segments clearly.',
-      },
-      source: {
-        code: `<AudioWaveformEnvelopeRectangles
-  color={({ index }) => {
-    const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'];
-    return colors[index % colors.length] || '#9f9fa9';
-  }}
-  segmentMinWidth={5}
-  gapWidthPercent={0.1}
-/>`,
       },
     },
   },

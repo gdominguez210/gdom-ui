@@ -27,7 +27,7 @@ A highly customizable audio waveform envelope visualization component that displ
 - **Customizable Appearance**: Control segment width, gap ratios, colors, and height to match your design
 - **Responsive Sampling**: Automatically scales and samples data to fit the container while maintaining visual quality. The component intelligently adjusts segment density when there are too many data points to display clearly, ensuring optimal performance across all device sizes.
 - **Dynamic Coloring**: Support for both static colors and dynamic per-segment coloring based on envelope properties
-- **Gradient Support**: Advanced gradient fills for sophisticated visual effects
+- **Gradient Support**: Advanced gradient fills with two modes - global gradients that span the entire canvas height for unified visual effects, and local gradients that apply individually to each segment for distinct per-segment styling
 - **Performance Optimized**: Uses efficient canvas rendering with responsive sampling for smooth visuals
 
 ## Examples
@@ -103,7 +103,7 @@ const MyWaveform = () => {
     return (
         <AudioWaveformEnvelopeRectangles
             data={audioData}
-            envelopeColor="#333333"
+            color="#333333"
             gapWidthPercent={0.01}
             segmentMinWidth={2}
             heightScale={0.8}
@@ -133,7 +133,7 @@ const MyWaveform = () => {
     return (
         <AudioWaveformEnvelopeRectangles
             data={envelopeSegments}
-            envelopeColor="#03C988"
+            color="#03C988"
             gapWidthPercent={0.05}
             segmentMinWidth={1}
             heightScale={0.9}
