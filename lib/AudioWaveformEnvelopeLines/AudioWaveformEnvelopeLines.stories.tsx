@@ -1,0 +1,400 @@
+import type { StoryObj, Meta } from '@storybook/react-vite';
+import {
+  AudioWaveformEnvelopeLines,
+  type AudioWaveformEnvelopeLinesProps,
+} from '@/lib/AudioWaveformEnvelopeLines/AudioWaveformEnvelopeLines';
+import { CollapseCategory } from '@storybook-decorators/CollapseCategory/CollapseCategory';
+import { DeferredRender } from '@/.storybook/components/DeferredRender/DeferredRender';
+import { audioData } from '@/data/audio/58730401-c910-4a77-935e-83d71d5d1a52';
+import { GRADIENT_MODE } from '@/types/colors';
+
+const sampleWaveformData = audioData.data[1].peaks;
+
+function AudioWaveformEnvelopeLinesWrapper(props: AudioWaveformEnvelopeLinesProps) {
+  return (
+    <DeferredRender height={150}>
+      <AudioWaveformEnvelopeLines
+        className="max-h-[150px]"
+        {...props}
+        data={sampleWaveformData}
+      />
+    </DeferredRender>
+  );
+}
+AudioWaveformEnvelopeLinesWrapper.displayName = 'AudioWaveformEnvelopeLines';
+
+export default {
+  title: 'components/AudioWaveformEnvelopeLines',
+  component: AudioWaveformEnvelopeLines,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'A customizable audio waveform visualization component that renders envelope data as thin vertical lines representing amplitude ranges, ideal for transitional zoom levels between overview and detailed editing.',
+      },
+      source: {
+        type: 'dynamic',
+        transform: (code: string) => {
+          return code.replace(
+            /data=\{[^}]+\}/,
+            'data={[/* Array of envelope segments or raw audio data */]}',
+          );
+        },
+      },
+      controls: {
+        sort: 'alpha',
+      },
+      canvas: {
+        sourceState: 'shown',
+      },
+    },
+  },
+  decorators: [CollapseCategory('Advanced')],
+  argTypes: {
+    // Appearance
+    heightScale: {
+      control: { type: 'range', min: 0.1, max: 1, step: 0.1 },
+      description: 'Height of waveform envelope as a proportion of canvas height',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '1' },
+        category: 'Appearance',
+      },
+    },
+    lineCap: {
+      control: { type: 'select' },
+      options: ['round', 'square', 'butt'],
+      description: 'Style of line endings',
+      table: {
+        type: { summary: 'CanvasLineCap' },
+        defaultValue: { summary: 'butt' },
+        category: 'Appearance',
+      },
+    },
+    segmentMinWidth: {
+      control: { type: 'range', min: 1, max: 10, step: 1 },
+      description: 'Minimum width per segment in pixels',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '1' },
+        category: 'Appearance',
+      },
+    },
+    gapWidthPercent: {
+      control: { type: 'range', min: 0, max: 1, step: 0.01 },
+      description: 'Gap width as a percentage of the display width',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '0.1' },
+        category: 'Appearance',
+      },
+    },
+    gapMinWidth: {
+      control: { type: 'range', min: 0, max: 10, step: 1 },
+      description: 'Minimum gap width in pixels',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '0' },
+        category: 'Appearance',
+      },
+    },
+    gapMaxWidth: {
+      control: { type: 'range', min: 0, max: 50, step: 1 },
+      description: 'Maximum gap width in pixels',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: 'undefined' },
+        category: 'Appearance',
+      },
+    },
+
+    // Color
+    color: {
+      control: 'color',
+      description: 'Color of the envelope lines (used if function is not provided)',
+      table: {
+        type: {
+          summary: 'string | ((segmentInfo: EnvelopeSegmentInfo) => ColorResult)',
+          detail: `type EnvelopeSegmentInfo = {
+  position: number;        // Position in the waveform (0-1)
+  min: number;            // Minimum value of the envelope segment (-1 to 1)
+  max: number;            // Maximum value of the envelope segment (-1 to 1)
+  index: number;          // Index in the segments array
+  widthPercentage: number; // Width of this segment as a percentage of total width (0-1)
+  widthPixels: number;    // Width of this segment in pixels
+  amplitudeRange: number; // Amplitude range of envelope segment (0 to 2)
+  heightPixels: number;   // Actual rendered height in pixels
+}
+
+type ColorResult = string | {
+  type: 'gradient';
+  mode?: 'global' | 'local';  // Default: 'global'
+  stops: Array<{
+    offset: number;  // Value between 0 and 1
+    color: string;   // CSS color value
+  }>;
+}`,
+        },
+        defaultValue: { summary: '#9f9fa9' },
+        category: 'Appearance',
+      },
+    },
+
+    // Advanced
+    data: {
+      control: false,
+      description: 'Audio data from the Web Audio API or pre-processed envelope segments',
+      table: {
+        type: {
+          summary: 'AudioData',
+          detail: `type AudioData = number[] | Float32Array | EnvelopeSegment[];
+
+type EnvelopeSegment = {
+  min: number;  // Minimum amplitude value in the segment (-1 to 1)
+  max: number;  // Maximum amplitude value in the segment (-1 to 1)
+};
+
+// Raw audio data (number[] | Float32Array) should be in the range from -1 to 1`,
+        },
+      },
+      type: { name: 'other', value: 'data', required: true },
+    },
+    interpolationFn: {
+      control: false,
+      description: 'Function to interpolate values when upsampling with raw audio data',
+      table: {
+        type: {
+          summary: 'RawAudioInterpolationFn',
+          detail: `type RawAudioInterpolationFn = (
+  data: number[] | Float32Array,
+  exactIndex: number,
+  options?: EnvelopeSampleOptions,
+) => EnvelopeSegment;
+
+type EnvelopeSampleOptions = {
+  numSamples?: number;      // Number of samples to use for interpolation window (default: 4)
+  oversampleRate?: number;  // Number of interpolated points per sample interval (default: 4)
+};
+
+type EnvelopeSegment = {
+  min: number;  // Minimum amplitude value (-1 to 1)
+  max: number;  // Maximum amplitude value (-1 to 1)
+};`,
+        },
+        category: 'Advanced',
+      },
+    },
+    drawOnCanvasReady: {
+      control: 'boolean',
+      description: 'Whether to draw the waveform when the canvas ref is set',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+        category: 'Advanced',
+      },
+    },
+
+    className: {
+      table: {
+        disable: true,
+      },
+    },
+  },
+} as Meta<typeof AudioWaveformEnvelopeLines>;
+
+export const Basic: StoryObj<typeof AudioWaveformEnvelopeLines> = {
+  args: {
+    color: '#9f9fa9',
+    heightScale: 1,
+    segmentMinWidth: 1,
+    lineCap: 'butt',
+    gapWidthPercent: 0,
+    gapMinWidth: 0,
+    gapMaxWidth: undefined,
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story:
+          'Basic envelope lines visualization with no gaps between segments. Creates a continuous thin-line waveform showing amplitude ranges.',
+      },
+    },
+  },
+  render: (args) => <AudioWaveformEnvelopeLinesWrapper {...args} />,
+};
+
+export const CustomColors: StoryObj<typeof AudioWaveformEnvelopeLines> = {
+  args: {
+    color: '#03C988',
+    segmentMinWidth: 1.5,
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story: 'Envelope lines with custom color scheme and slightly thicker lines.',
+      },
+    },
+  },
+  render: (args) => <AudioWaveformEnvelopeLinesWrapper {...args} />,
+};
+
+export const ThickLinesWithRoundedCaps: StoryObj<typeof AudioWaveformEnvelopeLines> = {
+  args: {
+    color: '#2b7fff',
+    segmentMinWidth: 3,
+    lineCap: 'round',
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story: 'Thicker envelope lines (3px) with rounded caps for a bolder appearance.',
+      },
+    },
+  },
+  render: (args) => <AudioWaveformEnvelopeLinesWrapper {...args} />,
+};
+
+export const SmallGaps: StoryObj<typeof AudioWaveformEnvelopeLines> = {
+  args: {
+    color: '#2b7fff',
+    segmentMinWidth: 1,
+    gapWidthPercent: 0.1,
+    gapMinWidth: 1,
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story: 'Envelope lines with small gaps (0.1% of display width) between segments.',
+      },
+    },
+  },
+  render: (args) => <AudioWaveformEnvelopeLinesWrapper {...args} />,
+};
+
+export const MediumGaps: StoryObj<typeof AudioWaveformEnvelopeLines> = {
+  args: {
+    color: '#2b7fff',
+    segmentMinWidth: 1.5,
+    gapWidthPercent: 0.35,
+    gapMinWidth: 1,
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story: 'Envelope lines with medium gaps (0.35% of display width) between segments.',
+      },
+    },
+  },
+  render: (args) => <AudioWaveformEnvelopeLinesWrapper {...args} />,
+};
+
+export const DynamicColors: StoryObj<typeof AudioWaveformEnvelopeLines> = {
+  args: {
+    color: ({ amplitudeRange }) => {
+      if (amplitudeRange > 1.5) return '#ff3300'; // High dynamic range
+      if (amplitudeRange > 1) return '#ff9900'; // Medium dynamic range
+      if (amplitudeRange > 0.5) return '#ffcc00'; // Low dynamic range
+      return '#cccccc'; // Very low dynamic range
+    },
+    segmentMinWidth: 2,
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story: 'Envelope lines with dynamic colors based on amplitude range values.',
+      },
+      source: {
+        code: `<AudioWaveformEnvelopeLines
+  color={({ amplitudeRange }) => {
+      if (amplitudeRange > 1.5) return '#ff3300'; // High dynamic range
+      if (amplitudeRange > 1) return '#ff9900'; // Medium dynamic range
+      if (amplitudeRange > 0.5) return '#ffcc00'; // Low dynamic range
+      return '#cccccc'; // Very low dynamic range
+  }}
+/>`,
+      },
+    },
+  },
+  render: (args) => <AudioWaveformEnvelopeLinesWrapper {...args} />,
+};
+
+export const GradientLines: StoryObj<typeof AudioWaveformEnvelopeLines> = {
+  args: {
+    color: () => ({
+      type: 'gradient' as const,
+      mode: GRADIENT_MODE.GLOBAL,
+      stops: [
+        { offset: 0, color: '#03C988' },
+        { offset: 0.95, color: '#026442' },
+      ],
+    }),
+    segmentMinWidth: 2,
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story:
+          'Global gradient mode where all lines sample from the same canvas-height gradient, creating a unified appearance with smooth color transitions.',
+      },
+      source: {
+        code: `<AudioWaveformEnvelopeLines
+  color={() => ({
+    type: 'gradient',
+    mode: 'global',
+    stops: [
+      { offset: 0, color: '#03C988' },
+      { offset: 0.95, color: '#026442' },
+    ],
+  })}
+/>`,
+      },
+    },
+  },
+  render: (args) => <AudioWaveformEnvelopeLinesWrapper {...args} />,
+};
+
+export const LocalGradientLines: StoryObj<typeof AudioWaveformEnvelopeLines> = {
+  args: {
+    color: ({ amplitudeRange }) => ({
+      type: 'gradient' as const,
+      mode: GRADIENT_MODE.LOCAL,
+      stops: [
+        { offset: 0, color: amplitudeRange > 1.2 ? '#ff6b6b' : '#4ecdc4' },
+        { offset: 1, color: amplitudeRange > 1.2 ? '#c92a2a' : '#26a69a' },
+      ],
+    }),
+    gapWidthPercent: 0.2,
+    gapMinWidth: 1,
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story:
+          'Local gradient mode where each line gets its own gradient from top to bottom. High-amplitude lines get red gradient, low-amplitude get teal.',
+      },
+      source: {
+        code: `<AudioWaveformEnvelopeLines
+  color={({ amplitudeRange }) => ({
+    type: 'gradient',
+    mode: 'local',
+    stops: [
+        { offset: 0, color: amplitudeRange > 1.2 ? '#ff6b6b' : '#4ecdc4' },
+        { offset: 1, color: amplitudeRange > 1.2 ? '#c92a2a' : '#26a69a' },
+    ],
+  })}
+  gapWidthPercent={0.2}
+  gapMinWidth={1}
+/>`,
+      },
+    },
+  },
+  render: (args) => <AudioWaveformEnvelopeLinesWrapper {...args} />,
+};

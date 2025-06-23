@@ -1,0 +1,147 @@
+import { Meta, Controls, Source, Canvas, Stories, Primary } from '@storybook/addon-docs/blocks';
+import * as AudioWaveformEnvelopeLinesStories from './AudioWaveformEnvelopeLines.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
+
+<Meta of={AudioWaveformEnvelopeLinesStories} />
+
+# AudioWaveformEnvelopeLines
+
+<ViewSource href="AudioWaveformEnvelopeLines" />
+
+A highly customizable audio waveform envelope visualization component that displays audio envelope data as thin vertical lines representing amplitude ranges, ideal for transitional zoom levels between overview and detailed editing.
+
+<DocumentationNav />
+
+<Canvas of={AudioWaveformEnvelopeLinesStories.Basic} />
+
+## API Reference
+
+`type ComponentPropsWithRef<'canvas'>` &
+<Controls />
+
+## Features
+
+- **Clean Envelope Line Visualization**: Displays audio envelope data as thin vertical lines representing amplitude ranges, perfect for transitional zoom levels
+- **Customizable Line Appearance**: Control line width, caps, colors, and height to match your design requirements
+- **Responsive Sampling**: Automatically scales and samples data to fit the container while maintaining visual quality. The component intelligently adjusts segment density when there are too many data points to display clearly, ensuring optimal performance across all device sizes.
+- **Dynamic Coloring**: Support for both static colors and dynamic per-segment coloring based on envelope properties
+- **Gradient Support**: Advanced gradient fills with two modes - global gradients that span the entire canvas height for unified visual effects, and local gradients that apply individually to each line for distinct per-line styling
+- **Performance Optimized**: Uses efficient canvas rendering with responsive sampling for smooth visuals
+
+## Examples
+
+<UsageNote>
+    This component expects pre-processed envelope data (array of envelope segments with min/max values)
+    or raw audio data (array of amplitude values). It does not convert
+    audio files to envelope data, as that conversion process depends on specific application
+    requirements and is left to the consumer.
+
+    **Data Resolution:** For optimal performance, it's recommended to work with pre-processed audio data 
+    in the form of EnvelopeSegments (array of min/max object values) that capture the dynamic range of audio 
+    segments. This approach requires fewer computations and better preserves the overall transients 
+    of the waveform compared to working with raw audio data directly. When processing raw audio, 
+    grouping samples into segments of 64-512 samples per segment typically provides excellent 
+    visual quality with optimal performance for this transitional zoom component. While the component 
+    supports both raw audio data and pre-processed envelope segments for user convenience, 
+    pre-processed data is preferred when possible.
+</UsageNote>
+
+<Stories
+  title=""
+  includePrimary={false}
+/>
+
+## Usage
+
+The AudioWaveformEnvelopeLines component supports two types of input data:
+
+### Using Raw Audio Data
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { useEffect, useState } from 'react';
+import { AudioWaveformEnvelopeLines } from '@gdominguez210/gdom-ui/AudioWaveformEnvelopeLines';
+
+const MyWaveform = () => {
+    const [audioData, setAudioData] = useState<Float32Array | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadAudioData = async () => {
+            try {
+                // Fetch audio file
+                const response = await fetch('/path/to/your/audio-file.mp3');
+                const arrayBuffer = await response.arrayBuffer();
+                
+                // Decode with Web Audio API
+                const audioContext = new AudioContext();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                const rawAudioData = audioBuffer.getChannelData(0); // Float32Array of amplitude values
+                
+                setAudioData(rawAudioData);
+                setLoading(false);
+            } catch (error) {
+                console.error('Failed to load audio data:', error);
+                setLoading(false);
+            }
+        };
+
+        loadAudioData();
+    }, []);
+
+    if (loading) {
+        return <div>Loading audio...</div>;
+    }
+
+    if (!audioData) {
+        return <div>Failed to load audio data</div>;
+    }
+
+    return (
+        <AudioWaveformEnvelopeLines
+            data={audioData}
+            color="#333333"
+            lineWidth={1.5}
+            lineCap="round"
+            gapWidthPercent={0.01}
+            segmentMinWidth={2}
+            heightScale={0.8}
+        />
+    );
+}; `} />
+
+### Using Pre-computed Envelope Segments (Recommended)
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { AudioWaveformEnvelopeLines } from '@gdominguez210/gdom-ui/AudioWaveformEnvelopeLines';
+
+const MyWaveform = () => {
+    // Pre-computed envelope segments - array of min/max pairs
+    // Each segment represents the dynamic range of a group of audio samples
+    const envelopeSegments = [
+      { min: -0.5, max: 0.8 },
+      { min: -0.1, max: 0.2 },
+      { min: -0.9, max: 0.4 },
+      { min: -0.3, max: 0.6 },
+      // ... more segments (typically hundreds to thousands of segments)
+    ];
+
+    return (
+        <AudioWaveformEnvelopeLines
+            data={envelopeSegments}
+            color="#03C988"
+            lineWidth={2}
+            lineCap="round"
+            gapWidthPercent={0.05}
+            segmentMinWidth={1}
+            heightScale={0.9}
+        />
+    );
+}; `} />
