@@ -185,7 +185,7 @@ type EnvelopeSegment = {
       },
     },
     drawOnCanvasReady: {
-      control: 'boolean',
+      control: false,
       description: 'Whether to draw the waveform when the canvas ref is set',
       table: {
         type: { summary: 'boolean' },
