@@ -1,0 +1,162 @@
+import { Meta, Controls, Source, Canvas, Stories, Primary } from '@storybook/addon-docs/blocks';
+import * as AudioWaveformEnvelopeCurvesStories from './AudioWaveformEnvelopeCurves.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
+
+<Meta of={AudioWaveformEnvelopeCurvesStories} />
+
+# AudioWaveformEnvelopeCurves
+
+<ViewSource href="AudioWaveformEnvelopeCurves" />
+
+A highly customizable audio waveform envelope visualization component that displays audio envelope data as curved continuous filled shapes, creating flowing, blob-like waveform visualizations.
+
+<DocumentationNav />
+
+<Canvas of={AudioWaveformEnvelopeCurvesStories.Basic} />
+
+## API Reference
+
+`type ComponentPropsWithRef<'canvas'>` &
+<Controls />
+
+## Features
+
+- **Curved Continuous Shapes**: Creates flowing, blob-like waveform visualizations using quadratic curves for smooth transitions between envelope segments
+- **Customizable Appearance**: Control height scale, segment sampling density, and colors to match your design
+- **Responsive Sampling**: Automatically scales and samples data to fit the container while maintaining visual quality and performance
+- **Dynamic Coloring**: Support for both static colors and dynamic gradient fills applied to the entire shape
+- **Gradient Support**: Advanced gradient fills spanning the entire waveform height for unified visual effects
+- **Performance Optimized**: Uses efficient canvas rendering with responsive sampling for smooth visuals
+
+## Examples
+
+<UsageNote>
+    This component expects pre-processed envelope data (array of envelope segments with min/max values)
+    or raw audio data (array of amplitude values). It does not convert
+    audio files to envelope data, as that conversion process depends on specific application
+    requirements and is left to the consumer.
+
+    **Data Resolution:** For optimal performance, it's recommended to work with pre-processed audio data 
+    in the form of EnvelopeSegments (array of min/max values) that capture the dynamic range of audio 
+    segments. This approach requires fewer computations and better preserves the overall transients 
+    of the waveform compared to working with raw audio data directly. When processing raw audio, 
+    grouping samples into segments of 2048 or 4096 samples per segment typically provides excellent 
+    visual quality with optimal performance. While the component supports both raw audio data and 
+    pre-processed envelope segments for user convenience, pre-processed data is preferred when possible.
+
+    **Curves vs. Discrete:** Unlike AudioWaveformEnvelopeRectangles and AudioWaveformEnvelopeLines,
+    this component creates one continuous filled shape with curved transitions. If you need discrete segments with gaps,
+    use the rectangles or lines components instead.
+</UsageNote>
+
+<Stories
+  title=""
+  includePrimary={false}
+/>
+
+## Usage
+
+The AudioWaveformEnvelopeCurves component supports two types of input data:
+
+### Using Raw Audio Data
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { useEffect, useState } from 'react';
+import { AudioWaveformEnvelopeCurves } from '@gdominguez210/gdom-ui/AudioWaveformEnvelopeCurves';
+
+const MyWaveform = () => {
+    const [audioData, setAudioData] = useState<Float32Array | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadAudioData = async () => {
+            try {
+                // Fetch audio file
+                const response = await fetch('/path/to/your/audio-file.mp3');
+                const arrayBuffer = await response.arrayBuffer();
+                
+                // Decode with Web Audio API
+                const audioContext = new AudioContext();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                const rawAudioData = audioBuffer.getChannelData(0); // Float32Array of amplitude values
+                
+                setAudioData(rawAudioData);
+                setLoading(false);
+            } catch (error) {
+                console.error('Failed to load audio data:', error);
+                setLoading(false);
+            }
+        };
+
+        loadAudioData();
+    }, []);
+
+    if (loading) {
+        return <div>Loading audio...</div>;
+    }
+
+    if (!audioData) {
+        return <div>Failed to load audio data</div>;
+    }
+
+    return (
+        <AudioWaveformEnvelopeCurves
+            data={audioData}
+            color="#333333"
+            smoothingFactor={0.6}
+            segmentMinWidth={2}
+            heightScale={0.8}
+        />
+    );
+}; `} />
+
+### Using Pre-computed Envelope Segments (Recommended)
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { AudioWaveformEnvelopeCurves } from '@gdominguez210/gdom-ui/AudioWaveformEnvelopeCurves';
+
+const MyWaveform = () => {
+    // Pre-computed envelope segments - array of min/max pairs
+    // Each segment represents the dynamic range of a group of audio samples
+    const envelopeSegments = [
+      { min: -0.5, max: 0.8 },
+      { min: -0.1, max: 0.2 },
+      { min: -0.9, max: 0.4 },
+      { min: -0.3, max: 0.6 },
+      // ... more segments (typically hundreds to thousands of segments)
+    ];
+
+    return (
+        <AudioWaveformEnvelopeCurves
+            data={envelopeSegments}
+            color="#03C988"
+            smoothingFactor={0.7}
+            segmentMinWidth={1}
+            heightScale={0.9}
+        />
+    );
+}; `} />
+
+## Use Cases
+
+- **Overview visualizations** where detailed segment boundaries aren't needed
+- **Music player interfaces** that prioritize aesthetics over precise editing
+- **Ambient/atmospheric audio applications** where flowing visuals match the content
+- **Marketing/presentation materials** where visual appeal is paramount
+
+For professional audio editing applications requiring precise segment control, consider using `AudioWaveformEnvelopeRectangles` or `AudioWaveformEnvelopeLines` instead.
+
+## Performance Considerations
+
+- **Sampling Density**: Use `segmentMinWidth` to control how many segments are processed
+- **Smoothing Factor**: Higher values (0.7-1.0) may require more rendering calculations
+- **Data Size**: Pre-processed envelope segments perform better than raw audio data
+- **Canvas Size**: Larger canvases require more curve calculations
