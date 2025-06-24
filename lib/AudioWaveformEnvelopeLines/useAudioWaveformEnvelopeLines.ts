@@ -81,7 +81,8 @@ export function useAudioWaveformEnvelopeLines(
 
   const drawWaveform = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas || data?.length === 0) return;
+    const segments = segmentsRef.current;
+    if (!canvas || segments.length === 0) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -93,7 +94,6 @@ export function useAudioWaveformEnvelopeLines(
 
     const centerY = displayHeight / 2;
     const maxHeight = displayHeight * heightScale;
-    const segments = segmentsRef.current;
     const segmentWidth = segmentWidthRef.current;
 
     ctx.lineWidth = segmentWidth;
@@ -179,7 +179,7 @@ export function useAudioWaveformEnvelopeLines(
         return;
       }
     });
-  }, [canvasRef, data, color, heightScale, lineCap, segmentsRef, segmentWidthRef, gapWidthRef]);
+  }, [canvasRef, color, heightScale, lineCap, segmentsRef, segmentWidthRef, gapWidthRef]);
 
   const init = useCallback(() => {
     const canvas = canvasRef.current;
