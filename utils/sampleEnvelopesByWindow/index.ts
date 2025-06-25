@@ -1,32 +1,29 @@
-import type { EnvelopeSegment } from '@/types/audio';
-import { findEnvelopeInSampleRange } from '@/utils/findEnvelopeInSampleRange';
+import type { EnvelopeSegment, SampleWindowTransformFn } from '@/types/audio';
+import { sampleAudioDataByWindow } from '@/utils/sampleAudioDataByWindow';
 
 /**
  * Samples envelope segment data using window-based envelope detection
  * @param data - Envelope segment data (EnvelopeSegment array)
  * @param numSegments - Number of segments to create
  * @param sampleSize - Size of each sampling window
- * @param transformFn - Optional transform function for each segment
+ * @returns Array of envelope segments
  */
-export function sampleEnvelopesByWindow<T>(
+export function sampleEnvelopesByWindow<TResult = EnvelopeSegment>(
   data: EnvelopeSegment[],
   numSegments: number,
   sampleSize: number,
-  transformFn?: (envelope: EnvelopeSegment) => T,
-): EnvelopeSegment[] | T[] {
+  transformFn?: SampleWindowTransformFn<TResult>,
+): TResult[] {
   const getEnvelopeSamplesAtPosition = (pos: number) => {
     const segment = data[pos]!;
     return [segment.min, segment.max];
   };
 
-  const result = Array.from({ length: numSegments }, (_, i) => {
-    const start = Math.floor(i * sampleSize);
-    const end = Math.min(Math.floor((i + 1) * sampleSize), data.length - 1);
-
-    const envelope = findEnvelopeInSampleRange(start, end, getEnvelopeSamplesAtPosition);
-
-    return transformFn ? transformFn(envelope) : envelope;
-  });
-
-  return transformFn ? (result as T[]) : (result as EnvelopeSegment[]);
+  return sampleAudioDataByWindow(
+    data,
+    numSegments,
+    sampleSize,
+    getEnvelopeSamplesAtPosition,
+    transformFn,
+  );
 }
