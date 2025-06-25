@@ -2,10 +2,10 @@ import { type ColorResult, GRADIENT_MODE } from '@/types/colors';
 import { useRefReady } from '@/lib/useRefReady/useRefReady';
 import { useCallback, useEffect } from 'react';
 import {
-  useAudioResponsiveSampling,
-  type UseAudioResponsiveSamplingOptions,
-  type UseAudioResponsiveSamplingReturn,
-} from '@/lib/useAudioResponsiveSampling/useAudioResponsiveSampling';
+  useAudioResponsiveSamplingEnvelopes,
+  type UseAudioResponsiveSamplingEnvelopesOptions,
+  type UseAudioResponsiveSamplingEnvelopesReturn,
+} from '@/lib/useAudioResponsiveSamplingEnvelopes/useAudioResponsiveSamplingEnvelopes';
 import { type EnvelopeSegmentInfo } from '@/types/audio';
 
 export type UseAudioWaveformEnvelopeLinesOptions = {
@@ -36,11 +36,11 @@ export type UseAudioWaveformEnvelopeLinesOptions = {
    * @default true
    */
   drawOnCanvasReady: boolean;
-} & UseAudioResponsiveSamplingOptions;
+} & UseAudioResponsiveSamplingEnvelopesOptions;
 
 export type UseAudioWaveformEnvelopeLinesReturn = {
   canvasRef: (node: HTMLCanvasElement | null) => void;
-  calculateSegments: UseAudioResponsiveSamplingReturn['calculateSegments'];
+  calculateSegments: UseAudioResponsiveSamplingEnvelopesReturn['calculateSegments'];
   drawWaveform: () => void;
   handleResize: () => void;
 };
@@ -68,7 +68,7 @@ export function useAudioWaveformEnvelopeLines(
   } = props;
 
   const { segmentsRef, segmentWidthRef, gapWidthRef, calculateSegments } =
-    useAudioResponsiveSampling({
+    useAudioResponsiveSamplingEnvelopes({
       data,
       segmentMinWidth,
       gapWidthPercent,
