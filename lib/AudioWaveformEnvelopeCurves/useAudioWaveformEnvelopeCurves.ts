@@ -2,10 +2,10 @@ import { type ColorResult } from '@/types/colors';
 import { useRefReady } from '@/lib/useRefReady/useRefReady';
 import { useCallback, useEffect } from 'react';
 import {
-  useAudioResponsiveSampling,
-  type UseAudioResponsiveSamplingOptions,
-  type UseAudioResponsiveSamplingReturn,
-} from '@/lib/useAudioResponsiveSampling/useAudioResponsiveSampling';
+  useAudioResponsiveSamplingEnvelopes,
+  type UseAudioResponsiveSamplingEnvelopesOptions,
+  type UseAudioResponsiveSamplingEnvelopesReturn,
+} from '@/lib/useAudioResponsiveSamplingEnvelopes/useAudioResponsiveSamplingEnvelopes';
 
 export type UseAudioWaveformEnvelopeCurvesOptions = {
   /**
@@ -26,11 +26,14 @@ export type UseAudioWaveformEnvelopeCurvesOptions = {
    * @default 0.5
    */
   smoothingFactor?: number;
-} & Omit<UseAudioResponsiveSamplingOptions, 'gapWidthPercent' | 'gapMinWidth' | 'gapMaxWidth'>;
+} & Omit<
+  UseAudioResponsiveSamplingEnvelopesOptions,
+  'gapWidthPercent' | 'gapMinWidth' | 'gapMaxWidth'
+>;
 
 export type UseAudioWaveformEnvelopeCurvesReturn = {
   canvasRef: (node: HTMLCanvasElement | null) => void;
-  calculateSegments: UseAudioResponsiveSamplingReturn['calculateSegments'];
+  calculateSegments: UseAudioResponsiveSamplingEnvelopesReturn['calculateSegments'];
   drawWaveform: () => void;
   handleResize: () => void;
 };
@@ -55,7 +58,7 @@ export function useAudioWaveformEnvelopeCurves(
     smoothingFactor = 0.5,
   } = props;
 
-  const { segmentsRef, segmentWidthRef, calculateSegments } = useAudioResponsiveSampling({
+  const { segmentsRef, segmentWidthRef, calculateSegments } = useAudioResponsiveSamplingEnvelopes({
     data,
     segmentMinWidth,
     interpolationFn,
