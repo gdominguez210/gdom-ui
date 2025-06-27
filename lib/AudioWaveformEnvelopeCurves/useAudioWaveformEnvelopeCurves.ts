@@ -42,11 +42,11 @@ export type UseAudioWaveformEnvelopeCurvesReturn = {
  * Hook for drawing curved audio waveform envelopes on a canvas.
  * Creates continuous filled curves without gaps between segments.
  *
- * @param props - Options for the hook
+ * @param options - Options for the hook
  * @returns An object containing the canvas ref, drawWaveform function, and handleResize function
  */
 export function useAudioWaveformEnvelopeCurves(
-  props: UseAudioWaveformEnvelopeCurvesOptions,
+  options: UseAudioWaveformEnvelopeCurvesOptions,
 ): UseAudioWaveformEnvelopeCurvesReturn {
   const {
     data,
@@ -56,7 +56,7 @@ export function useAudioWaveformEnvelopeCurves(
     segmentMinWidth = 1,
     interpolationFn,
     smoothingFactor = 0.5,
-  } = props;
+  } = options;
 
   const { segmentsRef, segmentWidthRef, calculateSegments } = useAudioResponsiveSamplingEnvelopes({
     data,
