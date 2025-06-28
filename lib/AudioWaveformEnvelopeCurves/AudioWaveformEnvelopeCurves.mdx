@@ -144,19 +144,3 @@ const MyWaveform = () => {
         />
     );
 }; `} />
-
-## Use Cases
-
-- **Overview visualizations** where detailed segment boundaries aren't needed
-- **Music player interfaces** that prioritize aesthetics over precise editing
-- **Ambient/atmospheric audio applications** where flowing visuals match the content
-- **Marketing/presentation materials** where visual appeal is paramount
-
-For professional audio editing applications requiring precise segment control, consider using `AudioWaveformEnvelopeRectangles` or `AudioWaveformEnvelopeLines` instead.
-
-## Performance Considerations
-
-- **Sampling Density**: Use `segmentMinWidth` to control how many segments are processed
-- **Smoothing Factor**: Higher values (0.7-1.0) may require more rendering calculations
-- **Data Size**: Pre-processed envelope segments perform better than raw audio data
-- **Canvas Size**: Larger canvases require more curve calculations
