@@ -9,12 +9,16 @@ import { getInterpolatedValueCubic } from '@/utils/getInterpolatedValueCubic';
 import { getInterpolatedEnvelopeFromSegments } from '@/utils/getInterpolatedEnvelopeFromSegments';
 import { isEnvelopeSegmentArray } from '@/utils/isEnvelopeSegmentArray';
 
+const defaultTransformFn: SampleWindowTransformFn<number> = (envelope) =>
+  Math.max(Math.abs(envelope.min), Math.abs(envelope.max));
+
 type CurveInterpolationFn = (data: number[] | Float32Array, exactIndex: number) => number;
 
 export type UseAudioResponsiveSamplingForCurvesOptions = {
   data: AudioData;
   segmentMinWidth?: number;
   interpolationFn?: CurveInterpolationFn;
+  transformFn?: SampleWindowTransformFn<number>;
 };
 export type UseAudioResponsiveSamplingForCurvesReturn = {
   valuesRef: React.RefObject<number[]>;
@@ -28,7 +32,12 @@ export type UseAudioResponsiveSamplingForCurvesReturn = {
 export function useAudioResponsiveSamplingForCurves(
   options: UseAudioResponsiveSamplingForCurvesOptions,
 ): UseAudioResponsiveSamplingForCurvesReturn {
-  const { data, segmentMinWidth = 1, interpolationFn = getInterpolatedValueCubic } = options;
+  const {
+    data,
+    segmentMinWidth = 1,
+    interpolationFn = getInterpolatedValueCubic,
+    transformFn = defaultTransformFn,
+  } = options;
 
   const valuesRef = useRef<number[]>([]);
   const segmentWidthRef = useRef<number>(0);
@@ -57,24 +66,37 @@ export function useAudioResponsiveSamplingForCurves(
       const sampleSize = data.length / actualSegmentCount;
 
       if (isEnvelopeSegmentArray(data)) {
-        const extractMin: SampleWindowTransformFn<number> = (envelope) => envelope.min;
+        const firstEnvelope = data[0];
+        const isInterpolatedData =
+          firstEnvelope && Math.abs(firstEnvelope.min - firstEnvelope.max) < 0.0001;
+
+        if (isInterpolatedData) {
+          const audioValues = data.map((envelope) => envelope.min);
+          valuesRef.current = sampleAudioDataByInterpolation(
+            audioValues,
+            actualSegmentCount,
+            interpolationFn,
+          );
+          return;
+        }
 
         valuesRef.current =
           sampleSize > 1
-            ? sampleEnvelopesByWindow(data, actualSegmentCount, sampleSize, extractMin)
-            : sampleAudioDataByInterpolation(
-                data,
-                actualSegmentCount,
-                (data, exactIndex) => getInterpolatedEnvelopeFromSegments(data, exactIndex).min,
-              );
-      } else {
-        valuesRef.current =
-          sampleSize > 1
-            ? sampleRawAudioByWindow(data, actualSegmentCount, sampleSize)
-            : sampleAudioDataByInterpolation(data, actualSegmentCount, interpolationFn);
+            ? sampleEnvelopesByWindow(data, actualSegmentCount, sampleSize, transformFn)
+            : sampleAudioDataByInterpolation(data, actualSegmentCount, (data, exactIndex) => {
+                const envelope = getInterpolatedEnvelopeFromSegments(data, exactIndex);
+                return transformFn ? transformFn(envelope) : envelope.min;
+              });
+
+        return;
       }
+
+      valuesRef.current =
+        sampleSize > 1
+          ? sampleRawAudioByWindow(data, actualSegmentCount, sampleSize)
+          : sampleAudioDataByInterpolation(data, actualSegmentCount, interpolationFn);
     },
-    [data, segmentMinWidth, interpolationFn],
+    [data, segmentMinWidth, interpolationFn, transformFn],
   );
 
   return {
