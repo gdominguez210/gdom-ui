@@ -1,0 +1,148 @@
+import { Meta, Controls, Source, Canvas, Stories, Primary } from '@storybook/addon-docs/blocks';
+import * as AudioWaveformCurvesStories from './AudioWaveformCurves.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
+
+<Meta of={AudioWaveformCurvesStories} />
+
+# AudioWaveformCurves
+
+<ViewSource href="AudioWaveformCurves" />
+
+A highly customizable audio waveform visualization component that displays audio data as smooth continuous stroke-based curves with configurable smoothing and line styling, creating flowing single-line waveform visualizations.
+
+<DocumentationNav />
+
+<Canvas of={AudioWaveformCurvesStories.Basic} />
+
+## API Reference
+
+`type ComponentPropsWithRef<'canvas'>` &
+<Controls />
+
+## Features
+
+- **Smooth Stroke-Based Curves**: Creates flowing, single-line waveform visualizations using quadratic curves for smooth transitions between data points
+- **Configurable Line Styling**: Control line width, color, line caps, and gradient strokes to match your design
+- **Responsive Sampling**: Automatically scales and samples data to fit the container while maintaining visual quality and performance
+- **Dynamic Coloring**: Support for both static colors and dynamic gradient strokes applied to the entire curve
+- **Gradient Support**: Advanced gradient strokes spanning the entire waveform height for unified visual effects
+- **Performance Optimized**: Uses efficient canvas rendering with responsive sampling for smooth visuals
+
+## Examples
+
+<UsageNote>
+    This component expects audio data as either raw audio samples (array of amplitude values)
+    or pre-processed envelope segments. For envelope segments, a configurable transform function
+    determines how min/max ranges are converted to single curve values. The component does not convert
+    audio files to waveform data, as that conversion process depends on specific application
+    requirements and is left to the consumer.
+
+    **Data Resolution:** For optimal performance, it's recommended to work with pre-processed audio data 
+    in the form of cubic interpolation data (≤16 SPP) where min === max values represent interpolated 
+    audio samples. This approach requires fewer computations and better preserves the waveform detail 
+    compared to working with raw audio data directly. When processing raw audio, grouping samples into 
+    segments of 2048 or 4096 samples per segment typically provides excellent visual quality with optimal 
+    performance. While the component supports both raw audio data and pre-processed envelope segments 
+    for user convenience, pre-processed interpolation data is preferred when possible.
+
+    **Curves vs. Envelope:** Unlike envelope components that show amplitude ranges (min/max), 
+    curve components display single-value paths, making them ideal for overlay visualizations, 
+    simplified representations, or artistic effects. They're particularly effective when 
+    combined with other waveform components or when a lighter visual weight is desired.
+</UsageNote>
+
+<Stories
+  title=""
+  includePrimary={false}
+/>
+
+## Usage
+
+The AudioWaveformCurves component supports two types of input data:
+
+### Using Raw Audio Data
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { useEffect, useState } from 'react';
+import { AudioWaveformCurves } from '@gdominguez210/gdom-ui/AudioWaveformCurves';
+
+const MyWaveform = () => {
+    const [audioData, setAudioData] = useState<Float32Array | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadAudioData = async () => {
+            try {
+                // Fetch audio file
+                const response = await fetch('/path/to/your/audio-file.mp3');
+                const arrayBuffer = await response.arrayBuffer();
+                
+                // Decode with Web Audio API
+                const audioContext = new AudioContext();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                const rawAudioData = audioBuffer.getChannelData(0); // Float32Array of amplitude values
+                
+                setAudioData(rawAudioData);
+                setLoading(false);
+            } catch (error) {
+                console.error('Failed to load audio data:', error);
+                setLoading(false);
+            }
+        };
+
+        loadAudioData();
+    }, []);
+
+    if (loading) {
+        return <div>Loading audio...</div>;
+    }
+
+    if (!audioData) {
+        return <div>Failed to load audio data</div>;
+    }
+
+    return (
+        <AudioWaveformCurves
+            data={audioData}
+            color="#03C988"
+            lineWidth={2.5}
+            smoothingFactor={0.6}
+            heightScale={0.8}
+        />
+    );
+}; `} />
+
+### Using Pre-computed Envelope Segments (Recommended)
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { AudioWaveformCurves } from '@gdominguez210/gdom-ui/AudioWaveformCurves';
+
+const MyWaveform = () => {
+    // Pre-computed envelope segments - array of min/max pairs
+    // For curves, a transform function converts these to single values
+    const envelopeSegments = [
+      { min: -0.5, max: 0.8 },  // Transform determines which value to use
+      { min: -0.1, max: 0.2 },  // Default uses peak: Math.max(Math.abs(min), Math.abs(max))
+      { min: -0.9, max: 0.4 },  // Results in smooth curve following peak amplitudes
+      { min: -0.3, max: 0.6 },
+      // ... more segments (typically hundreds to thousands of segments)
+    ];
+
+    return (
+        <AudioWaveformCurves
+            data={envelopeSegments}
+            color="#2b7fff"
+            lineWidth={3}
+            smoothingFactor={0.4}
+            heightScale={0.9}
+        />
+    );
+}; `} />
