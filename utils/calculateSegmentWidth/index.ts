@@ -13,18 +13,24 @@ export function calculateSegmentWidth(
   minSegmentWidth: number,
   gapWidth: number = 0,
 ): { segmentWidth: number; actualSegmentCount: number; remainingPixels: number } {
+  const effectiveDisplayWidth = Math.max(0, displayWidth);
+  const effectiveSegmentCount = Math.max(1, segmentCount);
+  const effectiveMinSegmentWidth = Math.max(1, minSegmentWidth);
+  const effectiveGapWidth = Math.max(0, gapWidth);
+
   // Calculate total width needed for gaps (n-1 gaps for n bars)
-  const totalGapWidth = (segmentCount - 1) * gapWidth;
-  const availableWidthForBars = displayWidth - totalGapWidth;
+  const totalGapWidth = (effectiveSegmentCount - 1) * effectiveGapWidth;
+  const availableWidthForBars = effectiveDisplayWidth - totalGapWidth;
 
-  const rawSegmentWidth = availableWidthForBars / segmentCount;
+  const rawSegmentWidth = availableWidthForBars / effectiveSegmentCount;
 
-  const segmentWidth = Math.max(minSegmentWidth, Math.floor(rawSegmentWidth));
+  const segmentWidth = Math.max(effectiveMinSegmentWidth, Math.floor(rawSegmentWidth));
 
-  const actualSegmentCount = Math.floor(availableWidthForBars / segmentWidth);
+  const actualSegmentCount = Math.max(0, Math.floor(availableWidthForBars / segmentWidth));
 
-  const usedWidth = actualSegmentCount * segmentWidth + (actualSegmentCount - 1) * gapWidth;
-  const remainingPixels = displayWidth - usedWidth;
+  const actualGapCount = actualSegmentCount > 0 ? actualSegmentCount - 1 : 0;
+  const usedWidth = actualSegmentCount * segmentWidth + actualGapCount * effectiveGapWidth;
+  const remainingPixels = effectiveDisplayWidth - usedWidth;
 
   return {
     segmentWidth,
