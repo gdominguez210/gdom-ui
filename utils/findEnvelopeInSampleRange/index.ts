@@ -15,11 +15,23 @@ export function findEnvelopeInSampleRange(
   getEnvelopeSamplesAtPosition: GetEnvelopeSamplesAtPositionFn,
   oversampleRate: number = 1,
 ): EnvelopeSegment {
+  const startPos = Math.round(startSample);
+  const endPos = Math.round(endSample);
+
   let min = Infinity;
   let max = -Infinity;
 
+  if (startPos === endPos) {
+    const samples = getEnvelopeSamplesAtPosition(startPos);
+    for (const value of samples) {
+      min = Math.min(min, value);
+      max = Math.max(max, value);
+    }
+    return { min, max };
+  }
+
   if (oversampleRate === 1) {
-    for (let i = startSample; i <= endSample; i++) {
+    for (let i = startPos; i <= endPos; i++) {
       const samples = getEnvelopeSamplesAtPosition(i);
       for (const value of samples) {
         min = Math.min(min, value);
@@ -27,11 +39,11 @@ export function findEnvelopeInSampleRange(
       }
     }
   } else {
-    const numSteps = (endSample - startSample) * oversampleRate;
+    const numSteps = (endPos - startPos) * oversampleRate;
 
-    for (let i = 0; i < numSteps; i++) {
+    for (let i = 0; i <= numSteps; i++) {
       const t = i / numSteps;
-      const pos = startSample + t * (endSample - startSample);
+      const pos = startPos + t * (endPos - startPos);
       const samples = getEnvelopeSamplesAtPosition(pos);
       for (const value of samples) {
         min = Math.min(min, value);
