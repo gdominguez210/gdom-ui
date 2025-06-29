@@ -1,4 +1,4 @@
-import type { SampleWindowTransformFn } from '@/types/audio';
+import type { SampleWindowTransformFn, EnvelopeSegment } from '@/types/audio';
 import { sampleAudioDataByWindow } from '@/utils/sampleAudioDataByWindow';
 
 /**
@@ -8,7 +8,7 @@ import { sampleAudioDataByWindow } from '@/utils/sampleAudioDataByWindow';
  * @param sampleSize - Size of each sampling window
  * @returns Array of envelope segments
  */
-export function sampleRawAudioByWindow<TResult = number>(
+export function sampleRawAudioByWindow<TResult = EnvelopeSegment>(
   data: number[] | Float32Array,
   numSegments: number,
   sampleSize: number,
