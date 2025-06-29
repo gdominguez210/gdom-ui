@@ -1,6 +1,7 @@
 import type { EnvelopeSampleOptions, EnvelopeSegment } from '@/types/audio';
 import { getInterpolatedValueCubic } from '@/utils/getInterpolatedValueCubic';
 import { findEnvelopeInSampleRange } from '@/utils/findEnvelopeInSampleRange';
+import { calculateValidSampleRange } from '@/utils/calculateValidSampleRange';
 
 /**
  * Gets interpolated envelope using cubic interpolation for raw audio data
@@ -13,10 +14,13 @@ export function getInterpolatedEnvelopeCubic(
   exactIndex: number,
   options?: EnvelopeSampleOptions,
 ): EnvelopeSegment {
+  if (data.length === 0) {
+    return { min: 0, max: 0 };
+  }
+
   const { numSamples = 4, oversampleRate = 4 } = options ?? {};
 
-  const startSample = Math.floor(exactIndex - numSamples / 2);
-  const endSample = Math.ceil(exactIndex + numSamples / 2);
+  const { startSample, endSample } = calculateValidSampleRange(data.length, exactIndex, numSamples);
 
   const getEnvelopeSamplesAtPosition = (pos: number) => [getInterpolatedValueCubic(data, pos)];
 
