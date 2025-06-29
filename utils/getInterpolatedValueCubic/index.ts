@@ -1,4 +1,4 @@
-import { interpolateCubic } from '../interpolateCubic';
+import { interpolateCubic } from '@/utils/interpolateCubic';
 
 /**
  * Gets a single interpolated value at an exact position using cubic interpolation
