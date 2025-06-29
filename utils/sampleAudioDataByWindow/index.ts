@@ -21,11 +21,22 @@ export function sampleAudioDataByWindow<
   getEnvelopeSamplesAtPosition: (pos: number) => number[],
   transformFn: SampleWindowTransformFn<TResult> = (envelope) => envelope as TResult,
 ): TResult[] {
+  if (numSegments <= 0 || data.length === 0) {
+    return [];
+  }
+
   return Array.from({ length: numSegments }, (_, i) => {
     const start = Math.floor(i * sampleSize);
     const end = Math.min(Math.floor((i + 1) * sampleSize), data.length - 1);
 
-    const envelope = findEnvelopeInSampleRange(start, end, getEnvelopeSamplesAtPosition);
+    const clampedStart = Math.min(start, data.length - 1);
+    const clampedEnd = Math.max(clampedStart, end);
+
+    const envelope = findEnvelopeInSampleRange(
+      clampedStart,
+      clampedEnd,
+      getEnvelopeSamplesAtPosition,
+    );
 
     return transformFn(envelope);
   });
