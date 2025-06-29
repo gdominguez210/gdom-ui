@@ -10,5 +10,11 @@ export function calculateMaxSegmentsInView(
   minSegmentWidth: number,
   gapWidth: number = 0,
 ): number {
-  return Math.floor((displayWidth + gapWidth) / (minSegmentWidth + gapWidth));
+  const effectiveDisplayWidth = Math.max(0, displayWidth);
+  const effectiveMinSegmentWidth = Math.max(1, minSegmentWidth);
+  const effectiveGapWidth = Math.max(0, gapWidth);
+
+  return Math.floor(
+    (effectiveDisplayWidth + effectiveGapWidth) / (effectiveMinSegmentWidth + effectiveGapWidth),
+  );
 }
