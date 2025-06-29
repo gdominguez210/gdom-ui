@@ -3,14 +3,13 @@ import type { AudioData, SampleWindowTransformFn } from '@/types/audio';
 import { calculateSegmentWidth } from '@/utils/calculateSegmentWidth';
 import { calculateMaxSegmentsInView } from '@/utils/calculateMaxSegmentsInView';
 import { sampleAudioDataByInterpolation } from '@/utils/sampleAudioDataByInterpolation';
-import { sampleRawAudioByWindow } from '@/utils/sampleRawAudioByWindow';
 import { sampleEnvelopesByWindow } from '@/utils/sampleEnvelopesByWindow';
 import { getInterpolatedValueCubic } from '@/utils/getInterpolatedValueCubic';
 import { getInterpolatedEnvelopeFromSegments } from '@/utils/getInterpolatedEnvelopeFromSegments';
 import { isEnvelopeSegmentArray } from '@/utils/isEnvelopeSegmentArray';
 
 const defaultTransformFn: SampleWindowTransformFn<number> = (envelope) =>
-  Math.max(Math.abs(envelope.min), Math.abs(envelope.max));
+  Math.abs(envelope.min) > Math.abs(envelope.max) ? envelope.min : envelope.max;
 
 type CurveInterpolationFn = (data: number[] | Float32Array, exactIndex: number) => number;
 
@@ -91,10 +90,7 @@ export function useAudioResponsiveSamplingForCurves(
         return;
       }
 
-      valuesRef.current =
-        sampleSize > 1
-          ? sampleRawAudioByWindow(data, actualSegmentCount, sampleSize)
-          : sampleAudioDataByInterpolation(data, actualSegmentCount, interpolationFn);
+      valuesRef.current = sampleAudioDataByInterpolation(data, actualSegmentCount, interpolationFn);
     },
     [data, segmentMinWidth, interpolationFn, transformFn],
   );
