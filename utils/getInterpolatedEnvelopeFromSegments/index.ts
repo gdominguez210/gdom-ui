@@ -10,14 +10,20 @@ export function getInterpolatedEnvelopeFromSegments(
   data: EnvelopeSegment[],
   exactIndex: number,
 ): EnvelopeSegment {
-  const floorIndex = Math.floor(exactIndex);
-  const ceilIndex = Math.min(Math.ceil(exactIndex), data.length - 1);
+  if (data.length === 0) {
+    return { min: 0, max: 0 };
+  }
+
+  const clampedIndex = Math.max(0, exactIndex);
+
+  const floorIndex = Math.floor(clampedIndex);
+  const ceilIndex = Math.min(Math.ceil(clampedIndex), data.length - 1);
 
   if (floorIndex === ceilIndex || floorIndex >= data.length) {
     return data[Math.min(floorIndex, data.length - 1)]!;
   }
 
-  const t = exactIndex - floorIndex;
+  const t = clampedIndex - floorIndex;
   const current = data[floorIndex]!;
   const next = data[ceilIndex]!;
 
