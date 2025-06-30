@@ -1,8 +1,8 @@
 import type { StoryObj, Meta } from '@storybook/react-vite';
 import { AudioVisualizerFrequencyBars } from '@/lib/AudioVisualizerFrequencyBars/AudioVisualizerFrequencyBars';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 import { AudioPlayerCompoundComponent as AudioPlayer } from '@/lib/AudioPlayer/namespace';
-import { CollapseCategory } from '@storybook-decorators/CollapseCategory/CollapseCategory';
+import { CollapseCategory } from '@/.storybook/decorators/CollapseCategory/CollapseCategory';
 
 export default {
   title: 'components/AudioVisualizerFrequencyBars',
