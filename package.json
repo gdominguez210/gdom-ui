@@ -50,7 +50,8 @@
     "format": "prettier . --write --ignore-unknown",
     "prepare": "husky install",
     "generate": "tsc --p .generate-component/tsconfig.json && node .generate-component/index.js",
-    "generate:icons": "node .generate-icon-components/index.js"
+    "generate:icons": "node .generate-icon-components/index.js",
+    "generate:audio-data": "tsc --p .generate-audio-data/tsconfig.json && node .generate-audio-data/index.js"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
@@ -82,6 +83,7 @@
     "@vitejs/plugin-react-swc": "^3.8.0",
     "@vitest/coverage-v8": "^1.6.1",
     "@vitest/ui": "^1.6.1",
+    "audio-decode": "^2.2.3",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "eslint": "^8.57.1",
@@ -106,6 +108,8 @@
     "tailwind-merge": "^3.1.0",
     "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "^4.1.7",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2",
     "vite": "^5.4.14",
     "vite-plugin-dts": "^4.5.3",
