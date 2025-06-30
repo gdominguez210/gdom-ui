@@ -7,7 +7,7 @@ import { CollapseCategory } from '@storybook-decorators/CollapseCategory/Collaps
 import { DeferredRender } from '@/.storybook/components/DeferredRender/DeferredRender';
 import { audioData } from '@/data/audio/58730401-c910-4a77-935e-83d71d5d1a52';
 
-const sampleWaveformData = audioData.data[2].peaks;
+const sampleWaveformData = audioData.data[2]!.peaks;
 
 function AudioWaveformEnvelopeCurvesWrapper(props: AudioWaveformEnvelopeCurvesProps) {
   return (
