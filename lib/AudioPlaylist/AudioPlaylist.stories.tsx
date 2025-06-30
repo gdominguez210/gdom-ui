@@ -15,7 +15,7 @@ import { AudioPlaylistTrackContextProvider } from '@/lib/AudioPlaylistTrackConte
 import { AudioPlaylistTrackImage } from '@/lib/AudioPlaylistTrackImage';
 import { AudioPlaylistTrackTitle } from '@/lib/AudioPlaylistTrackTitle';
 import { AudioPlaylistTrackAuthor } from '@/lib/AudioPlaylistTrackAuthor';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 
 const simplifiedExampleSource = `
 <AudioPlayerContextProvider tracks={trackData}>

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 import { AudioPlaylistCompoundComponent as AudioPlaylist } from '@/lib/AudioPlaylist/namespace';
 import { AudioPlaylist as AudioPlaylistPrimitive } from '@/lib/AudioPlaylist/AudioPlaylist';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 
 describe('AudioPlaylist', () => {

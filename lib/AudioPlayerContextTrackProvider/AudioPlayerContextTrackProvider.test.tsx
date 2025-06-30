@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 import { AudioPlayerContextTrackProvider } from '@/lib/AudioPlayerContextTrackProvider';
 import { useAudioPlayerContextTrack } from './useAudioPlayerContextTrack';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 
 describe('AudioPlayerContextTrackProvider', () => {
   test('should initialize with default track index when not provided', () => {

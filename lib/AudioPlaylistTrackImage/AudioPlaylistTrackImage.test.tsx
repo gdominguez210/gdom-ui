@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { AudioPlaylistTrackImage } from './AudioPlaylistTrackImage';
 import { AudioPlaylistTrackContextProvider } from '@/lib/AudioPlaylistTrackContextProvider';
 import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 
 describe('AudioPlaylistTrackImage', () => {
   test('should render with track data from context', () => {

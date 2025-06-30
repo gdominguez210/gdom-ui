@@ -4,7 +4,7 @@ import { AudioPlayerControlPlay } from '@/lib/AudioPlayerControlPlay/AudioPlayer
 import { AudioPlayerControlPlayPrimitive } from '@/lib/AudioPlayerControlPlay/AudioPlayerControlPlayPrimitive';
 import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
 import { AUDIO_PLAYER_CONTEXT_PLAYBACK_ERROR } from '@/lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlayback';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 
 describe('AudioPlayerControlPlay', () => {
   describe('without context', () => {

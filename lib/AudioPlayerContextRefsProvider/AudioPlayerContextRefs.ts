@@ -1,8 +1,8 @@
-import { createContext, type RefObject } from 'react';
+import { createContext, type ComponentRef } from 'react';
 
 export type AudioPlayerContextRefsType = {
-  audioRef: RefObject<HTMLAudioElement | null>;
-  progressBarRef: RefObject<HTMLInputElement | null>;
+  audioRef: ComponentRef<'audio'>;
+  progressBarRef: ComponentRef<'input'>;
 };
 
 export const AudioPlayerContextRefs = createContext<AudioPlayerContextRefsType | undefined>(

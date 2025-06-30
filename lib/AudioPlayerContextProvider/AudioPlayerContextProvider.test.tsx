@@ -5,7 +5,7 @@ import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider/
 import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 import { useAudioPlayerContextTime } from '@/lib/AudioPlayerContextTimeProvider/useAudioPlayerContextTime';
 import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 
 function RefsConsumer() {
   const { audioRef, progressBarRef } = useAudioPlayerContextRefs();

@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 import { AudioPlaylistTrackCompoundComponent as AudioPlaylistTrack } from '@/lib/AudioPlaylistTrack/namespace';
 import { AudioPlaylistTrackPrimitive } from '@/lib/AudioPlaylistTrack/AudioPlaylistTrackPrimitive';
 import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 import type { AudioTrackData } from '@/lib/AudioPlayerContextTrackProvider/reducer';
 import { AudioPlaylistContextProvider } from '@/lib/AudioPlaylistContextProvider/AudioPlaylistContextProvider';
 

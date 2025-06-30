@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { AudioPlayerAuthor } from '@/lib/AudioPlayerAuthor/AudioPlayerAuthor';
 import { AudioPlayerAuthorPrimitive } from '@/lib/AudioPlayerAuthor/AudioPlayerAuthorPrimitive';
 import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 
 describe('AudioPlayerAuthor', () => {
   describe('without context', () => {

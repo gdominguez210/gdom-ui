@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { AudioPlayerVolumeSlider } from '@/lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSlider';
 import { AudioPlayerVolumeSliderPrimitive } from '@/lib/AudioPlayerVolumeSlider/AudioPlayerVolumeSliderPrimitive';
 import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 
 describe('AudioPlayerVolumeSliderPrimitive', () => {
   test('should render with default props', () => {

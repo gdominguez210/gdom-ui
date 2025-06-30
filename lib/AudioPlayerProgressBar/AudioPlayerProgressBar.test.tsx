@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { AudioPlayerProgressBar } from '@/lib/AudioPlayerProgressBar/AudioPlayerProgressBar';
 import { AudioPlayerProgressBarPrimitive } from '@/lib/AudioPlayerProgressBar/AudioPlayerProgressBarPrimitive';
 import { AudioPlayerContextProvider } from '@/lib/AudioPlayerContextProvider/AudioPlayerContextProvider';
-import { trackData } from '@/lib/AudioPlayer/data';
+import { trackData } from '@/data/trackData';
 import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
 import { AudioPlayerContextTimeProvider } from '@/lib/AudioPlayerContextTimeProvider/AudioPlayerContextTimeProvider';
 
