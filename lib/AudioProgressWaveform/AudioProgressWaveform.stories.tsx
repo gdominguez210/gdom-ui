@@ -1,7 +1,7 @@
 import type { StoryObj, Meta } from '@storybook/react-vite';
 import { AudioProgressWaveform } from '@/lib/AudioProgressWaveform/AudioProgressWaveform';
 import { AUDIO_PROGRESS_COLOR_MODES } from '@/lib/AudioProgressWaveform/types';
-import { waveformData } from '@/data/waveformData';
+import { amplitudeData } from '@/data/amplitudeData';
 import { trackData } from '@/data/trackData';
 import { AudioPlayerCompoundComponent as AudioPlayer } from '@/lib/AudioPlayer/namespace';
 import {
@@ -16,12 +16,12 @@ function AudioPlayerProgressWaveformWithWaveformData(
   props: Omit<AudioPlayerProgressWaveformProps, 'waveformData'>,
 ) {
   const { currentTrack } = useAudioPlayerContextTrack();
-  const currentTrackWaveformData = waveformData[currentTrack?.id ?? ''] || [];
+  const currentTrackAmplitudeData = amplitudeData[currentTrack?.id ?? ''] || [];
 
   return (
     <AudioPlayerProgressWaveform
       {...props}
-      waveformData={currentTrackWaveformData}
+      amplitudeData={currentTrackAmplitudeData}
     />
   );
 }

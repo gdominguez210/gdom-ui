@@ -10,9 +10,9 @@ import {
   type useAudioProgressWaveformOptions,
 } from '@/lib/AudioProgressWaveform/useAudioProgressWaveform';
 import {
-  type useAudioWaveformOptions,
-  useAudioWaveform,
-} from '@/lib/AudioWaveform/useAudioWaveform';
+  type UseAudioAmplitudeBarsOptions,
+  useAudioAmplitudeBars,
+} from '@/lib/AudioAmplitudeBars/useAudioAmplitudeBars';
 import {
   useAnimationFrame,
   type useAnimationFrameOptions,
@@ -24,7 +24,7 @@ import {
   type UseKeyboardMediaSeekOptions,
 } from '@/lib/useKeyboardMediaSeek/useKeyboardMediaSeek';
 import { useDelayedMouseMove } from '@/lib/useDelayedMouseMove/useDelayedMouseMove';
-export type AudioProgressWaveformProps = Omit<useAudioWaveformOptions, 'getBarColor'> &
+export type AudioProgressWaveformProps = Omit<UseAudioAmplitudeBarsOptions, 'getBarColor'> &
   Omit<
     useAudioProgressWaveformColorOptions,
     'dimensionsRef' | 'hoverPositionRef' | 'getIsHovering'
@@ -39,9 +39,9 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     ref,
     className,
     onClick,
-    // AudioWaveform props
-    waveformData,
-    barColor,
+    // AudioWaveformBars props
+    amplitudeData,
+    color,
     barGapRatio,
     minBarWidth,
     heightScale,
@@ -87,11 +87,11 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     onPreviewTimeChange,
   });
 
-  const { getWaveformBarColor } = useAudioProgressWaveformColor({
+  const { getColor } = useAudioProgressWaveformColor({
     duration,
     audioRef,
     progressColor,
-    barColor,
+    color,
     dimensionsRef,
     getIsHovering,
     hoverPositionRef: positionRef,
@@ -102,17 +102,17 @@ export function AudioProgressWaveform(props: AudioProgressWaveformProps) {
     gradientLightnessDelta,
   });
 
-  const { canvasRef: audioWaveformCanvasRef, drawWaveform } = useAudioWaveform({
-    waveformData,
-    barColor,
-    getBarColor: getWaveformBarColor,
+  const { canvasRef: audioAmplitudeCanvasRef, drawWaveform } = useAudioAmplitudeBars({
+    amplitudeData,
+    color,
+    getColor,
     barGapRatio,
     minBarWidth,
     heightScale,
     minBarGapPercent,
   });
 
-  const mergedRef = useComposedRefs(ref, audioWaveformCanvasRef, audioProgressWaveformCanvasRef);
+  const mergedRef = useComposedRefs(ref, audioAmplitudeCanvasRef, audioProgressWaveformCanvasRef);
 
   const handleProgressChange = useCallback(() => {
     drawWaveform();

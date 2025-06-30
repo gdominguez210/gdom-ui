@@ -1,9 +1,7 @@
 import { useCallback, useMemo, type RefObject } from 'react';
-import {
-  type WaveformBarInfo,
-  type WaveformBarColorResult,
-  type WaveformGradientStop,
-} from '@/lib/AudioWaveform/types';
+import { type WaveformGradientStop } from '@/types/waveform';
+import type { ColorResult } from '@/types/colors';
+import type { AmplitudeBarInfo } from '@/lib/AudioAmplitudeBars/useAudioAmplitudeBars';
 import type { useMousePositionRefReturn } from '@/lib/useMousePositionRef/useMousePositionRef';
 import type { UseElementDimensionsReturn } from '@/lib/useElementDimensions/useElementDimensions';
 import type { OKLCHColor } from 'types/colors';
@@ -44,7 +42,7 @@ export type useAudioProgressWaveformColorOptions = {
   /**
    * The color of the waveform bars
    */
-  barColor?: string;
+  color?: string;
 
   /**
    * The color of the waveform bars when hovered
@@ -90,7 +88,7 @@ export type useAudioProgressWaveformColorOptions = {
 };
 
 export type useAudioProgressWaveformColorReturn = {
-  getWaveformBarColor: (barInfo: WaveformBarInfo) => WaveformBarColorResult;
+  getColor: (barInfo: AmplitudeBarInfo) => ColorResult;
 };
 
 export function useAudioProgressWaveformColor(
@@ -101,7 +99,7 @@ export function useAudioProgressWaveformColor(
     audioRef,
     dimensionsRef,
     progressColor = '#4a5565',
-    barColor = '#9f9fa9',
+    color = '#9f9fa9',
     getIsHovering,
     hoverPositionRef,
     hoverColor,
@@ -112,9 +110,9 @@ export function useAudioProgressWaveformColor(
   } = options;
 
   const progressColorOKLCH = useMemo(() => convertColorToOKLCH(progressColor), [progressColor]);
-  const barColorOKLCH = useMemo(() => convertColorToOKLCH(barColor), [barColor]);
+  const colorOKLCH = useMemo(() => convertColorToOKLCH(color), [color]);
   const progressColorCSS = useMemo(() => OKLCHToCSS(...progressColorOKLCH), [progressColorOKLCH]);
-  const barColorCSS = useMemo(() => OKLCHToCSS(...barColorOKLCH), [barColorOKLCH]);
+  const colorCSS = useMemo(() => OKLCHToCSS(...colorOKLCH), [colorOKLCH]);
 
   const hoverColorOKLCH: OKLCHColor = useMemo(() => {
     if (hoverColor) {
@@ -150,8 +148,8 @@ export function useAudioProgressWaveformColor(
     }));
   }, [colorMode, gradientStops, gradientLightnessDelta, progressColorOKLCH, progressColorCSS]);
 
-  const getWaveformBarColor = useCallback(
-    (barInfo: WaveformBarInfo): WaveformBarColorResult => {
+  const getColor = useCallback(
+    (barInfo: AmplitudeBarInfo): ColorResult => {
       const progress = audioRef.current?.currentTime ? audioRef.current.currentTime / duration : 0;
       const coverage = calculateBarCoverage(barInfo, progress);
 
@@ -184,7 +182,7 @@ export function useAudioProgressWaveformColor(
 
       // If bar is fully uncovered by progress
       if (coverage === 0) {
-        return barColorCSS;
+        return colorCSS;
       }
 
       // If bar is partially covered by progress
@@ -192,7 +190,7 @@ export function useAudioProgressWaveformColor(
         // Interpolate between barColor and each gradient stop's pre-computed OKLCH color
         const interpolatedStops = effectiveGradientStops.map((stop) => {
           const interpolatedColor = getInterpolatedColorString(
-            barColorOKLCH,
+            colorOKLCH,
             stop.colorOKLCH,
             coverage,
           );
@@ -209,12 +207,12 @@ export function useAudioProgressWaveformColor(
       }
 
       // If bar is partially covered by progress
-      return getInterpolatedColorString(barColorOKLCH, progressColorOKLCH, coverage);
+      return getInterpolatedColorString(colorOKLCH, progressColorOKLCH, coverage);
     },
     [
-      barColorCSS,
+      colorCSS,
       progressColorCSS,
-      barColorOKLCH,
+      colorOKLCH,
       progressColorOKLCH,
       duration,
       audioRef,
@@ -228,6 +226,6 @@ export function useAudioProgressWaveformColor(
   );
 
   return {
-    getWaveformBarColor,
+    getColor,
   };
 }

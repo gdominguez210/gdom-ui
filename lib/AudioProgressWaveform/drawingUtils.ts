@@ -1,7 +1,6 @@
 import { interpolateOKLCH } from '@/utils/interpolateOKLCH/interpolateOKLCH';
 import { OKLCHToCSS } from '@/utils/OKLCHToCSS';
-import type { OKLCHColor } from 'types/colors';
-import type { WaveformGradientStop } from '@/lib/AudioWaveform/types';
+import type { GradientStop, OKLCHColor } from 'types/colors';
 import type { MousePosition } from '@/lib/useMousePositionRef/useMousePositionRef';
 import type { ElementDimensions } from '@/lib/useElementDimensions/useElementDimensions';
 
@@ -34,7 +33,7 @@ export function generateGradientStops(
   progressColorOKLCH: OKLCHColor,
   progressColorCSS: string,
   lightnessDelta: number = -0.1,
-): WaveformGradientStop[] {
+): GradientStop[] {
   const [l, c, h] = progressColorOKLCH;
 
   // Apply lightness delta, ensuring we stay in the valid range (0-1)
