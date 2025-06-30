@@ -1,0 +1,1 @@
+export { IconFontSize } from './IconFontSize';

@@ -1,0 +1,1 @@
+export { useAudioResponsiveSamplingEnvelopes } from './useAudioResponsiveSamplingEnvelopes';
