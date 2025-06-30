@@ -107,16 +107,20 @@ export type RawAudioInterpolationForEnvelopesFn = (
  * @param metadata - Metadata about the audio data
  */
 export type ProcessedAudioEnvelopeData = {
-  data: EnvelopeSegment[];
+  data: Array<{
+    samplesPerPixel: number;
+    peaks: EnvelopeSegment[];
+  }>;
   metadata: {
     sourceFile: string;
     sampleRate: number;
     duration: number;
     channels: number;
-    resolution: number;
     normalized: boolean;
     generatedAt: string;
     originalLength: number;
+    zoomLevels: number[];
+    cubicInterpolationThreshold: number;
   };
 };
 
