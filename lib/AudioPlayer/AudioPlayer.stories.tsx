@@ -29,25 +29,25 @@ import {
   AudioPlayerProgressWaveform,
   type AudioPlayerProgressWaveformProps,
 } from '@/lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
-import { waveformData } from '@/data/waveformData';
+import { amplitudeData } from '@/data/amplitudeData';
 import { trackData } from '@/data/trackData';
 import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 
-function AudioPlayerProgressWaveformWithWaveformData(
-  props: Omit<AudioPlayerProgressWaveformProps, 'waveformData'>,
+function AudioPlayerProgressWaveformWithAmplitudeData(
+  props: Omit<AudioPlayerProgressWaveformProps, 'amplitudeData'>,
 ) {
   const { currentTrack } = useAudioPlayerContextTrack();
-  const currentTrackWaveformData = waveformData[currentTrack?.id ?? ''] || [];
+  const currentTrackAmplitudeData = amplitudeData[currentTrack?.id ?? ''] || [];
 
   return (
     <AudioPlayerProgressWaveform
       {...props}
-      waveformData={currentTrackWaveformData}
+      amplitudeData={currentTrackAmplitudeData}
     />
   );
 }
 
-AudioPlayerProgressWaveformWithWaveformData.displayName = 'AudioPlayer.ProgressWaveform';
+AudioPlayerProgressWaveformWithAmplitudeData.displayName = 'AudioPlayer.ProgressWaveform';
 
 export default {
   title: 'components/AudioPlayer',
@@ -464,12 +464,12 @@ export const WithProgressWaveform: StoryObj<typeof AudioPlayer> = {
   render: () => (
     <AudioPlayerCompoundComponent.Provider tracks={trackData}>
       <AudioPlayerCompoundComponent.Root>
-        <AudioPlayerProgressWaveformWithWaveformData
+        <AudioPlayerProgressWaveformWithAmplitudeData
           className="h-[150px]"
-          barColor={'#a1a1a1'}
+          color={'#a1a1a1'}
           progressColor={'#00bcff'}
-          heightScale={0.8}
           barGapRatio={0}
+          heightScale={0.8}
         />
         <div className="justify-space-between flex grow gap-4">
           <AudioPlayerCompoundComponent.Info className="basis-1/3">
