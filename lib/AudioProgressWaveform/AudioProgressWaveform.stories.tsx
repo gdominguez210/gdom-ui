@@ -96,7 +96,7 @@ export default {
     minBarGapPercent: 0.001,
     minBarWidth: 2,
     heightScale: 1,
-    barColor: '#cccccc',
+    color: '#cccccc',
     progressColor: '#0066cc',
     hoverColorDelta: 0.2,
     colorMode: AUDIO_PROGRESS_COLOR_MODES.SOLID,
@@ -138,7 +138,7 @@ export default {
     },
 
     // Color
-    barColor: {
+    color: {
       control: 'color',
       description: 'Color of the unplayed waveform bars',
       defaultValue: { summary: '#cccccc' },
@@ -308,7 +308,7 @@ type Story = StoryObj<typeof AudioPlayerProgressWaveform>;
 export const Basic: Story = {
   render: (args) => <AudioPlayerWrapper {...args} />,
   args: {
-    barColor: '#9f9fa9',
+    color: '#9f9fa9',
     barGapRatio: 0.0035,
     colorMode: AUDIO_PROGRESS_COLOR_MODES.SOLID,
     heightScale: 1,
