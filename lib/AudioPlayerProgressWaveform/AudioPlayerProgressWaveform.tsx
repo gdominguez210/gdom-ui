@@ -13,7 +13,7 @@ export type AudioPlayerProgressWaveformProps = Omit<
 >;
 
 export function AudioPlayerProgressWaveform(props: AudioPlayerProgressWaveformProps) {
-  const { waveformData, onClick, ...restProps } = props;
+  const { amplitudeData, onClick, ...restProps } = props;
 
   const { audioRef } = useAudioPlayerContextRefs();
   const { duration, seek, setPreviewTime } = useAudioPlayerContextTime();
@@ -36,7 +36,7 @@ export function AudioPlayerProgressWaveform(props: AudioPlayerProgressWaveformPr
       duration={duration}
       onProgressChange={seek}
       onPreviewTimeChange={setPreviewTime}
-      waveformData={waveformData}
+      amplitudeData={amplitudeData}
       onClick={handleClick}
       {...restProps}
     />
