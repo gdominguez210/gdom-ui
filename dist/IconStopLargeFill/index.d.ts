@@ -1,1 +1,0 @@
-export { IconStopLargeFill } from './IconStopLargeFill';

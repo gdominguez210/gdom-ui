@@ -1,1 +1,0 @@
-export { IconPlayLargeFill } from './IconPlayLargeFill';

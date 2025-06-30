@@ -1,1 +1,0 @@
-export { IconRewindFill } from './IconRewindFill';

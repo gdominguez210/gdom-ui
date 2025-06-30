@@ -1,1 +1,0 @@
-export { IconPuzzleFill } from './IconPuzzleFill';

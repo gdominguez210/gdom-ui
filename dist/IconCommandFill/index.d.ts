@@ -1,1 +1,0 @@
-export { IconCommandFill } from './IconCommandFill';

@@ -1,1 +1,0 @@
-export { IconEqualizerLine } from './IconEqualizerLine';

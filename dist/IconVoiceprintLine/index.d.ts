@@ -1,1 +1,0 @@
-export { IconVoiceprintLine } from './IconVoiceprintLine';

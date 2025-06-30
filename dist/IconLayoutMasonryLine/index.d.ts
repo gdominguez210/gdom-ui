@@ -1,1 +1,0 @@
-export { IconLayoutMasonryLine } from './IconLayoutMasonryLine';

@@ -1,1 +1,0 @@
-export { IconCloseFill } from './IconCloseFill';

@@ -1,1 +1,0 @@
-export { IconStarLine } from './IconStarLine';

@@ -1,1 +1,0 @@
-export { IconVolumeMuteFill } from './IconVolumeMuteFill';
