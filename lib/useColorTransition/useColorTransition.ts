@@ -1,4 +1,4 @@
-import { useRef, useCallback, useState } from 'react';
+import { useRef, useCallback, useState, useMemo } from 'react';
 import { convertColorToOKLCH } from '@/utils/convertColorToOKLCH/convertColorToOKLCH';
 import { OKLCHToCSS } from '@/utils/OKLCHToCSS/OKLCHtoCSS';
 import type { OKLCHColor } from '@/types/colors';
@@ -92,11 +92,15 @@ export function useColorTransition(options: UseColorTransitionOptions) {
     }
   }, [targetColor, colorTransitionDuration, getColorString]);
 
+  const animationDependencies = useMemo(() => {
+    return [targetColor, colorTransitionDuration];
+  }, [targetColor, colorTransitionDuration]);
+
   useAnimationFrame({
     isActive: targetColor !== transitionRef.current.targetColorString || isTransitioning,
     callback: updateTransition,
     frameRate,
-    dependencies: [targetColor, colorTransitionDuration],
+    dependencies: animationDependencies,
   });
 
   return {
