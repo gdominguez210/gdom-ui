@@ -41,6 +41,7 @@ export function AudioVisualizerWaveform(props: AudioVisualizerWaveformProps) {
     lineColor,
     lineWidth,
     segmentCount,
+    frameRate,
   });
 
   const isActiveRef = useLatest(isActive);

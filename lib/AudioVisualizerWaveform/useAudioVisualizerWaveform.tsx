@@ -5,7 +5,10 @@ import {
   drawSegmentedWaveform,
   WAVEFORM_COLOR_MODES,
 } from '@/lib/AudioVisualizerWaveform/drawingUtils';
-import { useColorTransition } from '@/lib/useColorTransition/useColorTransition';
+import {
+  useColorTransition,
+  type UseColorTransitionOptions,
+} from '@/lib/useColorTransition/useColorTransition';
 
 export type useAudioVisualizerWaveformOptions = {
   /**
@@ -29,13 +32,7 @@ export type useAudioVisualizerWaveformOptions = {
    * @default 40
    */
   segmentCount?: number;
-
-  /**
-   * Duration of the color transition in milliseconds
-   * @default 1000
-   */
-  colorTransitionDuration?: number;
-};
+} & Omit<UseColorTransitionOptions, 'targetColor'>;
 
 export type useAudioVisualizerWaveformReturn = {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
@@ -49,6 +46,7 @@ export function useAudioVisualizerWaveform(
   const {
     lineColor = '#ffffff',
     lineWidth = 2,
+    frameRate,
     colorMode = WAVEFORM_COLOR_MODES.STATIC,
     segmentCount = 40,
     colorTransitionDuration = 1000,
@@ -56,7 +54,8 @@ export function useAudioVisualizerWaveform(
 
   const { getColorString, getCurrentColor } = useColorTransition({
     targetColor: lineColor,
-    transitionDuration: colorTransitionDuration,
+    colorTransitionDuration,
+    frameRate,
   });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
