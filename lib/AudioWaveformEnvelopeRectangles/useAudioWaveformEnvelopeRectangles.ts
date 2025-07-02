@@ -7,6 +7,10 @@ import {
   type UseAudioResponsiveSamplingEnvelopesReturn,
 } from '@/lib/useAudioResponsiveSamplingEnvelopes/useAudioResponsiveSamplingEnvelopes';
 import type { EnvelopeSegmentInfo } from '@/types/audio';
+import {
+  useColorTransition,
+  type UseColorTransitionOptions,
+} from '@/lib/useColorTransition/useColorTransition';
 
 export type UseAudioWaveformEnvelopeRectanglesOptions = {
   /**
@@ -22,7 +26,8 @@ export type UseAudioWaveformEnvelopeRectanglesOptions = {
    * @default true
    */
   drawOnCanvasReady?: boolean;
-} & UseAudioResponsiveSamplingEnvelopesOptions;
+} & UseAudioResponsiveSamplingEnvelopesOptions &
+  Omit<UseColorTransitionOptions, 'targetColor'>;
 
 export type UseAudioWaveformEnvelopeRectanglesReturn = {
   canvasRef: (node: HTMLCanvasElement | null) => void;
@@ -43,6 +48,7 @@ export function useAudioWaveformEnvelopeRectangles(
   const {
     data,
     color = '#9f9fa9',
+    colorTransitionDuration,
     heightScale = 1,
     drawOnCanvasReady = true,
     segmentMinWidth = 1,
@@ -61,6 +67,11 @@ export function useAudioWaveformEnvelopeRectangles(
       gapMaxWidth,
       interpolationFn,
     });
+
+  const { getColorString, currentColor } = useColorTransition({
+    targetColor: typeof color === 'string' ? color : '#000000',
+    colorTransitionDuration,
+  });
 
   const [setCanvasRef, isReady, canvasRef] = useRefReady<HTMLCanvasElement | null>(null);
 
@@ -108,7 +119,7 @@ export function useAudioWaveformEnvelopeRectangles(
       };
 
       if (typeof color !== 'function') {
-        ctx.fillStyle = color;
+        ctx.fillStyle = getColorString();
         fillRect();
         return;
       }
@@ -156,9 +167,9 @@ export function useAudioWaveformEnvelopeRectangles(
         return;
       }
     });
-  }, [canvasRef, color, heightScale, segmentsRef, segmentWidthRef, gapWidthRef]);
+  }, [canvasRef, color, heightScale, segmentsRef, segmentWidthRef, gapWidthRef, getColorString]);
 
-  const init = useCallback(() => {
+  const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -168,9 +179,15 @@ export function useAudioWaveformEnvelopeRectangles(
 
   useEffect(() => {
     if (isReady && canvasRef.current && drawOnCanvasReady) {
-      init();
+      calculateSegments(canvasRef.current.clientWidth);
     }
-  }, [isReady, canvasRef, drawOnCanvasReady, init]);
+  }, [isReady, canvasRef, drawOnCanvasReady, calculateSegments]);
 
-  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize: init };
+  useEffect(() => {
+    if (isReady && canvasRef.current && drawOnCanvasReady) {
+      drawWaveform();
+    }
+  }, [isReady, canvasRef, drawOnCanvasReady, drawWaveform, currentColor]);
+
+  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize };
 }
