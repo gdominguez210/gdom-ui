@@ -84,6 +84,8 @@ export function useAudioWaveformEnvelopeRectangles(
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    ctx.imageSmoothingEnabled = false;
+
     const displayHeight = canvas.clientHeight;
     const displayWidth = canvas.clientWidth;
 
