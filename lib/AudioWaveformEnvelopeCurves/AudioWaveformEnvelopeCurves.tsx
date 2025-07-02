@@ -13,6 +13,8 @@ export function AudioWaveformEnvelopeCurves(props: AudioWaveformEnvelopeCurvesPr
   const {
     ref,
     color,
+    colorTransitionDuration,
+    frameRate,
     drawOnCanvasReady,
     heightScale,
     data,
@@ -30,6 +32,8 @@ export function AudioWaveformEnvelopeCurves(props: AudioWaveformEnvelopeCurvesPr
     interpolationFn,
     segmentMinWidth,
     smoothingFactor,
+    colorTransitionDuration,
+    frameRate,
   });
 
   const mergedRef = useComposedRefs(ref, canvasRef);
