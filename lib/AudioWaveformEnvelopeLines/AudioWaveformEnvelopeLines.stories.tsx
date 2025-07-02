@@ -111,7 +111,8 @@ export default {
     // Color
     color: {
       control: 'color',
-      description: 'Color of the envelope lines (used if function is not provided)',
+      description:
+        'Color of the envelope lines. For static colors (string), color transitions are supported. For dynamic colors (function), transitions should be handled within the function.',
       table: {
         type: {
           summary: 'string | ((segmentInfo: EnvelopeSegmentInfo) => ColorResult)',
@@ -136,8 +137,21 @@ type ColorResult = string | {
 }`,
         },
         defaultValue: { summary: '#9f9fa9' },
-        category: 'Appearance',
+        category: 'Color',
       },
+    },
+
+    // Color Transitions
+    colorTransitionDuration: {
+      control: { type: 'range', min: 100, max: 3000, step: 100 },
+      description:
+        'Duration in milliseconds for color transitions. Only applies when color is a string, not a function.',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '500' },
+        category: 'Color',
+      },
+      if: { arg: 'color', satisfies: (color: unknown) => typeof color === 'string' },
     },
 
     // Advanced
@@ -192,6 +206,17 @@ type EnvelopeSegment = {
         defaultValue: { summary: 'true' },
         category: 'Advanced',
       },
+    },
+    frameRate: {
+      control: { type: 'range', min: 15, max: 120, step: 5 },
+      description:
+        'Frame rate for color transition animations. Only applies when color is a string.',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '60' },
+        category: 'Advanced',
+      },
+      if: { arg: 'color', satisfies: (color: unknown) => typeof color === 'string' },
     },
 
     className: {
