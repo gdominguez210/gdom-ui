@@ -13,6 +13,8 @@ export function AudioWaveformEnvelopeRectangles(props: AudioWaveformEnvelopeRect
   const {
     ref,
     color,
+    colorTransitionDuration,
+    frameRate,
     drawOnCanvasReady,
     heightScale,
     data,
@@ -26,6 +28,8 @@ export function AudioWaveformEnvelopeRectangles(props: AudioWaveformEnvelopeRect
 
   const { canvasRef, handleResize } = useAudioWaveformEnvelopeRectangles({
     color,
+    colorTransitionDuration,
+    frameRate,
     drawOnCanvasReady,
     heightScale,
     data,
