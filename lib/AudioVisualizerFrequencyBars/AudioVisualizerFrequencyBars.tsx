@@ -47,6 +47,7 @@ export function AudioVisualizerFrequencyBars(props: AudioVisualizerFrequencyBars
     minBarHeight,
     colorMode,
     colorTransitionDuration,
+    frameRate,
   });
 
   const isActiveRef = useLatest(isActive);
