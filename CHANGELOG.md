@@ -1,3 +1,11 @@
+## [1.42.1](https://github.com/gdominguez210/gdom-ui/compare/v1.42.0...v1.42.1) (2025-07-02)
+
+
+### Bug Fixes
+
+* **lib/AudioWaveformEnvelopeLines/useAudioWaveformEnvelopeLines:** set imageSmoothingEnabled to false to prevent visual banding artifacts on non-retina display screens ([72ad20d](https://github.com/gdominguez210/gdom-ui/commit/72ad20d7cde38098913b6541a40abe037b09db79))
+* **lib/AudioWaveformEnvelopeRectangles/useAudioWaveformEnvelopeRectangles:** set imageSmoothingEnabled to false to prevent visual banding artifacts on non-retina display screens ([f62b0fc](https://github.com/gdominguez210/gdom-ui/commit/f62b0fc5ebc9f225a0b86cdef7551ac5ce8bb74a))
+
 # [1.42.0](https://github.com/gdominguez210/gdom-ui/compare/v1.41.0...v1.42.0) (2025-07-02)
 
 

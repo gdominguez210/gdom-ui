@@ -1,1 +1,1 @@
-export { A as AudioWaveformEnvelopeRectangles } from '../chunks/AudioWaveformEnvelopeRectangles-BlLeJiQL.js';
+export { A as AudioWaveformEnvelopeRectangles } from '../chunks/AudioWaveformEnvelopeRectangles-Bu7vwRgd.js';

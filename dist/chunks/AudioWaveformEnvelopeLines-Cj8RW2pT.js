@@ -7,12 +7,14 @@ import { u as useColorTransition } from './useColorTransition-j98910EB.js';
 import { C as CanvasResponsive } from './CanvasResponsive-Cua3Ie3J.js';
 import { u as useComposedRefs } from './useComposedRefs-DMyoGc1Z.js';
 
-function useAudioWaveformEnvelopeRectangles(props) {
+function useAudioWaveformEnvelopeLines(props) {
   const {
     data,
     color = "#9f9fa9",
     colorTransitionDuration,
+    frameRate,
     heightScale = 1,
+    lineCap = "butt",
     drawOnCanvasReady = true,
     segmentMinWidth = 1,
     gapWidthPercent = 0,
@@ -30,7 +32,8 @@ function useAudioWaveformEnvelopeRectangles(props) {
   });
   const { getColorString, currentColor } = useColorTransition({
     targetColor: typeof color === "string" ? color : "#000000",
-    colorTransitionDuration
+    colorTransitionDuration,
+    frameRate
   });
   const [setCanvasRef, isReady, canvasRef] = useRefReady(null);
   const drawWaveform = useCallback(() => {
@@ -39,12 +42,15 @@ function useAudioWaveformEnvelopeRectangles(props) {
     if (!canvas || segments.length === 0) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    ctx.imageSmoothingEnabled = false;
     const displayHeight = canvas.clientHeight;
     const displayWidth = canvas.clientWidth;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const centerY = displayHeight / 2;
     const maxHeight = displayHeight * heightScale;
     const segmentWidth = segmentWidthRef.current;
+    ctx.lineWidth = segmentWidth;
+    ctx.lineCap = lineCap;
     let globalGradient = null;
     segments.forEach(({ min, max }, i) => {
       const x = i * (segmentWidth + gapWidthRef.current);
@@ -53,6 +59,7 @@ function useAudioWaveformEnvelopeRectangles(props) {
       const barHeight = Math.abs(maxY - minY);
       const amplitudeRange = Math.abs(max - min);
       const position = segments.length > 1 ? i / (segments.length - 1) : 0;
+      const lineX = x + segmentWidth / 2;
       const segmentInfo = {
         position,
         min,
@@ -63,18 +70,21 @@ function useAudioWaveformEnvelopeRectangles(props) {
         amplitudeRange,
         heightPixels: barHeight
       };
-      const fillRect = () => {
-        ctx.fillRect(x, Math.min(minY, maxY), segmentWidth, barHeight);
+      const drawLine = () => {
+        ctx.beginPath();
+        ctx.moveTo(lineX, minY);
+        ctx.lineTo(lineX, maxY);
+        ctx.stroke();
       };
       if (typeof color !== "function") {
-        ctx.fillStyle = getColorString();
-        fillRect();
+        ctx.strokeStyle = getColorString();
+        drawLine();
         return;
       }
       const colorResult = color(segmentInfo);
       if (typeof colorResult === "string") {
-        ctx.fillStyle = colorResult;
-        fillRect();
+        ctx.strokeStyle = colorResult;
+        drawLine();
         return;
       }
       if (colorResult.type === "gradient") {
@@ -89,23 +99,32 @@ function useAudioWaveformEnvelopeRectangles(props) {
             globalGradient = ctx.createLinearGradient(0, 0, 0, displayHeight);
             addColorStops(globalGradient);
           }
-          ctx.fillStyle = globalGradient;
-          fillRect();
+          ctx.strokeStyle = globalGradient;
+          drawLine();
           return;
         }
         const gradient = ctx.createLinearGradient(
-          x,
+          lineX,
           Math.min(minY, maxY),
-          x,
+          lineX,
           Math.min(minY, maxY) + barHeight
         );
         addColorStops(gradient);
-        ctx.fillStyle = gradient;
-        fillRect();
+        ctx.strokeStyle = gradient;
+        drawLine();
         return;
       }
     });
-  }, [canvasRef, color, heightScale, segmentsRef, segmentWidthRef, gapWidthRef, getColorString]);
+  }, [
+    canvasRef,
+    color,
+    heightScale,
+    lineCap,
+    segmentsRef,
+    segmentWidthRef,
+    gapWidthRef,
+    getColorString
+  ]);
   const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -125,10 +144,12 @@ function useAudioWaveformEnvelopeRectangles(props) {
   return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize };
 }
 
-function AudioWaveformEnvelopeRectangles(props) {
+function AudioWaveformEnvelopeLines(props) {
   const {
     ref,
     color,
+    colorTransitionDuration,
+    frameRate,
     drawOnCanvasReady,
     heightScale,
     data,
@@ -137,18 +158,22 @@ function AudioWaveformEnvelopeRectangles(props) {
     gapMaxWidth,
     interpolationFn,
     segmentMinWidth,
+    lineCap,
     ...restProps
   } = props;
-  const { canvasRef, handleResize } = useAudioWaveformEnvelopeRectangles({
+  const { canvasRef, handleResize } = useAudioWaveformEnvelopeLines({
     color,
     drawOnCanvasReady,
     heightScale,
     data,
+    colorTransitionDuration,
+    frameRate,
     gapWidthPercent,
     gapMinWidth,
     gapMaxWidth,
     interpolationFn,
-    segmentMinWidth
+    segmentMinWidth,
+    lineCap
   });
   const mergedRef = useComposedRefs(ref, canvasRef);
   return /* @__PURE__ */ jsx(
@@ -161,4 +186,4 @@ function AudioWaveformEnvelopeRectangles(props) {
   );
 }
 
-export { AudioWaveformEnvelopeRectangles as A };
+export { AudioWaveformEnvelopeLines as A, useAudioWaveformEnvelopeLines as u };

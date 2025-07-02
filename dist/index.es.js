@@ -87,8 +87,8 @@ export { A as AudioAmplitudeBars } from './chunks/AudioAmplitudeBars-iDHQg_CN.js
 export { u as useAudioAmplitudeBars } from './chunks/useAudioAmplitudeBars-C8toOg0X.js';
 export { A as AudioWaveformCurves } from './chunks/AudioWaveformCurves-Bnyxvwjw.js';
 export { A as AudioWaveformEnvelopeCurves, u as useAudioWaveformEnvelopeCurves } from './chunks/AudioWaveformEnvelopeCurves-DYZCi7OO.js';
-export { A as AudioWaveformEnvelopeLines, u as useAudioWaveformEnvelopeLines } from './chunks/AudioWaveformEnvelopeLines-WWRJ5zHt.js';
-export { A as AudioWaveformEnvelopeRectangles } from './chunks/AudioWaveformEnvelopeRectangles-BlLeJiQL.js';
+export { A as AudioWaveformEnvelopeLines, u as useAudioWaveformEnvelopeLines } from './chunks/AudioWaveformEnvelopeLines-Cj8RW2pT.js';
+export { A as AudioWaveformEnvelopeRectangles } from './chunks/AudioWaveformEnvelopeRectangles-Bu7vwRgd.js';
 export { B as Badge } from './chunks/Badge-D6lSWQ8n.js';
 export { B as Button } from './chunks/Button-ZWRMKGn3.js';
 export { C as CanvasResponsive, u as useCanvasResponsive } from './chunks/CanvasResponsive-Cua3Ie3J.js';
