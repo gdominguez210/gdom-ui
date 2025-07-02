@@ -1,8 +1,9 @@
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useState } from 'react';
 import { convertColorToOKLCH } from '@/utils/convertColorToOKLCH/convertColorToOKLCH';
 import { OKLCHToCSS } from '@/utils/OKLCHToCSS/OKLCHtoCSS';
 import type { OKLCHColor } from '@/types/colors';
 import { interpolateOKLCH } from '@/utils/interpolateOKLCH/interpolateOKLCH';
+import { useAnimationFrame } from '@/lib/useAnimationFrame/useAnimationFrame';
 
 export type UseColorTransitionOptions = {
   /**
@@ -14,83 +15,94 @@ export type UseColorTransitionOptions = {
    * Duration in milliseconds for color transitions
    * @default 500
    */
-  transitionDuration?: number;
+  colorTransitionDuration?: number;
+
+  /**
+   * Frame rate for animation
+   * @default 60
+   */
+  frameRate?: number;
 };
 
 /**
- * Hook for handling smooth color transitions in OKLCH color space, expected to be used within an animation loop
+ * Hook for handling smooth color transitions in OKLCH color space.
  *
  * @param options Configuration options for the color transition
  * @returns Object with methods to get the current transitioning color and state
  */
 export function useColorTransition(options: UseColorTransitionOptions) {
-  const { targetColor, transitionDuration = 500 } = options;
+  const { targetColor, colorTransitionDuration = 500, frameRate = 60 } = options;
 
-  // Store transition state in a ref to prevent re-renders
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [currentColor, setCurrentColor] = useState(targetColor);
+
   const transitionRef = useRef({
     targetOKLCH: convertColorToOKLCH(targetColor),
     previousOKLCH: convertColorToOKLCH(targetColor),
     isTransitioning: false,
     progress: 1,
     targetColorString: targetColor,
-  });
-
-  // Store timestamp for transition tracking
-  const timeRef = useRef({
     transitionStartTime: 0,
   });
-
-  useEffect(() => {
-    if (targetColor !== transitionRef.current.targetColorString) {
-      transitionRef.current.previousOKLCH = transitionRef.current.targetOKLCH;
-      transitionRef.current.targetOKLCH = convertColorToOKLCH(targetColor);
-      transitionRef.current.targetColorString = targetColor;
-
-      transitionRef.current.isTransitioning = true;
-      transitionRef.current.progress = 0;
-      timeRef.current.transitionStartTime = performance.now();
-    }
-  }, [targetColor]);
-
-  const updateTransition = useCallback(() => {
-    const now = performance.now();
-    const elapsed = now - timeRef.current.transitionStartTime;
-    transitionRef.current.progress = Math.min(elapsed / transitionDuration, 1);
-
-    if (transitionRef.current.progress >= 1) {
-      transitionRef.current.isTransitioning = false;
-      transitionRef.current.progress = 1;
-    }
-  }, [transitionDuration]);
 
   const getCurrentColor = useCallback((): OKLCHColor => {
     if (!transitionRef.current.isTransitioning) {
       return transitionRef.current.targetOKLCH;
     }
 
-    updateTransition();
-
     return interpolateOKLCH(
       transitionRef.current.previousOKLCH,
       transitionRef.current.targetOKLCH,
       transitionRef.current.progress,
     );
-  }, [updateTransition]);
+  }, []);
 
   const getColorString = useCallback((): string => {
     const [lightness, chroma, hue] = getCurrentColor();
     return OKLCHToCSS(lightness, chroma, hue);
   }, [getCurrentColor]);
 
-  // Function to check if a transition is in progress
-  const isTransitioning = useCallback((): boolean => {
+  const getIsTransitioning = useCallback((): boolean => {
     return transitionRef.current.isTransitioning;
   }, []);
+
+  const updateTransition = useCallback(() => {
+    if (targetColor !== transitionRef.current.targetColorString) {
+      transitionRef.current.previousOKLCH = transitionRef.current.targetOKLCH;
+      transitionRef.current.targetOKLCH = convertColorToOKLCH(targetColor);
+      transitionRef.current.targetColorString = targetColor;
+      transitionRef.current.progress = 0;
+      transitionRef.current.transitionStartTime = performance.now();
+
+      transitionRef.current.isTransitioning = true;
+      setIsTransitioning(true);
+    }
+
+    const now = performance.now();
+    const elapsed = now - transitionRef.current.transitionStartTime;
+    transitionRef.current.progress = Math.min(elapsed / colorTransitionDuration, 1);
+
+    setCurrentColor(getColorString());
+
+    if (transitionRef.current.progress >= 1) {
+      transitionRef.current.progress = 1;
+
+      transitionRef.current.isTransitioning = false;
+      setIsTransitioning(false);
+    }
+  }, [targetColor, colorTransitionDuration, getColorString]);
+
+  useAnimationFrame({
+    isActive: targetColor !== transitionRef.current.targetColorString || isTransitioning,
+    callback: updateTransition,
+    frameRate,
+    dependencies: [targetColor, colorTransitionDuration],
+  });
 
   return {
     getCurrentColor,
     getColorString,
-    isTransitioning,
-    updateTransition,
+    getIsTransitioning,
+    currentColor,
   };
 }
