@@ -13,6 +13,8 @@ export function AudioWaveformEnvelopeLines(props: AudioWaveformEnvelopeLinesProp
   const {
     ref,
     color,
+    colorTransitionDuration,
+    frameRate,
     drawOnCanvasReady,
     heightScale,
     data,
@@ -30,6 +32,8 @@ export function AudioWaveformEnvelopeLines(props: AudioWaveformEnvelopeLinesProp
     drawOnCanvasReady,
     heightScale,
     data,
+    colorTransitionDuration,
+    frameRate,
     gapWidthPercent,
     gapMinWidth,
     gapMaxWidth,
