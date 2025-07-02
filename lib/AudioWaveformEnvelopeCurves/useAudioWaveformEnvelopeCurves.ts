@@ -6,6 +6,10 @@ import {
   type UseAudioResponsiveSamplingEnvelopesOptions,
   type UseAudioResponsiveSamplingEnvelopesReturn,
 } from '@/lib/useAudioResponsiveSamplingEnvelopes/useAudioResponsiveSamplingEnvelopes';
+import {
+  useColorTransition,
+  type UseColorTransitionOptions,
+} from '@/lib/useColorTransition/useColorTransition';
 
 export type UseAudioWaveformEnvelopeCurvesOptions = {
   /**
@@ -29,7 +33,8 @@ export type UseAudioWaveformEnvelopeCurvesOptions = {
 } & Omit<
   UseAudioResponsiveSamplingEnvelopesOptions,
   'gapWidthPercent' | 'gapMinWidth' | 'gapMaxWidth'
->;
+> &
+  Omit<UseColorTransitionOptions, 'targetColor'>;
 
 export type UseAudioWaveformEnvelopeCurvesReturn = {
   canvasRef: (node: HTMLCanvasElement | null) => void;
@@ -51,6 +56,8 @@ export function useAudioWaveformEnvelopeCurves(
   const {
     data,
     color = '#9f9fa9',
+    colorTransitionDuration,
+    frameRate,
     heightScale = 1,
     drawOnCanvasReady = true,
     segmentMinWidth = 1,
@@ -62,6 +69,12 @@ export function useAudioWaveformEnvelopeCurves(
     data,
     segmentMinWidth,
     interpolationFn,
+  });
+
+  const { getColorString, currentColor } = useColorTransition({
+    targetColor: typeof color === 'string' ? color : '#000000',
+    colorTransitionDuration,
+    frameRate,
   });
 
   const [setCanvasRef, isReady, canvasRef] = useRefReady<HTMLCanvasElement | null>(null);
@@ -135,7 +148,7 @@ export function useAudioWaveformEnvelopeCurves(
     ctx.closePath();
 
     if (typeof color !== 'function') {
-      ctx.fillStyle = color;
+      ctx.fillStyle = getColorString();
       ctx.fill();
       return;
     }
@@ -159,9 +172,17 @@ export function useAudioWaveformEnvelopeCurves(
       ctx.fill();
       return;
     }
-  }, [canvasRef, color, heightScale, segmentsRef, segmentWidthRef, smoothingFactor]);
+  }, [
+    canvasRef,
+    color,
+    heightScale,
+    segmentsRef,
+    segmentWidthRef,
+    smoothingFactor,
+    getColorString,
+  ]);
 
-  const init = useCallback(() => {
+  const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -171,9 +192,15 @@ export function useAudioWaveformEnvelopeCurves(
 
   useEffect(() => {
     if (isReady && canvasRef.current && drawOnCanvasReady) {
-      init();
+      calculateSegments(canvasRef.current.clientWidth);
     }
-  }, [isReady, canvasRef, drawOnCanvasReady, init]);
+  }, [isReady, canvasRef, drawOnCanvasReady, calculateSegments]);
 
-  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize: init };
+  useEffect(() => {
+    if (isReady && canvasRef.current && drawOnCanvasReady) {
+      drawWaveform();
+    }
+  }, [isReady, canvasRef, drawOnCanvasReady, drawWaveform, currentColor]);
+
+  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize };
 }
