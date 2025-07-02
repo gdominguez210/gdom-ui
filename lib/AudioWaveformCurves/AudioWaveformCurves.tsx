@@ -13,6 +13,8 @@ export function AudioWaveformCurves(props: AudioWaveformCurvesProps) {
   const {
     ref,
     color,
+    colorTransitionDuration,
+    frameRate,
     drawOnCanvasReady,
     heightScale,
     data,
@@ -34,6 +36,8 @@ export function AudioWaveformCurves(props: AudioWaveformCurvesProps) {
     lineWidth,
     lineCap,
     smoothingFactor,
+    colorTransitionDuration,
+    frameRate,
   });
 
   const mergedRef = useComposedRefs(ref, canvasRef);

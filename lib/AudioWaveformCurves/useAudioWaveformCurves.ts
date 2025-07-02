@@ -6,6 +6,10 @@ import {
   type UseAudioResponsiveSamplingForCurvesOptions,
   type UseAudioResponsiveSamplingForCurvesReturn,
 } from '@/lib/useAudioResponsiveSamplingCurves/useAudioResponsiveSamplingCurves';
+import {
+  useColorTransition,
+  type UseColorTransitionOptions,
+} from '@/lib/useColorTransition/useColorTransition';
 
 export type UseAudioWaveformCurvesOptions = {
   /**
@@ -36,7 +40,8 @@ export type UseAudioWaveformCurvesOptions = {
    * @default 0.5
    */
   smoothingFactor?: number;
-} & UseAudioResponsiveSamplingForCurvesOptions;
+} & UseAudioResponsiveSamplingForCurvesOptions &
+  Omit<UseColorTransitionOptions, 'targetColor'>;
 
 export type UseAudioWaveformCurvesReturn = {
   canvasRef: (node: HTMLCanvasElement | null) => void;
@@ -58,6 +63,8 @@ export function useAudioWaveformCurves(
   const {
     data,
     color = '#9f9fa9',
+    colorTransitionDuration,
+    frameRate,
     heightScale = 1,
     drawOnCanvasReady = true,
     segmentMinWidth = 1,
@@ -71,6 +78,12 @@ export function useAudioWaveformCurves(
     data,
     segmentMinWidth,
     interpolationFn,
+  });
+
+  const { getColorString, currentColor } = useColorTransition({
+    targetColor: typeof color === 'string' ? color : '#000000',
+    colorTransitionDuration,
+    frameRate,
   });
 
   const [setCanvasRef, isReady, canvasRef] = useRefReady<HTMLCanvasElement | null>(null);
@@ -116,7 +129,7 @@ export function useAudioWaveformCurves(
     ctx.lineJoin = 'round';
 
     if (typeof color !== 'function') {
-      ctx.strokeStyle = color;
+      ctx.strokeStyle = getColorString();
       ctx.stroke();
       return;
     }
@@ -147,9 +160,10 @@ export function useAudioWaveformCurves(
     lineWidth,
     lineCap,
     smoothingFactor,
+    getColorString,
   ]);
 
-  const init = useCallback(() => {
+  const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -159,9 +173,15 @@ export function useAudioWaveformCurves(
 
   useEffect(() => {
     if (isReady && canvasRef.current && drawOnCanvasReady) {
-      init();
+      calculateSegments(canvasRef.current.clientWidth);
     }
-  }, [isReady, canvasRef, drawOnCanvasReady, init]);
+  }, [isReady, canvasRef, drawOnCanvasReady, calculateSegments]);
 
-  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize: init };
+  useEffect(() => {
+    if (isReady && canvasRef.current && drawOnCanvasReady) {
+      drawWaveform();
+    }
+  }, [isReady, canvasRef, drawOnCanvasReady, drawWaveform, currentColor]);
+
+  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize };
 }
