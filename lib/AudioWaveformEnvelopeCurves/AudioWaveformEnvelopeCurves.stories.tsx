@@ -112,7 +112,7 @@ since coloring applies to the entire continuous shape, not individual segments.`
 
     // Color Transitions
     colorTransitionDuration: {
-      control: { type: 'range', min: 100, max: 3000, step: 100 },
+      control: { type: 'range', min: 100, max: 10000, step: 100 },
       description:
         'Duration in milliseconds for color transitions. Only applies when color is a string, not a function.',
       table: {
@@ -202,6 +202,8 @@ export const Basic: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
     heightScale: 1,
     segmentMinWidth: 1,
     smoothingFactor: 0.5,
+    colorTransitionDuration: 500,
+    frameRate: 60,
   },
   parameters: {
     layout: 'fullscreen',
