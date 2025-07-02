@@ -19,8 +19,8 @@ import { jsx } from 'react/jsx-runtime';
 import { t as twMerge } from './bundle-mjs-BME7zF0Z.js';
 import { c as clsx } from './clsx-ChV9xqsO.js';
 import { A as AudioPlayerContextAudioProvider } from './AudioPlayerContextAudioProvider-aiIvYh96.js';
-import { A as AudioPlayerVisualizerWaveform } from './AudioPlayerVisualizerWaveform-MjfgHf8N.js';
-import { A as AudioPlayerVisualizerFrequencyBars } from './AudioPlayerVisualizerFrequencyBars-C5TTtZDe.js';
+import { A as AudioPlayerVisualizerWaveform } from './AudioPlayerVisualizerWaveform-BbIrw1oJ.js';
+import { A as AudioPlayerVisualizerFrequencyBars } from './AudioPlayerVisualizerFrequencyBars-BbxzalOg.js';
 import { A as AudioPlayerProgressWaveform } from './AudioPlayerProgressWaveform-B3cKDUAp.js';
 
 function AudioPlayer(props) {

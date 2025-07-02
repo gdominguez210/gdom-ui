@@ -1,3 +1,4 @@
+import { UseColorTransitionOptions } from '../useColorTransition/useColorTransition';
 export type useAudioVisualizerFrequencyBarOptions = {
     /**
      * Color of the frequency bars
@@ -39,12 +40,7 @@ export type useAudioVisualizerFrequencyBarOptions = {
      * @default 'static'
      */
     colorMode?: 'static' | 'frequency' | 'intensity' | 'spectrum' | 'dynamic';
-    /**
-     * Duration of the color transition in milliseconds
-     * @default 1000
-     */
-    colorTransitionDuration?: number;
-};
+} & Omit<UseColorTransitionOptions, 'targetColor'>;
 export type useAudioVisualizerFrequencyBarsReturn = {
     canvasRef: React.RefObject<HTMLCanvasElement | null>;
     drawFrequencyBars: (dataArray: Uint8Array) => void;

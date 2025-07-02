@@ -3,7 +3,7 @@ import { u as useAudioContext } from './useAudioContext-V0BTlzjl.js';
 import { u as useAudioPlayerContextPlayback } from './useAudioPlayerContextPlayback-1tEUh5id.js';
 import { u as useAudioPlayerContextRefs } from './useAudioPlayerContextRefs-BnfUt_UB.js';
 import { u as useAudioPlayerContextTime } from './useAudioPlayerContextTime-BOJ7zmrG.js';
-import { A as AudioVisualizerFrequencyBars } from './AudioVisualizerFrequencyBars-DuYClzE2.js';
+import { A as AudioVisualizerFrequencyBars } from './AudioVisualizerFrequencyBars-XyWy4QpZ.js';
 
 function AudioPlayerVisualizerFrequencyBars(props) {
   const { isPlaying } = useAudioPlayerContextPlayback();

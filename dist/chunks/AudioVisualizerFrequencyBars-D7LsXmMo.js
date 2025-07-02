@@ -3,7 +3,7 @@
 const jsxRuntime = require('react/jsx-runtime');
 const React = require('react');
 const getColorByDynamicIntensity = require('./getColorByDynamicIntensity-BLuWXMfD.js');
-const useColorTransition = require('./useColorTransition-yCboFoS8.js');
+const useColorTransition = require('./useColorTransition-CTWDmqrb.js');
 const useComposedRefs = require('./useComposedRefs-CewP366o.js');
 const useLatest = require('./useLatest-rOeU5Z3P.js');
 const useAudioAnalyzer = require('./useAudioAnalyzer-ePtfnNIm.js');
@@ -92,7 +92,8 @@ function useAudioVisualizerFrequencyBars(options) {
     minBarHeight = 0,
     minBarWidth = 1,
     colorMode = FREQUENCY_BARS_COLOR_MODES.STATIC,
-    colorTransitionDuration = 1e3
+    colorTransitionDuration = 1e3,
+    frameRate
   } = options || {};
   const canvasRef = React.useRef(null);
   const clearCanvas = React.useCallback(() => {
@@ -104,7 +105,8 @@ function useAudioVisualizerFrequencyBars(options) {
   }, []);
   const { getColorString, getCurrentColor } = useColorTransition.useColorTransition({
     targetColor: barColor,
-    transitionDuration: colorTransitionDuration
+    colorTransitionDuration,
+    frameRate
   });
   const drawFrequencyBars = React.useCallback(
     (dataArray) => {
@@ -204,7 +206,8 @@ function AudioVisualizerFrequencyBars(props) {
     heightMultiplier,
     minBarHeight,
     colorMode,
-    colorTransitionDuration
+    colorTransitionDuration,
+    frameRate
   });
   const isActiveRef = useLatest.useLatest(isActive);
   const mergedRef = useComposedRefs.useComposedRefs(ref, canvasRef);

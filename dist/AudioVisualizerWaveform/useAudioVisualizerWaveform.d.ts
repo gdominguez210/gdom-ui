@@ -1,4 +1,5 @@
 import { WaveformColorMode } from './drawingUtils';
+import { UseColorTransitionOptions } from '../useColorTransition/useColorTransition';
 export type useAudioVisualizerWaveformOptions = {
     /**
      * Color of the waveform line
@@ -19,12 +20,7 @@ export type useAudioVisualizerWaveformOptions = {
      * @default 40
      */
     segmentCount?: number;
-    /**
-     * Duration of the color transition in milliseconds
-     * @default 1000
-     */
-    colorTransitionDuration?: number;
-};
+} & Omit<UseColorTransitionOptions, 'targetColor'>;
 export type useAudioVisualizerWaveformReturn = {
     canvasRef: React.RefObject<HTMLCanvasElement | null>;
     drawWaveform: (dataArray: Uint8Array) => void;

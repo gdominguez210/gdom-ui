@@ -8,10 +8,15 @@ export type UseColorTransitionOptions = {
      * Duration in milliseconds for color transitions
      * @default 500
      */
-    transitionDuration?: number;
+    colorTransitionDuration?: number;
+    /**
+     * Frame rate for animation
+     * @default 60
+     */
+    frameRate?: number;
 };
 /**
- * Hook for handling smooth color transitions in OKLCH color space, expected to be used within an animation loop
+ * Hook for handling smooth color transitions in OKLCH color space.
  *
  * @param options Configuration options for the color transition
  * @returns Object with methods to get the current transitioning color and state
@@ -19,6 +24,6 @@ export type UseColorTransitionOptions = {
 export declare function useColorTransition(options: UseColorTransitionOptions): {
     getCurrentColor: () => OKLCHColor;
     getColorString: () => string;
-    isTransitioning: () => boolean;
-    updateTransition: () => void;
+    getIsTransitioning: () => boolean;
+    currentColor: string;
 };

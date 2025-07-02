@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const namespace = require('../chunks/namespace-BCYHuU5o.js');
+const namespace = require('../chunks/namespace-Bl48-Kxh.js');
 
 
 

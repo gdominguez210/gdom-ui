@@ -1,16 +1,17 @@
-'use strict';
-
-const jsxRuntime = require('react/jsx-runtime');
-const React = require('react');
-const useRefReady = require('./useRefReady-BYj4xHLo.js');
-const useAudioResponsiveSamplingCurves = require('./useAudioResponsiveSamplingCurves-DOk6rkNv.js');
-const CanvasResponsive = require('./CanvasResponsive-Bryn-OAD.js');
-const useComposedRefs = require('./useComposedRefs-CewP366o.js');
+import { jsx } from 'react/jsx-runtime';
+import { useCallback, useEffect } from 'react';
+import { u as useRefReady } from './useRefReady-BB-Es_A6.js';
+import { u as useAudioResponsiveSamplingForCurves } from './useAudioResponsiveSamplingCurves-DUhYvEWG.js';
+import { u as useColorTransition } from './useColorTransition-j98910EB.js';
+import { C as CanvasResponsive } from './CanvasResponsive-Cua3Ie3J.js';
+import { u as useComposedRefs } from './useComposedRefs-DMyoGc1Z.js';
 
 function useAudioWaveformCurves(props) {
   const {
     data,
     color = "#9f9fa9",
+    colorTransitionDuration,
+    frameRate,
     heightScale = 1,
     drawOnCanvasReady = true,
     segmentMinWidth = 1,
@@ -19,13 +20,18 @@ function useAudioWaveformCurves(props) {
     lineCap = "round",
     smoothingFactor = 0.5
   } = props;
-  const { valuesRef, segmentWidthRef, calculateSegments } = useAudioResponsiveSamplingCurves.useAudioResponsiveSamplingForCurves({
+  const { valuesRef, segmentWidthRef, calculateSegments } = useAudioResponsiveSamplingForCurves({
     data,
     segmentMinWidth,
     interpolationFn
   });
-  const [setCanvasRef, isReady, canvasRef] = useRefReady.useRefReady(null);
-  const drawWaveform = React.useCallback(() => {
+  const { getColorString, currentColor } = useColorTransition({
+    targetColor: typeof color === "string" ? color : "#000000",
+    colorTransitionDuration,
+    frameRate
+  });
+  const [setCanvasRef, isReady, canvasRef] = useRefReady(null);
+  const drawWaveform = useCallback(() => {
     const canvas = canvasRef.current;
     const values = valuesRef.current;
     if (!canvas || values.length === 0) return;
@@ -55,7 +61,7 @@ function useAudioWaveformCurves(props) {
     ctx.lineCap = lineCap;
     ctx.lineJoin = "round";
     if (typeof color !== "function") {
-      ctx.strokeStyle = color;
+      ctx.strokeStyle = getColorString();
       ctx.stroke();
       return;
     }
@@ -82,26 +88,34 @@ function useAudioWaveformCurves(props) {
     segmentWidthRef,
     lineWidth,
     lineCap,
-    smoothingFactor
+    smoothingFactor,
+    getColorString
   ]);
-  const init = React.useCallback(() => {
+  const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     calculateSegments(canvas.clientWidth);
     drawWaveform();
   }, [canvasRef, calculateSegments, drawWaveform]);
-  React.useEffect(() => {
+  useEffect(() => {
     if (isReady && canvasRef.current && drawOnCanvasReady) {
-      init();
+      calculateSegments(canvasRef.current.clientWidth);
     }
-  }, [isReady, canvasRef, drawOnCanvasReady, init]);
-  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize: init };
+  }, [isReady, canvasRef, drawOnCanvasReady, calculateSegments]);
+  useEffect(() => {
+    if (isReady && canvasRef.current && drawOnCanvasReady) {
+      drawWaveform();
+    }
+  }, [isReady, canvasRef, drawOnCanvasReady, drawWaveform, currentColor]);
+  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize };
 }
 
 function AudioWaveformCurves(props) {
   const {
     ref,
     color,
+    colorTransitionDuration,
+    frameRate,
     drawOnCanvasReady,
     heightScale,
     data,
@@ -121,11 +135,13 @@ function AudioWaveformCurves(props) {
     segmentMinWidth,
     lineWidth,
     lineCap,
-    smoothingFactor
+    smoothingFactor,
+    colorTransitionDuration,
+    frameRate
   });
-  const mergedRef = useComposedRefs.useComposedRefs(ref, canvasRef);
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    CanvasResponsive.CanvasResponsive,
+  const mergedRef = useComposedRefs(ref, canvasRef);
+  return /* @__PURE__ */ jsx(
+    CanvasResponsive,
     {
       ...restProps,
       ref: mergedRef,
@@ -134,4 +150,4 @@ function AudioWaveformCurves(props) {
   );
 }
 
-exports.AudioWaveformCurves = AudioWaveformCurves;
+export { AudioWaveformCurves as A };

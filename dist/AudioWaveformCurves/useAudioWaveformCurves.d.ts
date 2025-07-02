@@ -1,5 +1,6 @@
 import { ColorResult } from '../../types/colors';
 import { UseAudioResponsiveSamplingForCurvesOptions, UseAudioResponsiveSamplingForCurvesReturn } from '../useAudioResponsiveSamplingCurves/useAudioResponsiveSamplingCurves';
+import { UseColorTransitionOptions } from '../useColorTransition/useColorTransition';
 export type UseAudioWaveformCurvesOptions = {
     /**
      * Height scale factor for the waveform
@@ -29,7 +30,7 @@ export type UseAudioWaveformCurvesOptions = {
      * @default 0.5
      */
     smoothingFactor?: number;
-} & UseAudioResponsiveSamplingForCurvesOptions;
+} & UseAudioResponsiveSamplingForCurvesOptions & Omit<UseColorTransitionOptions, 'targetColor'>;
 export type UseAudioWaveformCurvesReturn = {
     canvasRef: (node: HTMLCanvasElement | null) => void;
     calculateSegments: UseAudioResponsiveSamplingForCurvesReturn['calculateSegments'];

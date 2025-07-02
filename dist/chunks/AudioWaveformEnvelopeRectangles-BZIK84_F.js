@@ -5,15 +5,16 @@ const React = require('react');
 const colors = require('./colors-PXNKOlE9.js');
 const useRefReady = require('./useRefReady-BYj4xHLo.js');
 const useAudioResponsiveSamplingEnvelopes = require('./useAudioResponsiveSamplingEnvelopes-yGDrUPku.js');
+const useColorTransition = require('./useColorTransition-CTWDmqrb.js');
 const CanvasResponsive = require('./CanvasResponsive-Bryn-OAD.js');
 const useComposedRefs = require('./useComposedRefs-CewP366o.js');
 
-function useAudioWaveformEnvelopeLines(props) {
+function useAudioWaveformEnvelopeRectangles(props) {
   const {
     data,
     color = "#9f9fa9",
+    colorTransitionDuration,
     heightScale = 1,
-    lineCap = "butt",
     drawOnCanvasReady = true,
     segmentMinWidth = 1,
     gapWidthPercent = 0,
@@ -29,6 +30,10 @@ function useAudioWaveformEnvelopeLines(props) {
     gapMaxWidth,
     interpolationFn
   });
+  const { getColorString, currentColor } = useColorTransition.useColorTransition({
+    targetColor: typeof color === "string" ? color : "#000000",
+    colorTransitionDuration
+  });
   const [setCanvasRef, isReady, canvasRef] = useRefReady.useRefReady(null);
   const drawWaveform = React.useCallback(() => {
     const canvas = canvasRef.current;
@@ -42,8 +47,6 @@ function useAudioWaveformEnvelopeLines(props) {
     const centerY = displayHeight / 2;
     const maxHeight = displayHeight * heightScale;
     const segmentWidth = segmentWidthRef.current;
-    ctx.lineWidth = segmentWidth;
-    ctx.lineCap = lineCap;
     let globalGradient = null;
     segments.forEach(({ min, max }, i) => {
       const x = i * (segmentWidth + gapWidthRef.current);
@@ -52,7 +55,6 @@ function useAudioWaveformEnvelopeLines(props) {
       const barHeight = Math.abs(maxY - minY);
       const amplitudeRange = Math.abs(max - min);
       const position = segments.length > 1 ? i / (segments.length - 1) : 0;
-      const lineX = x + segmentWidth / 2;
       const segmentInfo = {
         position,
         min,
@@ -63,21 +65,18 @@ function useAudioWaveformEnvelopeLines(props) {
         amplitudeRange,
         heightPixels: barHeight
       };
-      const drawLine = () => {
-        ctx.beginPath();
-        ctx.moveTo(lineX, minY);
-        ctx.lineTo(lineX, maxY);
-        ctx.stroke();
+      const fillRect = () => {
+        ctx.fillRect(x, Math.min(minY, maxY), segmentWidth, barHeight);
       };
       if (typeof color !== "function") {
-        ctx.strokeStyle = color;
-        drawLine();
+        ctx.fillStyle = getColorString();
+        fillRect();
         return;
       }
       const colorResult = color(segmentInfo);
       if (typeof colorResult === "string") {
-        ctx.strokeStyle = colorResult;
-        drawLine();
+        ctx.fillStyle = colorResult;
+        fillRect();
         return;
       }
       if (colorResult.type === "gradient") {
@@ -92,24 +91,24 @@ function useAudioWaveformEnvelopeLines(props) {
             globalGradient = ctx.createLinearGradient(0, 0, 0, displayHeight);
             addColorStops(globalGradient);
           }
-          ctx.strokeStyle = globalGradient;
-          drawLine();
+          ctx.fillStyle = globalGradient;
+          fillRect();
           return;
         }
         const gradient = ctx.createLinearGradient(
-          lineX,
+          x,
           Math.min(minY, maxY),
-          lineX,
+          x,
           Math.min(minY, maxY) + barHeight
         );
         addColorStops(gradient);
-        ctx.strokeStyle = gradient;
-        drawLine();
+        ctx.fillStyle = gradient;
+        fillRect();
         return;
       }
     });
-  }, [canvasRef, color, heightScale, lineCap, segmentsRef, segmentWidthRef, gapWidthRef]);
-  const init = React.useCallback(() => {
+  }, [canvasRef, color, heightScale, segmentsRef, segmentWidthRef, gapWidthRef, getColorString]);
+  const handleResize = React.useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     calculateSegments(canvas.clientWidth);
@@ -117,13 +116,18 @@ function useAudioWaveformEnvelopeLines(props) {
   }, [canvasRef, calculateSegments, drawWaveform]);
   React.useEffect(() => {
     if (isReady && canvasRef.current && drawOnCanvasReady) {
-      init();
+      calculateSegments(canvasRef.current.clientWidth);
     }
-  }, [isReady, canvasRef, drawOnCanvasReady, init]);
-  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize: init };
+  }, [isReady, canvasRef, drawOnCanvasReady, calculateSegments]);
+  React.useEffect(() => {
+    if (isReady && canvasRef.current && drawOnCanvasReady) {
+      drawWaveform();
+    }
+  }, [isReady, canvasRef, drawOnCanvasReady, drawWaveform, currentColor]);
+  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize };
 }
 
-function AudioWaveformEnvelopeLines(props) {
+function AudioWaveformEnvelopeRectangles(props) {
   const {
     ref,
     color,
@@ -135,10 +139,9 @@ function AudioWaveformEnvelopeLines(props) {
     gapMaxWidth,
     interpolationFn,
     segmentMinWidth,
-    lineCap,
     ...restProps
   } = props;
-  const { canvasRef, handleResize } = useAudioWaveformEnvelopeLines({
+  const { canvasRef, handleResize } = useAudioWaveformEnvelopeRectangles({
     color,
     drawOnCanvasReady,
     heightScale,
@@ -147,8 +150,7 @@ function AudioWaveformEnvelopeLines(props) {
     gapMinWidth,
     gapMaxWidth,
     interpolationFn,
-    segmentMinWidth,
-    lineCap
+    segmentMinWidth
   });
   const mergedRef = useComposedRefs.useComposedRefs(ref, canvasRef);
   return /* @__PURE__ */ jsxRuntime.jsx(
@@ -161,5 +163,4 @@ function AudioWaveformEnvelopeLines(props) {
   );
 }
 
-exports.AudioWaveformEnvelopeLines = AudioWaveformEnvelopeLines;
-exports.useAudioWaveformEnvelopeLines = useAudioWaveformEnvelopeLines;
+exports.AudioWaveformEnvelopeRectangles = AudioWaveformEnvelopeRectangles;

@@ -1,3 +1,14 @@
+# [1.42.0](https://github.com/gdominguez210/gdom-ui/compare/v1.41.0...v1.42.0) (2025-07-02)
+
+
+### Features
+
+* **lib/AudioWaveformCurves:** changes in string color prop now smoothly transition between colors ([0181951](https://github.com/gdominguez210/gdom-ui/commit/018195142f52391ddbbfcda2cf24f831f01e44b1))
+* **lib/AudioWaveformEnvelopeCurves:** changes in string color prop now smoothly transition between colors ([be3ac29](https://github.com/gdominguez210/gdom-ui/commit/be3ac2903a497e8347e33215f5cfb94b4dd666f0))
+* **lib/AudioWaveformEnvelopeRectangles/useAudioWaveformEnvelopeLines:** changes in string color prop now smoothly transition between colors ([ad58173](https://github.com/gdominguez210/gdom-ui/commit/ad581730364b8fd31cee59e9e4a044eb77c0e98d))
+* **lib/AudioWaveformEnvelopeRectangles/useAudioWaveformEnvelopeRectangles:** changes in string color prop now smoothly transition between colors ([1dc684f](https://github.com/gdominguez210/gdom-ui/commit/1dc684fd08d82498b2e787ab76db471ba5bb69ce))
+* **lib/useColorTransition:** useColorTransition now handles it’s own animation loop to transition colors ([9ad749f](https://github.com/gdominguez210/gdom-ui/commit/9ad749fdfd99d7bed0ef5e8f3dcd04cc55e763ef))
+
 # [1.41.0](https://github.com/gdominguez210/gdom-ui/compare/v1.40.0...v1.41.0) (2025-06-30)
 
 

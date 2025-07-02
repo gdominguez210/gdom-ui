@@ -3,6 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { G as GRADIENT_MODE } from './colors-BhJVYq8s.js';
 import { u as useRefReady } from './useRefReady-BB-Es_A6.js';
 import { u as useAudioResponsiveSamplingEnvelopes } from './useAudioResponsiveSamplingEnvelopes-0IiikLCG.js';
+import { u as useColorTransition } from './useColorTransition-j98910EB.js';
 import { C as CanvasResponsive } from './CanvasResponsive-Cua3Ie3J.js';
 import { u as useComposedRefs } from './useComposedRefs-DMyoGc1Z.js';
 
@@ -10,6 +11,8 @@ function useAudioWaveformEnvelopeLines(props) {
   const {
     data,
     color = "#9f9fa9",
+    colorTransitionDuration,
+    frameRate,
     heightScale = 1,
     lineCap = "butt",
     drawOnCanvasReady = true,
@@ -26,6 +29,11 @@ function useAudioWaveformEnvelopeLines(props) {
     gapMinWidth,
     gapMaxWidth,
     interpolationFn
+  });
+  const { getColorString, currentColor } = useColorTransition({
+    targetColor: typeof color === "string" ? color : "#000000",
+    colorTransitionDuration,
+    frameRate
   });
   const [setCanvasRef, isReady, canvasRef] = useRefReady(null);
   const drawWaveform = useCallback(() => {
@@ -68,7 +76,7 @@ function useAudioWaveformEnvelopeLines(props) {
         ctx.stroke();
       };
       if (typeof color !== "function") {
-        ctx.strokeStyle = color;
+        ctx.strokeStyle = getColorString();
         drawLine();
         return;
       }
@@ -106,8 +114,17 @@ function useAudioWaveformEnvelopeLines(props) {
         return;
       }
     });
-  }, [canvasRef, color, heightScale, lineCap, segmentsRef, segmentWidthRef, gapWidthRef]);
-  const init = useCallback(() => {
+  }, [
+    canvasRef,
+    color,
+    heightScale,
+    lineCap,
+    segmentsRef,
+    segmentWidthRef,
+    gapWidthRef,
+    getColorString
+  ]);
+  const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     calculateSegments(canvas.clientWidth);
@@ -115,16 +132,23 @@ function useAudioWaveformEnvelopeLines(props) {
   }, [canvasRef, calculateSegments, drawWaveform]);
   useEffect(() => {
     if (isReady && canvasRef.current && drawOnCanvasReady) {
-      init();
+      calculateSegments(canvasRef.current.clientWidth);
     }
-  }, [isReady, canvasRef, drawOnCanvasReady, init]);
-  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize: init };
+  }, [isReady, canvasRef, drawOnCanvasReady, calculateSegments]);
+  useEffect(() => {
+    if (isReady && canvasRef.current && drawOnCanvasReady) {
+      drawWaveform();
+    }
+  }, [isReady, canvasRef, drawOnCanvasReady, drawWaveform, currentColor]);
+  return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize };
 }
 
 function AudioWaveformEnvelopeLines(props) {
   const {
     ref,
     color,
+    colorTransitionDuration,
+    frameRate,
     drawOnCanvasReady,
     heightScale,
     data,
@@ -141,6 +165,8 @@ function AudioWaveformEnvelopeLines(props) {
     drawOnCanvasReady,
     heightScale,
     data,
+    colorTransitionDuration,
+    frameRate,
     gapWidthPercent,
     gapMinWidth,
     gapMaxWidth,

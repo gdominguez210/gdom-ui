@@ -5,7 +5,7 @@ const useAudioContext = require('./useAudioContext-BdZ0YQml.js');
 const useAudioPlayerContextPlayback = require('./useAudioPlayerContextPlayback-lQhY1vk1.js');
 const useAudioPlayerContextRefs = require('./useAudioPlayerContextRefs-c-7Q5bUc.js');
 const useAudioPlayerContextTime = require('./useAudioPlayerContextTime-BhBAi2PV.js');
-const AudioVisualizerFrequencyBars = require('./AudioVisualizerFrequencyBars-DrVo4aOx.js');
+const AudioVisualizerFrequencyBars = require('./AudioVisualizerFrequencyBars-D7LsXmMo.js');
 
 function AudioPlayerVisualizerFrequencyBars(props) {
   const { isPlaying } = useAudioPlayerContextPlayback.useAudioPlayerContextPlayback();

@@ -1,5 +1,6 @@
 import { ColorResult } from '../../types/colors';
 import { UseAudioResponsiveSamplingEnvelopesOptions, UseAudioResponsiveSamplingEnvelopesReturn } from '../useAudioResponsiveSamplingEnvelopes/useAudioResponsiveSamplingEnvelopes';
+import { UseColorTransitionOptions } from '../useColorTransition/useColorTransition';
 export type UseAudioWaveformEnvelopeCurvesOptions = {
     /**
      * Height scale factor for the waveform
@@ -19,7 +20,7 @@ export type UseAudioWaveformEnvelopeCurvesOptions = {
      * @default 0.5
      */
     smoothingFactor?: number;
-} & Omit<UseAudioResponsiveSamplingEnvelopesOptions, 'gapWidthPercent' | 'gapMinWidth' | 'gapMaxWidth'>;
+} & Omit<UseAudioResponsiveSamplingEnvelopesOptions, 'gapWidthPercent' | 'gapMinWidth' | 'gapMaxWidth'> & Omit<UseColorTransitionOptions, 'targetColor'>;
 export type UseAudioWaveformEnvelopeCurvesReturn = {
     canvasRef: (node: HTMLCanvasElement | null) => void;
     calculateSegments: UseAudioResponsiveSamplingEnvelopesReturn['calculateSegments'];

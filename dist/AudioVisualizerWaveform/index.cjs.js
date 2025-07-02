@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const AudioVisualizerWaveform = require('../chunks/AudioVisualizerWaveform-B1yQiYTr.js');
+const AudioVisualizerWaveform = require('../chunks/AudioVisualizerWaveform-DCb3DHXQ.js');
 
 
 

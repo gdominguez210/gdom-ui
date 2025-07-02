@@ -1,1 +1,1 @@
-export { A as AudioPlayerVisualizerFrequencyBars } from '../chunks/AudioPlayerVisualizerFrequencyBars-C5TTtZDe.js';
+export { A as AudioPlayerVisualizerFrequencyBars } from '../chunks/AudioPlayerVisualizerFrequencyBars-BbxzalOg.js';

@@ -1,7 +1,7 @@
 import { jsx } from 'react/jsx-runtime';
 import { useRef, useCallback, useEffect } from 'react';
 import { g as getColorByDynamicIntensity, a as getColorBySpectrum, c as getColorByAudioIntensity, b as getColorByFrequencyPosition } from './getColorByDynamicIntensity-D1nI7ps2.js';
-import { u as useColorTransition } from './useColorTransition-f6SBILwZ.js';
+import { u as useColorTransition } from './useColorTransition-j98910EB.js';
 import { u as useComposedRefs } from './useComposedRefs-DMyoGc1Z.js';
 import { u as useLatest } from './useLatest-CIF2WkZQ.js';
 import { u as useAudioAnalyzer } from './useAudioAnalyzer-UJCiycqx.js';
@@ -90,7 +90,8 @@ function useAudioVisualizerFrequencyBars(options) {
     minBarHeight = 0,
     minBarWidth = 1,
     colorMode = FREQUENCY_BARS_COLOR_MODES.STATIC,
-    colorTransitionDuration = 1e3
+    colorTransitionDuration = 1e3,
+    frameRate
   } = options || {};
   const canvasRef = useRef(null);
   const clearCanvas = useCallback(() => {
@@ -102,7 +103,8 @@ function useAudioVisualizerFrequencyBars(options) {
   }, []);
   const { getColorString, getCurrentColor } = useColorTransition({
     targetColor: barColor,
-    transitionDuration: colorTransitionDuration
+    colorTransitionDuration,
+    frameRate
   });
   const drawFrequencyBars = useCallback(
     (dataArray) => {
@@ -202,7 +204,8 @@ function AudioVisualizerFrequencyBars(props) {
     heightMultiplier,
     minBarHeight,
     colorMode,
-    colorTransitionDuration
+    colorTransitionDuration,
+    frameRate
   });
   const isActiveRef = useLatest(isActive);
   const mergedRef = useComposedRefs(ref, canvasRef);

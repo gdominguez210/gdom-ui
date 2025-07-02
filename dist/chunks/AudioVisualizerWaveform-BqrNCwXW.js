@@ -1,13 +1,11 @@
-'use strict';
-
-const jsxRuntime = require('react/jsx-runtime');
-const React = require('react');
-const getColorByDynamicIntensity = require('./getColorByDynamicIntensity-BLuWXMfD.js');
-const useColorTransition = require('./useColorTransition-yCboFoS8.js');
-const useComposedRefs = require('./useComposedRefs-CewP366o.js');
-const useLatest = require('./useLatest-rOeU5Z3P.js');
-const useAudioAnalyzer = require('./useAudioAnalyzer-ePtfnNIm.js');
-const AudioVisualizerCanvas = require('./AudioVisualizerCanvas-CdrVDti6.js');
+import { jsx } from 'react/jsx-runtime';
+import { useRef, useCallback, useEffect } from 'react';
+import { g as getColorByDynamicIntensity, a as getColorBySpectrum, b as getColorByFrequencyPosition, c as getColorByAudioIntensity } from './getColorByDynamicIntensity-D1nI7ps2.js';
+import { u as useColorTransition } from './useColorTransition-j98910EB.js';
+import { u as useComposedRefs } from './useComposedRefs-DMyoGc1Z.js';
+import { u as useLatest } from './useLatest-CIF2WkZQ.js';
+import { u as useAudioAnalyzer } from './useAudioAnalyzer-UJCiycqx.js';
+import { A as AudioVisualizerCanvas } from './AudioVisualizerCanvas-DMPy4Stc.js';
 
 function normalizeAudioValue(value) {
   const normalized = (value - 128) / 128;
@@ -53,16 +51,16 @@ function applySegmentColor(ctx, segmentStartIndex, dataArray, currentColor, colo
   const amplitudeRatio = calculateAmplitudeRatio(normalizedValue);
   switch (colorMode) {
     case WAVEFORM_COLOR_MODES.AMPLITUDE:
-      ctx.strokeStyle = getColorByDynamicIntensity.getColorByAudioIntensity(currentColor, amplitudeRatio);
+      ctx.strokeStyle = getColorByAudioIntensity(currentColor, amplitudeRatio);
       break;
     case WAVEFORM_COLOR_MODES.FREQUENCY:
-      ctx.strokeStyle = getColorByDynamicIntensity.getColorByFrequencyPosition(currentColor, positionRatio);
+      ctx.strokeStyle = getColorByFrequencyPosition(currentColor, positionRatio);
       break;
     case WAVEFORM_COLOR_MODES.SPECTRUM:
-      ctx.strokeStyle = getColorByDynamicIntensity.getColorBySpectrum(currentColor, positionRatio);
+      ctx.strokeStyle = getColorBySpectrum(currentColor, positionRatio);
       break;
     case WAVEFORM_COLOR_MODES.DYNAMIC:
-      ctx.strokeStyle = getColorByDynamicIntensity.getColorByDynamicIntensity(currentColor, amplitudeRatio);
+      ctx.strokeStyle = getColorByDynamicIntensity(currentColor, amplitudeRatio);
       break;
   }
 }
@@ -101,23 +99,25 @@ function useAudioVisualizerWaveform(options) {
   const {
     lineColor = "#ffffff",
     lineWidth = 2,
+    frameRate,
     colorMode = WAVEFORM_COLOR_MODES.STATIC,
     segmentCount = 40,
     colorTransitionDuration = 1e3
   } = options || {};
-  const { getColorString, getCurrentColor } = useColorTransition.useColorTransition({
+  const { getColorString, getCurrentColor } = useColorTransition({
     targetColor: lineColor,
-    transitionDuration: colorTransitionDuration
+    colorTransitionDuration,
+    frameRate
   });
-  const canvasRef = React.useRef(null);
-  const clearCanvas = React.useCallback(() => {
+  const canvasRef = useRef(null);
+  const clearCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   }, []);
-  const drawWaveform = React.useCallback(
+  const drawWaveform = useCallback(
     (dataArray) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -170,11 +170,12 @@ function AudioVisualizerWaveform(props) {
     colorMode,
     lineColor,
     lineWidth,
-    segmentCount
+    segmentCount,
+    frameRate
   });
-  const isActiveRef = useLatest.useLatest(isActive);
-  const mergedRef = useComposedRefs.useComposedRefs(ref, canvasRef);
-  useAudioAnalyzer.useAudioAnalyzer({
+  const isActiveRef = useLatest(isActive);
+  const mergedRef = useComposedRefs(ref, canvasRef);
+  useAudioAnalyzer({
     audioRef,
     audioContextRef,
     isAudioContextReady,
@@ -188,13 +189,13 @@ function AudioVisualizerWaveform(props) {
     deleteAudioSource,
     frameTransitionSmoothing
   });
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isActiveRef.current) {
       clearCanvas();
     }
   }, [duration, isActiveRef, clearCanvas]);
-  return /* @__PURE__ */ jsxRuntime.jsx(
-    AudioVisualizerCanvas.AudioVisualizerCanvas,
+  return /* @__PURE__ */ jsx(
+    AudioVisualizerCanvas,
     {
       ref: mergedRef,
       frameRate,
@@ -203,5 +204,4 @@ function AudioVisualizerWaveform(props) {
   );
 }
 
-exports.AudioVisualizerWaveform = AudioVisualizerWaveform;
-exports.useAudioVisualizerWaveform = useAudioVisualizerWaveform;
+export { AudioVisualizerWaveform as A, useAudioVisualizerWaveform as u };

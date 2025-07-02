@@ -21,8 +21,8 @@ const jsxRuntime = require('react/jsx-runtime');
 const bundleMjs = require('./bundle-mjs-BqLi5MZM.js');
 const clsx = require('./clsx-BtxeOLZW.js');
 const AudioPlayerContextAudioProvider = require('./AudioPlayerContextAudioProvider-BCCY-JlP.js');
-const AudioPlayerVisualizerWaveform = require('./AudioPlayerVisualizerWaveform-msO7bXAk.js');
-const AudioPlayerVisualizerFrequencyBars = require('./AudioPlayerVisualizerFrequencyBars-RarOkXmZ.js');
+const AudioPlayerVisualizerWaveform = require('./AudioPlayerVisualizerWaveform-BzzvYu2-.js');
+const AudioPlayerVisualizerFrequencyBars = require('./AudioPlayerVisualizerFrequencyBars-CYbt8NdL.js');
 const AudioPlayerProgressWaveform = require('./AudioPlayerProgressWaveform-CEU7JJJt.js');
 
 function AudioPlayer(props) {
