@@ -1,8 +1,6 @@
 import { interpolateOKLCH } from '@/utils/interpolateOKLCH/interpolateOKLCH';
 import { OKLCHToCSS } from '@/utils/OKLCHToCSS';
 import type { GradientStop, OKLCHColor } from 'types/colors';
-import type { MousePosition } from '@/lib/useMousePositionRef/useMousePositionRef';
-import type { ElementDimensions } from '@/lib/useElementDimensions/useElementDimensions';
 
 /**
  * Interpolates between two colors based on a ratio
@@ -56,13 +54,10 @@ export function generateGradientStops(
  * @param progress - Current progress position (0-1)
  * @returns The percentage of the bar covered by progress, or null if not applicable
  */
-export function calculateBarCoverage(
-  barInfo: { position: number; width: number },
-  progress: number,
-): number {
-  const halfWidth = barInfo.width / 2;
-  const barStartPosition = barInfo.position - halfWidth;
-  const barEndPosition = barInfo.position + halfWidth;
+export function calculateBarCoverage(position: number, width: number, progress: number): number {
+  const halfWidth = width / 2;
+  const barStartPosition = position - halfWidth;
+  const barEndPosition = position + halfWidth;
 
   // If bar is fully behind the progress
   if (barEndPosition <= progress) {
@@ -110,16 +105,6 @@ export function shouldApplyHoverEffect(
  * @param dimensions The dimensions of the element
  * @returns Normalized position between 0 and 1, or undefined if data is missing
  */
-export function getNormalizedHoverPosition(
-  mousePosition: MousePosition | undefined,
-  dimensions: ElementDimensions | undefined,
-): number | undefined {
-  if (
-    typeof mousePosition?.offsetX === 'number' &&
-    typeof dimensions?.width === 'number' &&
-    dimensions.width > 0
-  ) {
-    return mousePosition.offsetX / dimensions.width;
-  }
-  return undefined;
+export function getNormalizedHoverPosition(offsetX: number, width: number): number {
+  return offsetX / width;
 }
