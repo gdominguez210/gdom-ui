@@ -77,7 +77,6 @@ export function useAudioResponsiveSamplingEnvelopes(
 
   const calculateSegments = useCallback(
     (displayWidth: number) => {
-      console.log(gapWidthPercent, gapMinWidth, gapMaxWidth);
       const gapWidth = calculateGapWidth(displayWidth, gapWidthPercent, gapMinWidth, gapMaxWidth);
 
       const maxSegmentsInView = calculateMaxSegmentsInView(displayWidth, segmentMinWidth, gapWidth);
