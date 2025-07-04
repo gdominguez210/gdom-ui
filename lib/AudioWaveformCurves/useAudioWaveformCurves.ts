@@ -181,7 +181,7 @@ export function useAudioWaveformCurves(
     if (isReady && canvasRef.current && drawOnCanvasReady) {
       drawWaveform();
     }
-  }, [isReady, canvasRef, drawOnCanvasReady, drawWaveform, currentColor]);
+  }, [isReady, canvasRef, drawOnCanvasReady, drawWaveform, currentColor, calculateSegments]);
 
   return { canvasRef: setCanvasRef, drawWaveform, calculateSegments, handleResize };
 }
