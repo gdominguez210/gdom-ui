@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, type DependencyList } from 'react';
 import { useLatest } from '@/lib/useLatest/useLatest';
-export type useAnimationFrameOptions = {
+export type UseAnimationFrameOptions = {
   /**
    * Whether the animation should be running
    */
@@ -31,13 +31,13 @@ export type useAnimationFrameOptions = {
   autoStart?: boolean;
 };
 
-export type useAnimationFrameReturn = {
+export type UseAnimationFrameReturn = {
   start: () => void;
   stop: () => void;
   restart: () => void;
 };
 
-export function useAnimationFrame(options: useAnimationFrameOptions): useAnimationFrameReturn {
+export function useAnimationFrame(options: UseAnimationFrameOptions): UseAnimationFrameReturn {
   const { isActive, callback, frameRate, dependencies = [], autoStart = true } = options;
 
   const animationRef = useRef<number | null>(null);
