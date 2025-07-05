@@ -7,7 +7,7 @@ export type MousePosition = {
   offsetY: number | null;
 };
 
-export type useMousePositionRefReturn = {
+export type UseMousePositionRefReturn = {
   getPosition: () => MousePosition;
   positionRef: RefObject<MousePosition>;
   handleMouseMove: (e: React.MouseEvent) => void;
@@ -15,7 +15,7 @@ export type useMousePositionRefReturn = {
   getIsHovering: () => boolean;
 };
 
-export function useMousePositionRef(): useMousePositionRefReturn {
+export function useMousePositionRef(): UseMousePositionRefReturn {
   const positionRef = useRef<MousePosition>({
     clientX: null,
     clientY: null,
