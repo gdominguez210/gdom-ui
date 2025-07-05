@@ -1,2 +1,8 @@
-export { CanvasResponsive } from '@/lib/CanvasResponsive/CanvasResponsive';
-export { useCanvasResponsive } from '@/lib/CanvasResponsive/useCanvasResponsive';
+export {
+  CanvasResponsive,
+  type CanvasResponsiveProps,
+} from '@/lib/CanvasResponsive/CanvasResponsive';
+export {
+  useCanvasResponsive,
+  type UseCanvasResponsiveOptions,
+} from '@/lib/CanvasResponsive/useCanvasResponsive';
