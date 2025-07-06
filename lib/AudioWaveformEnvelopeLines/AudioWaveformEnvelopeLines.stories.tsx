@@ -5,10 +5,10 @@ import {
 } from '@/lib/AudioWaveformEnvelopeLines/AudioWaveformEnvelopeLines';
 import { CollapseCategory } from '@storybook-decorators/CollapseCategory/CollapseCategory';
 import { DeferredRender } from '@/.storybook/components/DeferredRender/DeferredRender';
-import { audioData } from '@/data/audio/58730401-c910-4a77-935e-83d71d5d1a52';
+import { track1Peaks } from '@/data/peakOverviewData';
 import { GRADIENT_MODE } from '@/types/colors';
 
-const sampleWaveformData = audioData.data[1]!.peaks;
+const sampleWaveformData = track1Peaks;
 
 function AudioWaveformEnvelopeLinesWrapper(props: AudioWaveformEnvelopeLinesProps) {
   return (
