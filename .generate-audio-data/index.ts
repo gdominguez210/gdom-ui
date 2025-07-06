@@ -218,9 +218,9 @@ async function generateWaveformData() {
 
     // Generate TypeScript content
     const tsContent = `
-import type { AudioZoomData } from '@/types/audio';
+import type { ProcessedAudioEnvelopeData } from '@/types/audio';
 
-export const audioData: AudioZoomData = ${JSON.stringify(audioDataObject, null, 2)};
+export const audioData: ProcessedAudioEnvelopeData = ${JSON.stringify(audioDataObject, null, 2)};
 
 export default audioData;
     `.trim();
