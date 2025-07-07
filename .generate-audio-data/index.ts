@@ -5,7 +5,7 @@ import { hideBin } from 'yargs/helpers';
 
 function getOutputPath(inputPath: string) {
   const audioFileName = basename(inputPath).replace(/\.(wav|mp3|ogg|m4a)$/i, '');
-  return `data/audio/${audioFileName}.ts`;
+  return `data/audio/${audioFileName}.json`;
 }
 
 export function interpolateCubic(
@@ -149,7 +149,7 @@ const argv = yargs(hideBin(process.argv))
   })
   .option('output', {
     alias: 'o',
-    description: 'Output TypeScript file path',
+    description: 'Output JSON file path',
     type: 'string',
   })
   .middleware((argv) => {
@@ -175,7 +175,7 @@ async function generateWaveformData() {
   - Cubic interpolation threshold: ≤${CUBIC_INTERPOLATION_THRESHOLD} SPP
   - Normalize: ${normalize}
   - Input file: ${input}
-  - Output TypeScript: ${output}
+  - Output JSON: ${output}
   `);
 
     // Read and decode the audio file
@@ -216,24 +216,18 @@ async function generateWaveformData() {
       },
     };
 
-    // Generate TypeScript content
-    const tsContent = `
-import type { ProcessedAudioEnvelopeData } from '@/types/audio';
-
-export const audioData: ProcessedAudioEnvelopeData = ${JSON.stringify(audioDataObject, null, 2)};
-
-export default audioData;
-    `.trim();
+    // Generate JSON content
+    const jsonContent = JSON.stringify(audioDataObject, null, 2);
 
     // Ensure output directory exists
     const outputPath = join(process.cwd(), output);
     console.log('Output path:', outputPath);
     mkdirSync(dirname(outputPath), { recursive: true });
 
-    // Save as TypeScript file
-    writeFileSync(outputPath, tsContent);
+    // Save as JSON file
+    writeFileSync(outputPath, jsonContent);
 
-    const fileSize = (Buffer.from(tsContent).length / 1024).toFixed(2);
+    const fileSize = (Buffer.from(jsonContent).length / 1024).toFixed(2);
     const totalSegments = baselineZoomLevels.reduce((sum, level) => sum + level.peaks.length, 0);
 
     console.log(`
