@@ -5,9 +5,10 @@ import {
 } from '@/lib/AudioWaveformEnvelopeCurves/AudioWaveformEnvelopeCurves';
 import { CollapseCategory } from '@storybook-decorators/CollapseCategory/CollapseCategory';
 import { DeferredRender } from '@/.storybook/components/DeferredRender/DeferredRender';
-import { track1Peaks } from '@/data/peakOverviewData';
+import trackOneJson from '@/data/audio/58730401-c910-4a77-935e-83d71d5d1a52/overviewData.json';
+import type { ProcessedAudioEnvelopeData } from '@/types/audio';
 
-const sampleWaveformData = track1Peaks;
+const sampleWaveformData = (trackOneJson as ProcessedAudioEnvelopeData).data[0]!.peaks;
 
 function AudioWaveformEnvelopeCurvesWrapper(props: AudioWaveformEnvelopeCurvesProps) {
   return (
