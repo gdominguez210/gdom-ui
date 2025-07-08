@@ -218,6 +218,27 @@ type EnvelopeSegment = {
       },
       if: { arg: 'color', satisfies: (color: unknown) => typeof color === 'string' },
     },
+    resolutionMode: {
+      control: { type: 'radio' },
+      options: ['auto', 'high', 'low'],
+      description:
+        'Canvas resolution strategy. "auto" uses native display resolution, "high" supersamples fractional DPR for crisp rendering, "low" downsamples to 1x for maximum performance.',
+      table: {
+        type: { summary: "'auto' | 'high' | 'low'" },
+        defaultValue: { summary: 'high' },
+        category: 'Advanced',
+      },
+    },
+    devicePixelRatio: {
+      control: { type: 'range', min: 1, max: 4, step: 0.25 },
+      description:
+        'Manual device pixel ratio override (takes precedence over resolutionMode). Useful for power users who need precise control.',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: 'window.devicePixelRatio' },
+        category: 'Advanced',
+      },
+    },
 
     className: {
       table: {
@@ -238,6 +259,8 @@ export const Basic: StoryObj<typeof AudioWaveformEnvelopeLines> = {
     gapMaxWidth: undefined,
     colorTransitionDuration: 500,
     frameRate: 60,
+    devicePixelRatio: undefined,
+    resolutionMode: 'high',
   },
   parameters: {
     layout: 'fullscreen',
