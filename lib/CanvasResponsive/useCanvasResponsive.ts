@@ -15,21 +15,19 @@ export type UseCanvasResponsiveOptions = {
    * Optional frame rate limit for resize handling (fps)
    */
   frameRate?: number;
-
   /**
-   * Whether to round device pixel ratio to prevent visual banding on fractional DPR displays.
-   * When true, fractional DPR values (e.g., 1.125) are rounded to nearest integer (e.g., 1.0).
-   * This prioritizes visual crispness over maximum resolution.
-   * @default false
+   * Custom device pixel ratio override. When provided, this value is used instead of
+   * the native window.devicePixelRatio.
+   * @default window.devicePixelRatio || 1
    */
-  roundDevicePixelRatio?: boolean;
+  devicePixelRatio?: number;
 };
 
 /**
  * Hook to create a canvas that automatically scales to its size and device pixel ratio
  */
 export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
-  const { frameRate, onResize, roundDevicePixelRatio = false } = options ?? {};
+  const { frameRate, onResize, devicePixelRatio = window.devicePixelRatio || 1 } = options ?? {};
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const resizeCanvasDimensions = useCallback(
@@ -51,15 +49,14 @@ export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
     return rafThrottle((canvas: HTMLCanvasElement) => {
       const width = canvas.clientWidth;
       const height = canvas.clientHeight;
-      const dpr = window.devicePixelRatio || 1;
-      const scale = roundDevicePixelRatio ? Math.round(dpr) : dpr;
+      const scale = devicePixelRatio;
 
       // set canvas dimensions on new animation frame to prevent layout thrashing
       requestAnimationFrame(() => {
         resizeCanvasDimensions(canvas, width, height, scale);
       });
     }, frameRate);
-  }, [frameRate, resizeCanvasDimensions, roundDevicePixelRatio]);
+  }, [frameRate, resizeCanvasDimensions, devicePixelRatio]);
 
   const handleResize = useCallback(
     (entries: ResizeObserverEntry[]) => {
@@ -79,12 +76,11 @@ export function useCanvasResponsive(options?: UseCanvasResponsiveOptions) {
         // For initial setup, it's safe to read/write immediately
         const width = node.clientWidth;
         const height = node.clientHeight;
-        const dpr = window.devicePixelRatio || 1;
-        const scale = roundDevicePixelRatio ? Math.round(dpr) : dpr;
+        const scale = devicePixelRatio ?? (window.devicePixelRatio || 1);
         resizeCanvasDimensions(node, width, height, scale);
       }
     },
-    [resizeCanvasDimensions, roundDevicePixelRatio],
+    [resizeCanvasDimensions, devicePixelRatio],
   );
 
   const mergedRef = useComposedRefs(setResizeObserverRef, setCanvasRef);

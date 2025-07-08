@@ -22,7 +22,7 @@ A responsive canvas component that automatically manages canvas resolution and s
 
 - **High-DPI Support:** Automatically adjusts canvas resolution based on the device pixel ratio, ensuring crisp rendering on retina and high-DPI displays. This prevents the blurry appearance common with canvas elements on high-resolution screens.
 
-- **Custom DPR Support:** Provides a `devicePixelRatio` prop to override the native device pixel ratio. This enables avoiding fractional DPR issues, consistent rendering across devices, higher quality rendering via supersampling, and testing different DPR scenarios.
+- **Adaptive DPR Support:** Provides intelligent device pixel ratio adaptation via `resolutionMode` ('auto', 'high', 'low') to handle fractional DPR displays, with manual override available via `devicePixelRatio` prop for power users.
 
 - **Coordinate System Normalization:** Sets up the canvas context with a transformation matrix that maintains a 1:1 coordinate system, regardless of the device pixel ratio. This means you can use the same coordinates in your drawing code regardless of the display density.
 

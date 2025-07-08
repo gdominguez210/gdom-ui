@@ -14,13 +14,25 @@ export default {
         defaultValue: { summary: 'browser refresh rate' },
       },
     },
-    devicePixelRatio: {
-      control: { type: 'number', min: 0.5, max: 4, step: 0.25 },
+    resolutionMode: {
+      control: { type: 'radio' },
+      options: ['auto', 'high', 'low'],
       description:
-        'Custom device pixel ratio override. When provided, this value is used instead of the native window.devicePixelRatio. Useful for avoiding fractional DPR issues, consistent rendering across devices, higher quality rendering via supersampling, or testing different DPR scenarios.',
+        'Canvas resolution strategy. "auto" uses native display resolution, "high" supersamples fractional DPR for crisp rendering, "low" downsamples to 1x for maximum performance.',
+      table: {
+        type: { summary: "'auto' | 'high' | 'low'" },
+        defaultValue: { summary: 'high' },
+        category: 'Advanced',
+      },
+    },
+    devicePixelRatio: {
+      control: { type: 'range', min: 1, max: 4, step: 0.25 },
+      description:
+        'Manual device pixel ratio override (takes precedence over resolutionMode). Useful for power users who need precise control.',
       table: {
         type: { summary: 'number' },
         defaultValue: { summary: 'window.devicePixelRatio' },
+        category: 'Advanced',
       },
     },
     onResize: {
@@ -28,7 +40,7 @@ export default {
       description:
         'Optional callback function called when the canvas is resized. Useful for redrawing content or updating layout after size changes.',
       table: {
-        type: { summary: '() => void' },
+        type: { summary: '(e) => void' },
         defaultValue: { summary: 'undefined' },
       },
     },
@@ -134,6 +146,10 @@ const DrawingCanvas = (props: React.ComponentProps<typeof CanvasResponsiveCompon
 
 export const WithDrawing: StoryObj<typeof CanvasResponsiveComponent> = {
   render: (args) => <DrawingCanvas {...args} />,
+  args: {
+    devicePixelRatio: undefined,
+    resolutionMode: 'high',
+  },
   parameters: {
     docs: {
       description: {
