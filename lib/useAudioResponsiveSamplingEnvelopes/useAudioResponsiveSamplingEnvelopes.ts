@@ -62,7 +62,7 @@ export function useAudioResponsiveSamplingEnvelopes(
   const {
     data,
     segmentMinWidth = 1,
-    gapMinWidth = 0,
+    gapMinWidth = 1,
     gapMaxWidth,
     gapWidthPercent = 0.1,
     interpolationFn = getInterpolatedEnvelopeCubic,
