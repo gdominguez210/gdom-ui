@@ -5,9 +5,10 @@ import {
 } from '@/lib/AudioWaveformCurves/AudioWaveformCurves';
 import { CollapseCategory } from '@storybook-decorators/CollapseCategory/CollapseCategory';
 import { DeferredRender } from '@/.storybook/components/DeferredRender/DeferredRender';
-import { track1Peaks } from '@/data/peakOverviewData';
+import track1CurveData from '@/data/audio/58730401-c910-4a77-935e-83d71d5d1a52.json';
+import type { ProcessedAudioEnvelopeData } from '@/types/audio';
 
-const sampleWaveformData = track1Peaks;
+const sampleWaveformData = (track1CurveData as ProcessedAudioEnvelopeData).data[0]!.peaks;
 
 function AudioWaveformCurvesWrapper(props: AudioWaveformCurvesProps) {
   return (
@@ -213,6 +214,27 @@ type EnvelopeSegment = {
       },
       if: { arg: 'color', satisfies: (color: unknown) => typeof color === 'string' },
     },
+    resolutionMode: {
+      control: { type: 'radio' },
+      options: ['auto', 'high', 'low'],
+      description:
+        'Canvas resolution strategy. "auto" uses native display resolution, "high" supersamples fractional DPR for crisp rendering, "low" downsamples to 1x for maximum performance.',
+      table: {
+        type: { summary: "'auto' | 'high' | 'low'" },
+        defaultValue: { summary: 'auto' },
+        category: 'Advanced',
+      },
+    },
+    devicePixelRatio: {
+      control: { type: 'range', min: 1, max: 4, step: 0.25 },
+      description:
+        'Manual device pixel ratio override (takes precedence over resolutionMode). Useful for power users who need precise control.',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: 'window.devicePixelRatio' },
+        category: 'Advanced',
+      },
+    },
 
     className: {
       table: {
@@ -232,6 +254,8 @@ export const Basic: StoryObj<typeof AudioWaveformCurves> = {
     lineCap: 'butt',
     colorTransitionDuration: 500,
     frameRate: 60,
+    devicePixelRatio: undefined,
+    resolutionMode: 'auto',
   },
   parameters: {
     layout: 'fullscreen',
