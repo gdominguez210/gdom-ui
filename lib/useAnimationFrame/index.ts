@@ -1,5 +1,5 @@
 export {
   useAnimationFrame,
-  type useAnimationFrameOptions,
-  type useAnimationFrameReturn,
+  type UseAnimationFrameOptions,
+  type UseAnimationFrameReturn,
 } from './useAnimationFrame';
