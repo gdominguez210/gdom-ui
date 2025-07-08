@@ -1,0 +1,178 @@
+import { Meta, Controls, Story, Source, Canvas, Stories, Primary } from '@storybook/addon-docs/blocks';
+import * as AudioWaveformProgressStories from './AudioWaveformProgress.stories';
+import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
+import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
+
+<Meta of={AudioWaveformProgressStories} />
+
+# AudioWaveformProgress
+
+<ViewSource href="AudioWaveformProgress" />
+
+An interactive audio waveform progress visualization component that displays envelope segments with playback progress and allows seeking. It provides a visual representation of the audio waveform using envelope data with customizable appearance and color options.
+
+<DocumentationNav />
+
+<Canvas of={AudioWaveformProgressStories.Basic} />
+
+## API Reference
+<Controls />
+
+## Features
+
+- **Interactive Seeking**: Click anywhere on the waveform to seek to that position in the audio
+- **Visual Progress**: Shows played and unplayed segments with distinct colors
+- **Envelope-Based Visualization**: Uses pre-processed envelope data for efficient rendering
+- **Customizable Appearance**: Control segment width, gaps, and height to match your design
+- **Multiple Color Modes**: Choose from static or gradient coloring with hover effects
+- **Responsive Design**: Automatically scales to fit its container with responsive sampling
+- **Keyboard Navigation**: Support for keyboard-based seeking with acceleration
+- **AudioPlayer Integration**: Seamlessly works with the AudioPlayer component system
+
+## Examples
+
+<UsageNote>
+  This component requires envelope data to visualize. In these examples, we've used the
+  AudioPlayer component system to handle audio playback. Envelope data consists of pre-processed
+  audio segments with min/max amplitude values, providing efficient visualization of audio 
+  waveforms. Click the play button to see the waveform progress in action.
+</UsageNote>
+
+<Stories
+  title=""
+  includePrimary={false}
+/>
+
+## Usage
+
+The AudioWaveformProgress component can be used in two ways: 
+
+- [**With the AudioPlayer Component System**](#with-audioplayer-component-system-recommended)
+- [**Standalone**](#standalone-usage)
+
+### With AudioPlayer Component System (Recommended)
+
+The recommended way to use this component is through the AudioPlayer component system, which automatically handles all the required audio integration props for you:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
+
+const tracks = [
+  {
+    id: '1',
+    title: 'Example Track',
+    author: 'Artist Name',
+    src: '/path/to/audio.mp3',
+    thumbnail: '/path/to/cover.jpg',
+  },
+];
+
+// Pre-processed envelope data for the track
+const envelopeData = [
+  { min: -0.5, max: 0.8 },
+  { min: -0.1, max: 0.2 },
+  { min: -0.9, max: 0.4 },
+  // ... more envelope segments
+];
+
+const IntegratedAudioWaveformProgress = () => {
+  return (
+    <AudioPlayer.Provider tracks={tracks}>
+      <AudioPlayer.Root className="flex flex-col gap-4">
+        {/* Create a wrapper component that provides the envelope data */}
+        <AudioWaveformProgressWithData
+          data={envelopeData}
+          colorMode="static"
+          progressColor="#0066cc"
+          color="#cccccc"
+          className="h-[150px] w-full"
+        />
+        <AudioPlayer.ControlAudio />
+        {/* Other AudioPlayer components like controls, info, etc. would go here */}
+      </AudioPlayer.Root>
+    </AudioPlayer.Provider>
+  );
+};`} />
+
+#### How the AudioPlayer Integration Works
+
+When using with the AudioPlayer system, you need to create a wrapper component that provides the envelope data and connects to the AudioPlayer context:
+
+| Required Prop | Provided By | Description |
+|---------------|-------------|-------------|
+| `audioRef` | AudioPlayer Context | Reference to the audio element managed by the AudioPlayer |
+| `isActive` | AudioPlayer Context | Automatically managed based on playback state |
+| `duration` | AudioPlayer Context | Total duration of the current track |
+| `onProgressChange` | AudioPlayer Context | Function to handle seeking operations |
+| `onPreviewTimeChange` | AudioPlayer Context | Function to handle hover preview time updates |
+
+The AudioPlayer integration provides several key benefits:
+- **Zero Configuration**: No need to manually set up audio integration code
+- **Automatic State Management**: Waveform automatically syncs with playback
+- **Proper Event Handling**: All seek and preview events are properly managed
+
+### Standalone Usage
+
+When used standalone, you need to manually provide all the required audio integration props. This approach gives you full control but requires more setup code:
+
+<Source
+  language="tsx"
+  dark
+  code={`
+import { useRef, useState } from 'react';
+import { AudioWaveformProgress } from '@gdominguez210/gdom-ui/AudioWaveformProgress';
+
+const StandaloneAudioWaveformProgress = () => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isActive, setIsActive] = useState(false);
+  const [duration, setDuration] = useState(0);
+
+  // Pre-processed envelope data
+  const envelopeData = [
+    { min: -0.5, max: 0.8 },
+    { min: -0.1, max: 0.2 },
+    { min: -0.9, max: 0.4 },
+    { min: -0.3, max: 0.6 },
+    // ... more envelope segments
+  ];
+
+  const handleProgressChange = (time: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+    }
+  };
+
+  const handlePreviewTimeChange = (time: number | null) => {
+    // Handle preview time changes (e.g., show tooltip with time)
+    console.log('Preview time:', time);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <AudioWaveformProgress
+        data={envelopeData}
+        audioRef={audioRef}
+        isActive={isActive}
+        duration={duration}
+        onProgressChange={handleProgressChange}
+        onPreviewTimeChange={handlePreviewTimeChange}
+        progressColor="#0066cc"
+        color="#cccccc"
+        className="h-[150px] w-full"
+      />
+      <audio
+        ref={audioRef}
+        src="/path/to/audio.mp3"
+        controls
+        onPlay={() => setIsActive(true)}
+        onPause={() => setIsActive(false)}
+        onEnded={() => setIsActive(false)}
+        onDurationChange={(e) => setDuration(e.currentTarget.duration)}
+      />
+    </div>
+  );
+};`} />
