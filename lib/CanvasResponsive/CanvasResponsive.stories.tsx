@@ -14,6 +14,24 @@ export default {
         defaultValue: { summary: 'browser refresh rate' },
       },
     },
+    devicePixelRatio: {
+      control: { type: 'number', min: 0.5, max: 4, step: 0.25 },
+      description:
+        'Custom device pixel ratio override. When provided, this value is used instead of the native window.devicePixelRatio. Useful for avoiding fractional DPR issues, consistent rendering across devices, higher quality rendering via supersampling, or testing different DPR scenarios.',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: 'window.devicePixelRatio' },
+      },
+    },
+    onResize: {
+      control: false,
+      description:
+        'Optional callback function called when the canvas is resized. Useful for redrawing content or updating layout after size changes.',
+      table: {
+        type: { summary: '() => void' },
+        defaultValue: { summary: 'undefined' },
+      },
+    },
   },
   parameters: {
     docs: {

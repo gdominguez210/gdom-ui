@@ -2,6 +2,7 @@ import { Meta, Controls, Story, Source, Canvas, Stories } from '@storybook/addon
 import * as CanvasResponsiveStories from './CanvasResponsive.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
+import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
 
 <Meta of={CanvasResponsiveStories} />
 
@@ -21,31 +22,34 @@ A responsive canvas component that automatically manages canvas resolution and s
 
 - **High-DPI Support:** Automatically adjusts canvas resolution based on the device pixel ratio, ensuring crisp rendering on retina and high-DPI displays. This prevents the blurry appearance common with canvas elements on high-resolution screens.
 
+- **Custom DPR Support:** Provides a `devicePixelRatio` prop to override the native device pixel ratio. This enables avoiding fractional DPR issues, consistent rendering across devices, higher quality rendering via supersampling, and testing different DPR scenarios.
+
 - **Coordinate System Normalization:** Sets up the canvas context with a transformation matrix that maintains a 1:1 coordinate system, regardless of the device pixel ratio. This means you can use the same coordinates in your drawing code regardless of the display density.
 
 - **Responsive Resizing:** Uses ResizeObserver to detect when the canvas's container size changes and automatically adjusts the canvas dimensions accordingly. This ensures the canvas always fills its container properly and maintains the correct aspect ratio.
 
-- **Performance Optimization:** Throttles resize operations to prevent performance issues during continuous resize events, with an optional framerate limit.
+- **Performance Optimization:** Throttles resize operations to prevent performance issues during continuous resize events, with an optional framerate limit. Provides an `onResize` callback for efficient content redrawing after size changes.
 
 
 ## Examples
 
-<section className="p-3 rounded-md border border-slate-400 bg-slate-100 text-slate-400 mb-5">
-
-<div className="font-bold text-slate-700">Usage Note</div>
-<p>
+<UsageNote>
   CanvasResponsive is a utility component that manages canvas scaling and resolution, but doesn't
   render any content by itself. You'll need to use the Canvas API to draw on it. The examples below
   demonstrate how the component handles different device pixel ratios and container sizes.
-</p>
-
-</section>
+  
+  <strong>Note:</strong> On displays with fractional device pixel ratios (e.g., 1.125), you may experience 
+  visual banding artifacts. Use the <code>devicePixelRatio</code> prop to override with an integer value 
+  (e.g., 2.0 for supersampling) to eliminate these issues.
+</UsageNote>
 
 {/* Render stories with increased height to ensure text is fully visible */}
 
 <Stories title="" />
 
-## Component Architecture
+
+
+## Usage
 
 The CanvasResponsive component consists of two main parts:
 
@@ -66,22 +70,22 @@ import { CanvasResponsive } from '@gdominguez210/gdom-ui/CanvasResponsive';
 import { useRef, useEffect } from 'react';
 
 const MyCanvasComponent = () => {
-const canvasRef = useRef<HTMLCanvasElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
-useEffect(() => {
-const canvas = canvasRef.current;
-if (!canvas) return;
+    useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
 
-    // Your drawing code here
-    ctx.fillStyle = 'blue';
-    ctx.fillRect(10, 10, 100, 100);
+        // Your drawing code here
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(10, 10, 100, 100);
 
-}, []);
+    }, []);
 
-return <CanvasResponsive ref={canvasRef} className="w-full h-64" />;
+    return <CanvasResponsive ref={canvasRef} className="w-full h-64" />;
 };
 `} />
 
@@ -94,48 +98,32 @@ For more custom implementations, you can use the useCanvasResponsive hook direct
   dark
   code={`
 import { useCanvasResponsive } from '@gdominguez210/gdom-ui/CanvasResponsive';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 
 const MyCustomCanvas = () => {
-const canvasRef = useCanvasResponsive({ frameRate: 30 });
 
-useEffect(() => {
-const canvas = canvasRef.current;
-if (!canvas) return;
+    const drawContent = useCallback(() => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    // Your drawing code here
-    ctx.fillStyle = 'red';
-    ctx.fillRect(10, 10, 100, 100);
+      // Your drawing code here
+      ctx.fillStyle = 'red';
+      ctx.fillRect(10, 10, 100, 100);
+    }, []);
 
-}, []);
+    const canvasRef = useCanvasResponsive({ 
+      frameRate: 30,
+      devicePixelRatio: 2, // Prevents visual banding and provides supersampling
+      onResize: drawContent // Redraw when canvas size changes
+    });
 
-return <canvas ref={canvasRef} className="w-full h-64 border border-gray-300" />;
+    useEffect(() => {
+      drawContent();
+    }, [drawContent]);
+
+    return <canvas ref={canvasRef} className="w-full h-64 border border-gray-300" />;
 };
 `} />
-
-## Technical Details
-
-### Resolution Scaling
-
-The component handles resolution scaling by:
-
-- Reading the device pixel ratio (window.devicePixelRatio)
-- Setting the canvas width and height to clientWidth/Height \* devicePixelRatio
-- Applying a scaling transformation to the context
-
-This process ensures that:
-
-- The canvas has the correct number of pixels for the display density
-- The coordinate system remains normalized (1px in your code = 1px visual size)
-- Drawing operations appear crisp on high-DPI displays
-
-### ResizeObserver Integration
-
-The component uses ResizeObserver to detect size changes, which is more efficient than window resize events and works for all container resizing scenarios, not just window resizing.
-
-### Performance Throttling
-
-The component uses a requestAnimationFrame-based throttling mechanism to optimize resize handling:
