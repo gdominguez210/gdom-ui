@@ -1,1 +1,1 @@
-export { u as useColorTransition } from '../chunks/useColorTransition-j98910EB.js';
+export { u as useColorTransition } from '../chunks/useColorTransition-CWfqaoCT.js';

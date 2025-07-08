@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const AudioWaveformEnvelopeRectangles = require('../chunks/AudioWaveformEnvelopeRectangles-BokUi3wm.js');
+const AudioWaveformEnvelopeRectangles = require('../chunks/AudioWaveformEnvelopeRectangles-BlaSadHY.js');
 
 
 

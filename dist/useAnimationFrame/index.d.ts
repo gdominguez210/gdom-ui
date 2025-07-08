@@ -1,1 +1,1 @@
-export { useAnimationFrame, type useAnimationFrameOptions, type useAnimationFrameReturn, } from './useAnimationFrame';
+export { useAnimationFrame, type UseAnimationFrameOptions, type UseAnimationFrameReturn, } from './useAnimationFrame';

@@ -1,2 +1,2 @@
-export { CanvasResponsive } from './CanvasResponsive';
-export { useCanvasResponsive } from './useCanvasResponsive';
+export { CanvasResponsive, type CanvasResponsiveProps, } from './CanvasResponsive';
+export { useCanvasResponsive, type UseCanvasResponsiveOptions, } from './useCanvasResponsive';

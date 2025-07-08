@@ -1,4 +1,4 @@
-import { ComponentPropsWithRef } from 'react';
 import { UseAudioWaveformCurvesOptions } from './useAudioWaveformCurves';
-export type AudioWaveformCurvesProps = UseAudioWaveformCurvesOptions & Omit<ComponentPropsWithRef<'canvas'>, 'color'>;
+import { CanvasResponsiveProps } from '../CanvasResponsive/CanvasResponsive';
+export type AudioWaveformCurvesProps = UseAudioWaveformCurvesOptions & Omit<CanvasResponsiveProps, 'color'>;
 export declare function AudioWaveformCurves(props: AudioWaveformCurvesProps): import("react/jsx-runtime").JSX.Element;

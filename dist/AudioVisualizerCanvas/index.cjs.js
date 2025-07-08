@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const AudioVisualizerCanvas = require('../chunks/AudioVisualizerCanvas-CdrVDti6.js');
+const AudioVisualizerCanvas = require('../chunks/AudioVisualizerCanvas-pZ-TFTVa.js');
 
 
 

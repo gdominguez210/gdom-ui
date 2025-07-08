@@ -1,5 +1,5 @@
 import { DependencyList } from 'react';
-export type useAnimationFrameOptions = {
+export type UseAnimationFrameOptions = {
     /**
      * Whether the animation should be running
      */
@@ -25,9 +25,9 @@ export type useAnimationFrameOptions = {
      */
     autoStart?: boolean;
 };
-export type useAnimationFrameReturn = {
+export type UseAnimationFrameReturn = {
     start: () => void;
     stop: () => void;
     restart: () => void;
 };
-export declare function useAnimationFrame(options: useAnimationFrameOptions): useAnimationFrameReturn;
+export declare function useAnimationFrame(options: UseAnimationFrameOptions): UseAnimationFrameReturn;

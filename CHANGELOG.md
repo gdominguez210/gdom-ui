@@ -1,3 +1,29 @@
+# [1.43.0](https://github.com/gdominguez210/gdom-ui/compare/v1.42.1...v1.43.0) (2025-07-08)
+
+
+### Bug Fixes
+
+* **lib/AudioWaveformCurves/useAudioWaveformCurves:** add calculateSegments to drawWaveform useEffect dependency array to redraw waveform if segment data has changed ([aa15b28](https://github.com/gdominguez210/gdom-ui/commit/aa15b28a5f7e0a9aac05c0bc897602bec3741530))
+* **lib/AudioWaveformEnvelopeCurves//useAudioWaveformEnvelopeCurves:** add calculateSegments to drawWaveform useEffect dependency array to redraw waveform if segment data has changed ([1f8186f](https://github.com/gdominguez210/gdom-ui/commit/1f8186ff82c09cec80e937c6a007a37cfeddd156))
+* **lib/AudioWaveformEnvelopeLines/useAudioWaveformEnvelopeLines:** add calculateSegments to drawWaveform useEffect dependency array to redraw waveform if segment data has changed ([a71a2a3](https://github.com/gdominguez210/gdom-ui/commit/a71a2a367da931a21c4cb9dd88f7b3f8debd5825))
+* **lib/AudioWaveformEnvelopeRectangles/useAudioWaveformEnvelopeRectangles:** add calculateSegments to drawWaveform useEffect dependency array to redraw waveform if segment data has changed ([4bb0f78](https://github.com/gdominguez210/gdom-ui/commit/4bb0f78688a50314cda4d7feb1bb7769382d62ac))
+* **lib/useColorTransition:** memoize animation dependency array ([90831a1](https://github.com/gdominguez210/gdom-ui/commit/90831a135b5982b799cf997c79fc5d4ee4dd51ed))
+
+
+### Features
+
+* **lib/AudioVisualizerFrequencyBars:** add support for resolutionMode and devicePixelRatio overrides ([f2b5d18](https://github.com/gdominguez210/gdom-ui/commit/f2b5d187b5739e017e675803d21259c8e7312f80))
+* **lib/AudioVisualizerWaveform:** add support for resolutionMode and devicePixelRatio overrides ([dae9c43](https://github.com/gdominguez210/gdom-ui/commit/dae9c43b6d3be6e5c2b1ace85f57558cc8e4d8b5))
+* **lib/AudioWaveformCurves:** add support for resolutionMode and devicePixelRatio overrides ([0b5c0ff](https://github.com/gdominguez210/gdom-ui/commit/0b5c0ff00bf3acdb2beb9aa3fcda3c992f69e934))
+* **lib/AudioWaveformEnvelopeCurves:** add support for resolutionMode and devicePixelRatio overrides ([90a463c](https://github.com/gdominguez210/gdom-ui/commit/90a463c7c14bb76d32488791d13757dfc3124d0b))
+* **lib/AudioWaveformEnvelopeLines:** add support for resolutionMode and devicePixelRatio overrides ([34e33d0](https://github.com/gdominguez210/gdom-ui/commit/34e33d0bb72f74c8dd18376424cb57c7858a0ba1))
+* **lib/AudioWaveformEnvelopeRectangles:** add support for resolutionMode and devicePixelRatio overrides ([0b28c77](https://github.com/gdominguez210/gdom-ui/commit/0b28c77ec322937e0573f7b47bc8ae79f0726e9f))
+* **lib/AudioWaveformProgress:** add AudioWaveformProgress component ([fe13f4d](https://github.com/gdominguez210/gdom-ui/commit/fe13f4df76416ca9ab30ebbcf6e6a8fe3a0855a4))
+* **lib/CanvasResponsive:** add resolutionMode to allow control of supersample/downsampling based on devicePixelRatio ([5eb66fc](https://github.com/gdominguez210/gdom-ui/commit/5eb66fc1e9f492b382c6ea179be4340eaa682448))
+* **lib/CanvasResponsive:** add support for custom devicePixelRatio to allow for consistent rendering across displays ([e8037ff](https://github.com/gdominguez210/gdom-ui/commit/e8037ffa5baf173dfbecce514b07c2a6e4b569c9))
+* **lib/CanvasResponsive:** add support for rounding device pixel ratio to allow opt-in behavior for disabling visual banding at the cost of resolution ([b0f4959](https://github.com/gdominguez210/gdom-ui/commit/b0f49594e4b2ab0f15d20a69f72ea1c318d1a367))
+* **lib/useDevicePixelRatioAdaptive:** add useDevicePixelRatioAdaptive ([c0cf8fc](https://github.com/gdominguez210/gdom-ui/commit/c0cf8fc94ba061eaa31f268a03c2f7234f3bb320))
+
 ## [1.42.1](https://github.com/gdominguez210/gdom-ui/compare/v1.42.0...v1.42.1) (2025-07-02)
 
 

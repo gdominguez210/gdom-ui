@@ -5,11 +5,11 @@ export type MousePosition = {
     offsetX: number | null;
     offsetY: number | null;
 };
-export type useMousePositionRefReturn = {
+export type UseMousePositionRefReturn = {
     getPosition: () => MousePosition;
     positionRef: RefObject<MousePosition>;
     handleMouseMove: (e: React.MouseEvent) => void;
     handleMouseLeave: (e: React.MouseEvent) => void;
     getIsHovering: () => boolean;
 };
-export declare function useMousePositionRef(): useMousePositionRefReturn;
+export declare function useMousePositionRef(): UseMousePositionRefReturn;
