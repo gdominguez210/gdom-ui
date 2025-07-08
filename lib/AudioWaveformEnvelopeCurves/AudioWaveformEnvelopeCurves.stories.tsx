@@ -50,6 +50,16 @@ export default {
     },
   },
   decorators: [CollapseCategory('Advanced')],
+  args: {
+    color: '#9f9fa9',
+    heightScale: 1,
+    segmentMinWidth: 1,
+    smoothingFactor: 0.5,
+    colorTransitionDuration: 500,
+    frameRate: 60,
+    devicePixelRatio: undefined,
+    resolutionMode: 'high',
+  },
   argTypes: {
     // Appearance
     heightScale: {
@@ -219,16 +229,6 @@ type EnvelopeSegment = {
 } as Meta<typeof AudioWaveformEnvelopeCurves>;
 
 export const Basic: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
-  args: {
-    color: '#9f9fa9',
-    heightScale: 1,
-    segmentMinWidth: 1,
-    smoothingFactor: 0.5,
-    colorTransitionDuration: 500,
-    frameRate: 60,
-    devicePixelRatio: undefined,
-    resolutionMode: 'auto',
-  },
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -243,9 +243,7 @@ export const Basic: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
 
 export const AngularSmoothing: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
   args: {
-    color: '#2b7fff',
     smoothingFactor: 0.1,
-    segmentMinWidth: 1,
   },
   parameters: {
     layout: 'fullscreen',
@@ -261,9 +259,7 @@ export const AngularSmoothing: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
 
 export const VerySmooth: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
   args: {
-    color: '#ff6b6b',
     smoothingFactor: 0.9,
-    segmentMinWidth: 1,
   },
   parameters: {
     layout: 'fullscreen',
@@ -279,9 +275,7 @@ export const VerySmooth: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
 
 export const MediumSmoothing: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
   args: {
-    color: '#4ecdc4',
     smoothingFactor: 0.5,
-    segmentMinWidth: 2,
   },
   parameters: {
     layout: 'fullscreen',
@@ -297,9 +291,7 @@ export const MediumSmoothing: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
 
 export const ReducedHeightScale: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
   args: {
-    color: '#9b59b6',
     heightScale: 0.6,
-    smoothingFactor: 0.7,
   },
   parameters: {
     layout: 'fullscreen',
@@ -315,9 +307,7 @@ export const ReducedHeightScale: StoryObj<typeof AudioWaveformEnvelopeCurves> = 
 
 export const LargerSegmentWidth: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
   args: {
-    color: '#e67e22',
     segmentMinWidth: 4,
-    smoothingFactor: 0.6,
   },
   parameters: {
     layout: 'fullscreen',
@@ -340,7 +330,6 @@ export const SimpleGradient: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
         { offset: 1, color: '#764ba2' },
       ],
     }),
-    smoothingFactor: 0.6,
   },
   parameters: {
     layout: 'fullscreen',
@@ -357,7 +346,6 @@ export const SimpleGradient: StoryObj<typeof AudioWaveformEnvelopeCurves> = {
       { offset: 1, color: '#764ba2' },
     ],
   })}
-  smoothingFactor={0.6}
 />`,
       },
     },
