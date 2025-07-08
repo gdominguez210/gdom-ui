@@ -1,13 +1,16 @@
-import { type ComponentPropsWithRef } from 'react';
 import {
   useAudioWaveformEnvelopeRectangles,
   type UseAudioWaveformEnvelopeRectanglesOptions,
 } from './useAudioWaveformEnvelopeRectangles';
-import { CanvasResponsive } from '@/lib/CanvasResponsive/CanvasResponsive';
+import {
+  CanvasResponsive,
+  type CanvasResponsiveProps,
+} from '@/lib/CanvasResponsive/CanvasResponsive';
 import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
+import { useCallback } from 'react';
 
 export type AudioWaveformEnvelopeRectanglesProps = UseAudioWaveformEnvelopeRectanglesOptions &
-  Omit<ComponentPropsWithRef<'canvas'>, 'color'>;
+  Omit<CanvasResponsiveProps, 'color'>;
 
 export function AudioWaveformEnvelopeRectangles(props: AudioWaveformEnvelopeRectanglesProps) {
   const {
@@ -23,10 +26,12 @@ export function AudioWaveformEnvelopeRectangles(props: AudioWaveformEnvelopeRect
     gapMaxWidth,
     interpolationFn,
     segmentMinWidth,
+    resolutionMode = 'high',
+    onResize,
     ...restProps
   } = props;
 
-  const { canvasRef, handleResize } = useAudioWaveformEnvelopeRectangles({
+  const { canvasRef, handleResize: handleResizeInternal } = useAudioWaveformEnvelopeRectangles({
     color,
     colorTransitionDuration,
     frameRate,
@@ -42,11 +47,17 @@ export function AudioWaveformEnvelopeRectangles(props: AudioWaveformEnvelopeRect
 
   const mergedRef = useComposedRefs(ref, canvasRef);
 
+  const handleResize = useCallback(() => {
+    handleResizeInternal();
+    onResize?.();
+  }, [handleResizeInternal, onResize]);
+
   return (
     <CanvasResponsive
       {...restProps}
       ref={mergedRef}
       onResize={handleResize}
+      resolutionMode={resolutionMode}
     />
   );
 }
