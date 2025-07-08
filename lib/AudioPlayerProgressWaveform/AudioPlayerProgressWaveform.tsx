@@ -2,18 +2,18 @@ import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackP
 import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
 import { useAudioPlayerContextTime } from '@/lib/AudioPlayerContextTimeProvider';
 import {
-  AudioProgressWaveform,
-  type AudioProgressWaveformProps,
-} from '@/lib/AudioProgressWaveform/AudioProgressWaveform';
+  AudioWaveformProgress,
+  type AudioWaveformProgressProps,
+} from '@/lib/AudioWaveformProgress/AudioWaveformProgress';
 import { type MouseEventHandler, type RefObject, useCallback } from 'react';
 
 export type AudioPlayerProgressWaveformProps = Omit<
-  AudioProgressWaveformProps,
+  AudioWaveformProgressProps,
   'audioRef' | 'duration' | 'onProgressChange' | 'isActive'
 >;
 
 export function AudioPlayerProgressWaveform(props: AudioPlayerProgressWaveformProps) {
-  const { amplitudeData, onClick, ...restProps } = props;
+  const { data, onClick, ...restProps } = props;
 
   const { audioRef } = useAudioPlayerContextRefs();
   const { duration, seek, setPreviewTime } = useAudioPlayerContextTime();
@@ -30,13 +30,13 @@ export function AudioPlayerProgressWaveform(props: AudioPlayerProgressWaveformPr
   );
 
   return (
-    <AudioProgressWaveform
+    <AudioWaveformProgress
       isActive={isPlaying}
       audioRef={audioRef as RefObject<HTMLAudioElement>}
       duration={duration}
       onProgressChange={seek}
       onPreviewTimeChange={setPreviewTime}
-      amplitudeData={amplitudeData}
+      data={data}
       onClick={handleClick}
       {...restProps}
     />
