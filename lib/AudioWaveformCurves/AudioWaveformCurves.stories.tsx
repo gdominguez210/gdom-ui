@@ -50,6 +50,18 @@ export default {
     },
   },
   decorators: [CollapseCategory('Advanced')],
+  args: {
+    color: '#9f9fa9',
+    heightScale: 1,
+    segmentMinWidth: 1,
+    lineWidth: 1,
+    smoothingFactor: 0.5,
+    lineCap: 'butt',
+    colorTransitionDuration: 500,
+    frameRate: 60,
+    devicePixelRatio: undefined,
+    resolutionMode: 'high',
+  },
   argTypes: {
     // Appearance
     heightScale: {
@@ -245,18 +257,6 @@ type EnvelopeSegment = {
 } as Meta<typeof AudioWaveformCurves>;
 
 export const Basic: StoryObj<typeof AudioWaveformCurves> = {
-  args: {
-    color: '#9f9fa9',
-    heightScale: 1,
-    segmentMinWidth: 1,
-    lineWidth: 1,
-    smoothingFactor: 0.5,
-    lineCap: 'butt',
-    colorTransitionDuration: 500,
-    frameRate: 60,
-    devicePixelRatio: undefined,
-    resolutionMode: 'auto',
-  },
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -271,7 +271,6 @@ export const Basic: StoryObj<typeof AudioWaveformCurves> = {
 export const CustomColor: StoryObj<typeof AudioWaveformCurves> = {
   args: {
     color: '#03C988',
-    lineWidth: 2.5,
   },
   parameters: {
     layout: 'fullscreen',
@@ -286,9 +285,7 @@ export const CustomColor: StoryObj<typeof AudioWaveformCurves> = {
 
 export const ThickLine: StoryObj<typeof AudioWaveformCurves> = {
   args: {
-    color: '#2b7fff',
     lineWidth: 4,
-    smoothingFactor: 0.3,
   },
   parameters: {
     layout: 'fullscreen',
@@ -303,9 +300,7 @@ export const ThickLine: StoryObj<typeof AudioWaveformCurves> = {
 
 export const AngularNoSmoothing: StoryObj<typeof AudioWaveformCurves> = {
   args: {
-    color: '#ff6b6b',
     smoothingFactor: 0,
-    lineWidth: 2,
   },
   parameters: {
     layout: 'fullscreen',
@@ -321,9 +316,7 @@ export const AngularNoSmoothing: StoryObj<typeof AudioWaveformCurves> = {
 
 export const ModerateSmoothing: StoryObj<typeof AudioWaveformCurves> = {
   args: {
-    color: '#ff9500',
     smoothingFactor: 0.3,
-    lineWidth: 2,
   },
   parameters: {
     layout: 'fullscreen',
@@ -339,9 +332,7 @@ export const ModerateSmoothing: StoryObj<typeof AudioWaveformCurves> = {
 
 export const HighSmoothing: StoryObj<typeof AudioWaveformCurves> = {
   args: {
-    color: '#8b5cf6',
     smoothingFactor: 0.8,
-    lineWidth: 2,
   },
   parameters: {
     layout: 'fullscreen',
@@ -357,9 +348,7 @@ export const HighSmoothing: StoryObj<typeof AudioWaveformCurves> = {
 
 export const MaximumSmoothing: StoryObj<typeof AudioWaveformCurves> = {
   args: {
-    color: '#ec4899',
     smoothingFactor: 1,
-    lineWidth: 3,
   },
   parameters: {
     layout: 'fullscreen',
@@ -383,8 +372,6 @@ export const GradientStroke: StoryObj<typeof AudioWaveformCurves> = {
         { offset: 1, color: '#45b7d1' },
       ],
     }),
-    lineWidth: 3,
-    smoothingFactor: 0.6,
   },
   parameters: {
     layout: 'fullscreen',
@@ -413,10 +400,7 @@ export const GradientStroke: StoryObj<typeof AudioWaveformCurves> = {
 
 export const ThinDetailedLine: StoryObj<typeof AudioWaveformCurves> = {
   args: {
-    color: '#374151',
-    lineWidth: 1,
     smoothingFactor: 0.2,
-    segmentMinWidth: 1,
   },
   parameters: {
     layout: 'fullscreen',
@@ -432,9 +416,7 @@ export const ThinDetailedLine: StoryObj<typeof AudioWaveformCurves> = {
 
 export const WideSegments: StoryObj<typeof AudioWaveformCurves> = {
   args: {
-    color: '#059669',
     segmentMinWidth: 4,
-    lineWidth: 3,
     smoothingFactor: 0.4,
   },
   parameters: {
