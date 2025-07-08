@@ -51,6 +51,18 @@ export default {
     },
   },
   decorators: [CollapseCategory('Advanced')],
+  args: {
+    color: '#9f9fa9',
+    heightScale: 1,
+    gapWidthPercent: 0,
+    gapMinWidth: 1,
+    gapMaxWidth: undefined,
+    segmentMinWidth: 1,
+    colorTransitionDuration: 500,
+    frameRate: 60,
+    devicePixelRatio: undefined,
+    resolutionMode: 'high',
+  },
   argTypes: {
     // Appearance
     heightScale: {
@@ -85,7 +97,7 @@ export default {
       description: 'Minimum gap width in pixels',
       table: {
         type: { summary: 'number' },
-        defaultValue: { summary: '0' },
+        defaultValue: { summary: '1' },
         category: 'Appearance',
       },
     },
@@ -239,18 +251,6 @@ type EnvelopeSegment = {
 } as Meta<typeof AudioWaveformEnvelopeRectangles>;
 
 export const Basic: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
-  args: {
-    color: '#9f9fa9',
-    heightScale: 1,
-    gapWidthPercent: 0,
-    gapMinWidth: 0,
-    gapMaxWidth: undefined,
-    segmentMinWidth: 1,
-    colorTransitionDuration: 500,
-    frameRate: 60,
-    devicePixelRatio: undefined,
-    resolutionMode: 'high',
-  },
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -280,9 +280,7 @@ export const CustomColors: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const SmallGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    color: '#2b7fff',
     gapWidthPercent: 0.1,
-    gapMinWidth: 1,
   },
   parameters: {
     layout: 'fullscreen',
@@ -297,9 +295,7 @@ export const SmallGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const MediumGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    color: '#2b7fff',
     gapWidthPercent: 0.35,
-    gapMinWidth: 1,
   },
   parameters: {
     layout: 'fullscreen',
@@ -314,9 +310,7 @@ export const MediumGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
 
 export const LargeGaps: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    color: '#2b7fff',
     gapWidthPercent: 0.75,
-    gapMinWidth: 1,
   },
   parameters: {
     layout: 'fullscreen',
@@ -405,7 +399,6 @@ export const LocalGradientIndividualBars: StoryObj<typeof AudioWaveformEnvelopeR
       ],
     }),
     gapWidthPercent: 0.2,
-    gapMinWidth: 1,
   },
   parameters: {
     layout: 'fullscreen',
@@ -425,7 +418,6 @@ export const LocalGradientIndividualBars: StoryObj<typeof AudioWaveformEnvelopeR
       ],
   })}
   gapWidthPercent={0.2}
-  gapMinWidth={1}
 />`,
       },
     },
@@ -435,9 +427,7 @@ export const LocalGradientIndividualBars: StoryObj<typeof AudioWaveformEnvelopeR
 
 export const WithSegmentMinWidth3Pixels: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    color: '#2b7fff',
     segmentMinWidth: 3,
-    gapWidthPercent: 0.1,
   },
   parameters: {
     layout: 'fullscreen',
@@ -453,9 +443,7 @@ export const WithSegmentMinWidth3Pixels: StoryObj<typeof AudioWaveformEnvelopeRe
 
 export const WithSegmentMinWidth8Pixels: StoryObj<typeof AudioWaveformEnvelopeRectangles> = {
   args: {
-    color: '#2b7fff',
     segmentMinWidth: 8,
-    gapWidthPercent: 0.15,
   },
   parameters: {
     layout: 'fullscreen',
