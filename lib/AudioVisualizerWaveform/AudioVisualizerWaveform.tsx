@@ -2,16 +2,19 @@ import {
   useAudioVisualizerWaveform,
   type useAudioVisualizerWaveformOptions,
 } from '@/lib/AudioVisualizerWaveform/useAudioVisualizerWaveform';
-import { useEffect, type ComponentPropsWithRef, type RefObject } from 'react';
+import { useEffect, type RefObject } from 'react';
 import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
 import { useLatest } from '@/lib/useLatest/useLatest';
 import {
   useAudioAnalyzer,
   type UseAudioAnalyzerOptions,
 } from '@/lib/useAudioAnalyzer/useAudioAnalyzer';
-import { AudioVisualizerCanvas } from '@/lib/AudioVisualizerCanvas/AudioVisualizerCanvas';
+import {
+  AudioVisualizerCanvas,
+  type AudioVisualizerCanvasProps,
+} from '@/lib/AudioVisualizerCanvas/AudioVisualizerCanvas';
 
-export type AudioVisualizerWaveformProps = Omit<ComponentPropsWithRef<'canvas'>, 'onResize'> &
+export type AudioVisualizerWaveformProps = Omit<AudioVisualizerCanvasProps, 'onResize'> &
   Omit<UseAudioAnalyzerOptions, 'dataType' | 'onAnalyze'> &
   useAudioVisualizerWaveformOptions;
 
