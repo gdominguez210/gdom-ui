@@ -299,6 +299,27 @@ export default {
         category: 'Advanced',
       },
     },
+    resolutionMode: {
+      control: { type: 'radio' },
+      options: ['auto', 'high', 'low'],
+      description:
+        'Canvas resolution strategy. "auto" uses native display resolution, "high" supersamples fractional DPR for crisp rendering, "low" downsamples to 1x for maximum performance.',
+      table: {
+        type: { summary: "'auto' | 'high' | 'low'" },
+        defaultValue: { summary: 'auto' },
+        category: 'Advanced',
+      },
+    },
+    devicePixelRatio: {
+      control: { type: 'range', min: 1, max: 4, step: 0.25 },
+      description:
+        'Manual device pixel ratio override (takes precedence over resolutionMode). Useful for power users who need precise control.',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: 'window.devicePixelRatio' },
+        category: 'Advanced',
+      },
+    },
   },
   tags: ['autodocs'],
 } as Meta<typeof AudioProgressWaveform>;
@@ -320,6 +341,8 @@ export const Basic: Story = {
     seekAccelerationDelay: 100,
     seekInterval: 100,
     maxSeekIncrement: 30,
+    devicePixelRatio: undefined,
+    resolutionMode: 'high',
   },
   parameters: {
     docs: {
