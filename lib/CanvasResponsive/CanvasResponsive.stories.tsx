@@ -22,7 +22,6 @@ export default {
       table: {
         type: { summary: "'auto' | 'high' | 'low'" },
         defaultValue: { summary: 'high' },
-        category: 'Advanced',
       },
     },
     devicePixelRatio: {
@@ -32,7 +31,6 @@ export default {
       table: {
         type: { summary: 'number' },
         defaultValue: { summary: 'window.devicePixelRatio' },
-        category: 'Advanced',
       },
     },
     onResize: {
