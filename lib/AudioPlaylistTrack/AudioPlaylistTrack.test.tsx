@@ -77,7 +77,6 @@ describe('AudioPlaylistTrack', () => {
     });
 
     test('should apply selected class when track is active', () => {
-      // Get the first two tracks from trackData
       const track0 = trackData[0] as AudioTrackData;
       const track1 = trackData[1] as AudioTrackData;
 

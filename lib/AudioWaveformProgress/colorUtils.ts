@@ -34,7 +34,6 @@ export function generateGradientStops(
 ): GradientStop[] {
   const [l, c, h] = progressColorOKLCH;
 
-  // Apply lightness delta, ensuring we stay in the valid range (0-1)
   const adjustedLightness =
     lightnessDelta > 0 ? Math.min(l + lightnessDelta, 1) : Math.max(l + lightnessDelta, 0);
 

@@ -45,14 +45,12 @@ describe('AudioVisualizerFrequencyBars drawingUtils', () => {
       const results = [frequencyResult, intensityResult, spectrumResult, dynamicResult];
       const uniqueResults = new Set(results);
 
-      // At least some of the results should be different from each other
       expect(uniqueResults.size).toBeGreaterThan(1);
     });
 
     it('pass position ratio to frequency-based color modes', () => {
       const baseColor: OKLCHColor = [0.7, 0.3, 200];
 
-      // Test with different position ratios
       const lowPositionResult = getBarColor(
         baseColor,
         FREQUENCY_BARS_COLOR_MODES.FREQUENCY as DynamicColorMode,
@@ -67,7 +65,6 @@ describe('AudioVisualizerFrequencyBars drawingUtils', () => {
         0.5,
       );
 
-      // Position should affect the output for frequency-based modes
       expect(lowPositionResult).not.toBe(highPositionResult);
     });
 
@@ -88,13 +85,12 @@ describe('AudioVisualizerFrequencyBars drawingUtils', () => {
         0.9,
       );
 
-      // Intensity should affect the output for intensity-based modes
       expect(lowIntensityResult).not.toBe(highIntensityResult);
     });
 
     it('use the base color to derive the output colors', () => {
-      const redColor: OKLCHColor = [0.6, 0.3, 30]; // Reddish
-      const blueColor: OKLCHColor = [0.6, 0.3, 260]; // Bluish
+      const redColor: OKLCHColor = [0.6, 0.3, 30];
+      const blueColor: OKLCHColor = [0.6, 0.3, 260];
 
       const redResult = getBarColor(
         redColor,

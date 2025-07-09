@@ -17,7 +17,6 @@ export function rafThrottle<T extends (...args: any[]) => any>(
   const frameIntervalMs = frameRate ? 1000 / frameRate : 0;
 
   const throttledFn = (...args: Parameters<T>) => {
-    // Store the most recent arguments
     lastArgs = args;
 
     if (!scheduled) {
@@ -26,13 +25,10 @@ export function rafThrottle<T extends (...args: any[]) => any>(
       requestAnimationFrame((timestamp) => {
         scheduled = false;
 
-        // If a frameRate is specified, enforce the timing
         if (frameIntervalMs > 0) {
           const elapsed = timestamp - lastExecutionTime;
 
-          // If not enough time has passed since the last execution
           if (elapsed < frameIntervalMs) {
-            // Schedule another frame but don't execute yet
             scheduled = true;
             requestAnimationFrame((nextTimestamp) => {
               scheduled = false;
@@ -42,14 +38,11 @@ export function rafThrottle<T extends (...args: any[]) => any>(
             return;
           }
 
-          // Update last execution time, accounting for any remainder
           lastExecutionTime = timestamp - (elapsed % frameIntervalMs);
         } else {
-          // No framerate limit, just update the timestamp
           lastExecutionTime = timestamp;
         }
 
-        // Execute the callback with the latest arguments
         callback(...(lastArgs as Parameters<T>));
       });
     }

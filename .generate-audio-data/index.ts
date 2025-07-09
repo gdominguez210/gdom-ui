@@ -94,7 +94,6 @@ function generatePeaksForZoomLevel(
       const expandedEnd = Math.min(rawAudioData.length, endIndex + padding);
       const expandedBlock = Array.from(rawAudioData.subarray(expandedStart, expandedEnd));
 
-      // Calculate exact index in the original coordinate system, then convert to local
       const exactIndex = startIndex + samplesPerPixel / 2;
       const localExactIndex = exactIndex - expandedStart;
 
@@ -178,7 +177,6 @@ async function generateWaveformData() {
   - Output JSON: ${output}
   `);
 
-    // Read and decode the audio file
     const audioData = await import('audio-decode').then(({ default: decode }) =>
       decode(readFileSync(input)),
     );
@@ -188,7 +186,6 @@ async function generateWaveformData() {
     console.log('Processing waveform data...');
     console.log(`Raw audio length: ${rawData.length} samples`);
 
-    // Generate baseline zoom levels
     const baselineZoomLevels = BASELINE_ZOOM_LEVELS.map((samplesPerPixel) => {
       const peaks = generatePeaksForZoomLevel(rawData, samplesPerPixel, normalize);
 
@@ -200,7 +197,6 @@ async function generateWaveformData() {
       };
     });
 
-    // Create the audio data object
     const audioDataObject = {
       data: baselineZoomLevels,
       metadata: {
@@ -216,15 +212,12 @@ async function generateWaveformData() {
       },
     };
 
-    // Generate JSON content
     const jsonContent = JSON.stringify(audioDataObject, null, 2);
 
-    // Ensure output directory exists
     const outputPath = join(process.cwd(), output);
     console.log('Output path:', outputPath);
     mkdirSync(dirname(outputPath), { recursive: true });
 
-    // Save as JSON file
     writeFileSync(outputPath, jsonContent);
 
     const fileSize = (Buffer.from(jsonContent).length / 1024).toFixed(2);

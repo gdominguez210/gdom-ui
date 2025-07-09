@@ -2,7 +2,6 @@ import type { PropsWithChildren } from 'react';
 import { AudioContext } from './AudioContext';
 import { useAudioContextWebAPI } from '@/lib/useAudioContextWebAPI/useAudioContextWebAPI';
 
-// Define props for the provider component
 export type AudioContextProviderProps = PropsWithChildren & {
   isPlaying?: boolean;
 };

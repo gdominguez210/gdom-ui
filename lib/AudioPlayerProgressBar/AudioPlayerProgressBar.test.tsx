@@ -101,7 +101,6 @@ describe('AudioPlayerProgressBar', () => {
       const slider = screen.getByRole('slider');
       fireEvent.change(slider, { target: { value: '50' } });
 
-      // Check the actual CSS variable that was set
       expect(slider.style.getPropertyValue('--range-progress')).toBe('50%');
     });
   });

@@ -12,7 +12,6 @@ import { CollapseCategory } from '@storybook-decorators/CollapseCategory/Collaps
 import { type MouseEventHandler, type RefObject, useCallback } from 'react';
 import { type AudioWaveformProgressProps } from '@/lib/AudioWaveformProgress/AudioWaveformProgress';
 
-// Color modes for the audio waveform progress
 const AUDIO_WAVEFORM_PROGRESS_COLOR_MODES = {
   STATIC: 'static',
   GRADIENT: 'gradient',

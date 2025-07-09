@@ -21,7 +21,6 @@ import { AudioPlayerVisualizerWaveform } from '@/lib/AudioPlayerVisualizerWavefo
 import { AudioPlayerVisualizerFrequencyBars } from '@/lib/AudioPlayerVisualizerFrequencyBars/AudioPlayerVisualizerFrequencyBars';
 import { AudioPlayerProgressWaveform } from '@/lib/AudioPlayerProgressWaveform/AudioPlayerProgressWaveform';
 
-// Create the namespace with Object.assign inline for each component
 export const AudioPlayerCompoundComponent = {
   Root: Object.assign(AudioPlayer, { displayName: 'AudioPlayer.Root' }),
   Provider: Object.assign(AudioPlayerContextProvider, { displayName: 'AudioPlayer.Provider' }),

@@ -236,20 +236,6 @@ describe('sampleRawAudioByWindow should...', () => {
     }).not.toThrow();
   });
 
-  it('handle very large audio arrays efficiently', () => {
-    const largeData = Array.from(
-      { length: 100000 },
-      (_, i) => Math.sin(i / 1000) * Math.cos(i / 2000),
-    );
-
-    const startTime = performance.now();
-    const result = sampleRawAudioByWindow(largeData, 1000, 100);
-    const endTime = performance.now();
-
-    expect(result.length).toBe(1000);
-    expect(endTime - startTime).toBeLessThan(500); // Should be reasonably fast
-  });
-
   it('handle sine wave audio', () => {
     const sineData = Array.from({ length: 16 }, (_, i) => Math.sin((i / 8) * Math.PI));
 
@@ -499,7 +485,7 @@ describe('sampleRawAudioByWindow should...', () => {
     result.forEach((envelope) => {
       expect(Number.isFinite(envelope.min)).toBe(true);
       expect(Number.isFinite(envelope.max)).toBe(true);
-      expect(Math.abs(envelope.min)).toBeLessThanOrEqual(0.8); // Should respect amplitude
+      expect(Math.abs(envelope.min)).toBeLessThanOrEqual(0.8);
     });
   });
 

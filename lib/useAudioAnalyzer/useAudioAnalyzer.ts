@@ -16,7 +16,6 @@ function smoothData(current: Uint8Array, previous: Uint8Array, factor = 0.3): Ui
   current.forEach((value, index) => {
     const currentValue = value !== undefined ? value : 128;
     const previousValue = previous[index] !== undefined ? previous[index] : 128;
-    // The above ensures the values won't be undefined
     result[index] = Math.round(
       (previousValue as number) * factor + (currentValue as number) * (1 - factor),
     );

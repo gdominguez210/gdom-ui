@@ -39,11 +39,9 @@ function NavLink({ active, className, children, ...props }: NavLinkProps) {
 function isValidSelector(selector: string): boolean {
   if (!selector || selector === '#' || selector === '#-') return false;
 
-  // Check for selectors starting with numbers or dashes after the #
   if (selector.startsWith('#-')) return false;
 
   try {
-    // Test if the selector is valid by attempting to query for it
     document.createDocumentFragment().querySelector(selector);
     return true;
   } catch (e) {
@@ -69,11 +67,9 @@ export function DocumentationNav({ items: providedItems }: DocumentationNavProps
           label: heading.textContent || '',
           href: `#${heading.id}`,
         }))
-        // Filter out items with invalid selectors
         .filter((item) => item.href !== '#' && isValidSelector(item.href));
       setItems(navItems);
     } else {
-      // Filter out any provided items with invalid selectors
       setItems(providedItems.filter((item) => isValidSelector(item.href)));
     }
   }, [providedItems]);
@@ -95,7 +91,6 @@ export function DocumentationNav({ items: providedItems }: DocumentationNavProps
     );
 
     items.forEach((item) => {
-      // Only observe elements with valid selectors
       if (isValidSelector(item.href)) {
         try {
           const element = document.querySelector(item.href);
@@ -132,7 +127,6 @@ export function DocumentationNav({ items: providedItems }: DocumentationNavProps
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
 
-    // Validate selector before trying to use it
     if (!isValidSelector(href)) {
       console.warn(`Cannot navigate to invalid selector: ${href}`);
       return;

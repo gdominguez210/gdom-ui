@@ -13,7 +13,6 @@ export function interpolateOKLCH(
   colorB: OKLCHColor,
   progress: number,
 ): OKLCHColor {
-  // Ensure progress is between 0 and 1
   const t = Math.max(0, Math.min(1, progress));
 
   const [l1, c1, h1] = colorA;

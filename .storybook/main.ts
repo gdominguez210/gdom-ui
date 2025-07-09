@@ -55,13 +55,9 @@ const config: StorybookConfig = {
     reactDocgen: 'react-docgen-typescript',
     reactDocgenTypescriptOptions: {
       shouldExtractLiteralValuesFromEnum: true,
-      // Skip node_modules
       propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
-      // Include all component documentation, not just props with JSDoc
       shouldRemoveUndefinedFromOptional: true,
-      // Better support for generics and forwardRef
       savePropValueAsString: true,
-      // Improve handling of complex types
       compilerOptions: {
         allowSyntheticDefaultImports: true,
         esModuleInterop: true,

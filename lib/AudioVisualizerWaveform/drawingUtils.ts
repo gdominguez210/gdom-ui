@@ -125,7 +125,6 @@ export function drawSegmentedWaveform(
   const centerY = displayHeight / 2;
   const segmentSize = Math.max(1, Math.floor(dataArray.length / segmentCount));
 
-  // Track the last point to ensure continuity between segments
   let lastX = 0;
   let lastY = 0;
 
@@ -134,12 +133,10 @@ export function drawSegmentedWaveform(
 
     ctx.beginPath();
 
-    // Start from the last point of the previous segment
     if (i > 0) {
       ctx.moveTo(lastX, lastY);
     }
 
-    // Draw current segment
     for (let j = i; j < segmentEnd; j++) {
       const x = j * sliceWidth;
       const normalizedValue = normalizeAudioValue(dataArray[j]!);
@@ -150,7 +147,6 @@ export function drawSegmentedWaveform(
       } else {
         ctx.lineTo(x, y);
 
-        // Remember the last point coordinates
         if (j === segmentEnd - 1) {
           lastX = x;
           lastY = y;

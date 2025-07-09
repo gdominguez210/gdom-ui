@@ -78,13 +78,11 @@ describe('AudioPlayerContextTimeProvider', () => {
       wrapper: AudioPlayerContextTimeProvider,
     });
 
-    // First set a preview time
     act(() => {
       result.current.setPreviewTime(45);
     });
     expect(result.current.previewTime).toBe(45);
 
-    // Then clear it
     act(() => {
       result.current.setPreviewTime(null);
     });

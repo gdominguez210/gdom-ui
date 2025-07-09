@@ -222,7 +222,6 @@ describe('playbackReducer', () => {
         loop: true,
       };
 
-      // Update playing state
       expect(
         playbackReducer(complexState, {
           type: PLAYBACK_ACTIONS.SET_IS_PLAYING,
@@ -233,7 +232,6 @@ describe('playbackReducer', () => {
         isPlaying: false,
       });
 
-      // Update volume
       expect(
         playbackReducer(complexState, {
           type: PLAYBACK_ACTIONS.SET_VOLUME,
@@ -244,7 +242,6 @@ describe('playbackReducer', () => {
         volume: 25,
       });
 
-      // Update mute
       expect(
         playbackReducer(complexState, {
           type: PLAYBACK_ACTIONS.SET_MUTE,
@@ -255,7 +252,6 @@ describe('playbackReducer', () => {
         mute: false,
       });
 
-      // Update shuffle
       expect(
         playbackReducer(complexState, {
           type: PLAYBACK_ACTIONS.SET_SHUFFLE,
@@ -266,7 +262,6 @@ describe('playbackReducer', () => {
         shuffle: false,
       });
 
-      // Update loop
       expect(
         playbackReducer(complexState, {
           type: PLAYBACK_ACTIONS.SET_LOOP,

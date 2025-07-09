@@ -66,9 +66,7 @@ export function useElementDimensions(): UseElementDimensionsReturn {
       if (entry.borderBoxSize && entry.borderBoxSize[0]) {
         width = entry.borderBoxSize[0].inlineSize;
         height = entry.borderBoxSize[0].blockSize;
-      }
-      // Fallback
-      else if (entry.contentRect) {
+      } else if (entry.contentRect) {
         width = entry.contentRect.width;
         height = entry.contentRect.height;
       }

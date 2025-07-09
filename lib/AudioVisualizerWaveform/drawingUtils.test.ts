@@ -153,7 +153,6 @@ describe('AudioVisualizerWaveform drawingUtils', () => {
       const colorMode = WAVEFORM_COLOR_MODES.SPECTRUM as DynamicColorMode;
       const segmentCount = 10; // More segments than data points
 
-      // This shouldn't throw an error
       expect(() => {
         drawSegmentedWaveform(
           ctx as unknown as CanvasRenderingContext2D,
