@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll, afterAll, beforeEach } from 'vitest';
-import { convertColorToOKLCH } from './convertColorToOKLCH';
+import { convertColorToOKLCH } from '@/utils/convertColorToOKLCH';
 
 // Mock the DOM methods that convertColorToOKLCH relies on
 const mockDocument = {
