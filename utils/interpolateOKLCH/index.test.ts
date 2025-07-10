@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { interpolateOKLCH } from './interpolateOKLCH';
+import { interpolateOKLCH } from '@/utils/interpolateOKLCH';
 import type { OKLCHColor } from '@/types/colors';
 
 describe('interpolateOKLCH', () => {
