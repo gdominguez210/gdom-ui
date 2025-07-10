@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getColorBySpectrum } from './getColorBySpectrum';
+import { getColorBySpectrum } from '@/utils/getColorBySpectrum';
 
 describe('getColorBySpectrum', () => {
   const baseColor: [number, number, number] = [0.5, 0.2, 180];
