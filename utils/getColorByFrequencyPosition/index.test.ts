@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getColorByFrequencyPosition } from './getColorByFrequencyPosition';
+import { getColorByFrequencyPosition } from '@/utils/getColorByFrequencyPosition';
 
 describe('getColorByFrequencyPosition should...', () => {
   const baseColor: [number, number, number] = [0.5, 0.2, 180];
