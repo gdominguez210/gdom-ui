@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getColorByAudioIntensity } from './getColorByAudioIntensity';
+import { getColorByAudioIntensity } from '@/utils/getColorByAudioIntensity';
 
 describe('getColorByAudioIntensity should...', () => {
   const baseColor: [number, number, number] = [0.5, 0.2, 180];
