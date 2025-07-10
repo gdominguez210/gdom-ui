@@ -1,1 +1,0 @@
-export { calculateSamplingRate } from './calculateSamplingRate';
