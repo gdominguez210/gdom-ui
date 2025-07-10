@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getReactiveColor, type ReactivePropertyConfig } from './getReactiveColor';
+import { getReactiveColor, type ReactivePropertyConfig } from '@/utils/getReactiveColor';
 import { OKLCHProperty } from '@/types/colors';
 
 describe('getReactiveColor should...', () => {
