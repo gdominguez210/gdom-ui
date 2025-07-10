@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getColorByDynamicIntensity } from './getColorByDynamicIntensity';
+import { getColorByDynamicIntensity } from '@/utils/getColorByDynamicIntensity';
 
 describe('getColorByDynamicIntensity should...', () => {
   const baseColor: [number, number, number] = [0.5, 0.2, 180];
