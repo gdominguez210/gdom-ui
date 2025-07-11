@@ -1,8 +1,8 @@
 import { useRef, useCallback, useState, useMemo } from 'react';
-import { convertColorToOKLCH } from '@/utils/convertColorToOKLCH/convertColorToOKLCH';
+import { convertColorToOKLCH } from '@/utils/convertColorToOKLCH';
 import { OKLCHToCSS } from '@/utils/OKLCHToCSS/OKLCHtoCSS';
 import type { OKLCHColor } from '@/types/colors';
-import { interpolateOKLCH } from '@/utils/interpolateOKLCH/interpolateOKLCH';
+import { interpolateOKLCH } from '@/utils/interpolateOKLCH';
 import { useAnimationFrame } from '@/lib/useAnimationFrame/useAnimationFrame';
 
 export type UseColorTransitionOptions = {
