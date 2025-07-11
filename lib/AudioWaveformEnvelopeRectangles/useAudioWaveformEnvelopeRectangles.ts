@@ -58,7 +58,7 @@ export function useAudioWaveformEnvelopeRectangles(
     interpolationFn,
   } = props;
 
-  const { segmentsRef, segmentWidthRef, gapWidthRef, calculateSegments } =
+  const { getSegments, getSegmentWidth, getGapWidth, calculateSegments } =
     useAudioResponsiveSamplingEnvelopes({
       data,
       segmentMinWidth,
@@ -77,7 +77,7 @@ export function useAudioWaveformEnvelopeRectangles(
 
   const drawWaveform = useCallback(() => {
     const canvas = canvasRef.current;
-    const segments = segmentsRef.current;
+    const segments = getSegments();
 
     if (!canvas || segments.length === 0) return;
 
@@ -93,12 +93,12 @@ export function useAudioWaveformEnvelopeRectangles(
 
     const centerY = displayHeight / 2;
     const maxHeight = displayHeight * heightScale;
-    const segmentWidth = segmentWidthRef.current;
+    const segmentWidth = getSegmentWidth();
 
     let globalGradient: CanvasGradient | null = null;
 
     segments.forEach(({ min, max }, i) => {
-      const x = i * (segmentWidth + gapWidthRef.current);
+      const x = i * (segmentWidth + getGapWidth());
       const minY = centerY + (min * maxHeight) / 2;
       const maxY = centerY + (max * maxHeight) / 2;
       const barHeight = Math.abs(maxY - minY);
@@ -169,7 +169,7 @@ export function useAudioWaveformEnvelopeRectangles(
         return;
       }
     });
-  }, [canvasRef, color, heightScale, segmentsRef, segmentWidthRef, gapWidthRef, getColorString]);
+  }, [canvasRef, color, heightScale, getSegments, getSegmentWidth, getGapWidth, getColorString]);
 
   const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
