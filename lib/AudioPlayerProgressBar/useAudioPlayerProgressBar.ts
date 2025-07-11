@@ -63,13 +63,13 @@ export function useAudioPlayerProgressBar({
   onPreviewTimeChange,
   progressBarRef,
 }: UseAudioPlayerProgressBarProps): UseAudioPlayerProgressBarReturn {
-  const { dimensionsRef, elementRef } = useElementDimensions();
+  const { getElementDimensions, elementRef } = useElementDimensions();
 
   const _handleMouseMove: MouseEventHandler<HTMLInputElement> = useCallback(
     (e) => {
       if (!progressBarRef.current) return;
 
-      const { width, left } = dimensionsRef.current;
+      const { width, left } = getElementDimensions();
       if (width === 0) return;
 
       const mouseX = e.clientX - left;
@@ -84,7 +84,7 @@ export function useAudioPlayerProgressBar({
 
       onPreviewTimeChange?.(previewTime);
     },
-    [progressBarRef, previewCssVariableName, duration, onPreviewTimeChange, dimensionsRef],
+    [progressBarRef, previewCssVariableName, duration, onPreviewTimeChange, getElementDimensions],
   );
 
   const _handleMouseOut: MouseEventHandler<HTMLInputElement> = useCallback(() => {
