@@ -74,7 +74,7 @@ export function useAudioWaveformEnvelopeLines(
     interpolationFn,
   } = props;
 
-  const { segmentsRef, segmentWidthRef, gapWidthRef, calculateSegments } =
+  const { getSegments, getSegmentWidth, getGapWidth, calculateSegments } =
     useAudioResponsiveSamplingEnvelopes({
       data,
       segmentMinWidth,
@@ -94,7 +94,7 @@ export function useAudioWaveformEnvelopeLines(
 
   const drawWaveform = useCallback(() => {
     const canvas = canvasRef.current;
-    const segments = segmentsRef.current;
+    const segments = getSegments();
     if (!canvas || segments.length === 0) return;
 
     const ctx = canvas.getContext('2d');
@@ -109,7 +109,7 @@ export function useAudioWaveformEnvelopeLines(
 
     const centerY = displayHeight / 2;
     const maxHeight = displayHeight * heightScale;
-    const segmentWidth = segmentWidthRef.current;
+    const segmentWidth = getSegmentWidth();
 
     ctx.lineWidth = segmentWidth;
     ctx.lineCap = lineCap;
@@ -117,7 +117,7 @@ export function useAudioWaveformEnvelopeLines(
     let globalGradient: CanvasGradient | null = null;
 
     segments.forEach(({ min, max }, i) => {
-      const x = i * (segmentWidth + gapWidthRef.current);
+      const x = i * (segmentWidth + getGapWidth());
       const minY = centerY + (min * maxHeight) / 2;
       const maxY = centerY + (max * maxHeight) / 2;
       const barHeight = Math.abs(maxY - minY);
@@ -199,9 +199,9 @@ export function useAudioWaveformEnvelopeLines(
     color,
     heightScale,
     lineCap,
-    segmentsRef,
-    segmentWidthRef,
-    gapWidthRef,
+    getSegments,
+    getSegmentWidth,
+    getGapWidth,
     getColorString,
   ]);
 
