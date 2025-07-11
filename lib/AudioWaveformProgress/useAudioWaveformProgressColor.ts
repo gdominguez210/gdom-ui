@@ -46,9 +46,9 @@ export type UseAudioWaveformProgressColorOptions = {
   audioRef: RefObject<HTMLAudioElement>;
 
   /**
-   * The dimensions of the waveform
+   * Function to get the element dimensions
    */
-  dimensionsRef: UseElementDimensionsReturn['dimensionsRef'];
+  getElementDimensions: UseElementDimensionsReturn['getElementDimensions'];
 
   /**
    * The color of the progress bar
@@ -66,9 +66,9 @@ export type UseAudioWaveformProgressColorOptions = {
   hoverColor?: string;
 
   /**
-   * The relative position (value between 0 and 1) of the mouse on the waveform
+   * A function that returns the relative position (value between 0 and 1) of the mouse on the waveform
    */
-  hoverPositionRef?: UseMousePositionRefReturn['positionRef'];
+  getMousePosition: UseMousePositionRefReturn['getMousePosition'];
 
   /**
    * How much to adjust the progress color for hover effect
@@ -80,7 +80,7 @@ export type UseAudioWaveformProgressColorOptions = {
   /**
    * A function that returns whether the mouse is hovering over the waveform
    */
-  getIsHovering?: UseMousePositionRefReturn['getIsHovering'];
+  getIsHovering: UseMousePositionRefReturn['getIsHovering'];
 
   /**
    * Color mode for the progress visualization
@@ -113,11 +113,11 @@ export function useAudioWaveformProgressColor(
   const {
     duration,
     audioRef,
-    dimensionsRef,
     progressColor = '#4a5565',
     color = '#9f9fa9',
+    getElementDimensions,
     getIsHovering,
-    hoverPositionRef,
+    getMousePosition,
     hoverColor,
     hoverColorDelta = 0.15,
     colorMode = AUDIO_PROGRESS_COLOR_MODES.GRADIENT,
@@ -170,13 +170,12 @@ export function useAudioWaveformProgressColor(
       const progress = audioRef.current?.currentTime ? audioRef.current.currentTime / duration : 0;
       const coverage = calculateBarCoverage(position, widthPercent, progress);
 
-      const isHovering = getIsHovering?.();
+      const isHovering = getIsHovering();
+      const { offsetX } = getMousePosition();
+      const { width } = getElementDimensions();
 
-      if (isHovering && hoverPositionRef?.current?.offsetX && dimensionsRef?.current?.width) {
-        const normalizedHoverPosition = getNormalizedHoverPosition(
-          hoverPositionRef.current.offsetX,
-          dimensionsRef.current.width,
-        );
+      if (isHovering && offsetX !== null && width !== null) {
+        const normalizedHoverPosition = getNormalizedHoverPosition(offsetX, width);
 
         if (shouldApplyHoverEffect(position, progress, normalizedHoverPosition)) {
           return hoverColorCSS;
@@ -238,9 +237,9 @@ export function useAudioWaveformProgressColor(
       colorMode,
       effectiveGradientStops,
       getIsHovering,
-      hoverPositionRef,
+      getMousePosition,
+      getElementDimensions,
       hoverColorCSS,
-      dimensionsRef,
     ],
   );
 
