@@ -74,7 +74,7 @@ export function useAudioWaveformCurves(
     smoothingFactor = 0.5,
   } = props;
 
-  const { valuesRef, segmentWidthRef, calculateSegments } = useAudioResponsiveSamplingForCurves({
+  const { getValues, getSegmentWidth, calculateSegments } = useAudioResponsiveSamplingForCurves({
     data,
     segmentMinWidth,
     interpolationFn,
@@ -90,7 +90,7 @@ export function useAudioWaveformCurves(
 
   const drawWaveform = useCallback(() => {
     const canvas = canvasRef.current;
-    const values = valuesRef.current;
+    const values = getValues();
 
     if (!canvas || values.length === 0) return;
 
@@ -103,7 +103,7 @@ export function useAudioWaveformCurves(
 
     const centerY = displayHeight / 2;
     const maxHeight = displayHeight * heightScale;
-    const segmentWidth = segmentWidthRef.current;
+    const segmentWidth = getSegmentWidth();
 
     ctx.beginPath();
 
@@ -155,8 +155,8 @@ export function useAudioWaveformCurves(
     canvasRef,
     color,
     heightScale,
-    valuesRef,
-    segmentWidthRef,
+    getValues,
+    getSegmentWidth,
     lineWidth,
     lineCap,
     smoothingFactor,
