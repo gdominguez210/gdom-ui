@@ -31,12 +31,12 @@ export type UseAudioResponsiveSamplingEnvelopesOptions = {
     interpolationFn?: RawAudioInterpolationForEnvelopesFn;
 };
 export type UseAudioResponsiveSamplingEnvelopesReturn = {
-    segmentsRef: React.RefObject<EnvelopeSegment[]>;
-    segmentWidthRef: React.RefObject<number>;
-    leftOffsetRef: React.RefObject<number>;
-    rightOffsetRef: React.RefObject<number>;
-    actualSegmentCountRef: React.RefObject<number>;
-    gapWidthRef: React.RefObject<number>;
+    getSegments: () => EnvelopeSegment[];
+    getSegmentWidth: () => number;
+    getLeftOffset: () => number;
+    getRightOffset: () => number;
+    getActualSegmentCount: () => number;
+    getGapWidth: () => number;
     calculateSegments: (displayWidth: number) => void;
 };
 export declare function useAudioResponsiveSamplingEnvelopes(options: UseAudioResponsiveSamplingEnvelopesOptions): UseAudioResponsiveSamplingEnvelopesReturn;

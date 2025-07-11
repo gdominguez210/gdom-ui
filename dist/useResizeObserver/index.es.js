@@ -1,1 +1,1 @@
-export { u as useResizeObserver } from '../chunks/useResizeObserver-CP7BG3kt.js';
+export { u as useResizeObserver } from '../chunks/useResizeObserver-ikTg3ekm.js';

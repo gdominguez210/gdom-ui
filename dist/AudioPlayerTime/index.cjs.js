@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const AudioPlayerTime = require('../chunks/AudioPlayerTime-BLng6yq5.js');
+const AudioPlayerTime = require('../chunks/AudioPlayerTime-DYzdfWry.js');
 
 
 

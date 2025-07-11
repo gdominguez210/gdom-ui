@@ -1,1 +1,1 @@
-export { A as AudioPlayerVisualizerWaveform } from '../chunks/AudioPlayerVisualizerWaveform-DbT6iq-U.js';
+export { A as AudioPlayerVisualizerWaveform } from '../chunks/AudioPlayerVisualizerWaveform-zO0t4y-Y.js';

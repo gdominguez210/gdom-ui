@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const useKeyboardMediaSeek = require('../chunks/useKeyboardMediaSeek-CiZqxsyu.js');
+const useKeyboardMediaSeek = require('../chunks/useKeyboardMediaSeek-CglZ2tDM.js');
 
 
 

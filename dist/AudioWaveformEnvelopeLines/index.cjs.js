@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const AudioWaveformEnvelopeLines = require('../chunks/AudioWaveformEnvelopeLines-C9S76O9d.js');
+const AudioWaveformEnvelopeLines = require('../chunks/AudioWaveformEnvelopeLines-Cbef2KoH.js');
 
 
 

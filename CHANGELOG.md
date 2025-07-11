@@ -1,3 +1,10 @@
+# [1.44.0](https://github.com/gdominguez210/gdom-ui/compare/v1.43.0...v1.44.0) (2025-07-11)
+
+
+### Features
+
+* **lib/useResizeObserver:** accept options for the ResizeObserver observe function ([8a9dfa5](https://github.com/gdominguez210/gdom-ui/commit/8a9dfa5c292c583c9990da002a5bb7e3ec2c27ec))
+
 # [1.43.0](https://github.com/gdominguez210/gdom-ui/compare/v1.42.1...v1.43.0) (2025-07-08)
 
 

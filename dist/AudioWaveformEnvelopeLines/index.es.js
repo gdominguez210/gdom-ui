@@ -1,1 +1,1 @@
-export { A as AudioWaveformEnvelopeLines, u as useAudioWaveformEnvelopeLines } from '../chunks/AudioWaveformEnvelopeLines-7rerYQdL.js';
+export { A as AudioWaveformEnvelopeLines, u as useAudioWaveformEnvelopeLines } from '../chunks/AudioWaveformEnvelopeLines-JH5Ii8s3.js';

@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const AudioVisualizerFrequencyBars = require('../chunks/AudioVisualizerFrequencyBars-Do28Chb3.js');
+const AudioVisualizerFrequencyBars = require('../chunks/AudioVisualizerFrequencyBars-CTuzhOfD.js');
 
 
 

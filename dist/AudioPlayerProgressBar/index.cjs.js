@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const AudioPlayerProgressBar = require('../chunks/AudioPlayerProgressBar-tHkssv9R.js');
+const AudioPlayerProgressBar = require('../chunks/AudioPlayerProgressBar-IEXyPG7n.js');
 
 
 

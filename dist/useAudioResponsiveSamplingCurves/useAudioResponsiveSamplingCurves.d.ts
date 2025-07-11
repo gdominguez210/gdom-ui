@@ -7,11 +7,11 @@ export type UseAudioResponsiveSamplingForCurvesOptions = {
     transformFn?: SampleWindowTransformFn<number>;
 };
 export type UseAudioResponsiveSamplingForCurvesReturn = {
-    valuesRef: React.RefObject<number[]>;
-    segmentWidthRef: React.RefObject<number>;
-    leftOffsetRef: React.RefObject<number>;
-    rightOffsetRef: React.RefObject<number>;
-    actualSegmentCountRef: React.RefObject<number>;
+    getValues: () => number[];
+    getSegmentWidth: () => number;
+    getLeftOffset: () => number;
+    getRightOffset: () => number;
+    getActualSegmentCount: () => number;
     calculateSegments: (displayWidth: number) => void;
 };
 export declare function useAudioResponsiveSamplingForCurves(options: UseAudioResponsiveSamplingForCurvesOptions): UseAudioResponsiveSamplingForCurvesReturn;

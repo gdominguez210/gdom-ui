@@ -1,1 +1,1 @@
-export { A as AudioWaveformCurves } from '../chunks/AudioWaveformCurves-BQOUi3pg.js';
+export { A as AudioWaveformCurves } from '../chunks/AudioWaveformCurves-DOnjy0di.js';

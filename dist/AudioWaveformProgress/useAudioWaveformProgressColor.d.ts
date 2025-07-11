@@ -30,9 +30,9 @@ export type UseAudioWaveformProgressColorOptions = {
      */
     audioRef: RefObject<HTMLAudioElement>;
     /**
-     * The dimensions of the waveform
+     * Function to get the element dimensions
      */
-    dimensionsRef: UseElementDimensionsReturn['dimensionsRef'];
+    getElementDimensions: UseElementDimensionsReturn['getElementDimensions'];
     /**
      * The color of the progress bar
      */
@@ -46,9 +46,9 @@ export type UseAudioWaveformProgressColorOptions = {
      */
     hoverColor?: string;
     /**
-     * The relative position (value between 0 and 1) of the mouse on the waveform
+     * A function that returns the relative position (value between 0 and 1) of the mouse on the waveform
      */
-    hoverPositionRef?: UseMousePositionRefReturn['positionRef'];
+    getMousePosition: UseMousePositionRefReturn['getMousePosition'];
     /**
      * How much to adjust the progress color for hover effect
      * Only used when hoverColor is not provided
@@ -58,7 +58,7 @@ export type UseAudioWaveformProgressColorOptions = {
     /**
      * A function that returns whether the mouse is hovering over the waveform
      */
-    getIsHovering?: UseMousePositionRefReturn['getIsHovering'];
+    getIsHovering: UseMousePositionRefReturn['getIsHovering'];
     /**
      * Color mode for the progress visualization
      * @default 'static'

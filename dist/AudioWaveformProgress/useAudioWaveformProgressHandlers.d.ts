@@ -1,4 +1,5 @@
 import { MouseEventHandler, RefObject } from 'react';
+import { UseElementDimensionsReturn } from '../useElementDimensions/useElementDimensions';
 export type UseAudioWaveformProgressHandlersOptions = {
     /**
      * The duration of the audio to visualize
@@ -18,10 +19,12 @@ export type UseAudioWaveformProgressHandlersOptions = {
      * @param time The time in seconds to preview
      */
     onPreviewTimeChange?: (time: number | null) => void;
+    /**
+     * A function that returns the element's dimensions
+     */
+    getElementDimensions: UseElementDimensionsReturn['getElementDimensions'];
 };
 export declare function useAudioWaveformProgressHandlers(options: UseAudioWaveformProgressHandlersOptions): {
-    canvasRef: (node: Element | null) => void;
-    dimensionsRef: RefObject<import('../useElementDimensions/useElementDimensions').ElementDimensions>;
     handleClick: MouseEventHandler;
     handleMouseMove: MouseEventHandler<HTMLCanvasElement>;
     handleMouseLeave: MouseEventHandler<HTMLCanvasElement>;

@@ -1,1 +1,1 @@
-export { A as AudioVisualizerCanvas } from '../chunks/AudioVisualizerCanvas-CDuIk1QF.js';
+export { A as AudioVisualizerCanvas } from '../chunks/AudioVisualizerCanvas-oxa_cHz7.js';

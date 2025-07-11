@@ -1,1 +1,1 @@
-export { A as AudioWaveformProgress, a as AudioWaveformProgressPrimitive, u as useAudioWaveformProgress, b as useAudioWaveformProgressColor, c as useAudioWaveformProgressHandlers } from '../chunks/AudioWaveformProgress-D_EcRYxo.js';
+export { A as AudioWaveformProgress, a as AudioWaveformProgressPrimitive, u as useAudioWaveformProgress, b as useAudioWaveformProgressColor, c as useAudioWaveformProgressHandlers } from '../chunks/AudioWaveformProgress-D-kdMX5e.js';

@@ -1,4 +1,3 @@
-import { RefObject } from 'react';
 export type ElementDimensions = {
     width: number;
     height: number;
@@ -10,8 +9,7 @@ export type ElementDimensions = {
     y: number;
 };
 export type UseElementDimensionsReturn = {
-    dimensions: ElementDimensions;
-    dimensionsRef: RefObject<ElementDimensions>;
+    getElementDimensions: () => ElementDimensions;
     elementRef: (node: Element | null) => void;
 };
 export declare function useElementDimensions(): UseElementDimensionsReturn;

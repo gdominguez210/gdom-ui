@@ -1,4 +1,3 @@
-import { RefObject } from 'react';
 export type MousePosition = {
     clientX: number | null;
     clientY: number | null;
@@ -6,8 +5,7 @@ export type MousePosition = {
     offsetY: number | null;
 };
 export type UseMousePositionRefReturn = {
-    getPosition: () => MousePosition;
-    positionRef: RefObject<MousePosition>;
+    getMousePosition: () => MousePosition;
     handleMouseMove: (e: React.MouseEvent) => void;
     handleMouseLeave: (e: React.MouseEvent) => void;
     getIsHovering: () => boolean;

@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const useElementDimensions = require('../chunks/useElementDimensions-DeYYmJ_A.js');
+const useElementDimensions = require('../chunks/useElementDimensions-1QpEcy1U.js');
 
 
 

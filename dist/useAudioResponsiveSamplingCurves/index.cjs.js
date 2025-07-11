@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const useAudioResponsiveSamplingCurves = require('../chunks/useAudioResponsiveSamplingCurves-DOk6rkNv.js');
+const useAudioResponsiveSamplingCurves = require('../chunks/useAudioResponsiveSamplingCurves-B7uh3_si.js');
 
 
 

@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 
-const CanvasResponsive = require('../chunks/CanvasResponsive-C2Oot7ZB.js');
+const CanvasResponsive = require('../chunks/CanvasResponsive-DOgOr0T8.js');
 
 
 
