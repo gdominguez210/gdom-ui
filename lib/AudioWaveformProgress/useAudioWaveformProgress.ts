@@ -22,11 +22,15 @@ import {
 import { useDelayedMouseMove } from '@/lib/useDelayedMouseMove/useDelayedMouseMove';
 import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
 import { useMousePositionRef } from '@/lib/useMousePositionRef/useMousePositionRef';
+import { useElementDimensions } from '@/lib/useElementDimensions/useElementDimensions';
 
-export type UseAudioWaveformProgressOptions = UseAudioWaveformProgressHandlersOptions &
+export type UseAudioWaveformProgressOptions = Omit<
+  UseAudioWaveformProgressHandlersOptions,
+  'getElementDimensions'
+> &
   Omit<
     UseAudioWaveformProgressColorOptions,
-    'dimensionsRef' | 'hoverPositionRef' | 'getIsHovering'
+    'getElementDimensions' | 'getMousePosition' | 'getIsHovering'
   > &
   Omit<UseAudioWaveformEnvelopeRectanglesOptions, 'color'> &
   Omit<UseAnimationFrameOptions, 'callback'> &
@@ -76,16 +80,16 @@ export function useAudioWaveformProgress(props: UseAudioWaveformProgressOptions)
     onMouseLeave,
   } = props;
 
+  const { elementRef, getElementDimensions } = useElementDimensions();
+
   const {
     getIsHovering,
-    positionRef,
+    getMousePosition,
     handleMouseMove: handleMousePositionMove,
     handleMouseLeave: handleMousePositionLeave,
   } = useMousePositionRef();
 
   const {
-    canvasRef,
-    dimensionsRef,
     handleClick: handleWaveformClick,
     handleMouseMove: handleWaveformMouseMove,
     handleMouseLeave: handleWaveformMouseLeave,
@@ -94,28 +98,25 @@ export function useAudioWaveformProgress(props: UseAudioWaveformProgressOptions)
     audioRef,
     onProgressChange,
     onPreviewTimeChange,
+    getElementDimensions,
   });
 
   const { colorFn } = useAudioWaveformProgressColor({
-    duration,
     audioRef,
     color,
-    dimensionsRef,
-    hoverPositionRef: positionRef,
-    hoverColor,
-    hoverColorDelta,
     colorMode,
+    duration,
+    getElementDimensions,
+    getIsHovering,
+    getMousePosition,
     gradientStops,
     gradientLightnessDelta,
+    hoverColor,
+    hoverColorDelta,
     progressColor,
-    getIsHovering,
   });
 
-  const {
-    canvasRef: envelopeRectanglesCanvasRef,
-    drawWaveform,
-    handleResize,
-  } = useAudioWaveformEnvelopeRectangles({
+  const { canvasRef, drawWaveform, handleResize } = useAudioWaveformEnvelopeRectangles({
     data,
     color: colorFn,
     gapMaxWidth,
@@ -126,7 +127,7 @@ export function useAudioWaveformProgress(props: UseAudioWaveformProgressOptions)
     segmentMinWidth,
   });
 
-  const mergedRef = useComposedRefs(canvasRef, envelopeRectanglesCanvasRef);
+  const mergedRef = useComposedRefs(elementRef, canvasRef);
 
   const _handleMouseMove: MouseEventHandler<HTMLCanvasElement> = useCallback(
     (e) => {
