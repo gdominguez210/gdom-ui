@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
-import { rafThrottle } from '@/utils/rafThrottle/rafThrottle';
+import { rafThrottle } from '@/utils/rafThrottle';
 import { useResizeObserver } from '@/lib/useResizeObserver/useResizeObserver';
 import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
 
