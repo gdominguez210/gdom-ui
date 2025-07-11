@@ -20,11 +20,11 @@ export type UseAudioResponsiveSamplingForCurvesOptions = {
   transformFn?: SampleWindowTransformFn<number>;
 };
 export type UseAudioResponsiveSamplingForCurvesReturn = {
-  valuesRef: React.RefObject<number[]>;
-  segmentWidthRef: React.RefObject<number>;
-  leftOffsetRef: React.RefObject<number>;
-  rightOffsetRef: React.RefObject<number>;
-  actualSegmentCountRef: React.RefObject<number>;
+  getValues: () => number[];
+  getSegmentWidth: () => number;
+  getLeftOffset: () => number;
+  getRightOffset: () => number;
+  getActualSegmentCount: () => number;
   calculateSegments: (displayWidth: number) => void;
 };
 
@@ -95,12 +95,32 @@ export function useAudioResponsiveSamplingForCurves(
     [data, segmentMinWidth, interpolationFn, transformFn],
   );
 
+  const getValues = useCallback(() => {
+    return valuesRef.current;
+  }, []);
+
+  const getSegmentWidth = useCallback(() => {
+    return segmentWidthRef.current;
+  }, []);
+
+  const getLeftOffset = useCallback(() => {
+    return leftOffsetRef.current;
+  }, []);
+
+  const getRightOffset = useCallback(() => {
+    return rightOffsetRef.current;
+  }, []);
+
+  const getActualSegmentCount = useCallback(() => {
+    return actualSegmentCountRef.current;
+  }, []);
+
   return {
-    valuesRef,
-    segmentWidthRef,
-    leftOffsetRef,
-    rightOffsetRef,
-    actualSegmentCountRef,
+    getValues,
+    getSegmentWidth,
+    getLeftOffset,
+    getRightOffset,
+    getActualSegmentCount,
     calculateSegments,
   };
 }
