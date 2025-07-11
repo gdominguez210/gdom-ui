@@ -1,15 +1,20 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useLatest } from '@/lib/useLatest/useLatest';
 
+export type UseResizeObserverReturn = {
+  setRef: (node: Element | null) => void;
+};
+
 /**
  * Hook to observe an element's size changes
  *
  * @param callback Standard ResizeObserver callback function
  * @returns Object with a setRef function to attach to the element you want to observe
  */
-export function useResizeObserver(callback: ResizeObserverCallback): {
-  setRef: (node: Element | null) => void;
-} {
+export function useResizeObserver(
+  callback: ResizeObserverCallback,
+  options?: ResizeObserverOptions,
+): UseResizeObserverReturn {
   const callbackRef = useLatest(callback);
   const nodeRef = useRef<Element | null>(null);
 
@@ -28,7 +33,11 @@ export function useResizeObserver(callback: ResizeObserverCallback): {
       });
 
       if (nodeRef.current) {
-        observerRef.current.observe(nodeRef.current);
+        try {
+          observerRef.current.observe(nodeRef.current, options);
+        } catch (error) {
+          observerRef.current.observe(nodeRef.current);
+        }
       }
     }
 
@@ -38,23 +47,30 @@ export function useResizeObserver(callback: ResizeObserverCallback): {
         observerRef.current = null;
       }
     };
-  }, [callbackRef]);
+  }, [callbackRef, options]);
 
-  const setRef = useCallback((node: Element | null) => {
-    const currentNode = node;
+  const setRef = useCallback(
+    (node: Element | null) => {
+      const currentNode = node;
 
-    nodeRef.current = currentNode;
+      nodeRef.current = currentNode;
 
-    if (currentNode && observerRef.current) {
-      observerRef.current.observe(currentNode);
-    }
-
-    return () => {
       if (currentNode && observerRef.current) {
-        observerRef.current.unobserve(currentNode);
+        try {
+          observerRef.current.observe(currentNode, options);
+        } catch (error) {
+          observerRef.current.observe(currentNode);
+        }
       }
-    };
-  }, []);
+
+      return () => {
+        if (currentNode && observerRef.current) {
+          observerRef.current.unobserve(currentNode);
+        }
+      };
+    },
+    [options],
+  );
 
   return { setRef };
 }
