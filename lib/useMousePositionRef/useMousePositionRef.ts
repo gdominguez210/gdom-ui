@@ -1,4 +1,4 @@
-import { useRef, useCallback, type RefObject } from 'react';
+import { useRef, useCallback } from 'react';
 
 export type MousePosition = {
   clientX: number | null;
@@ -8,8 +8,7 @@ export type MousePosition = {
 };
 
 export type UseMousePositionRefReturn = {
-  getPosition: () => MousePosition;
-  positionRef: RefObject<MousePosition>;
+  getMousePosition: () => MousePosition;
   handleMouseMove: (e: React.MouseEvent) => void;
   handleMouseLeave: (e: React.MouseEvent) => void;
   getIsHovering: () => boolean;
@@ -44,12 +43,11 @@ export function useMousePositionRef(): UseMousePositionRefReturn {
     };
   }, []);
 
-  const getPosition = useCallback(() => positionRef.current, []);
+  const getMousePosition = useCallback(() => positionRef.current, []);
   const getIsHovering = useCallback(() => positionRef.current.clientX !== null, []);
 
   return {
-    getPosition,
-    positionRef,
+    getMousePosition,
     handleMouseMove,
     handleMouseLeave,
     getIsHovering,
