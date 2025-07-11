@@ -65,7 +65,7 @@ export function useAudioWaveformEnvelopeCurves(
     smoothingFactor = 0.5,
   } = options;
 
-  const { segmentsRef, segmentWidthRef, calculateSegments } = useAudioResponsiveSamplingEnvelopes({
+  const { getSegments, getSegmentWidth, calculateSegments } = useAudioResponsiveSamplingEnvelopes({
     data,
     segmentMinWidth,
     interpolationFn,
@@ -81,7 +81,7 @@ export function useAudioWaveformEnvelopeCurves(
 
   const drawWaveform = useCallback(() => {
     const canvas = canvasRef.current;
-    const segments = segmentsRef.current;
+    const segments = getSegments();
 
     if (!canvas || segments.length === 0) return;
 
@@ -95,7 +95,7 @@ export function useAudioWaveformEnvelopeCurves(
 
     const centerY = displayHeight / 2;
     const maxHeight = displayHeight * heightScale;
-    const segmentWidth = segmentWidthRef.current;
+    const segmentWidth = getSegmentWidth();
 
     ctx.beginPath();
 
@@ -176,8 +176,8 @@ export function useAudioWaveformEnvelopeCurves(
     canvasRef,
     color,
     heightScale,
-    segmentsRef,
-    segmentWidthRef,
+    getSegments,
+    getSegmentWidth,
     smoothingFactor,
     getColorString,
   ]);
