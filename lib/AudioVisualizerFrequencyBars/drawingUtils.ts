@@ -1,7 +1,7 @@
-import { getColorByFrequencyPosition } from '@/utils/getColorByFrequencyPosition/getColorByFrequencyPosition';
-import { getColorByAudioIntensity } from '@/utils/getColorByAudioIntensity/getColorByAudioIntensity';
-import { getColorBySpectrum } from '@/utils/getColorBySpectrum/getColorBySpectrum';
-import { getColorByDynamicIntensity } from '@/utils/getColorByDynamicIntensity/getColorByDynamicIntensity';
+import { getColorByFrequencyPosition } from '@/utils/getColorByFrequencyPosition';
+import { getColorByAudioIntensity } from '@/utils/getColorByAudioIntensity';
+import { getColorBySpectrum } from '@/utils/getColorBySpectrum';
+import { getColorByDynamicIntensity } from '@/utils/getColorByDynamicIntensity';
 import type { OKLCHColor } from 'types/colors';
 
 export const FREQUENCY_BARS_COLOR_MODES = {
