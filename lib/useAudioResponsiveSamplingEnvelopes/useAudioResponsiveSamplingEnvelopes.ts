@@ -47,12 +47,12 @@ export type UseAudioResponsiveSamplingEnvelopesOptions = {
 };
 
 export type UseAudioResponsiveSamplingEnvelopesReturn = {
-  segmentsRef: React.RefObject<EnvelopeSegment[]>;
-  segmentWidthRef: React.RefObject<number>;
-  leftOffsetRef: React.RefObject<number>;
-  rightOffsetRef: React.RefObject<number>;
-  actualSegmentCountRef: React.RefObject<number>;
-  gapWidthRef: React.RefObject<number>;
+  getSegments: () => EnvelopeSegment[];
+  getSegmentWidth: () => number;
+  getLeftOffset: () => number;
+  getRightOffset: () => number;
+  getActualSegmentCount: () => number;
+  getGapWidth: () => number;
   calculateSegments: (displayWidth: number) => void;
 };
 
@@ -122,13 +122,37 @@ export function useAudioResponsiveSamplingEnvelopes(
     [data, segmentMinWidth, gapWidthPercent, gapMinWidth, gapMaxWidth, interpolationFn],
   );
 
+  const getSegments = useCallback(() => {
+    return segmentsRef.current;
+  }, []);
+
+  const getSegmentWidth = useCallback(() => {
+    return segmentWidthRef.current;
+  }, []);
+
+  const getLeftOffset = useCallback(() => {
+    return leftOffsetRef.current;
+  }, []);
+
+  const getRightOffset = useCallback(() => {
+    return rightOffsetRef.current;
+  }, []);
+
+  const getActualSegmentCount = useCallback(() => {
+    return actualSegmentCountRef.current;
+  }, []);
+
+  const getGapWidth = useCallback(() => {
+    return gapWidthRef.current;
+  }, []);
+
   return {
-    segmentsRef,
-    segmentWidthRef,
-    leftOffsetRef,
-    rightOffsetRef,
-    actualSegmentCountRef,
-    gapWidthRef,
+    getSegments,
+    getSegmentWidth,
+    getLeftOffset,
+    getRightOffset,
+    getActualSegmentCount,
+    getGapWidth,
     calculateSegments,
   };
 }
