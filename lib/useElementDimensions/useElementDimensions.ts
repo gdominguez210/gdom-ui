@@ -1,8 +1,8 @@
-import { useRef, useCallback, useEffect, type RefObject } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { useIntersectionObserver } from '@/lib/useIntersectionObserver';
 import { useResizeObserver } from '@/lib/useResizeObserver';
 import { useComposedRefs } from '@/lib/useComposedRefs';
-import { rafThrottle } from '@/utils/rafThrottle/rafThrottle';
+import { rafThrottle } from '@/utils/rafThrottle';
 
 export type ElementDimensions = {
   width: number;
@@ -16,8 +16,7 @@ export type ElementDimensions = {
 };
 
 export type UseElementDimensionsReturn = {
-  dimensions: ElementDimensions;
-  dimensionsRef: RefObject<ElementDimensions>;
+  getElementDimensions: () => ElementDimensions;
   elementRef: (node: Element | null) => void;
 };
 
@@ -124,9 +123,10 @@ export function useElementDimensions(): UseElementDimensionsReturn {
     };
   }, []);
 
+  const getElementDimensions = useCallback(() => dimensionsRef.current, []);
+
   return {
-    dimensions: dimensionsRef.current,
-    dimensionsRef,
+    getElementDimensions,
     elementRef: mergedRef,
   };
 }
