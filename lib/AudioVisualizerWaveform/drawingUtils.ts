@@ -4,10 +4,10 @@ import {
   calculateAmplitudeRatio,
   calculatePositionRatio,
 } from './waveformUtils';
-import { getColorByAudioIntensity } from '@/utils/getColorByAudioIntensity/getColorByAudioIntensity';
-import { getColorByFrequencyPosition } from '@/utils/getColorByFrequencyPosition/getColorByFrequencyPosition';
-import { getColorBySpectrum } from '@/utils/getColorBySpectrum/getColorBySpectrum';
-import { getColorByDynamicIntensity } from '@/utils/getColorByDynamicIntensity/getColorByDynamicIntensity';
+import { getColorByAudioIntensity } from '@/utils/getColorByAudioIntensity';
+import { getColorByFrequencyPosition } from '@/utils/getColorByFrequencyPosition';
+import { getColorBySpectrum } from '@/utils/getColorBySpectrum';
+import { getColorByDynamicIntensity } from '@/utils/getColorByDynamicIntensity';
 import type { OKLCHColor } from 'types/colors';
 
 export const WAVEFORM_COLOR_MODES = {
