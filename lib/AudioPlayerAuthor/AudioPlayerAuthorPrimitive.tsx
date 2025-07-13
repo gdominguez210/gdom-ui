@@ -1,13 +1,12 @@
 import { twMerge } from 'tailwind-merge';
 import clsx from 'clsx';
 import type { ElementType } from 'react';
-import type { AudioPlayerAuthorProps } from '@/lib/AudioPlayerAuthor/AudioPlayerAuthor';
+import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
 
 /**
  * Props for the AudioPlayerAuthorPrimitive component
  */
-export type AudioPlayerAuthorPrimitiveProps<T extends ElementType = 'span'> =
-  AudioPlayerAuthorProps<T>;
+export type AudioPlayerAuthorPrimitiveProps<T extends ElementType = 'span'> = PolymorphicProps<T>;
 
 /**
  * Base component for displaying author information with appropriate styling
@@ -15,14 +14,15 @@ export type AudioPlayerAuthorPrimitiveProps<T extends ElementType = 'span'> =
 export function AudioPlayerAuthorPrimitive<T extends ElementType = 'span'>(
   props: AudioPlayerAuthorPrimitiveProps<T>,
 ) {
-  const { as: Element = 'span', children, className, ...restProps } = props;
+  const { as = 'span', children, className, ...restProps } = props;
 
   return (
-    <Element
-      className={twMerge(clsx('line-clamp-1 text-sm text-gray-400', className))}
+    <Polymorphic
+      as={as}
+      className={twMerge(clsx('line-clamp-1', 'text-sm', 'text-gray-400', className))}
       {...restProps}
     >
       {children}
-    </Element>
+    </Polymorphic>
   );
 }
