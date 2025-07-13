@@ -2,7 +2,7 @@ import { Meta, Controls, Canvas as StorybookCanvas, Source, Stories, Primary, Ar
 import * as AudioPlayerStories from './AudioPlayer.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
-import { AudioPlayerCompoundComponent as AudioPlayer } from './namespace'
+import { AudioPlayer } from '@/lib/AudioPlayer/AudioPlayer';
 import { Canvas } from '@storybook-components/Canvas/Canvas';
 import { UsageNote } from '@storybook-components/UsageNote/UsageNote';
 import { AudioPlayerContextPlaybackProvider } from '@/lib/AudioPlayerContextPlaybackProvider/AudioPlayerContextPlaybackProvider';
@@ -56,9 +56,9 @@ Each component is available through the main `AudioPlayer` namespace or can be i
 
 <Canvas>
 <>
-### Root Container
+### Container
 
-<ViewSource href="AudioPlayer/AudioPlayer" />
+<ViewSource href="AudioPlayerContainer/AudioPlayerContainer" />
 
 The main wrapper component that provides layout and styling for the audio player.
 
@@ -70,7 +70,7 @@ The main wrapper component that provides layout and styling for the audio player
   code={`
 // Compound component usage
 import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
-<AudioPlayer.Root>...</AudioPlayer.Root>
+<AudioPlayer.Container>...</AudioPlayer.Root>
 `} />
 
 <Source
@@ -78,23 +78,14 @@ import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer';
   dark
   code={`
 // Direct import
-import { AudioPlayer } from '@gdominguez210/gdom-ui/AudioPlayer/AudioPlayer';
-<AudioPlayer>...</AudioPlayer>
-`} />
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Primitive component
-import { AudioPlayerPrimitive } from '@gdominguez210/gdom-ui/AudioPlayer';
-<AudioPlayerPrimitive>...</AudioPlayerPrimitive>
+import { AudioPlayerContainer } from '@gdominguez210/gdom-ui/AudioPlayerContainer';
+<AudioPlayerContainer>...</AudioPlayerContainer>
 `} />
 
 #### API Reference
 
 `type ComponentPropsWithRef<'T extends ElementType = 'div'>` &
-<ArgTypes of={AudioPlayer.Root} />
+<ArgTypes of={AudioPlayer.Container} />
 </>
 </Canvas>
 
