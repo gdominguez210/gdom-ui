@@ -1,16 +1,17 @@
 'use client';
 
-import type { ComponentPropsWithRef, ElementType } from 'react';
+import type { ElementType } from 'react';
 import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
-import { AudioPlayerTitlePrimitive } from './AudioPlayerTitlePrimitive';
+import {
+  AudioPlayerTitlePrimitive,
+  type AudioPlayerTitlePrimitiveProps,
+} from './AudioPlayerTitlePrimitive';
 
 /**
  * Props for the track title component
  */
-export type AudioPlayerTitleProps<T extends ElementType = 'span'> = {
-  /** Element to render as @default span */
-  as?: T;
-} & ComponentPropsWithRef<T>;
+export type AudioPlayerTitleProps<T extends ElementType = 'span'> =
+  AudioPlayerTitlePrimitiveProps<T>;
 
 /**
  * Displays the title of the current audio track

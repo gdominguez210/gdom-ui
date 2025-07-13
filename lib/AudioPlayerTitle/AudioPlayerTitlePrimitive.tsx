@@ -1,10 +1,8 @@
 import type { ElementType } from 'react';
-import type { AudioPlayerTitleProps } from '@/lib/AudioPlayerTitle/AudioPlayerTitle';
 import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
 
-export type AudioPlayerTitlePrimitiveProps<T extends ElementType = 'span'> =
-  AudioPlayerTitleProps<T>;
+export type AudioPlayerTitlePrimitiveProps<T extends ElementType = 'span'> = PolymorphicProps<T>;
 
 /**
  * Base component for displaying track title with appropriate styling
@@ -12,14 +10,15 @@ export type AudioPlayerTitlePrimitiveProps<T extends ElementType = 'span'> =
 export function AudioPlayerTitlePrimitive<T extends ElementType = 'span'>(
   props: AudioPlayerTitlePrimitiveProps<T>,
 ) {
-  const { as: Element = 'span', children, className, ...restProps } = props;
+  const { as = 'span', children, className, ...restProps } = props;
 
   return (
-    <Element
-      className={twMerge(clsx('line-clamp-1 font-bold lg:max-w-64 lg:truncate', className))}
+    <Polymorphic
+      as={as}
+      className={clsx('line-clamp-1', 'font-bold', 'lg:max-w-64', 'lg:truncate', className)}
       {...restProps}
     >
       {children}
-    </Element>
+    </Polymorphic>
   );
 }
