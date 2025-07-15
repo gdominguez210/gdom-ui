@@ -1,22 +1,23 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
+import type { ElementType } from 'react';
 import clsx from 'clsx';
+import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
 
 /**
  * Props for the audio playlist primitive component
  */
-export type AudioPlayerContainerProps<T extends ElementType = 'div'> = {
-  /** Element to render as @default div */
-  as?: T;
-} & ComponentPropsWithRef<T>;
+export type AudioPlayerContainerProps<T extends ElementType = 'div'> = PolymorphicProps<T>;
 
 /**
  * Base wrapper component for the audio player UI
  */
-export function AudioPlayerContainer<T extends ElementType>(props: AudioPlayerContainerProps<T>) {
-  const { as: Element = 'div', children, className, ...restProps } = props;
+export function AudioPlayerContainer<T extends ElementType = 'div'>(
+  props: AudioPlayerContainerProps<T>,
+) {
+  const { as = 'div', children, className, ...restProps } = props;
 
   return (
-    <Element
+    <Polymorphic
+      as={as}
       className={clsx(
         'flex',
         'flex-col',
@@ -31,6 +32,6 @@ export function AudioPlayerContainer<T extends ElementType>(props: AudioPlayerCo
       {...restProps}
     >
       {children}
-    </Element>
+    </Polymorphic>
   );
 }

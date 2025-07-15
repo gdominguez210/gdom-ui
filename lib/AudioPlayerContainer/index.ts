@@ -1,4 +1,4 @@
 export {
   AudioPlayerContainer,
   type AudioPlayerContainerProps,
-} from '@/lib/AudioPlayerContainer/AudioPlayeContainer';
+} from '@/lib/AudioPlayerContainer/AudioPlayerContainer';
