@@ -2,7 +2,7 @@ import type { StoryObj, Meta } from '@storybook/react-vite';
 import { AudioWaveformProgress } from '@/lib/AudioWaveformProgress/AudioWaveformProgress';
 import { overViewData } from '@/data/peakOverviewData';
 import { trackData } from '@/data/trackData';
-import { AudioPlayerCompoundComponent as AudioPlayer } from '@/lib/AudioPlayer/namespace';
+import { AudioPlayer } from '@/lib/AudioPlayer/AudioPlayer';
 import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
 import { useAudioPlayerContextPlayback } from '@/lib/AudioPlayerContextPlaybackProvider/useAudioPlayerContextPlayback';
 import { useAudioPlayerContextRefs } from '@/lib/AudioPlayerContextRefsProvider/useAudioPlayerContextRefs';
@@ -61,7 +61,7 @@ function AudioPlayerWrapper(props: AudioPlayerWaveformProgressProps) {
   return (
     <DeferredRender height={300}>
       <AudioPlayer.Provider tracks={trackData}>
-        <AudioPlayer.Root>
+        <AudioPlayer.Container>
           <AudioPlayerWaveformProgressWithData
             className="h-[150px]"
             {...props}
@@ -88,7 +88,7 @@ function AudioPlayerWrapper(props: AudioPlayerWaveformProgressProps) {
               <AudioPlayer.VolumeSlider />
             </AudioPlayer.Volume>
           </div>
-        </AudioPlayer.Root>
+        </AudioPlayer.Container>
       </AudioPlayer.Provider>
     </DeferredRender>
   );

@@ -1,7 +1,7 @@
 import type { StoryObj, Meta } from '@storybook/react-vite';
 import { AudioVisualizerWaveform } from '@/lib/AudioVisualizerWaveform/AudioVisualizerWaveform';
 import { trackData } from '@/data/trackData';
-import { AudioPlayerCompoundComponent as AudioPlayer } from '@/lib/AudioPlayer/namespace';
+import { AudioPlayer } from '@/lib/AudioPlayer/AudioPlayer';
 import { CollapseCategory } from '@/.storybook/decorators/CollapseCategory/CollapseCategory';
 
 export default {
@@ -210,7 +210,7 @@ const AudioVisualizerWithControls = (props: VisualizerControlProps) => {
   return (
     <AudioPlayer.Provider tracks={trackData}>
       <AudioPlayer.AudioContextProvider>
-        <AudioPlayer.Root className="@container/audio-player">
+        <AudioPlayer.Container className="@container/audio-player">
           <AudioPlayer.VisualizerWaveform
             className="max-h-[150px]"
             {...props}
@@ -238,7 +238,7 @@ const AudioVisualizerWithControls = (props: VisualizerControlProps) => {
             </AudioPlayer.Controls>
           </div>
           <AudioPlayer.ProgressBar />
-        </AudioPlayer.Root>
+        </AudioPlayer.Container>
       </AudioPlayer.AudioContextProvider>
     </AudioPlayer.Provider>
   );
