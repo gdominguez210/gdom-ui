@@ -11,7 +11,7 @@ export type PolymorphicProps<T extends ElementType = 'div'> = ComponentPropsWith
   asChild?: boolean;
 };
 
-export function Polymorphic<T extends ElementType = 'div'>(props: PolymorphicProps<T>) {
+export function Polymorphic<T extends ElementType>(props: PolymorphicProps<T>) {
   const { as: Element = 'div', asChild, children, className, ...rest } = props;
 
   if (asChild) {
