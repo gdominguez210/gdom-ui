@@ -1,70 +1,23 @@
-'use client';
+import { AudioPlaylistTrackContainer } from '@/lib/AudioPlaylistTrackContainer/AudioPlaylistTrackContainer';
+import { AudioPlaylistTrackContextProvider } from '@/lib/AudioPlaylistTrackContextProvider';
+import { AudioPlaylistTrackImage } from '@/lib/AudioPlaylistTrackImage';
+import { AudioPlaylistTrackTitle } from '@/lib/AudioPlaylistTrackTitle';
+import { AudioPlaylistTrackAuthor } from '@/lib/AudioPlaylistTrackAuthor';
 
-import {
-  type ElementType,
-  type MouseEvent as ReactMouseEvent,
-  type KeyboardEvent,
-  type ComponentPropsWithRef,
-  useCallback,
-} from 'react';
-import {
-  AudioPlaylistTrackPrimitive,
-  type AudioPlaylistTrackPrimitiveProps,
-} from '@/lib/AudioPlaylistTrack/AudioPlaylistTrackPrimitive';
-import { useAudioPlaylistTrackContext } from '@/lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
-
-/**
- * Props for the audio playlist track component
- */
-export type AudioPlaylistTrackProps<T extends ElementType = 'li'> = {
-  /** Element to render as @default li */
-  as?: T;
-} & ComponentPropsWithRef<T>;
-
-/**
- * Individual playlist track component
- */
-export function AudioPlaylistTrack<T extends ElementType = 'li'>(
-  props: AudioPlaylistTrackProps<T>,
-) {
-  const { onClick, onKeyDown, children, ...restProps } = props;
-
-  const {
-    active,
-    onSelect,
-    track: { title, author },
-  } = useAudioPlaylistTrackContext();
-
-  const handleClick = useCallback(
-    (e: ReactMouseEvent) => {
-      e.preventDefault();
-      onSelect();
-      onClick?.(e);
-    },
-    [onSelect, onClick],
-  );
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent<HTMLElement>) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        onSelect();
-      }
-
-      onKeyDown?.(e);
-    },
-    [onSelect, onKeyDown],
-  );
-
-  return (
-    <AudioPlaylistTrackPrimitive
-      active={active}
-      aria-label={`Play ${title} by ${author}`}
-      {...(restProps as AudioPlaylistTrackPrimitiveProps<T>)}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-    >
-      {children}
-    </AudioPlaylistTrackPrimitive>
-  );
-}
+export const AudioPlaylistTrack = {
+  Provider: Object.assign(AudioPlaylistTrackContextProvider, {
+    displayName: 'AudioPlaylistTrack.Provider',
+  }),
+  Container: Object.assign(AudioPlaylistTrackContainer, {
+    displayName: 'AudioPlaylistTrack.Container',
+  }),
+  Image: Object.assign(AudioPlaylistTrackImage, {
+    displayName: 'AudioPlaylistTrack.Image',
+  }),
+  Title: Object.assign(AudioPlaylistTrackTitle, {
+    displayName: 'AudioPlaylistTrack.Title',
+  }),
+  Author: Object.assign(AudioPlaylistTrackAuthor, {
+    displayName: 'AudioPlaylistTrack.Author',
+  }),
+};
