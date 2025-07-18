@@ -65,11 +65,13 @@ export function useAudioWaveformEnvelopeCurves(
     smoothingFactor = 0.5,
   } = options;
 
-  const { getSegments, getSegmentWidth, calculateSegments } = useAudioResponsiveSamplingEnvelopes({
-    data,
-    segmentMinWidth,
-    interpolationFn,
-  });
+  const { getSegments, getSegmentWidth, getGapWidth, calculateSegments } =
+    useAudioResponsiveSamplingEnvelopes({
+      data,
+      segmentMinWidth,
+      interpolationFn,
+      gapMinWidth: 0,
+    });
 
   const { getColorString, currentColor } = useColorTransition({
     targetColor: typeof color === 'string' ? color : '#000000',

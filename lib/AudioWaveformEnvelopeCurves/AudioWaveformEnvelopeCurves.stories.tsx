@@ -58,7 +58,7 @@ export default {
     colorTransitionDuration: 500,
     frameRate: 60,
     devicePixelRatio: undefined,
-    resolutionMode: 'high',
+    resolutionMode: 'auto',
   },
   argTypes: {
     // Appearance
