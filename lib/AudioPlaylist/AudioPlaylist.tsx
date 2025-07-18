@@ -1,29 +1,27 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
+import { AudioPlaylistContextProvider } from '@/lib/AudioPlaylistContextProvider';
+import { AudioPlaylistContainer } from '@/lib/AudioPlaylistContainer/AudioPlaylistContainer';
+import { AudioPlaylistTracks } from '@/lib/AudioPlaylistTracks/AudioPlaylistTracks';
+import { AudioPlaylistHeader } from '@/lib/AudioPlaylistHeader/AudioPlaylistHeader';
+import { AudioPlaylistDismiss } from '@/lib/AudioPlaylistDismiss/AudioPlaylistDismiss';
+import { AudioPlaylistControlToggle } from '@/lib/AudioPlaylistControlToggle/AudioPlaylistControlToggle';
+import { AudioPlaylistExpandableContainer } from '@/lib/AudioPlaylistExpandableContainer';
+import { AudioPlaylistScrollableContainer } from '@/lib/AudioPlaylistScrollableContainer';
+import { AudioPlaylistTrack } from '@/lib/AudioPlaylistTrack/AudioPlaylistTrack';
 
-/**
- * Props for the audio playlist primitive component
- */
-export type AudioPlaylistProps<T extends ElementType = 'div'> = {
-  /** Element to render as @default div */
-  as?: T;
-} & ComponentPropsWithRef<T>;
-
-/**
- * Base component for displaying a playlist of audio tracks, providing the essential markup
- */
-export function AudioPlaylist<T extends ElementType = 'div'>(props: AudioPlaylistProps<T>) {
-  const { as: Element = 'div', className, children, ...restProps } = props;
-
-  return (
-    <Element
-      className={twMerge(
-        clsx('flex flex-col border-slate-600 bg-slate-800 text-neutral-100', className),
-      )}
-      {...restProps}
-    >
-      {children}
-    </Element>
-  );
-}
+export const AudioPlaylist = {
+  Container: Object.assign(AudioPlaylistContainer, { displayName: 'AudioPlaylist.Container' }),
+  Provider: Object.assign(AudioPlaylistContextProvider, { displayName: 'AudioPlaylist.Provider' }),
+  Header: Object.assign(AudioPlaylistHeader, { displayName: 'AudioPlaylist.Header' }),
+  Dismiss: Object.assign(AudioPlaylistDismiss, { displayName: 'AudioPlaylist.Dismiss' }),
+  Tracks: Object.assign(AudioPlaylistTracks, { displayName: 'AudioPlaylist.Tracks' }),
+  ControlToggle: Object.assign(AudioPlaylistControlToggle, {
+    displayName: 'AudioPlaylist.ControlToggle',
+  }),
+  Track: Object.assign(AudioPlaylistTrack, { displayName: 'AudioPlaylist.Track' }),
+  ExpandableContainer: Object.assign(AudioPlaylistExpandableContainer, {
+    displayName: 'AudioPlaylist.ExpandableContainer',
+  }),
+  ScrollableContainer: Object.assign(AudioPlaylistScrollableContainer, {
+    displayName: 'AudioPlaylist.ScrollableContainer',
+  }),
+};

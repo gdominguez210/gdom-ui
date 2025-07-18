@@ -2,7 +2,7 @@ import { Meta, Controls, Canvas as StorybookCanvas, Source, Stories, Primary, Ar
 import * as AudioPlaylistStories from './AudioPlaylist.stories';
 import { DocumentationNav } from '@storybook-components/DocumentationNav/DocumentationNav';
 import { ViewSource } from '@storybook-components/ViewSource/ViewSource';
-import { AudioPlaylistCompoundComponent as AudioPlaylist } from './namespace';
+import { AudioPlaylist } from '@/lib/AudioPlaylist/AudioPlaylist';
 import { Canvas } from '@storybook-components/Canvas/Canvas';
 
 <Meta of={AudioPlaylistStories} />
@@ -47,9 +47,9 @@ Each component is available through the main `AudioPlaylist` namespace or can be
 
 <Canvas>
 <>
-### Root Container
+### Container
 
-<ViewSource href="AudioPlaylist/AudioPlaylist" />
+<ViewSource href="AudioPlaylistContainer" />
 
 The main wrapper component that provides layout and styling for the playlist.
 
@@ -61,7 +61,7 @@ The main wrapper component that provides layout and styling for the playlist.
   code={`
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
-<AudioPlaylist.Root>...</AudioPlaylist.Root>
+<AudioPlaylist.Container>...</AudioPlaylist.Container>
 `} />
 
 <Source
@@ -69,23 +69,14 @@ import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
   dark
   code={`
 // Direct import
-import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist/AudioPlaylist';
-<AudioPlaylist>...</AudioPlaylist>
-`} />
-
-<Source
-  language="tsx"
-  dark
-  code={`
-// Primitive component
-import { AudioPlaylistPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylist';
-<AudioPlaylistPrimitive>...</AudioPlaylistPrimitive>
+import { AudioPlaylistContainer } from '@gdominguez210/gdom-ui/AudioPlaylistContainer';
+<AudioPlaylistContainer>...</AudioPlaylistContainer>
 `} />
 
 #### API Reference
 
 `type ComponentPropsWithRef<T extends ElementType = 'div'>` &
-<ArgTypes of={AudioPlaylist.Root} />
+<ArgTypes of={AudioPlaylist.Container} />
 </>
 </Canvas>
 
@@ -298,7 +289,7 @@ import { AudioPlaylistTrackContextProvider } from '@gdominguez210/gdom-ui/AudioP
 <>
 ### Track Root
 
-<ViewSource href="AudioPlaylistTrack" />
+<ViewSource href="AudioPlaylistTrackContainer" />
 
 Container for individual track display components.
 
@@ -310,7 +301,7 @@ Container for individual track display components.
   code={`
 // Compound component usage
 import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
-<AudioPlaylist.Track.Root>...</AudioPlaylist.Track.Root>
+<AudioPlaylist.Track.Container>...</AudioPlaylist.Track.Container>
 `} />
 
 <Source
@@ -318,8 +309,8 @@ import { AudioPlaylist } from '@gdominguez210/gdom-ui/AudioPlaylist';
   dark
   code={`
 // Direct import
-import { AudioPlaylistTrack } from '@gdominguez210/gdom-ui/AudioPlaylistTrack';
-<AudioPlaylistTrack>...</AudioPlaylistTrack>
+import { AudioPlaylistTrackContainer } from '@gdominguez210/gdom-ui/AudioPlaylistTrackContainer';
+<AudioPlaylistTrackContainer>...</AudioPlaylistTrackContainer>
 `} />
 
 <Source
@@ -327,14 +318,14 @@ import { AudioPlaylistTrack } from '@gdominguez210/gdom-ui/AudioPlaylistTrack';
   dark
   code={`
 // Primitive component
-import { AudioPlaylistTrackPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTrack';
-<AudioPlaylistTrackPrimitive>...</AudioPlaylistTrackPrimitive>
+import { AudioPlaylistTrackContainerPrimitive } from '@gdominguez210/gdom-ui/AudioPlaylistTrackContainer';
+<AudioPlaylistTrackContainerPrimitive>...</AudioPlaylistTrackContainerPrimitive>
 `} />
 
 #### API Reference
 
 `type ComponentPropsWithRef<T extends ElementType = 'li'>` &
-<ArgTypes of={AudioPlaylist.Track.Root} />
+<ArgTypes of={AudioPlaylist.Track.Container} />
 </>
 </Canvas>
 
