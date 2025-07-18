@@ -26,9 +26,12 @@ type IconButtonAccessibilityProps =
   | { iconOnly?: false; 'aria-label'?: string }
   | { iconOnly: true; 'aria-label': string };
 
-export type ButtonProps<T extends ElementType = 'button'> = ButtonBaseProps &
-  IconButtonAccessibilityProps &
-  Omit<PolymorphicProps<T>, keyof ButtonBaseProps | keyof IconButtonAccessibilityProps>;
+export type ButtonProps<T extends ElementType = 'button'> = Omit<
+  PolymorphicProps<T>,
+  keyof ButtonBaseProps | keyof IconButtonAccessibilityProps
+> &
+  ButtonBaseProps &
+  IconButtonAccessibilityProps;
 
 const buttonStyles = cva(
   ['inline-flex justify-center items-center rounded-sm font-medium focus-visible:outline-hidden'],
@@ -126,7 +129,7 @@ const buttonStyles = cva(
   },
 );
 
-export function Button<T extends ElementType = 'button'>(props: ButtonProps<T>) {
+export function Button<T extends ElementType>(props: ButtonProps<T>) {
   const {
     as = 'button',
     children,
