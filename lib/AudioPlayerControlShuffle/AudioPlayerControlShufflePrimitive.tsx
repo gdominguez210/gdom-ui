@@ -1,6 +1,5 @@
 import type { ComponentPropsWithRef } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 import { IconShuffleFill } from '@/lib/IconShuffleFill';
 import { AudioPlayerControlButton } from '@/lib/AudioPlayerControlButton/AudioPlayerControlButton';
 
@@ -20,13 +19,11 @@ export function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShuf
 
   return (
     <AudioPlayerControlButton
-      className={twMerge(
-        clsx(
-          { 'text-neutral-100/50': !active },
-          'hover:text-neutral-100',
-          'focus:text-neutral-100',
-          className,
-        ),
+      className={cn(
+        { 'text-neutral-100/50': !active },
+        'hover:text-neutral-100',
+        'focus:text-neutral-100',
+        className,
       )}
       aria-label="Toggle Shuffle"
       aria-pressed={active}
