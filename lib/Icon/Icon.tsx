@@ -1,6 +1,5 @@
 import type { ComponentPropsWithRef, ComponentType } from 'react';
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utils/cn';
 
 export interface IconProps extends ComponentPropsWithRef<'svg'> {
   as: ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -11,7 +10,7 @@ export function Icon(props: IconProps) {
 
   return (
     <IconComponent
-      className={twMerge(clsx('h-[1em] fill-current', className))}
+      className={cn('h-[1em] fill-current', className)}
       {...restProps}
     />
   );
