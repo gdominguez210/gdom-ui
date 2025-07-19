@@ -1,1 +1,1 @@
-export { AudioPlaylistTrack } from '@/lib/AudioPlaylistTrack/AudioPlaylistTrack';
+export * as AudioPlaylistTrack from '@/lib/AudioPlaylistTrack/subcomponents';
