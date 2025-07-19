@@ -3,8 +3,8 @@ import {
   AudioPlayerImagePrimitive,
   type AudioPlayerImagePrimitiveProps,
 } from '@/lib/AudioPlayerImage/AudioPlayerImagePrimitive';
-import clsx from 'clsx';
 import type { ElementType } from 'react';
+import { cn } from '@/utils/cn';
 
 /**
  * Props for the audio playlist track image component
@@ -31,25 +31,58 @@ export function AudioPlaylistTrackImagePrimitive(props: AudioPlaylistTrackImageP
   } = props;
 
   return (
-    <div className="group relative h-12 w-12 shrink-0 overflow-hidden rounded-md">
+    <div
+      className={cn(
+        'group',
+        'relative',
+        'h-12',
+        'w-12',
+        'shrink-0',
+        'overflow-hidden',
+        'rounded-md',
+        className,
+      )}
+    >
       <AudioPlayerImagePrimitive
         src={src}
         altText={altText}
         width={width}
         height={height}
-        className={clsx('h-full w-full rounded-md', { 'border-2 border-white': active }, className)}
+        className={cn(
+          'h-full',
+          'w-full',
+          'rounded-md',
+          { 'border-2 border-white': active },
+          className,
+        )}
         {...restProps}
       />
       <div
-        className={clsx('absolute inset-0 flex items-center justify-center transition-opacity', {
-          'opacity-100': active,
-          'opacity-0 group-hover:opacity-100 group-focus:opacity-100': !active,
-        })}
+        className={cn(
+          'absolute',
+          'inset-0',
+          'flex',
+          'items-center',
+          'justify-center',
+          'transition-opacity',
+          {
+            'opacity-100': active,
+            'opacity-0 group-hover:opacity-100 group-focus:opacity-100': !active,
+          },
+        )}
       >
         <AudioPlayerControlPlayPrimitive
           tabIndex={-1}
           active={active && isPlaying}
-          className="border-none bg-transparent p-0 text-xl shadow-none hover:bg-transparent focus:bg-transparent focus:outline-hidden"
+          className={cn(
+            'border-none',
+            'bg-transparent',
+            'p-0 text-xl',
+            'shadow-none',
+            'hover:bg-transparent',
+            'focus:bg-transparent',
+            'focus:outline-hidden',
+          )}
         />
       </div>
     </div>
