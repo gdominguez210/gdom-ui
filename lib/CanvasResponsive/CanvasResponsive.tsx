@@ -5,15 +5,22 @@ import {
   type UseDevicePixelRatioAdaptiveOptions,
 } from '@/lib/useDevicePixelRatioAdaptive/useDevicePixelRatioAdaptive';
 import { useComposedRefs } from '@/lib/useComposedRefs/useComposedRefs';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 
 export type CanvasResponsiveProps = ComponentPropsWithRef<'canvas'> &
   UseCanvasResponsiveOptions &
   UseDevicePixelRatioAdaptiveOptions;
 
 export function CanvasResponsive(props: CanvasResponsiveProps) {
-  const { frameRate, onResize, ref, className, devicePixelRatio, resolutionMode, ...rest } = props;
+  const {
+    frameRate,
+    onResize,
+    ref,
+    className,
+    devicePixelRatio,
+    resolutionMode = 'auto',
+    ...rest
+  } = props;
 
   const { adaptiveDevicePixelRatio } = useDevicePixelRatioAdaptive({ resolutionMode });
 
@@ -27,7 +34,7 @@ export function CanvasResponsive(props: CanvasResponsiveProps) {
 
   return (
     <canvas
-      className={twMerge(clsx('w-full max-w-full object-contain', className))}
+      className={cn('w-full max-w-full object-contain', className)}
       ref={mergedRef}
       {...rest}
     />
