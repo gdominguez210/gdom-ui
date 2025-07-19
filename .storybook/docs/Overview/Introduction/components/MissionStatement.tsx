@@ -1,7 +1,6 @@
 import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
 import type { ElementType } from 'react';
-import clsx from 'clsx';
-
+import { cn } from '@/utils/cn';
 export type MissionStatementProps<T extends ElementType> = PolymorphicProps<T>;
 
 export function MissionStatement<T extends ElementType>(props: MissionStatementProps<T>) {
@@ -9,7 +8,7 @@ export function MissionStatement<T extends ElementType>(props: MissionStatementP
   return (
     <Polymorphic
       as={as}
-      className={clsx(
+      className={cn(
         'relative',
         'p-12',
         'before:absolute',
