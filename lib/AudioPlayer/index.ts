@@ -1,1 +1,1 @@
-export { AudioPlayer } from '@/lib/AudioPlayer/AudioPlayer';
+export * as AudioPlayer from '@/lib/AudioPlayer/subcomponents';
