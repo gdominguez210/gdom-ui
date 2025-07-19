@@ -1,31 +1,28 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
-import { AudioPlayerAuthorPrimitive } from '@/lib/AudioPlayerAuthor/AudioPlayerAuthorPrimitive';
+import { cn } from '@/utils/cn';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 
 /**
  * Props for the audio playlist track author component
  */
-export type AudioPlaylistTrackAuthorPrimitiveProps<T extends ElementType = 'span'> = {
-  /** Element to render as @default span */
-  as?: T;
-} & ComponentPropsWithRef<T>;
+export type AudioPlaylistTrackAuthorPrimitiveProps = PolymorphicProps<'span'>;
 
 /**
  * Track author component specifically styled for playlist tracks
  */
-export function AudioPlaylistTrackAuthorPrimitive<T extends ElementType = 'span'>(
-  props: AudioPlaylistTrackAuthorPrimitiveProps<T>,
-) {
-  const { as, className, children, ...restProps } = props;
+const _AudioPlaylistTrackAuthorPrimitive = (props: AudioPlaylistTrackAuthorPrimitiveProps) => {
+  const { as: Element = 'span', className, children, ...restProps } = props;
 
   return (
-    <AudioPlayerAuthorPrimitive
-      as={as}
-      className={twMerge(clsx('text-xs', className))}
+    <Element
+      className={cn('text-xs', className)}
       {...restProps}
     >
       {children}
-    </AudioPlayerAuthorPrimitive>
+    </Element>
   );
-}
+};
+
+_AudioPlaylistTrackAuthorPrimitive.displayName = 'AudioPlaylistTrackAuthorPrimitive';
+
+export const AudioPlaylistTrackAuthorPrimitive =
+  _AudioPlaylistTrackAuthorPrimitive as PolymorphicComponent<'span'>;

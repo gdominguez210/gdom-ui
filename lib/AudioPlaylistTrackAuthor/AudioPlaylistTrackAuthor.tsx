@@ -1,33 +1,24 @@
 'use client';
 
-import type { ElementType } from 'react';
-import {
-  AudioPlaylistTrackAuthorPrimitive,
-  type AudioPlaylistTrackAuthorPrimitiveProps,
-} from '@/lib/AudioPlaylistTrackAuthor/AudioPlaylistTrackAuthorPrimitive';
+import { AudioPlaylistTrackAuthorPrimitive } from '@/lib/AudioPlaylistTrackAuthor/AudioPlaylistTrackAuthorPrimitive';
 import { useAudioPlaylistTrackContext } from '@/lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
-
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 /**
  * Props for the audio playlist track author component
  */
-export type AudioPlaylistTrackAuthorProps<T extends ElementType = 'span'> = Omit<
-  AudioPlaylistTrackAuthorPrimitiveProps<T>,
-  'children'
->;
+export type AudioPlaylistTrackAuthorProps = PolymorphicProps<'span'>;
 
 /**
  * Audio playlist track author component
  */
-export function AudioPlaylistTrackAuthor<T extends ElementType = 'span'>(
-  props: AudioPlaylistTrackAuthorProps<T>,
-) {
+const _AudioPlaylistTrackAuthor = (props: AudioPlaylistTrackAuthorProps) => {
   const {
     track: { author },
   } = useAudioPlaylistTrackContext();
 
-  return (
-    <AudioPlaylistTrackAuthorPrimitive {...(props as AudioPlaylistTrackAuthorPrimitiveProps<T>)}>
-      {author}
-    </AudioPlaylistTrackAuthorPrimitive>
-  );
-}
+  return <AudioPlaylistTrackAuthorPrimitive {...props}>{author}</AudioPlaylistTrackAuthorPrimitive>;
+};
+
+_AudioPlaylistTrackAuthor.displayName = 'AudioPlaylistTrackAuthor';
+
+export const AudioPlaylistTrackAuthor = _AudioPlaylistTrackAuthor as PolymorphicComponent<'span'>;

@@ -1,25 +1,19 @@
 'use client';
 
-import type { ElementType } from 'react';
 import { useAudioPlayerContextTrack } from '@/lib/AudioPlayerContextTrackProvider/useAudioPlayerContextTrack';
-import {
-  AudioPlayerAuthorPrimitive,
-  type AudioPlayerAuthorPrimitiveProps,
-} from '@/lib/AudioPlayerAuthor/AudioPlayerAuthorPrimitive';
+import { AudioPlayerAuthorPrimitive } from '@/lib/AudioPlayerAuthor/AudioPlayerAuthorPrimitive';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 
 /**
  * Props for the track author component
  */
-export type AudioPlayerAuthorProps<T extends ElementType = 'span'> =
-  AudioPlayerAuthorPrimitiveProps<T>;
+export type AudioPlayerAuthorProps = PolymorphicProps<'span'>;
 
 /**
  * Displays the author of the current audio track
  * Returns null if no author is available
  */
-export function AudioPlayerAuthor<T extends ElementType = 'span'>(
-  props: AudioPlayerAuthorProps<T>,
-) {
+const _AudioPlayerAuthor = (props: AudioPlayerAuthorProps) => {
   const { currentTrack: { author } = {} } = useAudioPlayerContextTrack();
 
   if (!author) return null;
@@ -32,4 +26,6 @@ export function AudioPlayerAuthor<T extends ElementType = 'span'>(
       {author}
     </AudioPlayerAuthorPrimitive>
   );
-}
+};
+
+export const AudioPlayerAuthor = _AudioPlayerAuthor as PolymorphicComponent<'span'>;

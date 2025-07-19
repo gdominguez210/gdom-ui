@@ -1,27 +1,32 @@
-import type { ElementType } from 'react';
-import clsx from 'clsx';
-import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
+import { cn } from '@/utils/cn';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
+
+export type AudioPlaylistTrackContainerPrimitivePropsInternal = {
+  active?: boolean;
+};
+
 /**
  * Props for the audio playlist track primitive component
  */
-export type AudioPlaylistTrackContainerPrimitiveProps<T extends ElementType = 'li'> =
-  PolymorphicProps<T>;
+export type AudioPlaylistTrackContainerPrimitiveProps = PolymorphicProps<
+  'li',
+  AudioPlaylistTrackContainerPrimitivePropsInternal
+>;
 
 /**
  * Primitive component for rendering a single playlist track item
  */
-export function AudioPlaylistTrackContainerPrimitive<T extends ElementType = 'li'>(
-  props: AudioPlaylistTrackContainerPrimitiveProps<T>,
-) {
-  const { active, as = 'li', children, className, ...restProps } = props;
+const _AudioPlaylistTrackContainerPrimitive = (
+  props: PolymorphicProps<'li', AudioPlaylistTrackContainerPrimitivePropsInternal>,
+) => {
+  const { active, as: Element = 'li', children, className, ...restProps } = props;
 
   return (
-    <Polymorphic
-      as={as}
+    <Element
       tabIndex={0}
       role="button"
       aria-current={active ? 'true' : 'false'}
-      className={clsx(
+      className={cn(
         'flex',
         'cursor-pointer',
         'items-center',
@@ -41,6 +46,14 @@ export function AudioPlaylistTrackContainerPrimitive<T extends ElementType = 'li
       {...restProps}
     >
       {children}
-    </Polymorphic>
+    </Element>
   );
-}
+};
+
+_AudioPlaylistTrackContainerPrimitive.displayName = 'AudioPlaylistTrackContainerPrimitive';
+
+export const AudioPlaylistTrackContainerPrimitive =
+  _AudioPlaylistTrackContainerPrimitive as PolymorphicComponent<
+    'li',
+    AudioPlaylistTrackContainerPrimitivePropsInternal
+  >;

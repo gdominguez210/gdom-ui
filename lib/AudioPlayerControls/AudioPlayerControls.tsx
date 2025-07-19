@@ -1,23 +1,19 @@
-import type { ElementType } from 'react';
-import clsx from 'clsx';
-import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
+import { cn } from '@/utils/cn';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 /**
  * Props for the playback controls container
  */
-export type AudioPlayerControlsProps<T extends ElementType = 'div'> = PolymorphicProps<T>;
+export type AudioPlayerControlsProps = PolymorphicProps<'div'>;
 
 /**
  * Base component for laying out audio player controls
  */
-export function AudioPlayerControls<T extends ElementType = 'div'>(
-  props: AudioPlayerControlsProps<T>,
-) {
-  const { as = 'div', children, className, ...restProps } = props;
+const _AudioPlayerControls = (props: AudioPlayerControlsProps) => {
+  const { as: Element = 'div', children, className, ...restProps } = props;
 
   return (
-    <Polymorphic
-      as={as}
-      className={clsx(
+    <Element
+      className={cn(
         'flex',
         'items-center',
         'justify-center',
@@ -29,6 +25,10 @@ export function AudioPlayerControls<T extends ElementType = 'div'>(
       {...restProps}
     >
       {children}
-    </Polymorphic>
+    </Element>
   );
-}
+};
+
+_AudioPlayerControls.displayName = 'AudioPlayerControls';
+
+export const AudioPlayerControls = _AudioPlayerControls as PolymorphicComponent<'div'>;

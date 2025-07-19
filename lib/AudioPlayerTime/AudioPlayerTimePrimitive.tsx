@@ -1,23 +1,19 @@
-import type { ElementType } from 'react';
-import clsx from 'clsx';
-import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
+import { cn } from '@/utils/cn';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 /**
  * Props for the time display primitive component
  */
-export type AudioPlayerTimePrimitiveProps<T extends ElementType = 'span'> = PolymorphicProps<T>;
+export type AudioPlayerTimePrimitiveProps = PolymorphicProps<'span'>;
 
 /**
  * Base component for displaying formatted audio playback time
  */
-export function AudioPlayerTimePrimitive<T extends ElementType = 'span'>(
-  props: AudioPlayerTimePrimitiveProps<T>,
-) {
-  const { as = 'span', className, children, ...restProps } = props;
+const _AudioPlayerTimePrimitive = (props: AudioPlayerTimePrimitiveProps) => {
+  const { as: Element = 'span', className, children, ...restProps } = props;
 
   return (
-    <Polymorphic
-      as={as}
-      className={clsx(
+    <Element
+      className={cn(
         'line-clamp-1',
         'inline-block',
         'min-w-[6ch]',
@@ -30,6 +26,10 @@ export function AudioPlayerTimePrimitive<T extends ElementType = 'span'>(
       {...restProps}
     >
       {children}
-    </Polymorphic>
+    </Element>
   );
-}
+};
+
+_AudioPlayerTimePrimitive.displayName = 'AudioPlayerTimePrimitive';
+
+export const AudioPlayerTimePrimitive = _AudioPlayerTimePrimitive as PolymorphicComponent<'span'>;

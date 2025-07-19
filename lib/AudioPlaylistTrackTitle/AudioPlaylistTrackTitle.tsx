@@ -1,25 +1,17 @@
 import { useAudioPlaylistTrackContext } from '@/lib/AudioPlaylistTrackContextProvider/useAudioPlaylistTrackContext';
-import {
-  AudioPlaylistTrackTitlePrimitive,
-  type AudioPlaylistTrackTitlePrimitiveProps,
-} from '@/lib/AudioPlaylistTrackTitle/AudioPlaylistTrackTitlePrimitive';
-import type { ElementType } from 'react';
+import { AudioPlaylistTrackTitlePrimitive } from '@/lib/AudioPlaylistTrackTitle/AudioPlaylistTrackTitlePrimitive';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 
-export type AudioPlaylistTrackTitleProps<T extends ElementType = 'span'> = Omit<
-  AudioPlaylistTrackTitlePrimitiveProps<T>,
-  'children'
->;
+export type AudioPlaylistTrackTitleProps = PolymorphicProps<'span'>;
 
-export function AudioPlaylistTrackTitle<T extends ElementType = 'span'>(
-  props: AudioPlaylistTrackTitleProps<T>,
-) {
+const _AudioPlaylistTrackTitle = (props: AudioPlaylistTrackTitleProps) => {
   const {
     track: { title },
   } = useAudioPlaylistTrackContext();
 
-  return (
-    <AudioPlaylistTrackTitlePrimitive {...(props as AudioPlaylistTrackTitlePrimitiveProps<T>)}>
-      {title}
-    </AudioPlaylistTrackTitlePrimitive>
-  );
-}
+  return <AudioPlaylistTrackTitlePrimitive {...props}>{title}</AudioPlaylistTrackTitlePrimitive>;
+};
+
+_AudioPlaylistTrackTitle.displayName = 'AudioPlaylistTrackTitle';
+
+export const AudioPlaylistTrackTitle = _AudioPlaylistTrackTitle as PolymorphicComponent<'span'>;

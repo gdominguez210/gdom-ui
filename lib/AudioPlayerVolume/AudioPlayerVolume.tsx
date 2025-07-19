@@ -1,27 +1,27 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 
 /**
  * Props for the volume control component
  */
-export type AudioPlayerVolumeProps<T extends ElementType = 'div'> = ComponentPropsWithRef<T> & {
-  /** Element to render as @default div */
-  as?: T;
-};
+export type AudioPlayerVolumeProps = PolymorphicProps<'div'>;
 
 /**
  * Base container component for volume controls
  */
-export function AudioPlayerVolume<T extends ElementType = 'div'>(props: AudioPlayerVolumeProps<T>) {
+const _AudioPlayerVolume = (props: AudioPlayerVolumeProps) => {
   const { as: Element = 'div', className, children, ...restProps } = props;
 
   return (
     <Element
-      className={twMerge(clsx('flex items-center gap-2', className))}
+      className={cn('flex', 'items-center', 'gap-2', className)}
       {...restProps}
     >
       {children}
     </Element>
   );
-}
+};
+
+_AudioPlayerVolume.displayName = 'AudioPlayerVolume';
+
+export const AudioPlayerVolume = _AudioPlayerVolume as PolymorphicComponent<'div'>;

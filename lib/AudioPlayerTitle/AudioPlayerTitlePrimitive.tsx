@@ -1,24 +1,24 @@
-import type { ElementType } from 'react';
-import clsx from 'clsx';
-import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
+import { cn } from '@/utils/cn';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 
-export type AudioPlayerTitlePrimitiveProps<T extends ElementType = 'span'> = PolymorphicProps<T>;
+export type AudioPlayerTitlePrimitiveProps = PolymorphicProps<'span'>;
 
 /**
  * Base component for displaying track title with appropriate styling
  */
-export function AudioPlayerTitlePrimitive<T extends ElementType = 'span'>(
-  props: AudioPlayerTitlePrimitiveProps<T>,
-) {
-  const { as = 'span', children, className, ...restProps } = props;
+const _AudioPlayerTitlePrimitive = (props: AudioPlayerTitlePrimitiveProps) => {
+  const { as: Element = 'span', children, className, ...restProps } = props;
 
   return (
-    <Polymorphic
-      as={as}
-      className={clsx('line-clamp-1', 'font-bold', 'lg:max-w-64', 'lg:truncate', className)}
+    <Element
+      className={cn('line-clamp-1', 'font-bold', 'lg:max-w-64', 'lg:truncate', className)}
       {...restProps}
     >
       {children}
-    </Polymorphic>
+    </Element>
   );
-}
+};
+
+_AudioPlayerTitlePrimitive.displayName = 'AudioPlayerTitlePrimitive';
+
+export const AudioPlayerTitlePrimitive = _AudioPlayerTitlePrimitive as PolymorphicComponent<'span'>;

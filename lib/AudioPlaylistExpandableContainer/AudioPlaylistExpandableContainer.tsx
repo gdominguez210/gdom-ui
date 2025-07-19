@@ -1,27 +1,22 @@
 'use client';
 
-import type { ElementType, ComponentPropsWithRef } from 'react';
 import { useAudioPlaylistContext } from '@/lib/AudioPlaylistContextProvider';
 import { AudioPlaylistExpandableContainerPrimitive } from './AudioPlaylistExpandableContainerPrimitive';
 import { useComposedRefs } from '@/lib/useComposedRefs';
 import { useAudioPlaylistExpandableContainer } from './useAudioPlaylistExpandableContainer';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 
 /**
  * Props for the context-connected expandable container component - same as primitive
  * but without the isExpanded prop which comes from context
  */
-export type AudioPlaylistExpandableContainerProps<T extends ElementType = 'div'> = {
-  /** Element to render as @default div */
-  as?: T;
-} & ComponentPropsWithRef<T>;
+export type AudioPlaylistExpandableContainerProps = PolymorphicProps<'div'>;
 
 /**
  * Container component that connects to AudioPlaylistContext and expands/collapses based on context state
  * This component is a client component as it uses React hooks and context
  */
-export function AudioPlaylistExpandableContainer<T extends ElementType = 'div'>(
-  props: AudioPlaylistExpandableContainerProps<T>,
-) {
+const _AudioPlaylistExpandableContainer = (props: AudioPlaylistExpandableContainerProps) => {
   const { isPlaylistVisible, expandableContainerRef, toggleRef, togglePlaylist, id } =
     useAudioPlaylistContext();
 
@@ -43,6 +38,9 @@ export function AudioPlaylistExpandableContainer<T extends ElementType = 'div'>(
       {...props}
     />
   );
-}
+};
 
-export default AudioPlaylistExpandableContainer;
+_AudioPlaylistExpandableContainer.displayName = 'AudioPlaylistExpandableContainer';
+
+export const AudioPlaylistExpandableContainer =
+  _AudioPlaylistExpandableContainer as PolymorphicComponent<'div'>;

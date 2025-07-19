@@ -1,24 +1,26 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
+import type { ElementType } from 'react';
+
+type AudioPlaylistScrollableContainerPropsInternal = {
+  maxHeight?: string;
+};
 
 /**
  * Props for the audio playlist scrollable container component
  */
-export type AudioPlaylistScrollableContainerProps<T extends ElementType = 'div'> = {
-  /** Element to render as @default div */
-  as?: T;
-  /** Maximum height for the scrollable container */
-  maxHeight?: string;
-} & ComponentPropsWithRef<T>;
+export type AudioPlaylistScrollableContainerProps<T extends ElementType = 'div'> = PolymorphicProps<
+  T,
+  AudioPlaylistScrollableContainerPropsInternal
+>;
 
 /**
  * A scrollable container component for audio playlist elements
  * Provides consistent custom scrollbar styling across browsers
  */
-export function AudioPlaylistScrollableContainer<T extends ElementType = 'div'>(
-  props: AudioPlaylistScrollableContainerProps<T>,
-) {
+const _AudioPlaylistScrollableContainer = (
+  props: PolymorphicProps<'div', AudioPlaylistScrollableContainerPropsInternal>,
+) => {
   const {
     as: Element = 'div',
     children,
@@ -30,13 +32,14 @@ export function AudioPlaylistScrollableContainer<T extends ElementType = 'div'>(
 
   return (
     <Element
-      className={twMerge(
-        clsx(
-          'overflow-y-auto',
-          'scrollbar-thin scrollbar-thumb-slate-400/30 scrollbar-track-slate-800/20 hover:scrollbar-thumb-slate-400/50',
-          'scrollbar-thumb-rounded-none',
-          className,
-        ),
+      className={cn(
+        'overflow-y-auto',
+        'scrollbar-thin',
+        'scrollbar-thumb-slate-400/30',
+        'scrollbar-track-slate-800/20',
+        'hover:scrollbar-thumb-slate-400/50',
+        'scrollbar-thumb-rounded-none',
+        className,
       )}
       style={{
         maxHeight,
@@ -47,6 +50,12 @@ export function AudioPlaylistScrollableContainer<T extends ElementType = 'div'>(
       {children}
     </Element>
   );
-}
+};
 
-export default AudioPlaylistScrollableContainer;
+_AudioPlaylistScrollableContainer.displayName = 'AudioPlaylistScrollableContainer';
+
+export const AudioPlaylistScrollableContainer =
+  _AudioPlaylistScrollableContainer as PolymorphicComponent<
+    'div',
+    AudioPlaylistScrollableContainerPropsInternal
+  >;

@@ -1,29 +1,26 @@
-import type { ComponentPropsWithRef, ElementType } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
-
+import { cn } from '@/utils/cn';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 /**
  * Props for the audio playlist tracks container component
  */
-export type AudioPlaylistTracksProps<T extends ElementType = 'ul'> = {
-  /** Element to render as @default ul */
-  as?: T;
-} & ComponentPropsWithRef<T>;
+export type AudioPlaylistTracksProps = PolymorphicProps<'ul'>;
 
 /**
  * Audio playlist tracks component for rendering the scrollable list of playlist tracks
  */
-export function AudioPlaylistTracks<T extends ElementType = 'ul'>(
-  props: AudioPlaylistTracksProps<T>,
-) {
+const _AudioPlaylistTracks = (props: AudioPlaylistTracksProps) => {
   const { as: Element = 'ul', className, children, ...restProps } = props;
 
   return (
     <Element
-      className={twMerge(clsx('flex flex-col gap-2 p-4', className))}
+      className={cn('flex flex-col', 'gap-2 p-4', className)}
       {...restProps}
     >
       {children}
     </Element>
   );
-}
+};
+
+_AudioPlaylistTracks.displayName = 'AudioPlaylistTracks';
+
+export const AudioPlaylistTracks = _AudioPlaylistTracks as PolymorphicComponent<'ul'>;
