@@ -1,8 +1,7 @@
 import { type ComponentPropsWithRef } from 'react';
 import { Button } from '@/lib/Button/Button';
 import { IconLibrary } from '@/lib/IconLibrary/IconLibrary';
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utils/cn';
 
 export type SocialsProps = ComponentPropsWithRef<'div'>;
 
@@ -11,7 +10,7 @@ export function Socials(props: SocialsProps) {
 
   return (
     <div
-      className={twMerge(clsx('flex items-center', className))}
+      className={cn('flex items-center', className)}
       {...rest}
     >
       <Button
