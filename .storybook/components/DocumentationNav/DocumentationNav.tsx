@@ -1,6 +1,5 @@
 import { useState, useEffect, type ComponentPropsWithoutRef } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 
 export type NavItem = {
   label: string;
@@ -14,14 +13,12 @@ interface NavLinkProps extends ComponentPropsWithoutRef<'a'> {
 function NavLink({ active, className, children, ...props }: NavLinkProps) {
   return (
     <a
-      className={twMerge(
-        clsx(
-          'block truncate overflow-hidden text-sm text-ellipsis text-blue-400 no-underline transition-colors',
-          {
-            'text-blue-700 underline': active,
-            'hover:text-blue-700 hover:underline': !active,
-          },
-        ),
+      className={cn(
+        'block truncate overflow-hidden text-sm text-ellipsis text-blue-400 no-underline transition-colors',
+        {
+          'text-blue-700 underline': active,
+          'hover:text-blue-700 hover:underline': !active,
+        },
         className,
       )}
       {...props}
@@ -154,7 +151,7 @@ export function DocumentationNav({ items: providedItems }: DocumentationNavProps
       >
         Table of Contents
         <svg
-          className={clsx('h-4 w-4 transform transition-transform', {
+          className={cn('h-4 w-4 transform transition-transform', {
             'rotate-180': isOpen,
           })}
           fill="none"
@@ -171,7 +168,7 @@ export function DocumentationNav({ items: providedItems }: DocumentationNavProps
       </button>
 
       <nav
-        className={clsx('mt-4 flex flex-col gap-2 transition-all duration-200', {
+        className={cn('mt-4 flex flex-col gap-2 transition-all duration-200', {
           block: isOpen,
           hidden: !isOpen,
         })}
