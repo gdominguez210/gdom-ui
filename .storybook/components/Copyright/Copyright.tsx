@@ -1,6 +1,6 @@
 import { type ComponentPropsWithRef } from 'react';
 import { Button } from '@/lib/Button/Button';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 
 const START_YEAR = 2024;
 const CURRENT_YEAR = new Date().getFullYear();
@@ -15,7 +15,7 @@ export function Copyright(props: CopyrightProps) {
 
   return (
     <div
-      className={clsx(
+      className={cn(
         'flex flex-wrap items-center gap-2 text-sm text-balance text-slate-500',
         className,
       )}
