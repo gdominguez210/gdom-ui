@@ -1,7 +1,6 @@
 import type { ElementType } from 'react';
 import type { AudioPlayerImageProps } from '@/lib/AudioPlayerImage/AudioPlayerImage';
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utils/cn';
 import { IconDiscFill } from '@/lib/IconDiscFill';
 
 export type AudioPlayerImagePrimitiveProps<T extends ElementType = 'div'> =
@@ -28,11 +27,14 @@ export function AudioPlayerImagePrimitive<T extends ElementType>(
 
   return (
     <Element
-      className={twMerge(
-        clsx(
-          'flex h-24 w-24 items-center justify-center overflow-hidden bg-neutral-100/10',
-          className,
-        ),
+      className={cn(
+        'flex',
+        'h-24 w-24',
+        'items-center',
+        'justify-center',
+        'overflow-hidden',
+        'bg-neutral-100/10',
+        className,
       )}
       {...restProps}
     >
@@ -40,12 +42,12 @@ export function AudioPlayerImagePrimitive<T extends ElementType>(
         <img
           src={src}
           alt={altText}
-          className="h-full w-full object-cover"
+          className={cn('h-full', 'w-full', 'object-cover')}
           width={width}
           height={height}
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center">
+        <div className={cn('flex', 'h-full', 'w-full', 'items-center', 'justify-center')}>
           <span className="text-4xl">
             <IconDiscFill />
           </span>
