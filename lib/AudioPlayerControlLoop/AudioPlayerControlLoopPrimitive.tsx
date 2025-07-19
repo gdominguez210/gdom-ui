@@ -1,6 +1,5 @@
 import type { ComponentPropsWithRef } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 import { IconRepeatOneFill } from '@/lib/IconRepeatOneFill';
 import { IconRepeat2Fill } from '@/lib/IconRepeat2Fill';
 import { AudioPlayerControlButton } from '@/lib/AudioPlayerControlButton';
@@ -21,13 +20,11 @@ export function AudioPlayerControlLoopPrimitive(props: AudioPlayerControlLoopPri
 
   return (
     <AudioPlayerControlButton
-      className={twMerge(
-        clsx(
-          { 'text-neutral-100/50': !active },
-          'hover:text-neutral-100',
-          'focus-within:text-neutral-100',
-          className,
-        ),
+      className={cn(
+        { 'text-neutral-100/50': !active },
+        'hover:text-neutral-100',
+        'focus-within:text-neutral-100',
+        className,
       )}
       aria-label="Toggle Loop"
       aria-pressed={active}
