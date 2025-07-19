@@ -1,8 +1,7 @@
 import type { ComponentPropsWithRef } from 'react';
-import { twMerge } from 'tailwind-merge';
-import clsx from 'clsx';
 import { IconCloseFill } from '@/lib/IconCloseFill';
 import { AudioPlayerControlButton } from '@/lib/AudioPlayerControlButton';
+import { cn } from '@/utils/cn';
 
 /**
  * Props for the audio playlist dismiss button primitive component
@@ -18,7 +17,7 @@ export function AudioPlaylistDismissPrimitive(props: AudioPlaylistDismissPrimiti
   return (
     <AudioPlayerControlButton
       aria-label="Close playlist"
-      className={twMerge(clsx('text-2xl', className))}
+      className={cn('text-2xl', className)}
       {...restProps}
     >
       <IconCloseFill />
