@@ -1,7 +1,7 @@
-import type { ElementType } from 'react';
 import { cva } from 'class-variance-authority';
 import { variants, sizes } from '@/lib/Button/data';
-import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
+import { type PolymorphicProps, type PolymorphicComponent } from '@/types/helpers';
+import type { ElementType } from 'react';
 
 type Variant = (typeof variants)[number];
 
@@ -26,12 +26,11 @@ type IconButtonAccessibilityProps =
   | { iconOnly?: false; 'aria-label'?: string }
   | { iconOnly: true; 'aria-label': string };
 
-export type ButtonProps<T extends ElementType = 'button'> = Omit<
-  PolymorphicProps<T>,
-  keyof ButtonBaseProps | keyof IconButtonAccessibilityProps
-> &
-  ButtonBaseProps &
-  IconButtonAccessibilityProps;
+export type ButtonInternalProps = ButtonBaseProps & IconButtonAccessibilityProps;
+export type ButtonProps<T extends ElementType = 'button'> = PolymorphicProps<
+  T,
+  ButtonInternalProps
+>;
 
 const buttonStyles = cva(
   ['inline-flex justify-center items-center rounded-sm font-medium focus-visible:outline-hidden'],
@@ -129,9 +128,9 @@ const buttonStyles = cva(
   },
 );
 
-export function Button<T extends ElementType>(props: ButtonProps<T>) {
+const _Button = (props: PolymorphicProps<'button', ButtonInternalProps>) => {
   const {
-    as = 'button',
+    as: Element = 'button',
     children,
     disabled,
     variant = 'primary',
@@ -142,13 +141,16 @@ export function Button<T extends ElementType>(props: ButtonProps<T>) {
   } = props;
 
   return (
-    <Polymorphic
-      as={as}
+    <Element
       className={buttonStyles({ variant, size, disabled, iconOnly, className })}
       disabled={disabled}
       {...restProps}
     >
       {children}
-    </Polymorphic>
+    </Element>
   );
-}
+};
+
+_Button.displayName = 'Button';
+
+export const Button = _Button as PolymorphicComponent<'button', ButtonInternalProps>;
