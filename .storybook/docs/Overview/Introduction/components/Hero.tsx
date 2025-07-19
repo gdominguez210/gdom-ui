@@ -1,19 +1,16 @@
 import { Canvas, type CanvasProps } from '@/.storybook/components/Canvas/Canvas';
 import { Button } from '@/lib/Button/Button';
 import { IconLibrary } from '@/lib/IconLibrary/IconLibrary';
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utils/cn';
 
 export function Hero(props: CanvasProps) {
   const { className, ...restProps } = props;
 
   return (
     <section
-      className={twMerge(
-        clsx(
-          'sb-unstyled relative z-0 before:absolute before:top-0 before:bottom-0 before:left-1/2 before:block before:w-screen before:-translate-x-1/2 before:transform before:bg-radial-[at_50%_40%] before:from-blue-800 before:to-blue-900',
-          className,
-        ),
+      className={cn(
+        'sb-unstyled relative z-0 before:absolute before:top-0 before:bottom-0 before:left-1/2 before:block before:w-screen before:-translate-x-1/2 before:transform before:bg-radial-[at_50%_40%] before:from-blue-800 before:to-blue-900',
+        className,
       )}
     >
       <Canvas
