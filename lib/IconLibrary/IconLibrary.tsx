@@ -1,6 +1,5 @@
 import type { ComponentPropsWithRef } from 'react';
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utils/cn';
 import { Icon } from '@/lib/Icon/Icon';
 import { type IconName, icons } from '@/lib/IconLibrary/data';
 
@@ -21,7 +20,7 @@ export function IconLibrary(props: IconLibraryProps) {
   return (
     <Icon
       as={IconComponent}
-      className={twMerge(clsx('h-[1em] fill-current', className))}
+      className={cn('h-[1em] fill-current', className)}
       {...restProps}
     />
   );
