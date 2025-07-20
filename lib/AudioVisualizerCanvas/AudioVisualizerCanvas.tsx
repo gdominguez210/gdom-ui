@@ -2,8 +2,7 @@ import {
   CanvasResponsive,
   type CanvasResponsiveProps,
 } from '@/lib/CanvasResponsive/CanvasResponsive';
-import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '@/utils/cn';
 export type AudioVisualizerCanvasProps = CanvasResponsiveProps;
 
 export const AudioVisualizerCanvas = (props: AudioVisualizerCanvasProps) => {
@@ -11,11 +10,19 @@ export const AudioVisualizerCanvas = (props: AudioVisualizerCanvasProps) => {
 
   return (
     <CanvasResponsive
-      className={twMerge(
-        clsx(
-          'relative bg-radial from-slate-800 from-0% to-slate-950 to-90% before:absolute before:inset-0 before:bg-radial before:from-white before:to-transparent before:bg-[size:1px_1px] before:content-[""]',
-          className,
-        ),
+      className={cn(
+        'relative',
+        'bg-radial',
+        'from-slate-800 from-0%',
+        'to-slate-950 to-90%',
+        'before:absolute',
+        'before:inset-0',
+        'before:bg-radial',
+        'before:from-white',
+        'before:to-transparent',
+        'before:bg-[size:1px_1px]',
+        'before:content-[""]',
+        className,
       )}
       {...restProps}
     />
