@@ -1,13 +1,15 @@
 import { type ElementType } from 'react';
 import { cva } from 'class-variance-authority';
-import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
+import type { PolymorphicProps, PolymorphicComponent } from '@/types/helpers';
 
-export type BadgeProps<T extends ElementType = 'span'> = PolymorphicProps<T> & {
+type BadgePropsInternal = {
   /** @default neutral */
   variant?: 'neutral' | 'danger' | 'warning' | 'success' | 'primary' | 'outline';
   /** @default md */
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 };
+
+export type BadgeProps<T extends ElementType = 'span'> = PolymorphicProps<T, BadgePropsInternal>;
 
 const badgeStyles = cva(
   'inline-flex items-center rounded-full border border-solid font-normal text-center',
@@ -36,9 +38,9 @@ const badgeStyles = cva(
   },
 );
 
-export function Badge<T extends ElementType = 'span'>(props: BadgeProps<T>) {
+const _Badge = (props: PolymorphicProps<'span', BadgePropsInternal>) => {
   const {
-    as = 'span',
+    as: Element = 'span',
     children,
     className,
     variant = 'neutral',
@@ -47,12 +49,15 @@ export function Badge<T extends ElementType = 'span'>(props: BadgeProps<T>) {
   } = props;
 
   return (
-    <Polymorphic
-      as={as}
+    <Element
       className={badgeStyles({ variant, size, className })}
       {...restProps}
     >
       {children}
-    </Polymorphic>
+    </Element>
   );
-}
+};
+
+_Badge.displayName = 'Badge';
+
+export const Badge = _Badge as PolymorphicComponent<'span', BadgePropsInternal>;
