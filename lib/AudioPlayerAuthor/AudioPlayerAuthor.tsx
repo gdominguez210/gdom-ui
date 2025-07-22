@@ -28,4 +28,6 @@ const _AudioPlayerAuthor = (props: AudioPlayerAuthorProps) => {
   );
 };
 
+_AudioPlayerAuthor.displayName = 'AudioPlayerAuthor';
+
 export const AudioPlayerAuthor = _AudioPlayerAuthor as PolymorphicComponent<'span'>;
