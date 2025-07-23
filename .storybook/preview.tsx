@@ -1,9 +1,10 @@
-import type { Preview } from '@storybook/react';
+import type { Preview } from '@storybook/react-vite';
 import { DocsContainer } from '@storybook/addon-docs/blocks';
 import './storybook.css';
 import { Copyright } from '@/.storybook/components/Copyright/Copyright';
 import { Footer } from '@/.storybook/components/Footer/Footer';
 import { Socials } from '@/.storybook/components/Socials/Socials';
+
 const preview: Preview = {
   parameters: {
     controls: {
@@ -11,10 +12,24 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
+      expanded: true,
+      sort: 'alpha',
     },
     docs: {
       story: {
         inline: true,
+      },
+      source: {
+        transform: async (source) => {
+          const prettier = await import('prettier/standalone');
+          const prettierPluginBabel = await import('prettier/plugins/babel');
+          const prettierPluginEstree = await import('prettier/plugins/estree');
+
+          return prettier.format(source, {
+            parser: 'babel',
+            plugins: [prettierPluginBabel.default, prettierPluginEstree.default],
+          });
+        },
       },
       container: ({ children, context }) => {
         return (
