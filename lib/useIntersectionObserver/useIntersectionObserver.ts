@@ -1,9 +1,17 @@
 import { useEffect, useRef, useCallback, useMemo } from 'react';
 import { useLatest } from '@/lib/useLatest/useLatest';
+
 const DEFAULT_OPTIONS: IntersectionObserverInit = {
   rootMargin: '0px',
   threshold: 0,
   root: null,
+};
+
+type UseIntersectionObserverReturn = {
+  setRef: (node: Element | null) => void;
+  observe: (node: Element | null) => void;
+  unobserve: (node: Element | null) => void;
+  disconnect: () => void;
 };
 
 /**
@@ -16,7 +24,7 @@ const DEFAULT_OPTIONS: IntersectionObserverInit = {
 export function useIntersectionObserver(
   callback: IntersectionObserverCallback,
   options: IntersectionObserverInit = DEFAULT_OPTIONS,
-): { setRef: (node: Element | null) => void } {
+): UseIntersectionObserverReturn {
   const mergedOptions = useMemo(() => ({ ...DEFAULT_OPTIONS, ...options }), [options]);
 
   const callbackRef = useLatest(callback);
@@ -63,5 +71,22 @@ export function useIntersectionObserver(
     };
   }, []);
 
-  return { setRef };
+  const observe = useCallback((node: Element | null) => {
+    if (node && observerRef.current) {
+      observerRef.current.observe(node);
+    }
+  }, []);
+
+  const unobserve = useCallback((node: Element | null) => {
+    if (node && observerRef.current) {
+      observerRef.current.unobserve(node);
+    }
+  }, []);
+
+  const disconnect = useCallback(() => {
+    observerRef.current?.disconnect();
+    observerRef.current = null;
+  }, []);
+
+  return { setRef, observe, unobserve, disconnect };
 }
