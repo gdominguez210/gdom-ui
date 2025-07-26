@@ -28,12 +28,11 @@ export function useIntersectionObserver(
   const mergedOptions = useMemo(() => ({ ...DEFAULT_OPTIONS, ...options }), [options]);
 
   const callbackRef = useLatest(callback);
-
   const observerRef = useRef<IntersectionObserver | null>(
     typeof IntersectionObserver !== 'undefined'
       ? new IntersectionObserver((entries, observer) => {
           callbackRef.current(entries, observer);
-        })
+        }, mergedOptions)
       : null,
   );
 
@@ -85,7 +84,6 @@ export function useIntersectionObserver(
 
   const disconnect = useCallback(() => {
     observerRef.current?.disconnect();
-    observerRef.current = null;
   }, []);
 
   return { setRef, observe, unobserve, disconnect };
