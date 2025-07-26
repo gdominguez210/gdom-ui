@@ -1,190 +1,54 @@
-import { useState, useEffect, type ComponentPropsWithoutRef } from 'react';
+import { useState } from 'react';
 import { cn } from '@/utils/cn';
+import { styled } from '@storybook/theming';
+import { Button } from '@/lib/Button/Button';
+import { IconArrowRightSLine } from '@/lib/IconArrowRightSLine/IconArrowRightSLine';
+import { useDocumentationNavItems } from './useDocumentationNavItems';
+import { DocumentationNavItem } from './DocumentationNavItem';
+import { baseCommon } from '@storybook-components/Typography/config';
 
-export type NavItem = {
-  label: string;
-  href: string;
-};
+const StyledDocumentationNav = styled.div(baseCommon);
 
-interface NavLinkProps extends ComponentPropsWithoutRef<'a'> {
-  active?: boolean;
-}
-
-function NavLink({ active, className, children, ...props }: NavLinkProps) {
-  return (
-    <a
-      className={cn(
-        'block truncate overflow-hidden text-sm text-ellipsis text-blue-400 no-underline transition-colors',
-        {
-          'text-blue-700 underline': active,
-          'hover:text-blue-700 hover:underline': !active,
-        },
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </a>
-  );
-}
-
-/**
- * Validates if a string is a valid CSS selector
- * @param selector - The selector string to validate
- * @returns boolean indicating if the selector is valid
- */
-function isValidSelector(selector: string): boolean {
-  if (!selector || selector === '#' || selector === '#-') return false;
-
-  if (selector.startsWith('#-')) return false;
-
-  try {
-    document.createDocumentFragment().querySelector(selector);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-export type DocumentationNavProps = {
-  items?: NavItem[];
-};
-
-export function DocumentationNav({ items: providedItems }: DocumentationNavProps) {
+export function DocumentationNav() {
   const [isOpen, setIsOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState<string>('');
-  const [items, setItems] = useState<NavItem[]>(providedItems || []);
-  const [isNavigatingViaLink, setIsNavigatingViaLink] = useState(false);
 
-  useEffect(() => {
-    if (!providedItems) {
-      const headings = Array.from(document.querySelectorAll('h1, h2'));
-      const navItems = headings
-        .map((heading) => ({
-          label: heading.textContent || '',
-          href: `#${heading.id}`,
-        }))
-        .filter((item) => item.href !== '#' && isValidSelector(item.href));
-      setItems(navItems);
-    } else {
-      setItems(providedItems.filter((item) => isValidSelector(item.href)));
-    }
-  }, [providedItems]);
-
-  useEffect(() => {
-    if (items.length === 0 || isNavigatingViaLink) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: '-10% 0px -90% 0px',
-      },
-    );
-
-    items.forEach((item) => {
-      if (isValidSelector(item.href)) {
-        try {
-          const element = document.querySelector(item.href);
-          if (element) observer.observe(element);
-        } catch (error) {
-          console.warn(`Invalid selector: ${item.href}`);
-        }
-      }
-    });
-
-    return () => observer.disconnect();
-  }, [items, isNavigatingViaLink]);
-
-  useEffect(() => {
-    if (!isNavigatingViaLink) return;
-
-    let scrollTimeout: NodeJS.Timeout;
-
-    const handleScroll = () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        setIsNavigatingViaLink(false);
-      }, 150);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(scrollTimeout);
-    };
-  }, [isNavigatingViaLink]);
-
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-
-    if (!isValidSelector(href)) {
-      console.warn(`Cannot navigate to invalid selector: ${href}`);
-      return;
-    }
-
-    try {
-      const element = document.querySelector(href);
-      if (element) {
-        setIsNavigatingViaLink(true);
-        setActiveSection(href.slice(1));
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    } catch (error) {
-      console.warn(`Error navigating to ${href}:`, error);
-    }
-  };
+  const { items, handleClick, activeSection } = useDocumentationNavItems();
 
   if (items.length === 0) return null;
 
   return (
-    <div className="sb-unstyled fixed top-3 right-4 z-1000 w-48 rounded-lg border border-slate-200 bg-white p-4 shadow-xs">
-      <button
+    <StyledDocumentationNav className="sb-unstyled fixed top-3 right-4 z-1000 flex w-48 flex-col gap-1 rounded-lg border-2 border-slate-200 bg-white shadow-xs">
+      <Button
+        className="flex justify-between font-bold text-inherit"
+        variant="tertiary"
+        size="md"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between text-sm font-bold text-slate-600 hover:text-blue-700"
       >
         Table of Contents
-        <svg
-          className={cn('h-4 w-4 transform transition-transform', {
-            'rotate-180': isOpen,
-          })}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
+        <span className="text-lg">
+          <IconArrowRightSLine
+            className={cn('rotate-90 transform transition-transform', { 'rotate-270': isOpen! })}
           />
-        </svg>
-      </button>
-
+        </span>
+      </Button>
       <nav
-        className={cn('mt-4 flex flex-col gap-2 transition-all duration-200', {
-          block: isOpen,
+        className={cn('flex flex-col gap-1 text-base transition-all duration-200', {
+          flex: isOpen,
           hidden: !isOpen,
         })}
       >
-        {items.map((item: NavItem) => (
-          <NavLink
-            key={item.href}
-            href={item.href}
-            onClick={(e) => handleClick(e, item.href)}
-            active={activeSection === item.href.slice(1)}
-            title={item.label}
+        {items.map((item, index) => (
+          <DocumentationNavItem
+            key={item.id}
+            href={`#${item.id}`}
+            onClick={(e) => handleClick(e, item)}
+            active={activeSection ? activeSection === item.id : index === 0}
+            title={item.textContent ?? ''}
           >
-            {item.label}
-          </NavLink>
+            {item.textContent}
+          </DocumentationNavItem>
         ))}
       </nav>
-    </div>
+    </StyledDocumentationNav>
   );
 }
