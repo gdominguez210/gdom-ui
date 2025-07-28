@@ -1,6 +1,7 @@
 import * as RadixTabs from '@radix-ui/react-tabs';
 import type { ComponentProps } from 'react';
 import { cn } from '@/utils/cn';
+import { Button } from '@/lib/Button/Button';
 
 function TabsRoot(props: ComponentProps<typeof RadixTabs.Root>) {
   const { className, ...rest } = props;
@@ -16,22 +17,29 @@ function TabsList(props: ComponentProps<typeof RadixTabs.TabsList>) {
   const { className, ...rest } = props;
   return (
     <RadixTabs.List
-      className={cn('inline-flex items-center gap-4', className)}
+      className={cn('inline-flex items-center gap-3', className)}
       {...rest}
     />
   );
 }
 
 function TabsTrigger(props: ComponentProps<typeof RadixTabs.TabsTrigger>) {
-  const { className, ...rest } = props;
+  const { className, children, ...rest } = props;
   return (
     <RadixTabs.Trigger
-      className={cn(
-        'border-b-3 border-transparent px-3.5 py-2.5 text-sm font-bold text-neutral-400 data-[state=active]:border-blue-300 data-[state=active]:text-black',
-        className,
-      )}
+      asChild
       {...rest}
-    />
+    >
+      <Button
+        variant="tertiary"
+        className={cn(
+          'rounded-none border-b-3 border-transparent font-bold text-neutral-400 data-[state=active]:border-blue-500 data-[state=active]:text-black',
+          className,
+        )}
+      >
+        {children}
+      </Button>
+    </RadixTabs.Trigger>
   );
 }
 
