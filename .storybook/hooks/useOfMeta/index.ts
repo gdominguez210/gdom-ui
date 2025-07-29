@@ -1,0 +1,1 @@
+export { useOfMeta } from './useOfMeta';
