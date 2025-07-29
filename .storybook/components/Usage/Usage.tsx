@@ -1,21 +1,38 @@
-import { useOf } from '@storybook/addon-docs/blocks';
-import { Tabs } from '@storybook-components/Tabs';
 import { Source, Markdown } from '@storybook/addon-docs/blocks';
+import { Tabs } from '@/.storybook/components/Tabs';
+import { useOfMeta } from '@/.storybook/hooks/useOfMeta';
+import { styled } from '@storybook/theming';
+import { Typography } from '@/.storybook/components/Typography';
+import { baseCommon } from '@/.storybook/components/Typography/config';
 
-export function DocsUsage() {
-  const resolvedOfMeta = useOf('meta');
-  const resolvedCsf = resolvedOfMeta.type === 'meta' ? resolvedOfMeta.csfFile : null;
-  const storyModuleExports = Object.values(resolvedCsf?.stories ?? {})
-    .map((story) => story?.moduleExport)
-    .filter((moduleExport) => !moduleExport?.name?.includes('Usage'));
+const StyledUsage = styled.div(baseCommon, {
+  '.docblock-source': {
+    marginBottom: '0px',
+  },
+});
+
+const StyledHeader = styled(Typography.H2)({
+  border: 'none',
+  padding: '0px',
+  marginBottom: '1rem',
+});
+
+export function Usage() {
+  const { csfFile } = useOfMeta();
+
+  const storyModuleExports = Object.values(csfFile.stories)
+    .map((story) => story.moduleExport)
+    .filter((moduleExport) => !moduleExport.name.includes('Usage'));
 
   if (!storyModuleExports?.length) {
     return null;
   }
 
   return (
-    <div>
-      <Markdown>## Usage</Markdown>
+    <StyledUsage>
+      <StyledHeader as="div">
+        <Markdown>## Usage</Markdown>
+      </StyledHeader>
       <Tabs.Root
         defaultValue={storyModuleExports[0].name}
         className="mt-[25px] mb-[25px]"
@@ -43,6 +60,6 @@ export function DocsUsage() {
           </Tabs.Content>
         ))}
       </Tabs.Root>
-    </div>
+    </StyledUsage>
   );
 }
