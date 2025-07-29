@@ -1,15 +1,15 @@
 import { useState } from 'react';
+import { styled } from 'storybook/theming';
 import { cn } from '@/utils/cn';
-import { styled } from '@storybook/theming';
 import { Button } from '@/lib/Button/Button';
 import { IconArrowRightSLine } from '@/lib/IconArrowRightSLine/IconArrowRightSLine';
-import { useDocumentationNavItems } from './useDocumentationNavItems';
-import { DocumentationNavItem } from './DocumentationNavItem';
-import { baseCommon } from '@storybook-components/Typography/config';
+import { useDocumentationNavItems } from './useTableOfContents';
+import { TableOfContentsItem } from './TableOfContentsItem';
+import { baseCommon } from '@/.storybook/components/Typography/config';
 
-const StyledDocumentationNav = styled.div(baseCommon);
+const StyledTableOfContents = styled.div(baseCommon);
 
-export function DocumentationNav() {
+export function TableOfContents() {
   const [isOpen, setIsOpen] = useState(true);
 
   const { items, handleClick, activeSection } = useDocumentationNavItems();
@@ -17,14 +17,14 @@ export function DocumentationNav() {
   if (items.length === 0) return null;
 
   return (
-    <StyledDocumentationNav className="sb-unstyled fixed top-3 right-4 z-1000 flex w-48 flex-col gap-1 rounded-lg border-2 border-slate-200 bg-white shadow-xs">
+    <StyledTableOfContents className="sb-unstyled fixed top-3 right-4 z-1000 flex w-48 flex-col gap-1 rounded-lg border-2 border-slate-200 bg-white shadow-xs">
       <Button
         className="flex justify-between font-bold text-inherit"
         variant="tertiary"
-        size="md"
+        size="lg"
         onClick={() => setIsOpen(!isOpen)}
       >
-        Table of Contents
+        On This Page
         <span className="text-lg">
           <IconArrowRightSLine
             className={cn('rotate-90 transform transition-transform', { 'rotate-270': isOpen! })}
@@ -38,7 +38,7 @@ export function DocumentationNav() {
         })}
       >
         {items.map((item, index) => (
-          <DocumentationNavItem
+          <TableOfContentsItem
             key={item.id}
             href={`#${item.id}`}
             onClick={(e) => handleClick(e, item)}
@@ -46,9 +46,9 @@ export function DocumentationNav() {
             title={item.textContent ?? ''}
           >
             {item.textContent}
-          </DocumentationNavItem>
+          </TableOfContentsItem>
         ))}
       </nav>
-    </StyledDocumentationNav>
+    </StyledTableOfContents>
   );
 }

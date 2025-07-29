@@ -2,16 +2,16 @@ import { Button } from '@/lib/Button/Button';
 import { cn } from '@/utils/cn';
 import type { ComponentPropsWithRef } from 'react';
 
-interface DocumentationNavItemProps extends ComponentPropsWithRef<'a'> {
+interface TableOfContentsItemProps extends ComponentPropsWithRef<'a'> {
   active?: boolean;
 }
 
-export function DocumentationNavItem({
+export function TableOfContentsItem({
   active,
   className,
   children,
   ...props
-}: DocumentationNavItemProps) {
+}: TableOfContentsItemProps) {
   return (
     <Button
       variant="tertiary"
