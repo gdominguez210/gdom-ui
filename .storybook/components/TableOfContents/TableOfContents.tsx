@@ -17,7 +17,7 @@ export function TableOfContents() {
   if (items.length === 0) return null;
 
   return (
-    <StyledTableOfContents className="sb-unstyled fixed top-3 right-4 z-1000 flex w-48 flex-col gap-1 rounded-lg border-2 border-slate-200 bg-white shadow-xs">
+    <StyledTableOfContents className="sb-unstyled fixed top-3 right-4 z-1000 flex max-h-[calc(100vh-var(--spacing)*6)] w-48 flex-col gap-1 rounded-lg border-2 border-slate-200 bg-white shadow-xs">
       <Button
         className="flex justify-between font-bold text-inherit"
         variant="tertiary"
@@ -31,24 +31,26 @@ export function TableOfContents() {
           />
         </span>
       </Button>
-      <nav
-        className={cn('flex flex-col gap-1 text-base transition-all duration-200', {
-          flex: isOpen,
-          hidden: !isOpen,
-        })}
-      >
-        {items.map((item, index) => (
-          <TableOfContentsItem
-            key={item.id}
-            href={`#${item.id}`}
-            onClick={(e) => handleClick(e, item)}
-            active={activeSection ? activeSection === item.id : index === 0}
-            title={item.textContent ?? ''}
-          >
-            {item.textContent}
-          </TableOfContentsItem>
-        ))}
-      </nav>
+      <div className="scrollbar-thin scrollbar-thumb-blue-100 scrollbar-track-transparent overflow-y-auto">
+        <nav
+          className={cn('flex flex-col gap-1 text-base transition-all duration-200', {
+            flex: isOpen,
+            hidden: !isOpen,
+          })}
+        >
+          {items.map((item, index) => (
+            <TableOfContentsItem
+              key={item.id}
+              href={`#${item.id}`}
+              onClick={(e) => handleClick(e, item)}
+              active={activeSection ? activeSection === item.id : index === 0}
+              title={item.textContent ?? ''}
+            >
+              {item.textContent}
+            </TableOfContentsItem>
+          ))}
+        </nav>
+      </div>
     </StyledTableOfContents>
   );
 }
