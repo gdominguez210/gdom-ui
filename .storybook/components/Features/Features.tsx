@@ -1,116 +1,104 @@
-import { IconLibrary, type IconLibraryProps } from '@/lib/IconLibrary/IconLibrary';
-import { Polymorphic, type PolymorphicProps } from '@/lib/Polymorphic/Polymorphic';
-import type { ElementType, ReactNode } from 'react';
+import { useOfMeta } from '@/.storybook/hooks/useOfMeta';
+import type { ComponentPropsWithRef, ReactNode, FC } from 'react';
+import { IconLibrary, type IconLibraryProps } from '@/lib/IconLibrary';
 import { cn } from '@/utils/cn';
-export type Feature = {
-  header: string;
-  description: string | ReactNode;
-  icon: string;
-  href?: string;
-};
+import { Markdown } from '@storybook/addon-docs/blocks';
+import { styled } from '@storybook/theming';
+import { baseCommon } from '@/.storybook/components/Typography/config';
+import { Typography } from '@/.storybook/components/Typography';
 
-function FeaturesRoot<T extends ElementType = 'section'>(props: PolymorphicProps<T>) {
-  const { as = 'section', children, className, ...rest } = props;
+export type FeatureItemEntity =
+  | {
+      title: ReactNode;
+      description: ReactNode;
+      icon?: IconLibraryProps['name'];
+    }
+  | FC;
+
+const StyledList = styled.ul(baseCommon);
+const StyledHeader = styled(Typography.H2)({
+  border: 'none',
+  padding: '0px',
+  marginBottom: '1rem',
+});
+
+export function Features() {
+  const {
+    csfFile: {
+      meta: { parameters },
+    },
+  } = useOfMeta();
+
+  const features = parameters?.['docs']?.features;
+
+  if (!features?.items?.length) return null;
 
   return (
-    <Polymorphic
-      as={as}
-      className={cn('flex flex-col gap-4', className)}
-      {...rest}
-    >
-      {children}
-    </Polymorphic>
+    <div className="sb-unstyled text-base/[1.75]">
+      <StyledHeader as="div">
+        <Markdown>## Features</Markdown>
+      </StyledHeader>
+      <StyledList className="flex list-disc flex-col gap-2 pl-[1.875rem]">
+        {features.items.map((item: FeatureItemEntity, index: number) => {
+          if (typeof item === 'function') {
+            return item({});
+          }
+
+          const { title, description, icon } = item;
+
+          return (
+            <FeatureItem key={index}>
+              {icon && <FeatureItemIcon name={icon} />}
+              <FeatureItemTitle>{title}</FeatureItemTitle> - {description}
+            </FeatureItem>
+          );
+        })}
+      </StyledList>
+    </div>
   );
 }
 
-export type FeaturesHeaderProps<T extends ElementType = 'h2'> = PolymorphicProps<T>;
+export type FeatureItemProps = ComponentPropsWithRef<'li'>;
 
-function FeaturesHeader(props: FeaturesHeaderProps) {
-  const { as = 'h2', children, className, ...rest } = props;
+export function FeatureItem(props: FeatureItemProps) {
+  const { children, className, ...rest } = props;
 
   return (
-    <Polymorphic
-      as={as}
-      className={cn('text-lg/normal font-medium', className)}
+    <li
+      className={cn(className)}
       {...rest}
     >
       {children}
-    </Polymorphic>
+    </li>
   );
 }
 
-export type FeaturesListProps<T extends ElementType = 'ul'> = PolymorphicProps<T>;
+export type FeatureItemIconProps = ComponentPropsWithRef<'span'> & Pick<IconLibraryProps, 'name'>;
 
-function FeaturesList(props: FeaturesListProps) {
-  const { as = 'ul', children, className, ...rest } = props;
-
-  return (
-    <Polymorphic
-      as={as}
-      className={cn('sb-unstyled font-[Nunito_Sans]flex flex-col gap-4', className)}
-      {...rest}
-    >
-      {children}
-    </Polymorphic>
-  );
-}
-
-export type FeaturesItemProps<T extends ElementType = 'li'> = PolymorphicProps<T>;
-
-function FeaturesItem(props: FeaturesItemProps) {
-  const { as: Element = 'li', children, className, ...rest } = props;
+export function FeatureItemIcon(props: FeatureItemIconProps) {
+  const { className, name, ...rest } = props;
 
   return (
-    <Element
-      className={cn('flex flex-col gap-3', className)}
-      {...rest}
-    >
-      {children}
-    </Element>
-  );
-}
-
-export type FeaturesItemHeaderProps<T extends ElementType = 'div'> = PolymorphicProps<T>;
-
-function FeaturesItemHeader(props: FeaturesItemHeaderProps) {
-  const { as = 'div', children, className, ...rest } = props;
-
-  return (
-    <Polymorphic
-      as={as}
-      className={cn('flex items-center gap-2 font-bold', as === 'a' && 'text-[#029cfd]', className)}
-      {...rest}
-    >
-      {children}
-    </Polymorphic>
-  );
-}
-
-export type FeaturesIconProps<T extends ElementType = 'span'> = IconLibraryProps &
-  PolymorphicProps<T>;
-
-function FeaturesIcon<T extends ElementType = 'span'>(props: FeaturesIconProps<T>) {
-  const { as = 'span', className, name, ...rest } = props;
-
-  return (
-    <Polymorphic
-      as={as}
-      className={cn(
-        'sb-unstyled rounded-full bg-blue-200 p-[.3em] text-2xl text-blue-700',
-        className,
-      )}
+    <span
+      className={cn(className)}
       {...rest}
     >
       <IconLibrary name={name} />
-    </Polymorphic>
+    </span>
   );
 }
 
-export const Features = {
-  Root: Object.assign(FeaturesRoot, { displayName: 'Features.Root' }),
-  Header: Object.assign(FeaturesHeader, { displayName: 'Features.Header' }),
-  List: Object.assign(FeaturesList, { displayName: 'Features.List' }),
-  Item: Object.assign(FeaturesItem, { displayName: 'Features.Item' }),
-  ItemHeader: Object.assign(FeaturesItemHeader, { displayName: 'Features.ItemHeader' }),
-  Icon: Object.assign(FeaturesIcon, { displayName: 'Features.Icon' }),
-};
+export type FeatureItemTitleProps = ComponentPropsWithRef<'span'>;
+
+export function FeatureItemTitle(props: FeatureItemTitleProps) {
+  const { children, className, ...rest } = props;
+
+  return (
+    <span
+      className={cn(className, 'font-bold')}
+      {...rest}
+    >
+      {children}
+    </span>
+  );
+}
