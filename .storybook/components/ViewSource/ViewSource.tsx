@@ -1,5 +1,6 @@
 import { Button, type ButtonProps } from '@/lib/Button/Button';
 import { IconLibrary } from '@/lib/IconLibrary/IconLibrary';
+import { cn } from '@/utils/cn';
 import { useOf } from '@storybook/addon-docs/blocks';
 
 const BASE_URL = 'https://github.com/gdominguez210/gdom-ui/tree/main/lib/';
@@ -20,7 +21,8 @@ export function ViewSource(props: ViewSourceProps) {
       href={composedUrl}
       variant="secondary"
       target="_blank"
-      className="text-sky-500"
+      size="lg"
+      className={cn('text-sky-500', className)}
       {...restProps}
     >
       <span>View Source</span>
