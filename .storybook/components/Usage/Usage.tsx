@@ -21,8 +21,8 @@ export function Usage() {
   const { csfFile } = useOfMeta();
 
   const storyModuleExports = Object.values(csfFile.stories)
-    .map((story) => story.moduleExport)
-    .filter((moduleExport) => !moduleExport.name.includes('Usage'));
+    .filter((story) => story.tags?.includes('usage'))
+    .map((story) => story.moduleExport);
 
   if (!storyModuleExports?.length) {
     return null;
@@ -33,10 +33,7 @@ export function Usage() {
       <StyledHeader as="div">
         <Markdown>## Usage</Markdown>
       </StyledHeader>
-      <Tabs.Root
-        defaultValue={storyModuleExports[0].name}
-        className="mt-[25px] mb-[25px]"
-      >
+      <Tabs.Root defaultValue={storyModuleExports[0].name}>
         <Tabs.List>
           {storyModuleExports.map((moduleExport) => (
             <Tabs.Trigger
