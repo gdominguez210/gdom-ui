@@ -20,13 +20,14 @@ export function AudioPlayerControlShufflePrimitive(props: AudioPlayerControlShuf
   return (
     <AudioPlayerControlButton
       className={cn(
-        { 'text-neutral-100/50': !active },
-        'hover:text-neutral-100',
-        'focus:text-neutral-100',
+        'hover:data-[state=inactive]:text-neutral-100',
+        'focus-visible:data-[state=inactive]:text-neutral-100',
+        'data-[state=inactive]:text-neutral-100/50',
         className,
       )}
       aria-label="Toggle Shuffle"
       aria-pressed={active}
+      active={active}
       {...restProps}
     >
       <IconShuffleFill className="scale-75" />
