@@ -20,6 +20,7 @@ export function AudioPlayerControlPlayPrimitive(props: AudioPlayerControlPlayPri
     <AudioPlayerControlButton
       aria-label={active ? 'Pause' : 'Play'}
       aria-pressed={active}
+      active={active}
       {...restProps}
     >
       {active ? <IconPauseLargeFill /> : <IconPlayLargeFill />}
