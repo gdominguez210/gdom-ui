@@ -21,13 +21,14 @@ export function AudioPlayerControlLoopPrimitive(props: AudioPlayerControlLoopPri
   return (
     <AudioPlayerControlButton
       className={cn(
-        { 'text-neutral-100/50': !active },
-        'hover:text-neutral-100',
-        'focus-within:text-neutral-100',
+        'hover:data-[state=inactive]:text-neutral-100',
+        'focus-visible:data-[state=inactive]:text-neutral-100',
+        'data-[state=inactive]:text-neutral-100/50',
         className,
       )}
       aria-label="Toggle Loop"
       aria-pressed={active}
+      active={active}
       {...restProps}
     >
       {active ? (
