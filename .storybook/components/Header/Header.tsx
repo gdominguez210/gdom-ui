@@ -21,14 +21,14 @@ export function Header(props: HeaderProps) {
 
   return (
     <HeaderContainer
-      className={cn('sb-unstyled flex flex-col items-start', className)}
+      className={cn('sb-unstyled flex flex-col gap-8', className)}
       {...restProps}
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 self-stretch">
+      <div className="flex flex-wrap items-center gap-2 self-stretch">
         <DocBadges />
-        <ViewSource />
+        <ViewSource className="ml-auto" />
       </div>
-      <div className="my-8 flex flex-col items-start">
+      <div className="flex flex-col items-start">
         <Title />
         <Subtitle />
       </div>
