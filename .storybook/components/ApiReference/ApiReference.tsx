@@ -3,6 +3,7 @@ import type { ComponentProps } from 'react';
 import { Typography } from '@/.storybook/components/Typography';
 import { styled } from '@storybook/theming';
 import { cn } from '@/utils/cn';
+import { useOfMeta } from 'hooks/useOfMeta';
 
 const StyledApiReferenceHeader = styled(Typography.H2)({
   border: 'none',
@@ -16,6 +17,12 @@ export type ApiReferenceProps = ComponentProps<typeof Controls> & {
 
 export function ApiReference(props: ApiReferenceProps) {
   const { className, ...restProps } = props;
+
+  const { preparedMeta } = useOfMeta();
+
+  if (preparedMeta.parameters?.['docs']?.api?.disabled) {
+    return null;
+  }
 
   return (
     <div className={cn('sb-unstyled api-reference', className)}>
