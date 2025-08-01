@@ -10,15 +10,15 @@ import { useOfMeta } from '@/.storybook/hooks/useOfMeta';
  *
  * PRIMARY (Blue) - Core Architectural Features
  * - Use for fundamental component capabilities that define what the component IS
- * - Examples: 'Polymorphic', 'Compound Component', 'Animated'
+ * - Examples: 'Polymorphic', 'Primitive', 'Compound Component', 'Animated', etc.
  *
  * SUCCESS (Green) - Available Features
  * - Use for additional functionality or alternatives that are AVAILABLE
- * - Examples: 'Primitive Available', 'Related Hooks'
+ * - Examples: 'Primitive Available', 'Related Hooks', etc.
  *
  * OUTLINE (Gray) - Secondary Features
  * - Use for enhanced capabilities that are nice-to-have but not core
- * - Examples: 'Accessibility Enhanced'
+ * - Examples: 'Accessibility Enhanced', etc.
  *
  * WARNING (Amber) - Requirements/Considerations
  * - Reserved for requirements or important considerations developers should keep in mind
@@ -44,6 +44,12 @@ const badgeConfig: Record<DocBadgeType, DocBadge> = {
     href: './?path=/docs/core-concepts-two-tier-components--docs#primitive-components',
     target: '_blank',
   },
+  provider: {
+    label: 'Provider',
+    variant: 'primary' as const,
+    href: './?path=/docs/core-concepts-provider-components--docs',
+    target: '_blank',
+  },
   animated: {
     label: 'Animated',
     variant: 'primary' as const,
@@ -61,7 +67,6 @@ const badgeConfig: Record<DocBadgeType, DocBadge> = {
     variant: 'success' as const,
     href: '#related-hooks',
   },
-
   accessibility: {
     label: 'Accessibility Enhanced',
     variant: 'outline' as const,
@@ -85,6 +90,7 @@ export const DOC_BADGES = {
   PRIMITIVE_AVAILABLE: 'primitive-available',
   HOOKS: 'hooks',
   ACCESSIBILITY: 'accessibility',
+  PROVIDER: 'provider',
 } as const;
 
 export type DocBadgeType = (typeof DOC_BADGES)[keyof typeof DOC_BADGES];
