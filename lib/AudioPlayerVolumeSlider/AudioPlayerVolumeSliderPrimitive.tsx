@@ -23,6 +23,7 @@ export function AudioPlayerVolumeSliderPrimitive(props: AudioPlayerVolumeSliderP
 
   return (
     <input
+      data-orientation={orientation}
       className={cn(
         '[--volume-value:0%]',
         'appearance-none',
@@ -30,9 +31,12 @@ export function AudioPlayerVolumeSliderPrimitive(props: AudioPlayerVolumeSliderP
         'relative',
         'cursor-pointer',
         'focus-within:outline-white',
-        orientation === 'horizontal'
-          ? ['w-full', 'h-2']
-          : ['[writing-mode:bt-lr]', '[appearance:slider-vertical]', 'h-32', 'w-2'],
+        'data-[orientation=horizontal]:w-full',
+        'data-[orientation=horizontal]:h-2',
+        'data-[orientation=vertical]:[writing-mode:bt-lr]',
+        'data-[orientation=vertical]:[appearance:slider-vertical]',
+        'data-[orientation=vertical]:h-32',
+        'data-[orientation=vertical]:w-2',
         // Progress bar styles
         'before:block',
         'before:w-(--volume-value)',
