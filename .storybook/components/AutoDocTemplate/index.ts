@@ -1,0 +1,1 @@
+export { AutoDocTemplate } from './AutoDocTemplate';
